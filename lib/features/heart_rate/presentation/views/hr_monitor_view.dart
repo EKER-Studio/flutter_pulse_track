@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../providers/bluetooth_connection_providers.dart';
 import '../providers/heart_rate_providers.dart';
 
@@ -17,28 +19,67 @@ class HrMonitorView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     print('--- [UI VIEW] Building HrMonitorView for deviceId: $deviceId ---');
 
-    final connectionStatus = ref.watch(bleConnectionStatusProvider);
-    print('--- [UI VIEW] Connection Status: $connectionStatus ---');
-
     final hrMetricsAsync = ref.watch(heartRateMetricsProvider(deviceId));
-    print('--- [UI VIEW] HR Metrics AsyncState: $hrMetricsAsync ---');
+    final nativeDevice = BluetoothDevice.fromId(deviceId);
 
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E1E1E),
-        title: Text(deviceName.isEmpty ? 'HR Monitor' : deviceName),
+        elevation: 0,
+        title: Text(
+          deviceName.isEmpty ? 'HR Monitor' : deviceName,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [
-          connectionStatus.when(
-            data: (status) => TextButton(
-              onPressed: () {
-                ref.read(bluetoothConnectionControllerProvider.notifier).disconnect();
-                Navigator.of(context).pop();
-              },
-              child: const Text('Disconnect', style: TextStyle(color: Colors.redAccent)),
-            ),
-            loading: () => const CircularProgressIndicator(),
-            error: (_, __) => const Icon(Icons.error, color: Colors.red),
+          // Stream Builder słuchający bezpośrednio hardware'u, ignorujący błędy stanów Riverpoda
+          StreamBuilder<BluetoothConnectionState>(
+            stream: nativeDevice.connectionState,
+            initialData: BluetoothConnectionState.disconnected,
+            builder: (context, snapshot) {
+              final state = snapshot.data;
+
+              if (state == BluetoothConnectionState.connected) {
+                return TextButton.icon(
+                  icon: const Icon(
+                    Icons.power_settings_new,
+                    color: Colors.redAccent,
+                    size: 18,
+                  ),
+                  label: const Text(
+                    'Disconnect',
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () async {
+                    // Wywołujemy rozłączenie przez nasz kontroler/serwis
+                    await ref
+                        .read(bluetoothConnectionControllerProvider.notifier)
+                        .disconnect();
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                );
+              }
+
+              // Jeśli się łączy (connecting) lub rozłącza (disconnecting)
+              return const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -50,24 +91,33 @@ class HrMonitorView extends ConsumerWidget {
           children: [
             const Text(
               'Heart rate',
-              style: TextStyle(color: Colors.grey, fontSize: 18, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
 
-            // Reaktivy odczyt telemetryczny
             hrMetricsAsync.when(
               data: (metric) => Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
                     children: [
-                      const Icon(Icons.favorite, color: Colors.redAccent, size: 48),
+                      const Icon(
+                        Icons.favorite,
+                        color: Colors.redAccent,
+                        size: 44,
+                      ),
                       const SizedBox(width: 12),
                       Text(
                         '${metric.bpm}',
                         style: const TextStyle(
-                          fontSize: 72,
+                          fontSize: 84,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -75,24 +125,45 @@ class HrMonitorView extends ConsumerWidget {
                       const SizedBox(width: 8),
                       const Text(
                         'BPM',
-                        style: TextStyle(fontSize: 24, color: Colors.grey),
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
                   if (metric.rrIntervals.isNotEmpty) ...[
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
                     Text(
                       'R-R: ${metric.rrIntervals.map((e) => '${(e * 1000).toStringAsFixed(0)}ms').join(', ')}',
-                      style: const TextStyle(color: Colors.greenAccent, fontSize: 14),
+                      style: const TextStyle(
+                        color: Colors.greenAccent,
+                        fontSize: 14,
+                        fontFamily: 'monospace',
+                      ),
                     ),
                   ],
                 ],
               ),
               loading: () => const Center(
-                child: Text('Waiting for data stream...', style: TextStyle(color: Colors.grey)),
+                child: Column(
+                  children: [
+                    CircularProgressIndicator(color: Colors.redAccent),
+                    SizedBox(height: 16),
+                    Text(
+                      'Waiting for data stream...',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
               ),
               error: (err, _) => Center(
-                child: Text('Error: $err', style: TextStyle(color: Colors.redAccent)),
+                child: Text(
+                  'Error: $err',
+                  style: TextStyle(color: Colors.redAccent),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
 
@@ -110,10 +181,20 @@ class HrMonitorView extends ConsumerWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Body sensor location', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                      Text('Chest', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text(
+                        'Body sensor location',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                      Text(
+                        'Chest',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
