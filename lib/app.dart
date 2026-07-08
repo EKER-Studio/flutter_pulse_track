@@ -44,7 +44,7 @@ class App extends ConsumerWidget {
                 },
               ),
               loading: () => const CircularProgressIndicator(),
-              error: (_, __) => const Icon(Icons.error),
+              error: (_, _) => const Icon(Icons.error),
             ),
           ],
         ),

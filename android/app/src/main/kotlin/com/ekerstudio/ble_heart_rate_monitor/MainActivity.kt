@@ -1,4 +1,4 @@
-package com.example.flutter_riverpod_boilerplate
+package com.ekerstudio.ble_heart_rate_monitor
 
 import io.flutter.embedding.android.FlutterActivity
 

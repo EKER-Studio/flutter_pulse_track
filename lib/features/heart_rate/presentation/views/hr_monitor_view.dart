@@ -66,7 +66,7 @@ class HrMonitorView extends ConsumerWidget {
               return const _LoadingIndicator();
             },
             loading: () => const _LoadingIndicator(),
-            error: (_, __) => const _LoadingIndicator(),
+            error: (_, _) => const _LoadingIndicator(),
           ),
         ],
       ),
