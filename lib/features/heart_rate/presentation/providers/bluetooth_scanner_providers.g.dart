@@ -8,9 +8,12 @@ part of 'bluetooth_scanner_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Provides the concrete implementation of the Bluetooth scanner service.
 
 @ProviderFor(bluetoothScannerService)
 final bluetoothScannerServiceProvider = BluetoothScannerServiceProvider._();
+
+/// Provides the concrete implementation of the Bluetooth scanner service.
 
 final class BluetoothScannerServiceProvider
     extends
@@ -20,6 +23,7 @@ final class BluetoothScannerServiceProvider
           BluetoothScannerService
         >
     with $Provider<BluetoothScannerService> {
+  /// Provides the concrete implementation of the Bluetooth scanner service.
   BluetoothScannerServiceProvider._()
     : super(
         from: null,
@@ -57,8 +61,12 @@ final class BluetoothScannerServiceProvider
 String _$bluetoothScannerServiceHash() =>
     r'f6b53cee1ef5149f35c0382415691d207436db4b';
 
+/// Exposes a reactive stream of all discovered BLE devices filtered and mapped by infrastructure.
+
 @ProviderFor(bleScanResults)
 final bleScanResultsProvider = BleScanResultsProvider._();
+
+/// Exposes a reactive stream of all discovered BLE devices filtered and mapped by infrastructure.
 
 final class BleScanResultsProvider
     extends
@@ -68,6 +76,7 @@ final class BleScanResultsProvider
           Stream<List<BleDevice>>
         >
     with $FutureModifier<List<BleDevice>>, $StreamProvider<List<BleDevice>> {
+  /// Exposes a reactive stream of all discovered BLE devices filtered and mapped by infrastructure.
   BleScanResultsProvider._()
     : super(
         from: null,
@@ -96,12 +105,16 @@ final class BleScanResultsProvider
 
 String _$bleScanResultsHash() => r'6697cd852f1733f62b2a3e74ae68be3a59fd9e7b';
 
+/// Controller managing the execution of hardware scan intents and tracking active scanner lifecycle.
+
 @ProviderFor(BluetoothScannerController)
 final bluetoothScannerControllerProvider =
     BluetoothScannerControllerProvider._();
 
+/// Controller managing the execution of hardware scan intents and tracking active scanner lifecycle.
 final class BluetoothScannerControllerProvider
     extends $StreamNotifierProvider<BluetoothScannerController, bool> {
+  /// Controller managing the execution of hardware scan intents and tracking active scanner lifecycle.
   BluetoothScannerControllerProvider._()
     : super(
         from: null,
@@ -122,7 +135,9 @@ final class BluetoothScannerControllerProvider
 }
 
 String _$bluetoothScannerControllerHash() =>
-    r'ff6786ac22a2eb940cc1105e5f5ae47f0f91d89e';
+    r'd6df71954e9add908d021ca6dc0f6d986d65f70c';
+
+/// Controller managing the execution of hardware scan intents and tracking active scanner lifecycle.
 
 abstract class _$BluetoothScannerController extends $StreamNotifier<bool> {
   Stream<bool> build();
