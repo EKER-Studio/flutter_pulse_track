@@ -1,0 +1,87 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../domain/entities/user_preferences.dart';
+import '../providers/user_preferences_notifier.dart';
+
+class SettingsScreen extends ConsumerWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final preferencesAsync = ref.watch(userPreferencesProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Ustawienia')),
+      body: preferencesAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Nie udało się załadować ustawień',
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  error.toString(),
+                  style: Theme.of(context).textTheme.bodySmall,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                FilledButton(
+                  onPressed: () => ref.invalidate(userPreferencesProvider),
+                  child: const Text('Spróbuj ponownie'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        data: (preferences) => ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          children: [
+            SegmentedButton<UserThemeMode>(
+              segments: const [
+                ButtonSegment<UserThemeMode>(
+                  value: UserThemeMode.system,
+                  icon: Icon(Icons.brightness_auto_outlined),
+                  label: Text('Systemowy'),
+                ),
+                ButtonSegment<UserThemeMode>(
+                  value: UserThemeMode.light,
+                  icon: Icon(Icons.light_mode_outlined),
+                  label: Text('Jasny'),
+                ),
+                ButtonSegment<UserThemeMode>(
+                  value: UserThemeMode.dark,
+                  icon: Icon(Icons.dark_mode_outlined),
+                  label: Text('Ciemny'),
+                ),
+              ],
+              selected: {preferences.themeMode},
+              onSelectionChanged: (selection) =>
+                  _updateThemeMode(ref, selection.single),
+            ),
+            const Divider(height: 24),
+            SwitchListTile(
+              title: const Text('Powiadomienia'),
+              secondary: const Icon(Icons.notifications_outlined),
+              value: preferences.isNotificationsEnabled,
+              onChanged: (value) => ref
+                  .read(userPreferencesProvider.notifier)
+                  .updateNotificationsEnabled(value),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _updateThemeMode(WidgetRef ref, UserThemeMode value) {
+    ref.read(userPreferencesProvider.notifier).updateThemeMode(value);
+  }
+}
