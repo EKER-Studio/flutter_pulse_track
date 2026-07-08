@@ -158,6 +158,48 @@ class HrMonitorView extends ConsumerWidget {
                   ],
                 ),
               ),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E1E1E),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      metric.batteryLevel != null && metric.batteryLevel! > 20
+                          ? Icons.battery_full
+                          : Icons.battery_alert,
+                      color:
+                          metric.batteryLevel != null &&
+                              metric.batteryLevel! > 20
+                          ? Colors.greenAccent
+                          : Colors.redAccent,
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Sensor battery',
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                        Text(
+                          metric.batteryLevel != null
+                              ? '${metric.batteryLevel}%'
+                              : 'N/A',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           loading: () => const Center(
