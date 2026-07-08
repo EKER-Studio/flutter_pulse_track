@@ -1,4 +1,4 @@
-import '../models/ble_connection_state.dart';
+import '../models/ble_connection_status.dart';
 
 abstract class BluetoothConnectionService {
   Stream<BleConnectionStatus> get connectionStatus;

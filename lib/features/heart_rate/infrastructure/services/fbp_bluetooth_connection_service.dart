@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import '../../domain/models/ble_connection_state.dart';
+import '../../domain/models/ble_connection_status.dart';
 import '../../domain/services/bluetooth_connection_service.dart';
 
 class FbpBluetoothConnectionService implements BluetoothConnectionService {

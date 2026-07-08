@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../domain/models/ble_connection_state.dart';
+import '../../domain/models/ble_connection_status.dart';
 import '../../domain/services/bluetooth_connection_service.dart';
 import '../../infrastructure/services/fbp_bluetooth_connection_service.dart';
 
