@@ -5,62 +5,43 @@ import '../../domain/services/bluetooth_connection_service.dart';
 
 class FbpBluetoothConnectionService implements BluetoothConnectionService {
   BluetoothDevice? _activeDevice;
-  StreamSubscription<BluetoothConnectionState>? _stateSubscription;
-
-  final StreamController<BleConnectionStatus> _statusController =
-  StreamController<BleConnectionStatus>.broadcast();
-
-  FbpBluetoothConnectionService() {
-    _statusController.add(BleConnectionStatus.disconnected);
-  }
+  final _statusController = StreamController<BleConnectionStatus>.broadcast();
 
   @override
   Stream<BleConnectionStatus> get connectionStatus => _statusController.stream;
 
   @override
   Future<void> connect(String deviceId) async {
-    await _stateSubscription?.cancel();
-
-    _statusController.add(BleConnectionStatus.connecting);
-    _activeDevice = BluetoothDevice.fromId(deviceId);
-
-    _stateSubscription = _activeDevice!.connectionState.listen((state) {
-      switch (state) {
-        case BluetoothConnectionState.connected:
-          _statusController.add(BleConnectionStatus.connected);
-          break;
-        case BluetoothConnectionState.disconnected:
-          _statusController.add(BleConnectionStatus.disconnected);
-          break;
-        case BluetoothConnectionState.connecting:
-          _statusController.add(BleConnectionStatus.connecting);
-          break;
-        case BluetoothConnectionState.disconnecting:
-          _statusController.add(BleConnectionStatus.disconnecting);
-          break;
-      }
-    });
-
     try {
-      // autoConnect: true delegates reconnection to iOS/Android OS level
+      print('--- [CONN SERVICE] Initializing connection connection to $deviceId ---');
+      _statusController.add(BleConnectionStatus.connecting);
+
+      _activeDevice = BluetoothDevice.fromId(deviceId);
+
+      // Connect natively with a clear timeout and disable autoConnect to force immediate link
       await _activeDevice!.connect(
-        autoConnect: true,
-        timeout: const Duration(seconds: 15),
+        autoConnect: false,
+      ).timeout(
+        const Duration(seconds: 4),
+        onTimeout: () => throw TimeoutException('Native BLE connection handshake timed out'),
       );
+
+      print('--- [CONN SERVICE] Native connect() completed successfully ---');
+      _statusController.add(BleConnectionStatus.connected);
     } catch (e) {
+      print('--- [CONN SERVICE] Error during connection setup: $e ---');
       _statusController.add(BleConnectionStatus.disconnected);
-      rethrow;
+      _statusController.addError(e);
     }
   }
 
   @override
   Future<void> disconnect() async {
-    await _stateSubscription?.cancel();
     if (_activeDevice != null) {
-      _statusController.add(BleConnectionStatus.disconnecting);
+      print('--- [CONN SERVICE] Disconnecting from ${_activeDevice!.remoteId} ---');
       await _activeDevice!.disconnect();
+      _statusController.add(BleConnectionStatus.disconnected);
+      _activeDevice = null;
     }
-    _statusController.add(BleConnectionStatus.disconnected);
-    _activeDevice = null;
   }
 }
