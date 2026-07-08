@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'features/settings/domain/entities/user_preferences.dart';
-import 'features/settings/presentation/providers/user_preferences_notifier.dart';
-import 'features/todos/presentation/screens/todo_screen.dart';
+import 'package:flutter/material.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final preferences = ref.watch(userPreferencesProvider).value;
 
     return MaterialApp(
       title: 'Todo App',
@@ -25,18 +21,7 @@ class App extends ConsumerWidget {
         ),
         useMaterial3: true,
       ),
-      themeMode: _toFlutterThemeMode(
-        preferences?.themeMode ?? UserThemeMode.system,
-      ),
-      home: const TodoScreen(),
+      home: const Scaffold(),
     );
-  }
-
-  ThemeMode _toFlutterThemeMode(UserThemeMode themeMode) {
-    return switch (themeMode) {
-      UserThemeMode.light => ThemeMode.light,
-      UserThemeMode.dark => ThemeMode.dark,
-      UserThemeMode.system => ThemeMode.system,
-    };
   }
 }

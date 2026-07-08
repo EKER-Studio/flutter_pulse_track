@@ -66,5 +66,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>EKER Studio HR Companion wymaga stałego dostępu do Bluetooth, aby odbierać i analizować dane biometryczne z pasa tętna w czasie rzeczywistym, również przy zablokowanym ekranie.</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>Aplikacja wymaga uprawnień Bluetooth do nawiązania stabilnego połączenia z sensorami tętna.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Lokalizacja jest wymagana przez system do poprawnego skanowania i identyfikacji urządzeń Bluetooth Low Energy w Twoim otoczeniu.</string>
+
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>bluetooth-central</string>
+    </array>
 </dict>
 </plist>
