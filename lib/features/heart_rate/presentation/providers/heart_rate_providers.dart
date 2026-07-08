@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../domain/models/hr_measurement.dart';
 import '../../domain/services/heart_rate_repository.dart';
 import '../../infrastructure/services/fbp_heart_rate_repository.dart';
@@ -12,6 +13,10 @@ HeartRateRepository heartRateRepository(Ref ref, String deviceId) {
 }
 
 /// Exposes a clean stream of parsed heart rate measurements for the UI or persistence layer.
+///
+/// Under the hood, subscribing to this stream triggers physical connection and GATT discovery
+/// via the infrastructure layer. Unsubscribing (e.g., leaving the monitor view) automatically
+/// tears down native BLE notifications to preserve device battery.
 @riverpod
 Stream<HrMeasurement> heartRateMetrics(Ref ref, String deviceId) {
   final repository = ref.watch(heartRateRepositoryProvider(deviceId));

@@ -102,11 +102,19 @@ final class HeartRateRepositoryFamily extends $Family
 }
 
 /// Exposes a clean stream of parsed heart rate measurements for the UI or persistence layer.
+///
+/// Under the hood, subscribing to this stream triggers physical connection and GATT discovery
+/// via the infrastructure layer. Unsubscribing (e.g., leaving the monitor view) automatically
+/// tears down native BLE notifications to preserve device battery.
 
 @ProviderFor(heartRateMetrics)
 final heartRateMetricsProvider = HeartRateMetricsFamily._();
 
 /// Exposes a clean stream of parsed heart rate measurements for the UI or persistence layer.
+///
+/// Under the hood, subscribing to this stream triggers physical connection and GATT discovery
+/// via the infrastructure layer. Unsubscribing (e.g., leaving the monitor view) automatically
+/// tears down native BLE notifications to preserve device battery.
 
 final class HeartRateMetricsProvider
     extends
@@ -117,6 +125,10 @@ final class HeartRateMetricsProvider
         >
     with $FutureModifier<HrMeasurement>, $StreamProvider<HrMeasurement> {
   /// Exposes a clean stream of parsed heart rate measurements for the UI or persistence layer.
+  ///
+  /// Under the hood, subscribing to this stream triggers physical connection and GATT discovery
+  /// via the infrastructure layer. Unsubscribing (e.g., leaving the monitor view) automatically
+  /// tears down native BLE notifications to preserve device battery.
   HeartRateMetricsProvider._({
     required HeartRateMetricsFamily super.from,
     required String super.argument,
@@ -164,6 +176,10 @@ final class HeartRateMetricsProvider
 String _$heartRateMetricsHash() => r'e9ad4e8c3f34f8c24ee101cd8ae39ca0071f5055';
 
 /// Exposes a clean stream of parsed heart rate measurements for the UI or persistence layer.
+///
+/// Under the hood, subscribing to this stream triggers physical connection and GATT discovery
+/// via the infrastructure layer. Unsubscribing (e.g., leaving the monitor view) automatically
+/// tears down native BLE notifications to preserve device battery.
 
 final class HeartRateMetricsFamily extends $Family
     with $FunctionalFamilyOverride<Stream<HrMeasurement>, String> {
@@ -177,6 +193,10 @@ final class HeartRateMetricsFamily extends $Family
       );
 
   /// Exposes a clean stream of parsed heart rate measurements for the UI or persistence layer.
+  ///
+  /// Under the hood, subscribing to this stream triggers physical connection and GATT discovery
+  /// via the infrastructure layer. Unsubscribing (e.g., leaving the monitor view) automatically
+  /// tears down native BLE notifications to preserve device battery.
 
   HeartRateMetricsProvider call(String deviceId) =>
       HeartRateMetricsProvider._(argument: deviceId, from: this);
