@@ -62,63 +62,26 @@ final class BluetoothConnectionServiceProvider
 String _$bluetoothConnectionServiceHash() =>
     r'83177dcae8d239f6f175faf06e09a62998457fed';
 
-/// Exposes a reactive stream of the current BLE connection status to the UI.
-
-@ProviderFor(bleConnectionStatus)
-final bleConnectionStatusProvider = BleConnectionStatusProvider._();
-
-/// Exposes a reactive stream of the current BLE connection status to the UI.
-
-final class BleConnectionStatusProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<BleConnectionStatus>,
-          BleConnectionStatus,
-          Stream<BleConnectionStatus>
-        >
-    with
-        $FutureModifier<BleConnectionStatus>,
-        $StreamProvider<BleConnectionStatus> {
-  /// Exposes a reactive stream of the current BLE connection status to the UI.
-  BleConnectionStatusProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'bleConnectionStatusProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$bleConnectionStatusHash();
-
-  @$internal
-  @override
-  $StreamProviderElement<BleConnectionStatus> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
-
-  @override
-  Stream<BleConnectionStatus> create(Ref ref) {
-    return bleConnectionStatus(ref);
-  }
-}
-
-String _$bleConnectionStatusHash() =>
-    r'd1f239e02bcbf1d9ccdac74073ef2573ef2fcd0a';
-
-/// Controller responsible for executing connect and disconnect intents.
+/// Controller responsible for managing connection state and executing lifecycle intents.
+///
+/// Replaces the legacy void controller with a robust AsyncValue wrapper driving the UI.
 
 @ProviderFor(BluetoothConnectionController)
 final bluetoothConnectionControllerProvider =
     BluetoothConnectionControllerProvider._();
 
-/// Controller responsible for executing connect and disconnect intents.
+/// Controller responsible for managing connection state and executing lifecycle intents.
+///
+/// Replaces the legacy void controller with a robust AsyncValue wrapper driving the UI.
 final class BluetoothConnectionControllerProvider
-    extends $NotifierProvider<BluetoothConnectionController, void> {
-  /// Controller responsible for executing connect and disconnect intents.
+    extends
+        $StreamNotifierProvider<
+          BluetoothConnectionController,
+          BleConnectionStatus
+        > {
+  /// Controller responsible for managing connection state and executing lifecycle intents.
+  ///
+  /// Replaces the legacy void controller with a robust AsyncValue wrapper driving the UI.
   BluetoothConnectionControllerProvider._()
     : super(
         from: null,
@@ -136,32 +99,28 @@ final class BluetoothConnectionControllerProvider
   @$internal
   @override
   BluetoothConnectionController create() => BluetoothConnectionController();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(void value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<void>(value),
-    );
-  }
 }
 
 String _$bluetoothConnectionControllerHash() =>
-    r'87b92f75880a91c4267392df2c3ed5a9be3726e5';
+    r'75a491b3300ee610359e8a6e6dcadf91daa0e124';
 
-/// Controller responsible for executing connect and disconnect intents.
+/// Controller responsible for managing connection state and executing lifecycle intents.
+///
+/// Replaces the legacy void controller with a robust AsyncValue wrapper driving the UI.
 
-abstract class _$BluetoothConnectionController extends $Notifier<void> {
-  void build();
+abstract class _$BluetoothConnectionController
+    extends $StreamNotifier<BleConnectionStatus> {
+  Stream<BleConnectionStatus> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<void, void>;
+    final ref =
+        this.ref as $Ref<AsyncValue<BleConnectionStatus>, BleConnectionStatus>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<void, void>,
-              void,
+              AnyNotifier<AsyncValue<BleConnectionStatus>, BleConnectionStatus>,
+              AsyncValue<BleConnectionStatus>,
               Object?,
               Object?
             >;

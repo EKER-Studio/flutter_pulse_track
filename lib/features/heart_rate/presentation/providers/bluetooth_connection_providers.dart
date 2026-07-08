@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../domain/models/ble_connection_status.dart';
 import '../../domain/services/bluetooth_connection_service.dart';
 import '../../infrastructure/services/fbp_bluetooth_connection_service.dart';
@@ -11,31 +12,40 @@ BluetoothConnectionService bluetoothConnectionService(Ref ref) {
   return FbpBluetoothConnectionService();
 }
 
-/// Exposes a reactive stream of the current BLE connection status to the UI.
-@riverpod
-Stream<BleConnectionStatus> bleConnectionStatus(Ref ref) {
-  final connectionService = ref.watch(bluetoothConnectionServiceProvider);
-  return connectionService.connectionStatus;
-}
-
-/// Controller responsible for executing connect and disconnect intents.
+/// Controller responsible for managing connection state and executing lifecycle intents.
+///
+/// Replaces the legacy void controller with a robust AsyncValue wrapper driving the UI.
 @riverpod
 class BluetoothConnectionController extends _$BluetoothConnectionController {
   @override
-  void build() {
-    // Initial state setup if needed, returns void as execution intents are separate.
-    return;
+  Stream<BleConnectionStatus> build() {
+    final connectionService = ref.watch(bluetoothConnectionServiceProvider);
+    return connectionService.connectionStatus;
   }
 
-  /// Initiates a secure, persistent connection with a specific device.
+  /// Initiates a secure connection with a specific device, wrapping state transitions.
   Future<void> connect(String deviceId) async {
     final connectionService = ref.read(bluetoothConnectionServiceProvider);
-    await connectionService.connect(deviceId);
+
+    state = const AsyncValue.loading();
+
+    try {
+      await connectionService.connect(deviceId);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 
   /// Gracefully closes the active connection and unsubscribes from GATT lifecycle.
   Future<void> disconnect() async {
     final connectionService = ref.read(bluetoothConnectionServiceProvider);
-    await connectionService.disconnect();
+
+    state = const AsyncValue.loading();
+
+    try {
+      await connectionService.disconnect();
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 }
