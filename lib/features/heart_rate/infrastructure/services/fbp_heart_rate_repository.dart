@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
+import '../../domain/models/body_sensor_location.dart';
 import '../../domain/models/hr_measurement.dart';
 import '../../domain/services/heart_rate_repository.dart';
 import '../parsers/hr_packet_parser.dart';
@@ -28,7 +29,6 @@ class FbpHeartRateRepository implements HeartRateRepository {
           '--- [HARD REPO] Ensuring physical connection for ${_device.remoteId} ---',
         );
 
-        // Hard-connect directly inside the data stream to bypass provider race conditions
         await _device
             .connect(autoConnect: false)
             .timeout(
@@ -41,7 +41,6 @@ class FbpHeartRateRepository implements HeartRateRepository {
         debugPrint(
           '--- [HARD REPO] Triggering discoverServices() with safety timeout ---',
         );
-        // Bound discoverServices to prevent infinite waiting states if GATT discovery freezes
         final services = await _device.discoverServices().timeout(
           const Duration(seconds: 5),
           onTimeout: () =>
@@ -72,6 +71,44 @@ class FbpHeartRateRepository implements HeartRateRepository {
           return;
         }
 
+        // --- Dynamic Body Sensor Location Read (0x2A38) ---
+        BodySensorLocation discoveredLocation = BodySensorLocation.unknown;
+        try {
+          final locationChar = hrService.characteristics
+              .where(
+                (c) => c.characteristicUuid == Guid('2a38'),
+              ) // POPRAWIONE: brak przypisania, czysty Guid
+              .firstOrNull;
+
+          if (locationChar != null) {
+            debugPrint('--- [HARD REPO] Reading Body Sensor Location... ---');
+            final List<int> locationBytes = await locationChar.read().timeout(
+              const Duration(seconds: 2),
+            );
+
+            if (locationBytes.isNotEmpty) {
+              final int locationCode = locationBytes.first;
+              discoveredLocation = switch (locationCode) {
+                1 => BodySensorLocation.chest,
+                2 => BodySensorLocation.wrist,
+                3 => BodySensorLocation.finger,
+                4 => BodySensorLocation.hand,
+                5 => BodySensorLocation.earLobe,
+                6 => BodySensorLocation.foot,
+                _ => BodySensorLocation.other,
+              };
+              debugPrint(
+                '--- [HARD REPO] Sensor Location resolved: ${discoveredLocation.name} ---',
+              );
+            }
+          }
+        } catch (e) {
+          debugPrint(
+            '--- [HARD REPO] Optional Sensor Location read failed or unsupported: $e ---',
+          );
+        }
+        // --------------------------------------------------
+
         await characteristic.setNotifyValue(true);
         debugPrint('--- [HARD REPO] GATT Notifications Active! ---');
 
@@ -80,7 +117,13 @@ class FbpHeartRateRepository implements HeartRateRepository {
         ) {
           final measurement = HrPacketParser.parseRawBytes(rawBytes);
           if (measurement != null && !controller.isClosed) {
-            controller.add(measurement);
+            final updatedMeasurement = HrMeasurement(
+              bpm: measurement.bpm,
+              rrIntervals: measurement.rrIntervals,
+              timestamp: measurement.timestamp,
+              sensorLocation: discoveredLocation, // Przekazujemy enum
+            );
+            controller.add(updatedMeasurement);
           }
         }, onError: (err) => controller.addError(err));
       } catch (e) {
