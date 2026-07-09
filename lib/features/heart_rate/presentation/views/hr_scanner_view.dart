@@ -109,30 +109,30 @@ class HrScannerView extends ConsumerWidget {
   Widget _buildAdapterOffState() {
     return Container(
       width: double.infinity,
-      color: Colors.redAccent.withValues(alpha: 0.1),
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.bluetooth_disabled, size: 80, color: Colors.redAccent),
-          SizedBox(height: 24),
-          Text(
-            'Bluetooth is Off',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+      color: Colors.redAccent.withValues(alpha: 0.05),
+      child: const Padding(
+        padding: EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.bluetooth_disabled, size: 80, color: Colors.redAccent),
+            SizedBox(height: 24),
+            Text(
+              'Bluetooth Required',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          SizedBox(height: 16),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32.0),
-            child: Text(
-              'Bluetooth adapter is powered off. Please enable Bluetooth to scan for sensors.',
+            SizedBox(height: 16),
+            Text(
+              'Bluetooth adapter is powered off or unauthorized. Please enable Bluetooth and grant local infrastructure permissions to scan for sensors.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              style: TextStyle(color: Colors.grey, fontSize: 16, height: 1.4),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
