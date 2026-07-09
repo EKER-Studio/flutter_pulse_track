@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar_community/isar.dart';
 
+import '../../../../core/infrastructure/storage/isar_provider.dart';
+import '../../../workout/infrastructure/models/device_profile_dto.dart';
 import '../../domain/models/ble_device.dart';
 import '../../domain/models/ble_scanner_state.dart';
 import '../controllers/ble_scanner_notifier.dart';
@@ -49,10 +52,15 @@ class HrScannerView extends ConsumerWidget {
         IdleScannerState() => _buildIdleState(notifier),
         AdapterOffScannerState() => _buildAdapterOffState(),
         EmptyScannerState() => _buildEmptyState(notifier),
-        ScanningScannerState(:final devices) =>
-          _buildScanningState(context, devices, notifier),
-        FailureScannerState(:final message) =>
-          _buildFailureState(message, notifier),
+        ScanningScannerState(:final devices) => _buildScanningState(
+          context,
+          notifier,
+          devices,
+        ),
+        FailureScannerState(:final message) => _buildFailureState(
+          message,
+          notifier,
+        ),
       },
     );
   }
@@ -144,7 +152,11 @@ class HrScannerView extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.device_unknown, size: 80, color: Colors.orangeAccent),
+            const Icon(
+              Icons.device_unknown,
+              size: 80,
+              color: Colors.orangeAccent,
+            ),
             const SizedBox(height: 24),
             const Text(
               "CAN'T SEE YOUR DEVICE?",
@@ -167,7 +179,10 @@ class HrScannerView extends ConsumerWidget {
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orangeAccent,
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -203,7 +218,11 @@ class HrScannerView extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline, size: 48, color: Colors.redAccent),
+              const Icon(
+                Icons.error_outline,
+                size: 48,
+                color: Colors.redAccent,
+              ),
               const SizedBox(height: 16),
               const Text(
                 'Scan Failed',
@@ -242,116 +261,213 @@ class HrScannerView extends ConsumerWidget {
 
   Widget _buildScanningState(
     BuildContext context,
-    List<BleDevice> devices,
     BleScannerNotifier notifier,
+    List<BleDevice> devices,
   ) {
     return Column(
       children: [
-        // Modern top bar showing scan activity
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          color: Colors.blueAccent.withValues(alpha: 0.1),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.blueAccent,
-                ),
-              ),
-              SizedBox(width: 12),
-              Text(
-                'Scanning for devices...',
-                style: TextStyle(
-                  color: Colors.blueAccent,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
+        // --- LOCAL-FIRST LAYER: SAVED SENSORS FROM ISAR ---
+        Consumer(
+          builder: (context, ref, child) {
+            final isar = ref.watch(isarProvider);
+            return StreamBuilder<List<DeviceProfileDto>>(
+              // Automatically triggers a reactive update whenever device profile collection mutates
+              stream: isar.deviceProfileDtos
+                  .where()
+                  .sortByLastConnectedAtDesc()
+                  .watch(fireImmediately: true),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const SizedBox.shrink(); // Hide section completely if no historical records exist
+                }
+
+                final savedProfiles = snapshot.data!;
+
+                return Container(
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF1E1E1E),
+                    border: Border(
+                      bottom: BorderSide(color: Colors.white10, width: 1),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.history_toggle_off,
+                                color: Colors.blueAccent,
+                                size: 18,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Saved Sensors (Direct Connect)',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 44, // Tightened vertical layout allocation
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                            ),
+                            itemCount: savedProfiles.length,
+                            itemBuilder: (context, index) {
+                              final profile = savedProfiles[index];
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                ),
+                                child: ActionChip(
+                                  backgroundColor: const Color(0xFF2A2A2A),
+                                  side: BorderSide.none,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  avatar: const Icon(
+                                    Icons.bluetooth_connected,
+                                    color: Colors.greenAccent,
+                                    size: 14,
+                                  ),
+                                  label: Text(
+                                    profile.name.isEmpty
+                                        ? 'Unknown Sensor'
+                                        : profile.name,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    // Direct Connect bypass sequence: truncate power-hungry radio operations and jump straight to telemetry
+                                    notifier.stopScan();
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) => HrMonitorView(
+                                          deviceId: profile.macAddress,
+                                          deviceName: profile.name.isEmpty
+                                              ? 'Saved Sensor'
+                                              : profile.name,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
         ),
-        Expanded(
-          child: ListView.separated(
-            itemCount: devices.length,
-            separatorBuilder: (_, _) => const Divider(
-              color: Color(0xFF2A2A2A),
-              height: 1,
+
+        // --- PHYSICAL AIR SCANNING LAYER ---
+        if (devices.isEmpty)
+          const Expanded(
+            child: Center(
+              child: Text(
+                'Searching for active sensors...',
+                style: TextStyle(color: Colors.grey),
+              ),
             ),
-            itemBuilder: (context, index) {
-              final device = devices[index];
-              return ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
-                ),
-                leading: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2A2A2A),
-                    borderRadius: BorderRadius.circular(10),
+          )
+        else
+          Expanded(
+            child: ListView.separated(
+              itemCount: devices.length,
+              separatorBuilder: (_, _) =>
+                  const Divider(color: Colors.white10, height: 1),
+              itemBuilder: (context, index) {
+                final device = devices[index];
+                return ListTile(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
                   ),
-                  child: const Icon(
-                    Icons.bluetooth,
-                    color: Colors.white,
-                    size: 24,
+                  leading: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2A2A2A),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.bluetooth,
+                      color: Colors.white,
+                      size: 24,
+                    ),
                   ),
-                ),
-                title: Text(
-                  device.name.isEmpty ? 'Unknown Device' : device.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                  title: Text(
+                    device.name.isEmpty ? 'Unknown Device' : device.name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-                subtitle: Text(
-                  device.id,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                    fontFamily: 'monospace',
+                  subtitle: Text(
+                    device.id,
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                      fontFamily: 'monospace',
+                    ),
                   ),
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${device.rssi} dBm',
-                      style: TextStyle(
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${device.rssi} dBm',
+                        style: TextStyle(
+                          color: _getRssiColor(device.rssi),
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(
+                        _getRssiIcon(device.rssi),
                         color: _getRssiColor(device.rssi),
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                        size: 20,
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Icon(
-                      _getRssiIcon(device.rssi),
-                      color: _getRssiColor(device.rssi),
-                      size: 20,
-                    ),
-                  ],
-                ),
-                onTap: () {
-                  notifier.stopScan();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => HrMonitorView(
-                        deviceId: device.id,
-                        deviceName: device.name.isEmpty
-                            ? 'Unknown Device'
-                            : device.name,
+                    ],
+                  ),
+                  onTap: () {
+                    notifier.stopScan();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => HrMonitorView(
+                          deviceId: device.id,
+                          deviceName: device.name.isEmpty
+                              ? 'Unknown Device'
+                              : device.name,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              );
-            },
+                    );
+                  },
+                );
+              },
+            ),
           ),
-        ),
       ],
     );
   }
