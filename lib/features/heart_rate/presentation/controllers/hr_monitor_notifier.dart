@@ -8,6 +8,7 @@ import '../../domain/models/body_sensor_location.dart';
 import '../../domain/models/hr_measurement.dart';
 import '../../domain/models/monitor_state.dart';
 import '../../infrastructure/parsers/hr_packet_parser.dart';
+import '../../../workout/infrastructure/repositories/workout_persistence_repository.dart';
 
 part 'hr_monitor_notifier.g.dart';
 
@@ -92,6 +93,14 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// "Disconnect" first.
   StreamSubscription<BluetoothConnectionState>? _connectionStateSubscription;
 
+  // --- Session persistence state ---------------------------------------------
+
+  final List<int> _collectedBpmSamples = [];
+  DateTime? _sessionStartTime;
+  String? _sessionDeviceId;
+  String? _sessionDeviceName;
+  int? _sessionSensorLocationIndex;
+
   // ---------------------------------------------------------------------------
   // Riverpod build — register disposal and return initial state
   // ---------------------------------------------------------------------------
@@ -133,6 +142,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
 
     // Release any resources from a previous session before starting a new one.
     await _cancelSubscriptions();
+    _collectedBpmSamples.clear();
+    _sessionStartTime = DateTime.now();
+    _sessionDeviceId = deviceId;
+    _sessionDeviceName = deviceName;
+    _sessionSensorLocationIndex = null;
 
     _device = BluetoothDevice.fromId(deviceId);
 
@@ -269,6 +283,15 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     // that omits 0x2A38 does not block the telemetry stream from starting.
     final BodySensorLocation sensorLocation =
         await _readBodySensorLocation(hrService);
+        
+    _sessionSensorLocationIndex = sensorLocation.index;
+
+    // Cache the device profile directly into the local Isar database.
+    ref.read(workoutPersistenceRepositoryProvider).saveDeviceProfile(
+          macAddress: deviceId,
+          name: deviceName,
+          sensorLocationIndex: sensorLocation.index,
+        );
 
     debugPrint(
       '[HrMonitorNotifier] Body sensor location: ${sensorLocation.displayName}',
@@ -297,6 +320,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
         final HrMeasurement? measurement =
             HrPacketParser.parseRawBytes(rawBytes);
         if (measurement == null) return;
+
+        // Persist the raw integer directly into our telemetry buffer
+        _collectedBpmSamples.add(measurement.bpm);
 
         // Stamp the dynamically resolved sensor location onto every emitted
         // measurement. The location is read once at session start and held
@@ -338,9 +364,39 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// and transitions to [DisconnectedMonitorState].
   Future<void> disconnect() async {
     debugPrint('[HrMonitorNotifier] disconnect() called.');
+    await _saveSessionToDisk();
     await _cancelSubscriptions();
     await _safeDisconnectDevice();
     state = const MonitorState.disconnected();
+  }
+
+  /// Flushes collected session telemetry to disk asynchronously via the repository,
+  /// then clears the in-memory array to prepare for the next session.
+  Future<void> _saveSessionToDisk() async {
+    if (_collectedBpmSamples.isNotEmpty &&
+        _sessionStartTime != null &&
+        _sessionDeviceId != null &&
+        _sessionDeviceName != null) {
+      final repo = ref.read(workoutPersistenceRepositoryProvider);
+      
+      final samples = List<int>.from(_collectedBpmSamples);
+      final startTime = _sessionStartTime!;
+      final endTime = DateTime.now();
+
+      await repo.saveWorkoutSession(
+        startTime: startTime,
+        endTime: endTime,
+        samples: samples,
+        sensorLocationIndex: _sessionSensorLocationIndex ?? BodySensorLocation.other.index,
+        macAddress: _sessionDeviceId!,
+        name: _sessionDeviceName!,
+      );
+    }
+    _collectedBpmSamples.clear();
+    _sessionStartTime = null;
+    _sessionDeviceId = null;
+    _sessionDeviceName = null;
+    _sessionSensorLocationIndex = null;
   }
 
   /// Convenience method combining [disconnect] and [connect] for the UI
@@ -426,6 +482,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
           '[HrMonitorNotifier] Unexpected disconnection detected — '
           'surfacing failure state.',
         );
+        _saveSessionToDisk(); // Flush recorded session safely
         _hrNotificationSubscription?.cancel();
         _hrNotificationSubscription = null;
         state = const MonitorState.failure(
