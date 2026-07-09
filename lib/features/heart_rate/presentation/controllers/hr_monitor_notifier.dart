@@ -8,6 +8,7 @@ import '../../domain/models/body_sensor_location.dart';
 import '../../domain/models/hr_measurement.dart';
 import '../../domain/models/monitor_state.dart';
 import '../../infrastructure/parsers/hr_packet_parser.dart';
+import '../../../../core/infrastructure/services/foreground_service_manager.dart';
 import '../../../workout/infrastructure/repositories/workout_persistence_repository.dart';
 
 part 'hr_monitor_notifier.g.dart';
@@ -156,6 +157,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
 
     // --- Phase 1: Physical link-layer handshake --------------------------------
     state = const MonitorState.connecting();
+
+    // Start foreground service to protect connection before establishing it
+    await ref.read(foregroundServiceManagerProvider).startService();
 
     try {
       await _device!
@@ -373,6 +377,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// Flushes collected session telemetry to disk asynchronously via the repository,
   /// then clears the in-memory array to prepare for the next session.
   Future<void> _saveSessionToDisk() async {
+    // Stop foreground service when telemetry session concludes
+    await ref.read(foregroundServiceManagerProvider).stopService();
+
     if (_collectedBpmSamples.isNotEmpty &&
         _sessionStartTime != null &&
         _sessionDeviceId != null &&

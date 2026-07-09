@@ -40,6 +40,7 @@ dependencies:
   isar_community_flutter_libs: ^3.3.2
   path_provider: ^2.1.5
   intl: ^0.20.3
+  flutter_foreground_task: ^9.2.2
 
 dev_dependencies:
   flutter_test:
