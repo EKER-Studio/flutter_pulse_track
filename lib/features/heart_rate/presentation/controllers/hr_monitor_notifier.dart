@@ -41,6 +41,12 @@ final Guid _kHrMeasurementCharUuid = Guid('2a37');
 /// GATT Body Sensor Location Characteristic UUID (0x2A38).
 final Guid _kBodySensorLocationCharUuid = Guid('2a38');
 
+/// GATT Battery Service UUID (Bluetooth SIG assigned number 0x180F).
+final Guid _kBatteryServiceUuid = Guid('180f');
+
+/// GATT Battery Level Characteristic UUID (0x2A19).
+final Guid _kBatteryLevelCharacteristicUuid = Guid('2a19');
+
 // ---------------------------------------------------------------------------
 // Notifier
 // ---------------------------------------------------------------------------
@@ -94,6 +100,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// "Disconnect" first.
   StreamSubscription<BluetoothConnectionState>? _connectionStateSubscription;
 
+  /// Subscription to [BluetoothCharacteristic.onValueReceived] for the Battery
+  /// Level characteristic (0x2A19). Drives live battery percentage updates.
+  StreamSubscription<List<int>>? _batteryNotificationSubscription;
+
   // --- Session persistence state ---------------------------------------------
 
   final List<int> _collectedBpmSamples = [];
@@ -101,6 +111,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   String? _sessionDeviceId;
   String? _sessionDeviceName;
   int? _sessionSensorLocationIndex;
+  int? _currentBatteryLevel;
 
   // ---------------------------------------------------------------------------
   // Riverpod build — register disposal and return initial state
@@ -301,6 +312,95 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       '[HrMonitorNotifier] Body sensor location: ${sensorLocation.displayName}',
     );
 
+    // --- Optional: resolve Battery Service (0x180F) -------------------------
+    // Best-effort discovery. If the sensor omits the Battery Service, we
+    // gracefully fall back to 0/NA without interrupting the HR stream.
+    try {
+      final BluetoothService? batteryService = services
+          .where((BluetoothService s) => s.serviceUuid == _kBatteryServiceUuid)
+          .firstOrNull;
+
+      if (batteryService != null) {
+        final BluetoothCharacteristic? batteryChar = batteryService.characteristics
+            .where(
+              (BluetoothCharacteristic c) =>
+                  c.characteristicUuid == _kBatteryLevelCharacteristicUuid,
+            )
+            .firstOrNull;
+
+        if (batteryChar != null) {
+          // Initial read to populate battery level immediately
+          final List<int> initialBytes = await batteryChar.read().timeout(
+            const Duration(seconds: 2),
+          );
+          if (initialBytes.isNotEmpty) {
+            _currentBatteryLevel = initialBytes.first.clamp(0, 100);
+            debugPrint(
+              '[HrMonitorNotifier] Initial battery level read: $_currentBatteryLevel%',
+            );
+          }
+
+          // Enable notifications if supported
+          final bool supportsNotify = batteryChar.properties.notify;
+          final bool supportsIndicate = batteryChar.properties.indicate;
+
+          if (supportsNotify || supportsIndicate) {
+            await batteryChar.setNotifyValue(true);
+            _batteryNotificationSubscription =
+                batteryChar.onValueReceived.listen(
+              (List<int> bytes) {
+                if (bytes.isNotEmpty) {
+                  final int newLevel = bytes.first.clamp(0, 100);
+                  if (_currentBatteryLevel != newLevel) {
+                    _currentBatteryLevel = newLevel;
+                    debugPrint(
+                      '[HrMonitorNotifier] Battery level updated: $newLevel%',
+                    );
+                    // Update state with latest measurement + new battery level
+                    if (state is ConnectedMonitorState) {
+                      final current = state as ConnectedMonitorState;
+                      state = MonitorState.connected(
+                        measurement: HrMeasurement(
+                          bpm: current.measurement.bpm,
+                          rrIntervals: current.measurement.rrIntervals,
+                          timestamp: current.measurement.timestamp,
+                          sensorLocation: current.measurement.sensorLocation,
+                          batteryLevel: newLevel,
+                        ),
+                      );
+                    }
+                  }
+                }
+              },
+              onError: (Object error, StackTrace stack) {
+                debugPrint(
+                  '[HrMonitorNotifier] Battery notification stream error: $error\n$stack',
+                );
+              },
+              cancelOnError: false,
+            );
+          } else {
+            debugPrint(
+              '[HrMonitorNotifier] Battery characteristic found but does not '
+              'support notifications/indications. Using initial read value.',
+            );
+          }
+        } else {
+          debugPrint(
+            '[HrMonitorNotifier] Battery Level Characteristic (0x2A19) not found.',
+          );
+        }
+      } else {
+        debugPrint(
+          '[HrMonitorNotifier] Battery Service (0x180F) not found on device.',
+        );
+      }
+    } catch (e) {
+      debugPrint(
+        '[HrMonitorNotifier] Battery service resolution failed (ignored): $e',
+      );
+    }
+
     // --- Phase 3: Enable GATT notifications and begin streaming ---------------
     try {
       await hrCharacteristic.setNotifyValue(true);
@@ -336,7 +436,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
           rrIntervals: measurement.rrIntervals,
           timestamp: measurement.timestamp,
           sensorLocation: sensorLocation,
-          batteryLevel: measurement.batteryLevel,
+          batteryLevel: _currentBatteryLevel ?? measurement.batteryLevel,
         );
 
         state = MonitorState.connected(measurement: enrichedMeasurement);
@@ -491,7 +591,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
         );
         _saveSessionToDisk(); // Flush recorded session safely
         _hrNotificationSubscription?.cancel();
+        _batteryNotificationSubscription?.cancel();
         _hrNotificationSubscription = null;
+        _batteryNotificationSubscription = null;
         state = const MonitorState.failure(
           message:
               'Connection lost. The sensor may be out of range or powered off.',
@@ -509,8 +611,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// subscription polluting the new state machine.
   Future<void> _cancelSubscriptions() async {
     await _hrNotificationSubscription?.cancel();
+    await _batteryNotificationSubscription?.cancel();
     await _connectionStateSubscription?.cancel();
     _hrNotificationSubscription = null;
+    _batteryNotificationSubscription = null;
     _connectionStateSubscription = null;
   }
 
@@ -546,8 +650,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     // Riverpod does not await onDispose callbacks; best-effort teardown is
     // the correct behaviour here to avoid holding up ProviderScope disposal.
     _hrNotificationSubscription?.cancel();
+    _batteryNotificationSubscription?.cancel();
     _connectionStateSubscription?.cancel();
     _hrNotificationSubscription = null;
+    _batteryNotificationSubscription = null;
     _connectionStateSubscription = null;
     _device?.disconnect();
     _device = null;
