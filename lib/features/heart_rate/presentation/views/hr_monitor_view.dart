@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/models/ble_connection_status.dart';
-import '../providers/bluetooth_connection_providers.dart';
-import '../providers/heart_rate_providers.dart';
+import '../../domain/models/hr_measurement.dart';
+import '../../domain/models/monitor_state.dart';
+import '../controllers/hr_monitor_notifier.dart';
 
-/// Production-ready telemetry monitor view driving reactive Riverpod state updates.
-class HrMonitorView extends ConsumerWidget {
+/// Telemetry dashboard and BLE connection lifecycle view.
+///
+/// Implements an exhaustive state machine UI reacting to [MonitorState]
+/// emitted by [hrMonitorProvider].
+class HrMonitorView extends ConsumerStatefulWidget {
   final String deviceId;
   final String deviceName;
 
@@ -17,15 +20,27 @@ class HrMonitorView extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    debugPrint(
-      '--- [UI VIEW] Building HrMonitorView for deviceId: $deviceId ---',
-    );
+  ConsumerState<HrMonitorView> createState() => _HrMonitorViewState();
+}
 
-    final hrMetricsAsync = ref.watch(heartRateMetricsProvider(deviceId));
-    final connectionStateAsync = ref.watch(
-      bluetoothConnectionControllerProvider,
-    );
+class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
+  @override
+  void initState() {
+    super.initState();
+    // Initiate the connection sequence as soon as the view is mounted.
+    // We defer the execution to the next frame to avoid modifying providers
+    // during the build phase.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(hrMonitorProvider.notifier)
+          .connect(widget.deviceId, widget.deviceName);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(hrMonitorProvider);
+    final notifier = ref.read(hrMonitorProvider.notifier);
 
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
@@ -33,213 +48,313 @@ class HrMonitorView extends ConsumerWidget {
         backgroundColor: const Color(0xFF1E1E1E),
         elevation: 0,
         title: Text(
-          deviceName.isEmpty ? 'HR Monitor' : deviceName,
+          widget.deviceName,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
-          connectionStateAsync.when(
-            data: (status) {
-              if (status == BleConnectionStatus.connected) {
-                return TextButton.icon(
-                  icon: const Icon(
-                    Icons.power_settings_new,
-                    color: Colors.redAccent,
-                    size: 18,
-                  ),
-                  label: const Text(
-                    'Disconnect',
-                    style: TextStyle(
-                      color: Colors.redAccent,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: () async {
-                    await ref
-                        .read(bluetoothConnectionControllerProvider.notifier)
-                        .disconnect();
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                );
-              }
-              return const _LoadingIndicator();
-            },
-            loading: () => const _LoadingIndicator(),
-            error: (_, _) => const _LoadingIndicator(),
+          // Show explicit disconnect button only when actively streaming or connecting
+          if (state is ConnectedMonitorState ||
+              state is ConnectingMonitorState ||
+              state is DiscoveringServicesMonitorState)
+            TextButton.icon(
+              icon: const Icon(
+                Icons.power_settings_new,
+                color: Colors.redAccent,
+                size: 18,
+              ),
+              label: const Text(
+                'Disconnect',
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () async {
+                await notifier.disconnect();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+        ],
+      ),
+      body: switch (state) {
+        DisconnectedMonitorState() => _buildDisconnectedState(context),
+        ConnectingMonitorState() => _buildLoadingState(
+            'Connecting to device...\nLink-layer handshake in progress',
+          ),
+        DiscoveringServicesMonitorState() => _buildLoadingState(
+            'Discovering Services... Please wait...',
+          ),
+        ConnectedMonitorState(:final measurement) =>
+          _buildConnectedState(measurement),
+        FailureMonitorState(:final message) =>
+          _buildFailureState(context, message, notifier),
+      },
+    );
+  }
+
+  Widget _buildDisconnectedState(BuildContext context) {
+    // Optionally pop the route if the user gets to a hard disconnected state.
+    // For UI stability, we'll just show a graceful disconnected message.
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.bluetooth_disabled, size: 80, color: Colors.grey),
+          const SizedBox(height: 24),
+          const Text(
+            'Disconnected',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 32),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Return to Scanner',
+                style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: hrMetricsAsync.when(
-          data: (metric) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'Heart rate',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  const Icon(Icons.favorite, color: Colors.redAccent, size: 44),
-                  const SizedBox(width: 12),
-                  Text(
-                    '${metric.bpm}',
-                    style: const TextStyle(
-                      fontSize: 84,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'BPM',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              if (metric.rrIntervals.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                Text(
-                  'R-R: ${metric.rrIntervals.map((e) => '${(e * 1000).toStringAsFixed(0)}ms').join(', ')}',
-                  style: const TextStyle(
-                    color: Colors.greenAccent,
-                    fontSize: 14,
-                    fontFamily: 'monospace',
-                  ),
-                ),
-              ],
-              const SizedBox(height: 48),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1E1E1E),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.accessibility_new,
-                      color: Colors.blueAccent,
-                    ),
-                    const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Body sensor location',
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                        Text(
-                          metric.sensorLocation.displayName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1E1E1E),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      metric.batteryLevel != null && metric.batteryLevel! > 20
-                          ? Icons.battery_full
-                          : Icons.battery_alert,
-                      color:
-                          metric.batteryLevel != null &&
-                              metric.batteryLevel! > 20
-                          ? Colors.greenAccent
-                          : Colors.redAccent,
-                    ),
-                    const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Sensor battery',
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                        Text(
-                          metric.batteryLevel != null
-                              ? '${metric.batteryLevel}%'
-                              : 'N/A',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          loading: () => const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(color: Colors.redAccent),
-                SizedBox(height: 16),
-                Text(
-                  'Waiting for data stream...',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
+    );
+  }
+
+  Widget _buildLoadingState(String message) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(
+              color: Colors.blueAccent,
+              strokeWidth: 3,
             ),
-          ),
-          error: (err, _) => Center(
-            child: Text(
-              'Error: $err',
-              style: const TextStyle(color: Colors.redAccent),
+            const SizedBox(height: 32),
+            Text(
+              message,
               textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                height: 1.5,
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
-}
 
-class _LoadingIndicator extends StatelessWidget {
-  const _LoadingIndicator();
+  Widget _buildConnectedState(HrMeasurement metric) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text(
+            'Heart rate',
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              const Icon(Icons.favorite, color: Colors.redAccent, size: 44),
+              const SizedBox(width: 12),
+              Text(
+                '${metric.bpm}',
+                style: const TextStyle(
+                  fontSize: 84,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'BPM',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          if (metric.rrIntervals.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text(
+              'R-R: ${metric.rrIntervals.map((e) => '${(e * 1000).toStringAsFixed(0)}ms').join(', ')}',
+              style: const TextStyle(
+                color: Colors.greenAccent,
+                fontSize: 14,
+                fontFamily: 'monospace',
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+          const SizedBox(height: 48),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1E1E1E),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.accessibility_new,
+                  color: Colors.blueAccent,
+                ),
+                const SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Body sensor location',
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                    Text(
+                      metric.sensorLocation.displayName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1E1E1E),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  metric.batteryLevel != null && metric.batteryLevel! > 20
+                      ? Icons.battery_full
+                      : Icons.battery_alert,
+                  color: metric.batteryLevel != null && metric.batteryLevel! > 20
+                      ? Colors.greenAccent
+                      : Colors.redAccent,
+                ),
+                const SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Sensor battery',
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                    Text(
+                      metric.batteryLevel != null
+                          ? '${metric.batteryLevel}%'
+                          : 'N/A',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
-      child: Center(
-        child: SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.grey),
+  Widget _buildFailureState(
+    BuildContext context,
+    String message,
+    HrMonitorNotifier notifier,
+  ) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1E1E1E),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.error_outline, size: 48, color: Colors.redAccent),
+              const SizedBox(height: 16),
+              const Text(
+                'Connection Failed',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.grey, fontSize: 14),
+              ),
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  icon: const Icon(Icons.refresh, color: Colors.white),
+                  label: const Text(
+                    'Retry Connection',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () => notifier.retry(widget.deviceId, widget.deviceName),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text(
+                    'Go Back',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

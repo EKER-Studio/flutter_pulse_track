@@ -87,6 +87,9 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   /// unnamed and distant ones — are passed through to state.
   bool _filtersEnabled = true;
 
+  /// Exposes the current filter state to the UI.
+  bool get filtersEnabled => _filtersEnabled;
+
   // ---------------------------------------------------------------------------
   // Riverpod build — initialise subscriptions and return starting state
   // ---------------------------------------------------------------------------
