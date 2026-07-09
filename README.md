@@ -6,31 +6,28 @@ state management and Isar for high-speed local data persistence.
 
 ## Features
 
-* **Real-time Telemetry**: Low-latency parsing of standard GATT Heart Rate Service (0x180D).
-* **Universal Compatibility**: Dynamic reading of Body Sensor Location (0x2A38) and Battery Level (
-  0x180F).
-* **Local-First Architecture**: Offline-ready data storage using Isar database to track workout
-  sessions.
-* **Reactive State**: Robust state management using Riverpod 3.0, ensuring seamless UI
-  synchronization with hardware lifecycle.
-* **Resilient Connectivity**: Advanced connection handling with automatic GATT discovery, timeouts,
-  and lifecycle management.
+* **Real-time Telemetry**: Low-latency parsing of standard GATT Heart Rate Service (`0x180D`) streaming heart rate values and high-precision R-R intervals for HRV analysis.
+* **Smart Direct Connect**: Local-First device caching via Isar database allows instant, one-tap connections to previously paired sensors, bypassing expensive and battery-draining hardware air discovery.
+* **Universal Capability Discovery**: Dynamic runtime resolution of Body Sensor Location (`0x2A38`) and continuous live streaming of Battery Level (`0x180F`).
+* **Resilient Background Protection**: Engineered with a strict Android Foreground Service boundary to prevent OS-level process termination when the device is locked or dark-screened during a workout.
+* **Reactive State Machine**: Powered by Riverpod 3.0, mapping native BLE events into an exhaustive, type-safe sealed state architecture with atomic error boundaries.
+* **Environmental Safety**: Immersive hardware state detection catching disabled Bluetooth adapters, runtime permission revokes, and connection timeouts instantly at the UI layer.
 
 ## Architecture
 
-This project follows a clean architectural pattern:
+This project follows a rygorystyczny clean architectural pattern:
 
-* **Domain**: Pure business entities, model contracts, and service definitions.
-* **Infrastructure**: Implementation of hardware interfaces (FlutterBluePlus) and data storage (
-  Isar).
-* **Presentation**: Reactive UI components and state controllers using Riverpod.
+* **Domain**: Pure business entities, model contracts, and immutable state definitions.
+* **Infrastructure**: Low-level hardware abstractions (`flutter_blue_plus`) and high-speed local persistence engines (`isar`).
+* **Presentation**: Fully reactive, dark-themed UI components and controller notifiers orchestrating state transformations.
 
 ## Getting Started
 
 1. Clone the repository.
 2. Install dependencies: `flutter pub get`.
 3. Run code generation: `dart run build_runner build --delete-conflicting-outputs`.
-4. Launch on your physical Android/iOS device.
+4. Ensure Bluetooth and Location permissions are granted on your physical Android/iOS device.
+5. Launch the application.
 
 ## License
 
