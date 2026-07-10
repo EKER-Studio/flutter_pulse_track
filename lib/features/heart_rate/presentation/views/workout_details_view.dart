@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../workout/infrastructure/models/workout_session_dto.dart';
+import '../utils/heart_rate_zones.dart';
 
 /// Full-screen details for a single workout session: header, summary grid,
 /// and a custom-painted BPM waveform chart.
@@ -192,6 +193,9 @@ class WorkoutDetailsView extends StatelessWidget {
                     ),
                   ),
 
+                  const SizedBox(height: 16),
+                  _hrZoneLegend(),
+
                   const SizedBox(height: 32),
                 ],
               ),
@@ -262,6 +266,36 @@ class WorkoutDetailsView extends StatelessWidget {
     return parts.join(' ');
   }
 }
+
+Widget _hrZoneLegend() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        kHeartRateZones.length,
+        (i) => Row(
+          children: [
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                color: kZoneColors[i],
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              kHeartRateZones[i].label,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+              ),
+            ),
+            if (i < kHeartRateZones.length - 1) const SizedBox(width: 12),
+          ],
+        ),
+      ),
+    );
+  }
 
 /// Custom painter that draws a BPM waveform chart from raw samples.
 ///
@@ -334,28 +368,26 @@ class BpmChart extends CustomPainter {
       );
     }
 
-    // BPM waveform line
-    final linePaint = Paint()
-      ..color = const Color(0xFFFF6B6B)
-      ..strokeWidth = 2.0
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
+    // BPM waveform line with zone-colored segments
+    for (int i = 0; i < samples.length - 1; i++) {
+      final x1 = chartLeft + (i / (samples.length - 1)) * size.width;
+      final x2 = chartLeft + ((i + 1) / (samples.length - 1)) * size.width;
+      final ratio1 = (samples[i] - rangeMin) / effectiveRange;
+      final ratio2 = (samples[i + 1] - rangeMin) / effectiveRange;
+      final y1 = chartBottom - (ratio1 * chartHeight);
+      final y2 = chartBottom - (ratio2 * chartHeight);
 
-    final path = Path();
+      final segmentColor = getZoneColor(samples[i], maxHr: bpmMax);
 
-    for (int i = 0; i < samples.length; i++) {
-      final x = chartLeft + (i / (samples.length - 1)) * size.width;
-      final ratio = (samples[i] - rangeMin) / effectiveRange;
-      final y = chartBottom - (ratio * chartHeight);
-
-      if (i == 0) {
-        path.moveTo(x, y);
-      } else {
-        path.lineTo(x, y);
-      }
+      canvas.drawLine(
+        Offset(x1, y1),
+        Offset(x2, y2),
+        Paint()
+          ..color = segmentColor
+          ..strokeWidth = 2.0
+          ..strokeCap = StrokeCap.round,
+      );
     }
-
-    canvas.drawPath(path, linePaint);
 
     // Gradient fill under the line
     final fillPath = Path();
