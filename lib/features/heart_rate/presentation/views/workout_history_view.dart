@@ -50,7 +50,27 @@ class WorkoutHistoryView extends ConsumerWidget {
             separatorBuilder: (BuildContext _, int index) => const SizedBox(height: 8),
             itemBuilder: (context, index) {
               final session = sessions[index];
-              return _buildWorkoutCard(context, session);
+              return Dismissible(
+                key: Key(session.id.toString()),
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 16.0),
+                  color: Colors.red,
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+                onDismissed: (_) async {
+                  final isar = ref.read(isarProvider);
+                  await isar.writeTxn(() async {
+                    await isar.workoutSessionDtos.delete(session.id);
+                  });
+                },
+                child: _buildWorkoutCard(context, session),
+              );
             },
           );
         },

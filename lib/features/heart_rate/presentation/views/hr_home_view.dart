@@ -197,16 +197,6 @@ class HrHomeView extends ConsumerWidget {
                 ),
               ),
 
-              // --- BUILD IN PUBLIC GUIDE PLACEHOLDER ---
-              SliverToBoxAdapter(
-                child: _buildPlaceholderSection(
-                  context,
-                  title: 'Build in Public Guide',
-                  icon: Icons.menu_book,
-                  description: 'Learn how to share your journey and connect with the community.',
-                ),
-              ),
-
               const SliverToBoxAdapter(
                 child: SizedBox(height: 32),
               ),
