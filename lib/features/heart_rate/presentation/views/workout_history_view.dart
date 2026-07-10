@@ -4,6 +4,7 @@ import 'package:isar_community/isar.dart';
 
 import '../../../../core/infrastructure/storage/isar_provider.dart';
 import '../../../workout/infrastructure/models/workout_session_dto.dart';
+import 'workout_details_view.dart';
 
 /// Reactive workout history screen that displays all stored [WorkoutSessionDto]
 /// records from Isar, sorted by [WorkoutSessionDto.startTime] descending.
@@ -49,7 +50,7 @@ class WorkoutHistoryView extends ConsumerWidget {
             separatorBuilder: (BuildContext _, int index) => const SizedBox(height: 8),
             itemBuilder: (context, index) {
               final session = sessions[index];
-              return _buildWorkoutCard(session);
+              return _buildWorkoutCard(context, session);
             },
           );
         },
@@ -94,73 +95,86 @@ class WorkoutHistoryView extends ConsumerWidget {
     );
   }
 
-  Widget _buildWorkoutCard(WorkoutSessionDto session) {
+  Widget _buildWorkoutCard(BuildContext context, WorkoutSessionDto session) {
     final duration = _formatDuration(session.startTime, session.endTime);
     final formattedDate = _formatDate(session.startTime);
 
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 16.0),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => WorkoutDetailsView(session: session),
+            ),
+          );
+        },
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white10, width: 1),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Container(
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(horizontal: 16.0),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1E1E1E),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white10, width: 1),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  formattedDate,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2A2A2A),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    duration,
-                    style: const TextStyle(
-                      color: Colors.blueAccent,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      formattedDate,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
                     ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2A2A2A),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        duration,
+                        style: const TextStyle(
+                          color: Colors.blueAccent,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  session.deviceName.isEmpty
+                      ? 'Unknown Sensor'
+                      : session.deviceName,
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                    fontSize: 12,
                   ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    _buildMetricColumn('Avg BPM', '${session.avgBpm}'),
+                    const SizedBox(width: 24),
+                    _buildMetricColumn('Max BPM', '${session.maxBpm}'),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              session.deviceName.isEmpty
-                  ? 'Unknown Sensor'
-                  : session.deviceName,
-              style: TextStyle(
-                color: Colors.grey[500],
-                fontSize: 12,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                _buildMetricColumn('Avg BPM', '${session.avgBpm}'),
-                const SizedBox(width: 24),
-                _buildMetricColumn('Max BPM', '${session.maxBpm}'),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );
