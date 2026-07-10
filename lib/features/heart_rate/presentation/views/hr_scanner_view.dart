@@ -294,40 +294,51 @@ class HrScannerView extends ConsumerWidget {
                       size: 24,
                     ),
                   ),
-                  title: Text(
-                    device.name.isEmpty ? 'Unknown Device' : device.name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                  title: Flexible(
+                    child: Text(
+                      device.name.isEmpty ? 'Unknown Device' : device.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  subtitle: Text(
-                    device.id,
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
-                      fontFamily: 'monospace',
+                  subtitle: Flexible(
+                    child: Text(
+                      device.id,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                        fontFamily: 'monospace',
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '${device.rssi} dBm',
-                        style: TextStyle(
+                  trailing: SizedBox(
+                    width: 56,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          _getRssiIcon(device.rssi),
                           color: _getRssiColor(device.rssi),
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                          size: 22,
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Icon(
-                        _getRssiIcon(device.rssi),
-                        color: _getRssiColor(device.rssi),
-                        size: 20,
-                      ),
-                    ],
+                        const SizedBox(height: 2),
+                        Text(
+                          '${device.rssi} dBm',
+                          style: TextStyle(
+                            color: _getRssiColor(device.rssi),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'monospace',
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   onTap: () {
                     notifier.stopScan();
