@@ -1,0 +1,240 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar_community/isar.dart';
+
+import '../../../../core/infrastructure/storage/isar_provider.dart';
+import '../../../workout/infrastructure/models/workout_session_dto.dart';
+
+/// Reactive workout history screen that displays all stored [WorkoutSessionDto]
+/// records from Isar, sorted by [WorkoutSessionDto.startTime] descending.
+class WorkoutHistoryView extends ConsumerWidget {
+  const WorkoutHistoryView({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isar = ref.watch(isarProvider);
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF121212),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E1E1E),
+        elevation: 0,
+        title: const Text(
+          'Workout History',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: StreamBuilder<List<WorkoutSessionDto>>(
+        stream: isar
+            .workoutSessionDtos
+            .where()
+            .sortByStartTimeDesc()
+            .watch(fireImmediately: true),
+        builder: (context, snapshot) {
+          final sessions = snapshot.data;
+
+          if (sessions == null) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.blueAccent),
+            );
+          }
+
+          if (sessions.isEmpty) {
+            return _buildEmptyState();
+          }
+
+          return ListView.separated(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            itemCount: sessions.length,
+            separatorBuilder: (BuildContext _, int index) => const SizedBox(height: 8),
+            itemBuilder: (context, index) {
+              final session = sessions[index];
+              return _buildWorkoutCard(session);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.fitness_center,
+              size: 80,
+              color: Colors.grey[600],
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'No workouts recorded yet',
+              style: TextStyle(
+                color: Colors.grey[400],
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Complete a heart rate monitoring session to see your workout history here.',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWorkoutCard(WorkoutSessionDto session) {
+    final duration = _formatDuration(session.startTime, session.endTime);
+    final formattedDate = _formatDate(session.startTime);
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E1E1E),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white10, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  formattedDate,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2A2A2A),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    duration,
+                    style: const TextStyle(
+                      color: Colors.blueAccent,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              session.deviceName.isEmpty
+                  ? 'Unknown Sensor'
+                  : session.deviceName,
+              style: TextStyle(
+                color: Colors.grey[500],
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                _buildMetricColumn('Avg BPM', '${session.avgBpm}'),
+                const SizedBox(width: 24),
+                _buildMetricColumn('Max BPM', '${session.maxBpm}'),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMetricColumn(String label, String value) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 11,
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final workoutDay = DateTime(date.year, date.month, date.day);
+    final difference = today.difference(workoutDay).inDays;
+
+    if (difference == 0) {
+      return 'Today, ${_formatTime(date)}';
+    } else if (difference == 1) {
+      return 'Yesterday, ${_formatTime(date)}';
+    } else {
+      return '${_getDayOfWeek(date)}, ${_formatMonthDay(date)}, ${_formatTime(date)}';
+    }
+  }
+
+  String _formatTime(DateTime date) {
+    final hour = date.hour.toString().padLeft(2, '0');
+    final minute = date.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
+  String _formatMonthDay(DateTime date) {
+    final months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+    return '${months[date.month - 1]} ${date.day}';
+  }
+
+  String _getDayOfWeek(DateTime date) {
+    final days = [
+      'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
+    ];
+    return days[(date.weekday - 1) % 7];
+  }
+
+  String _formatDuration(DateTime start, DateTime? end) {
+    final endTime = end ?? DateTime.now();
+    final duration = endTime.difference(start);
+
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+
+    if (hours > 0) {
+      return '${hours}h ${minutes}m';
+    }
+    return '${minutes}m';
+  }
+}

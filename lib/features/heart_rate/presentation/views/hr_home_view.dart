@@ -6,6 +6,7 @@ import '../../../../core/infrastructure/storage/isar_provider.dart';
 import '../../../workout/infrastructure/models/device_profile_dto.dart';
 import 'hr_monitor_view.dart';
 import 'hr_scanner_view.dart';
+import 'workout_history_view.dart';
 
 /// Central dashboard hub for the heart rate monitoring application.
 ///
@@ -186,6 +187,13 @@ class HrHomeView extends ConsumerWidget {
                   title: 'Workout History',
                   icon: Icons.fitness_center,
                   description: 'View past heart rate sessions and analytics.',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const WorkoutHistoryView(),
+                      ),
+                    );
+                  },
                 ),
               ),
 
@@ -214,6 +222,7 @@ class HrHomeView extends ConsumerWidget {
     required String title,
     required IconData icon,
     required String description,
+    VoidCallback? onTap,
   }) {
     return Container(
       width: double.infinity,
@@ -225,9 +234,7 @@ class HrHomeView extends ConsumerWidget {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          // TODO: Navigate to ${title} screen when implemented
-        },
+        onTap: onTap ?? () {},
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
