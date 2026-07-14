@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Heart rate zone definitions and utilities.
-///
-/// Zones are calculated as percentages of a configurable max heart rate
-/// (default: 190 bpm).
+/// Heart rate zone definitions and utilities based on a configurable max heart rate.
 class HeartRateZone {
   const HeartRateZone({
     required this.label,
@@ -16,32 +13,18 @@ class HeartRateZone {
   final double minPercent;
   final double maxPercent;
   final Color color;
-
-  /// Returns the zone index (1-5) for a given bpm value.
-  int zoneIndexForBpm(int bpm, {int maxHr = 190}) {
-    final percentage = (bpm / maxHr * 100).clamp(0.0, 100.0);
-    if (percentage < minPercent * 100) return 1;
-    if (percentage < maxPercent * 100) {
-      // Find the zone whose range contains this percentage
-    }
-    // Iterate zones to find which one contains the percentage
-    return 1;
-  }
 }
 
-/// Zone colors: Z1=Blue, Z2=Green, Z3=Yellow, Z4=Orange, Z5=Red.
 const List<Color> kZoneColors = [
-  Color(0xFF4D96FF), // Z1 - Blue
-  Color(0xFF6BCB77), // Z2 - Green
-  Color(0xFFFFD93D), // Z3 - Yellow
-  Color(0xFFFF9F45), // Z4 - Orange
-  Color(0xFFFF6B6B), // Z5 - Red
+  Color(0xFF4D96FF),
+  Color(0xFF6BCB77),
+  Color(0xFFFFD93D),
+  Color(0xFFFF9F45),
+  Color(0xFFFF6B6B),
 ];
 
-/// Default max heart rate used when no personal data is available.
 const int kDefaultMaxHr = 190;
 
-/// Heart rate zone definitions.
 const List<HeartRateZone> kHeartRateZones = [
   HeartRateZone(label: 'Z1', minPercent: 0.50, maxPercent: 0.60, color: Color(0xFF4D96FF)),
   HeartRateZone(label: 'Z2', minPercent: 0.60, maxPercent: 0.70, color: Color(0xFF6BCB77)),
@@ -59,7 +42,6 @@ int getZoneIndex(int bpm, {int maxHr = kDefaultMaxHr}) {
       return i + 1;
     }
   }
-  // Edge case: exactly 100% or below 50%
   if (percentage >= 100) return 5;
   return 1;
 }
