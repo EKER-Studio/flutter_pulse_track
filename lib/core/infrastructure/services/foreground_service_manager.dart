@@ -2,7 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:isar_community/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../../features/heart_rate/infrastructure/data/models/isar_hr_measurement.dart';
 
 part 'foreground_service_manager.g.dart';
 
@@ -18,19 +22,58 @@ void startCallback() {
 /// Task handler that defines the behavior inside the isolate running the
 /// foreground service for the heart rate monitor workout session.
 class MyTaskHandler extends TaskHandler {
+  Isar? _isar;
+
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     debugPrint('MyTaskHandler.onStart: Foreground service started at $timestamp');
+
+    final dir = await getApplicationDocumentsDirectory();
+    _isar = await Isar.open(
+      [HrWorkoutSessionSchema],
+      directory: dir.path,
+    );
+
+    debugPrint('MyTaskHandler.onStart: Isar database opened in background isolate at ${dir.path}');
   }
 
   @override
   void onRepeatEvent(DateTime timestamp) {
     debugPrint('MyTaskHandler.onRepeatEvent: Periodic event at $timestamp');
+
+    final isar = _isar;
+    if (isar == null) {
+      debugPrint('MyTaskHandler.onRepeatEvent: Isar not initialized, skipping write');
+      return;
+    }
+
+    final session = HrWorkoutSession()
+      ..startTime = timestamp
+      ..endTime = timestamp
+      ..samples = [
+        IsarHrSample()
+          ..bpm = 75
+          ..rrIntervals = [0.8, 0.82, 0.79]
+          ..timestamp = timestamp,
+      ];
+
+    isar.writeTxn(() async {
+      await isar.collection<HrWorkoutSession>().put(session);
+    }).then((_) {
+      debugPrint('MyTaskHandler.onRepeatEvent: Wrote HrWorkoutSession to background Isar instance');
+    }).catchError((error) {
+      debugPrint('MyTaskHandler.onRepeatEvent: Failed to write HrWorkoutSession: $error');
+    });
   }
 
   @override
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
     debugPrint('MyTaskHandler.onDestroy: Foreground service destroyed (timeout: $isTimeout) at $timestamp');
+
+    await _isar?.close();
+    _isar = null;
+
+    debugPrint('MyTaskHandler.onDestroy: Isar database closed in background isolate');
   }
 }
 
