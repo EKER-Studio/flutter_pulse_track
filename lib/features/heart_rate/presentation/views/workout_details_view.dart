@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../workout/infrastructure/models/workout_session_dto.dart';
+import '../utils/heart_rate_export_helper.dart';
 import '../utils/heart_rate_zones.dart';
 
 /// Full-screen details for a single workout session: header, summary grid,
@@ -34,6 +35,14 @@ class WorkoutDetailsView extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {
+              HeartRateExportHelper.shareWorkoutAsCsv(context, session);
+            },
+          ),
+        ],
       ),
       body: CustomScrollView(
         slivers: [
