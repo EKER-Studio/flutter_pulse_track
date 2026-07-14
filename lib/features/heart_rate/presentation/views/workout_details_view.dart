@@ -194,7 +194,7 @@ class WorkoutDetailsView extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 16),
-                  _hrZoneLegend(),
+                  _HrZoneLegend(),
 
                   const SizedBox(height: 32),
                 ],
@@ -267,35 +267,45 @@ class WorkoutDetailsView extends StatelessWidget {
   }
 }
 
-Widget _hrZoneLegend() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+class _HrZoneLegend extends StatelessWidget {
+  const _HrZoneLegend();
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 16,
+      runSpacing: 8,
       children: List.generate(
         kHeartRateZones.length,
-        (i) => Row(
-          children: [
-            Container(
-              width: 12,
-              height: 12,
-              decoration: BoxDecoration(
-                color: kZoneColors[i],
-                shape: BoxShape.circle,
-              ),
+            (i) =>
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: kHeartRateZones[i].color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '${kHeartRateZones[i].label} ${(kHeartRateZones[i]
+                      .minPercent * 100).toInt()}%-${(kHeartRateZones[i]
+                      .maxPercent * 100).toInt()}%',
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 4),
-            Text(
-              kHeartRateZones[i].label,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
-              ),
-            ),
-            if (i < kHeartRateZones.length - 1) const SizedBox(width: 12),
-          ],
-        ),
       ),
     );
   }
+}
 
 /// Custom painter that draws a BPM waveform chart from raw samples.
 ///
@@ -324,9 +334,9 @@ class BpmChart extends CustomPainter {
 
     // Add 10% padding to the BPM range so the line doesn't touch edges
     final padding = (bpmMax - bpmMin).toDouble().clamp(0.0, 20.0);
-    final rangeMin = (bpmMax - padding).toDouble();
-    final rangeMax = (bpmMin + padding).toDouble();
-    final effectiveRange = rangeMax - rangeMin;
+    final rangeMin = (bpmMin - padding).toDouble();
+    final rangeMax = (bpmMax + padding).toDouble();
+    final effectiveRange = rangeMax - rangeMin == 0 ? 1.0 : rangeMax - rangeMin;
 
     final double chartLeft = 0;
     final double chartRight = size.width;
@@ -368,6 +378,10 @@ class BpmChart extends CustomPainter {
       );
     }
 
+    final linePaint = Paint()
+      ..strokeWidth = 2.0
+      ..strokeCap = StrokeCap.round;
+
     // BPM waveform line with zone-colored segments
     for (int i = 0; i < samples.length - 1; i++) {
       final x1 = chartLeft + (i / (samples.length - 1)) * size.width;
@@ -377,15 +391,12 @@ class BpmChart extends CustomPainter {
       final y1 = chartBottom - (ratio1 * chartHeight);
       final y2 = chartBottom - (ratio2 * chartHeight);
 
-      final segmentColor = getZoneColor(samples[i], maxHr: bpmMax);
+      linePaint.color = getZoneColor(samples[i]);
 
       canvas.drawLine(
         Offset(x1, y1),
         Offset(x2, y2),
-        Paint()
-          ..color = segmentColor
-          ..strokeWidth = 2.0
-          ..strokeCap = StrokeCap.round,
+        linePaint,
       );
     }
 
@@ -394,7 +405,7 @@ class BpmChart extends CustomPainter {
     fillPath.addPolygon(
       List.generate(
         samples.length,
-        (i) => Offset(
+            (i) => Offset(
           chartLeft + (i / (samples.length - 1)) * size.width,
           chartBottom -
               ((samples[i] - rangeMin) / effectiveRange) * chartHeight,
@@ -409,8 +420,8 @@ class BpmChart extends CustomPainter {
     final fillPaint = Paint()
       ..shader = LinearGradient(
         colors: [
-          const Color(0xFFFF6B6B).withAlpha(76),
-          const Color(0xFFFF6B6B).withAlpha(0),
+          Colors.white.withValues(alpha: 0.05),
+          Colors.white.withValues(alpha: 0.0),
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
