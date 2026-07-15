@@ -444,8 +444,8 @@ class BpmChart extends CustomPainter {
     final bpmMin = samples.reduce((a, b) => a < b ? a : b);
     final bpmMax = samples.reduce((a, b) => a > b ? a : b);
 
-    // Vertical padding: expands the Y-axis range by 10% of the observed spread
-    // (clamped to 20 BPM) so the waveform never clips at the canvas edge.
+    // Vertical padding: expands the Y-axis range so the waveform never clips
+    // at the canvas edge. Clamped to [0, 20] BPM to avoid excessive whitespace.
     final padding = (bpmMax - bpmMin).toDouble().clamp(0.0, 20.0);
     final rangeMin = (bpmMin - padding).toDouble();
     final rangeMax = (bpmMax + padding).toDouble();
@@ -460,7 +460,7 @@ class BpmChart extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5;
 
-    const labelStyle = TextStyle(color: Colors.grey, fontSize: 10);
+    const gridLabelStyle = TextStyle(color: Colors.grey, fontSize: 10);
 
     // Draw 4 horizontal grid lines
     for (int i = 0; i < 4; i++) {
@@ -470,26 +470,39 @@ class BpmChart extends CustomPainter {
 
       canvas.drawLine(Offset(0, y), Offset(chartWidth, y), gridPaint);
 
-      final tp = TextPainter(
-        text: TextSpan(text: '${bpmValue.round()}', style: labelStyle),
+      final labelPainter = TextPainter(
+        text: TextSpan(text: '${bpmValue.round()}', style: gridLabelStyle),
         textDirection: TextDirection.ltr,
       );
-      tp.layout();
-      tp.paint(canvas, Offset(4, y - 6));
+      labelPainter.layout();
+      labelPainter.paint(canvas, Offset(4, y - 6));
     }
 
-    // Precompute all chart points in a single pass to avoid redundant
-    // coordinate calculations for both the line segments and the fill path.
+    // Precompute coordinates and build the fill path in a single pass.
     // Guard: when samples.length == 1, divisor would be 0, producing NaN offsets.
     final divisor = samples.length > 1 ? samples.length - 1 : 1;
     final points = <Offset>[];
     points.growTo(samples.length);
+
+    final fillPath = Path();
     for (int i = 0; i < samples.length; i++) {
       final x = (i / divisor) * chartWidth;
-      final ratio = (samples[i] - rangeMin) / effectiveRange;
-      final y = chartHeight - (ratio * chartHeight);
+      final yRatio = (samples[i] - rangeMin) / effectiveRange;
+      final y = chartHeight - (yRatio * chartHeight);
+
       points[i] = Offset(x, y);
+
+      if (i == 0) {
+        fillPath.moveTo(x, y);
+      } else {
+        fillPath.lineTo(x, y);
+      }
     }
+
+    // Close the fill region down to the bottom of the chart.
+    fillPath.lineTo(chartWidth, chartHeight);
+    fillPath.lineTo(0, chartHeight);
+    fillPath.close();
 
     // BPM waveform line with zone-colored segments
     final linePaint = Paint()
@@ -502,11 +515,6 @@ class BpmChart extends CustomPainter {
     }
 
     // Gradient fill under the line
-    final fillPath = Path()..addPolygon(points, false);
-    fillPath.lineTo(chartWidth, chartHeight);
-    fillPath.lineTo(0, chartHeight);
-    fillPath.close();
-
     final fillPaint = Paint()
       ..shader = LinearGradient(
         colors: [
