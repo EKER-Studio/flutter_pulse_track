@@ -4,7 +4,7 @@ import 'package:isar_community/isar.dart';
 
 import '../../../../core/infrastructure/storage/isar_provider.dart';
 import '../../../workout/infrastructure/models/workout_session_dto.dart';
-import 'workout_details_view.dart';
+import '../../../workout/presentation/views/workout_details_view.dart';
 
 /// Reactive workout history screen that displays all stored [WorkoutSessionDto]
 /// records from Isar, sorted by [WorkoutSessionDto.startTime] descending.

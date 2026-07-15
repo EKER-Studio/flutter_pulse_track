@@ -9,8 +9,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../features/heart_rate/domain/models/hr_measurement.dart';
 import '../../../features/heart_rate/infrastructure/data/mappers/hr_measurement_mapper.dart';
-import '../../../features/heart_rate/infrastructure/data/models/isar_hr_measurement.dart';
 import '../../../features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
+import '../../../features/workout/infrastructure/models/isar_hr_measurement.dart';
 
 part 'foreground_service_manager.g.dart';
 
