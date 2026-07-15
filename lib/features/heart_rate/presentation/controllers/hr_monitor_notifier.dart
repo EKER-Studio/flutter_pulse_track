@@ -195,9 +195,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     await ref.read(foregroundServiceManagerProvider).startService();
 
     try {
-      await _device!
-          .connect(autoConnect: false)
-          .timeout(_kConnectionTimeout);
+      await _device!.connect(autoConnect: false).timeout(_kConnectionTimeout);
     } on TimeoutException {
       debugPrint(
         '[HrMonitorNotifier] Physical connection timed out after '
@@ -210,9 +208,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       );
       return;
     } catch (e, st) {
-      debugPrint(
-        '[HrMonitorNotifier] connect() threw unexpectedly: $e\n$st',
-      );
+      debugPrint('[HrMonitorNotifier] connect() threw unexpectedly: $e\n$st');
       await _safeDisconnectDevice();
       state = MonitorState.failure(
         message: 'Failed to connect: ${e.toString()}',
@@ -226,8 +222,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
 
     // Subscribe to the device's connection state stream so unexpected drops
     // (range loss, sensor power-off) are surfaced to the UI immediately.
-    _connectionStateSubscription =
-        _device!.connectionState.listen(_onDeviceConnectionStateChanged);
+    _connectionStateSubscription = _device!.connectionState.listen(
+      _onDeviceConnectionStateChanged,
+    );
 
     // --- Phase 2: GATT service discovery --------------------------------------
     state = const MonitorState.discoveringServices();
@@ -260,9 +257,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       );
       return;
     } catch (e, st) {
-      debugPrint(
-        '[HrMonitorNotifier] discoverServices() threw: $e\n$st',
-      );
+      debugPrint('[HrMonitorNotifier] discoverServices() threw: $e\n$st');
       await _safeDisconnectDevice();
       state = MonitorState.failure(
         message: 'Service discovery failed: ${e.toString()}',
@@ -318,13 +313,16 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     // --- Optional: read Body Sensor Location (0x2A38) -------------------------
     // This is a best-effort read. Any error is silently swallowed so a firmware
     // that omits 0x2A38 does not block the telemetry stream from starting.
-    final BodySensorLocation sensorLocation =
-        await _readBodySensorLocation(hrService);
-        
+    final BodySensorLocation sensorLocation = await _readBodySensorLocation(
+      hrService,
+    );
+
     _sessionSensorLocationIndex = sensorLocation.index;
 
     // Cache the device profile directly into the local Isar database.
-    ref.read(workoutPersistenceRepositoryProvider).saveDeviceProfile(
+    ref
+        .read(workoutPersistenceRepositoryProvider)
+        .saveDeviceProfile(
           macAddress: deviceId,
           name: deviceName,
           sensorLocationIndex: sensorLocation.index,
@@ -336,100 +334,14 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
 
     // --- Optional: resolve Battery Service (0x180F) -------------------------
     // Best-effort discovery. If the sensor omits the Battery Service, we
-    // gracefully fall back to 0/NA without interrupting the HR stream.
-    try {
-      final BluetoothService? batteryService = services
-          .where((BluetoothService s) => s.serviceUuid == _kBatteryServiceUuid)
-          .firstOrNull;
-
-      if (batteryService != null) {
-        final BluetoothCharacteristic? batteryChar = batteryService.characteristics
-            .where(
-              (BluetoothCharacteristic c) =>
-                  c.characteristicUuid == _kBatteryLevelCharacteristicUuid,
-            )
-            .firstOrNull;
-
-        if (batteryChar != null) {
-          // Initial read to populate battery level immediately
-          final List<int> initialBytes = await batteryChar.read().timeout(
-            const Duration(seconds: 2),
-          );
-          if (initialBytes.isNotEmpty) {
-            _currentBatteryLevel = initialBytes.first.clamp(0, 100);
-            debugPrint(
-              '[HrMonitorNotifier] Initial battery level read: $_currentBatteryLevel%',
-            );
-          }
-
-          // Enable notifications if supported
-          final bool supportsNotify = batteryChar.properties.notify;
-          final bool supportsIndicate = batteryChar.properties.indicate;
-
-          if (supportsNotify || supportsIndicate) {
-            await batteryChar.setNotifyValue(true);
-            _batteryNotificationSubscription =
-                batteryChar.onValueReceived.listen(
-              (List<int> bytes) {
-                if (bytes.isNotEmpty) {
-                  final int newLevel = bytes.first.clamp(0, 100);
-                  if (_currentBatteryLevel != newLevel) {
-                    _currentBatteryLevel = newLevel;
-                    debugPrint(
-                      '[HrMonitorNotifier] Battery level updated: $newLevel%',
-                    );
-                    // Update state with latest measurement + new battery level
-                    if (state is ConnectedMonitorState) {
-                      final current = state as ConnectedMonitorState;
-                      state = MonitorState.connected(
-                        measurement: HrMeasurement(
-                          bpm: current.measurement.bpm,
-                          rrIntervals: current.measurement.rrIntervals,
-                          timestamp: current.measurement.timestamp,
-                          sensorLocation: current.measurement.sensorLocation,
-                          batteryLevel: newLevel,
-                        ),
-                      );
-                    }
-                  }
-                }
-              },
-              onError: (Object error, StackTrace stack) {
-                debugPrint(
-                  '[HrMonitorNotifier] Battery notification stream error: $error\n$stack',
-                );
-              },
-              cancelOnError: false,
-            );
-          } else {
-            debugPrint(
-              '[HrMonitorNotifier] Battery characteristic found but does not '
-              'support notifications/indications. Using initial read value.',
-            );
-          }
-        } else {
-          debugPrint(
-            '[HrMonitorNotifier] Battery Level Characteristic (0x2A19) not found.',
-          );
-        }
-      } else {
-        debugPrint(
-          '[HrMonitorNotifier] Battery Service (0x180F) not found on device.',
-        );
-      }
-    } catch (e) {
-      debugPrint(
-        '[HrMonitorNotifier] Battery service resolution failed (ignored): $e',
-      );
-    }
+    // gracefully fall back to null without interrupting the HR stream.
+    await _resolveBatteryService(services);
 
     // --- Phase 3: Enable GATT notifications and begin streaming ---------------
     try {
       await hrCharacteristic.setNotifyValue(true);
     } catch (e, st) {
-      debugPrint(
-        '[HrMonitorNotifier] setNotifyValue(true) failed: $e\n$st',
-      );
+      debugPrint('[HrMonitorNotifier] setNotifyValue(true) failed: $e\n$st');
       await _safeDisconnectDevice();
       state = MonitorState.failure(
         message: 'Failed to enable HR notifications: ${e.toString()}',
@@ -443,8 +355,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
 
     _hrNotificationSubscription = hrCharacteristic.onValueReceived.listen(
       (List<int> rawBytes) {
-        final HrMeasurement? measurement =
-            HrPacketParser.parseRawBytes(rawBytes);
+        final HrMeasurement? measurement = HrPacketParser.parseRawBytes(
+          rawBytes,
+        );
         if (measurement == null) return;
 
         // Persist the raw integer directly into our telemetry buffer
@@ -520,7 +433,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
           startTime: startTime,
           endTime: endTime,
           samples: samples,
-          sensorLocationIndex: _sessionSensorLocationIndex ?? BodySensorLocation.other.index,
+          sensorLocationIndex:
+              _sessionSensorLocationIndex ?? BodySensorLocation.other.index,
           macAddress: _sessionDeviceId!,
           name: _sessionDeviceName!,
         );
@@ -573,8 +487,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
 
       if (locationChar == null) return BodySensorLocation.unknown;
 
-      final List<int> bytes =
-          await locationChar.read().timeout(const Duration(seconds: 2));
+      final List<int> bytes = await locationChar.read().timeout(
+        const Duration(seconds: 2),
+      );
 
       if (bytes.isEmpty) return BodySensorLocation.unknown;
 
@@ -592,6 +507,117 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
         '[HrMonitorNotifier] Optional 0x2A38 read failed (ignored): $e',
       );
       return BodySensorLocation.unknown;
+    }
+  }
+
+  /// Best-effort resolution of the Battery Service (0x180F) and Battery Level
+  /// Characteristic (0x2A19).
+  ///
+  /// Executes a guarded initial read (2 s timeout), then optionally enables
+  /// notifications if the GATT properties allow it. Any failure is logged and
+  /// swallowed — the primary HR telemetry stream is never blocked.
+  Future<void> _resolveBatteryService(List<BluetoothService> services) async {
+    try {
+      final BluetoothService? batteryService = services
+          .where((BluetoothService s) => s.serviceUuid == _kBatteryServiceUuid)
+          .firstOrNull;
+
+      if (batteryService == null) {
+        debugPrint(
+          '[HrMonitorNotifier] Battery Service (0x180F) not found on device.',
+        );
+        return;
+      }
+
+      final BluetoothCharacteristic? batteryChar = batteryService
+          .characteristics
+          .where(
+            (BluetoothCharacteristic c) =>
+                c.characteristicUuid == _kBatteryLevelCharacteristicUuid,
+          )
+          .firstOrNull;
+
+      if (batteryChar == null) {
+        debugPrint(
+          '[HrMonitorNotifier] Battery Level Characteristic (0x2A19) not found.',
+        );
+        return;
+      }
+
+      // Guarded initial read — 2 s timeout so a slow GATT response does not
+      // hold up the connection flow.
+      try {
+        final List<int> initialBytes = await batteryChar.read().timeout(
+          const Duration(seconds: 2),
+        );
+        if (initialBytes.isNotEmpty) {
+          _currentBatteryLevel = initialBytes.first.clamp(0, 100);
+          debugPrint(
+            '[HrMonitorNotifier] Initial battery level read: $_currentBatteryLevel%',
+          );
+        }
+      } on TimeoutException {
+        debugPrint(
+          '[HrMonitorNotifier] Battery level initial read timed out (2 s) — '
+          'will rely on notifications if available.',
+        );
+      } catch (e) {
+        debugPrint('[HrMonitorNotifier] Battery level initial read failed: $e');
+      }
+
+      // Enable notifications only if the characteristic advertises the property.
+      final bool supportsNotify = batteryChar.properties.notify;
+      final bool supportsIndicate = batteryChar.properties.indicate;
+
+      if (supportsNotify || supportsIndicate) {
+        await batteryChar.setNotifyValue(true);
+        _batteryNotificationSubscription = batteryChar.onValueReceived.listen(
+          (List<int> bytes) {
+            if (bytes.isNotEmpty) {
+              _updateStateWithBatteryLevel(bytes.first.clamp(0, 100));
+            }
+          },
+          onError: (Object error, StackTrace stack) {
+            debugPrint(
+              '[HrMonitorNotifier] Battery notification stream error: $error',
+            );
+          },
+          cancelOnError: false,
+        );
+      } else {
+        debugPrint(
+          '[HrMonitorNotifier] Battery characteristic found but does not '
+          'support notifications/indications. Using initial read value.',
+        );
+      }
+    } catch (e) {
+      debugPrint(
+        '[HrMonitorNotifier] Battery service resolution failed (ignored): $e',
+      );
+    }
+  }
+
+  /// Parses a new battery percentage and synchronizes it into both the cached
+  /// field and the active [ConnectedMonitorState] (if currently connected).
+  ///
+  /// Only triggers a state transition when the value actually changes, avoiding
+  /// unnecessary UI repaints.
+  void _updateStateWithBatteryLevel(int newLevel) {
+    if (_currentBatteryLevel == newLevel) return;
+    _currentBatteryLevel = newLevel;
+    debugPrint('[HrMonitorNotifier] Battery level updated: $newLevel%');
+
+    if (state is ConnectedMonitorState) {
+      final current = state as ConnectedMonitorState;
+      state = MonitorState.connected(
+        measurement: HrMeasurement(
+          bpm: current.measurement.bpm,
+          rrIntervals: current.measurement.rrIntervals,
+          timestamp: current.measurement.timestamp,
+          sensorLocation: current.measurement.sensorLocation,
+          batteryLevel: newLevel,
+        ),
+      );
     }
   }
 
