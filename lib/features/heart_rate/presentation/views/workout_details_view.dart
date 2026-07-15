@@ -444,9 +444,10 @@ class BpmChart extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     // BPM waveform line with zone-colored segments
+    final divisor = samples.length > 1 ? samples.length - 1 : 1;
     for (int i = 0; i < samples.length - 1; i++) {
-      final x1 = chartLeft + (i / (samples.length - 1)) * size.width;
-      final x2 = chartLeft + ((i + 1) / (samples.length - 1)) * size.width;
+      final x1 = chartLeft + (i / divisor) * size.width;
+      final x2 = chartLeft + ((i + 1) / divisor) * size.width;
       final ratio1 = (samples[i] - rangeMin) / effectiveRange;
       final ratio2 = (samples[i + 1] - rangeMin) / effectiveRange;
       final y1 = chartBottom - (ratio1 * chartHeight);
@@ -467,7 +468,7 @@ class BpmChart extends CustomPainter {
       List.generate(
         samples.length,
             (i) => Offset(
-          chartLeft + (i / (samples.length - 1)) * size.width,
+          chartLeft + (i / divisor) * size.width,
           chartBottom -
               ((samples[i] - rangeMin) / effectiveRange) * chartHeight,
         ),

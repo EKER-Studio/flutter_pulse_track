@@ -590,11 +590,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
           '[HrMonitorNotifier] Unexpected disconnection detected — '
           'surfacing failure state.',
         );
-        _saveSessionToDisk(); // Flush recorded session safely
         _hrNotificationSubscription?.cancel();
         _batteryNotificationSubscription?.cancel();
         _hrNotificationSubscription = null;
         _batteryNotificationSubscription = null;
+        _saveSessionToDisk(); // Flush recorded session safely
         state = const MonitorState.failure(
           message:
               'Connection lost. The sensor may be out of range or powered off.',
@@ -658,5 +658,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     _connectionStateSubscription = null;
     _device?.disconnect();
     _device = null;
+    ref.read(foregroundServiceManagerProvider).stopService();
   }
 }
