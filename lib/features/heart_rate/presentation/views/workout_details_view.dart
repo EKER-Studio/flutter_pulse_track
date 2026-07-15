@@ -179,31 +179,73 @@ class WorkoutDetailsView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Container(
-                    width: double.infinity,
-                    height: 250,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1E1E1E),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white10, width: 1),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
+                  if (session.bpmSamples.isEmpty || session.bpmSamples.any((s) => s <= 0))
+                    Container(
+                      width: double.infinity,
+                      height: 250,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1E1E1E),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.white10, width: 1),
                       ),
-                      child: CustomPaint(
-                        painter: BpmChart(
-                          samples: session.bpmSamples,
-                          startTime: session.startTime,
-                          endTime: session.endTime,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.monitor_heart,
+                              size: 48,
+                              color: Colors.grey,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'No workout data captured',
+                              style: TextStyle(
+                                color: Colors.grey[400],
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _getEmptyDataReason(session),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  else
+                    Container(
+                      width: double.infinity,
+                      height: 250,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1E1E1E),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.white10, width: 1),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        child: CustomPaint(
+                          painter: BpmChart(
+                            samples: session.bpmSamples,
+                            startTime: session.startTime,
+                            endTime: session.endTime,
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 16),
-                  _HrZoneLegend(),
+                  if (session.bpmSamples.isNotEmpty && !session.bpmSamples.any((s) => s <= 0))
+                    const SizedBox(height: 16),
+                  if (session.bpmSamples.isNotEmpty && !session.bpmSamples.any((s) => s <= 0))
+                    const _HrZoneLegend(),
 
                   const SizedBox(height: 32),
                 ],
@@ -273,6 +315,16 @@ class WorkoutDetailsView extends StatelessWidget {
     if (minutes > 0) parts.add('${minutes}m');
     if (seconds > 0 || parts.isEmpty) parts.add('${seconds}s');
     return parts.join(' ');
+  }
+
+  String _getEmptyDataReason(WorkoutSessionDto session) {
+    if (session.endTime == null) {
+      return 'The workout was not completed';
+    }
+    if (session.bpmSamples.isEmpty) {
+      return 'The sensor may have disconnected before data was captured';
+    }
+    return 'No valid heart rate data was recorded';
   }
 }
 

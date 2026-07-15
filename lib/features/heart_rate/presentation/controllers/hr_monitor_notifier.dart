@@ -471,6 +471,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     await _saveSessionToDisk();
     await _cancelSubscriptions();
     await _safeDisconnectDevice();
+    await ref.read(foregroundServiceManagerProvider).stopService();
     state = const MonitorState.disconnected();
   }
 
