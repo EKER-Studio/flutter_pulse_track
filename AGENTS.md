@@ -17,7 +17,10 @@ For every public class/method, add a doc comment following the language's standa
 ### Scope Discipline
 - Only read, open, or modify files explicitly named in the task, or files directly imported/referenced by them.
 - Do NOT explore or edit files outside the stated scope without first asking for confirmation.
-- If the task seems to require touching files beyond the stated scope, STOP and report which additional files you believe are needed, and why — before making changes.
+- Exception — the following do NOT require asking first, as they are natural consequences of a task, not scope expansion:
+  - Regenerating/updating codegen output files (e.g. `.g.dart`) that correspond to a modified source file.
+  - Updating an existing test file that directly tests the modified code, when needed to keep the Mandatory Verification Pipeline passing.
+- If the task seems to require touching files beyond the stated scope AND beyond the exceptions above, STOP and report which additional files you believe are needed, and why — before making changes.
 
 ### Ambiguity Handling
 - If a requirement is ambiguous or underspecified, state your interpretation/assumption explicitly before proceeding, rather than silently guessing.
@@ -25,7 +28,7 @@ For every public class/method, add a doc comment following the language's standa
 
 ### Dependency Changes
 - Do NOT add, remove, or upgrade a dependency without explicitly flagging it in your response (name, version, reason).
-- Never introduce agit add AGENTS.md new dependency to solve a problem that can be reasonably solved with existing project dependencies or stdlib.
+- Never introduce a new dependency to solve a problem that can be reasonably solved with existing project dependencies or stdlib.
 
 ### Git & Version Control
 - Do NOT commit automatically unless explicitly instructed — some tools default to auto-commit, this project does not.
@@ -65,11 +68,15 @@ For every public class/method, add a doc comment following the language's standa
 - Run build runner: `dart run build_runner build --delete-conflicting-outputs`
 - Watch build runner: `dart run build_runner watch --delete-conflicting-outputs`
 - Code analysis: `flutter analyze`
-- Lint (Riverpod-specific): `dart run custom_lint` *(remove this line once confirmed redundant with `flutter analyze` in this project's `analysis_options.yaml`)*
 - Run tests: `flutter test`
 
-### Architecture & State Management
-This is a Local-First, AI-Native boilerplate utilizing Clean Architecture under a Feature-First approach.
+### Architecture & Layer Boundaries
+This is a Local-First, AI-Native mobile application utilizing Clean Architecture under a Feature-First approach.
+- **Domain Layer (`lib/features/[feature_name]/domain/`)**: Pure Dart business logic, entities, and repository interfaces. NO Flutter or Riverpod imports allowed here.
+- **Data Layer (`lib/features/[feature_name]/data/`)**: Repository implementations, models, and mappers utilizing `isar_community` (Isar Database).
+- **Presentation Layer (`lib/features/[feature_name]/presentation/`)**: Responsive UI components, state management via Riverpod 3.x generators (`@riverpod`), and controllers/notifiers.
+
+### State Management & Reactivity
 - **State Management:** Riverpod 3.x strictly.
 - **Data Flow:** UI (`ConsumerWidget`) -> Notifier (`@riverpod`) -> Repository Interface (`domain`) -> Repository Impl (`data`) -> Local DB (`isar_community`).
 - **Reactivity:** Handled purely via Isar streams. Notifiers listen to Isar collections and pipe data directly into `AsyncValue` state.
@@ -85,7 +92,6 @@ Before considering any feature involving streams, timers, animations, or BLE con
 After any modification within the `lib/**` directory, you MUST execute the following pipeline in strict order:
 1. `dart run build_runner build --delete-conflicting-outputs`
 2. `flutter analyze`
-3. `dart run custom_lint` *(see note above — drop if redundant)*
-4. `flutter test`
+3. `flutter test`
 
 A task is NOT considered complete until all steps pass with zero errors and zero failing tests, AND the Lifecycle & Resource Disposal Checklist above has been explicitly verified for any touched code involving streams/timers/BLE/background tasks. Fix any arising issues autonomously, subject to the Guardrails above.
