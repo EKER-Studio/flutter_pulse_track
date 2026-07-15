@@ -498,35 +498,44 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   }
 
   /// Flushes collected session telemetry to disk asynchronously via the repository,
-  /// then clears the in-memory array to prepare for the next session.
+  /// then clears the in-memory session state to prepare for the next session.
+  ///
+  /// The persistence call is wrapped in a try-catch-finally block to guarantee
+  /// that in-memory state is always reset, even if the database write fails.
+  /// Foreground service lifecycle is managed by [disconnect] and is not
+  /// duplicated here to avoid double-stop when both are in the call stack.
   Future<void> _saveSessionToDisk() async {
-    // Stop foreground service when telemetry session concludes
-    await ref.read(foregroundServiceManagerProvider).stopService();
+    try {
+      if (_collectedBpmSamples.isNotEmpty &&
+          _sessionStartTime != null &&
+          _sessionDeviceId != null &&
+          _sessionDeviceName != null) {
+        final repo = ref.read(workoutPersistenceRepositoryProvider);
 
-    if (_collectedBpmSamples.isNotEmpty &&
-        _sessionStartTime != null &&
-        _sessionDeviceId != null &&
-        _sessionDeviceName != null) {
-      final repo = ref.read(workoutPersistenceRepositoryProvider);
-      
-      final samples = List<int>.from(_collectedBpmSamples);
-      final startTime = _sessionStartTime!;
-      final endTime = DateTime.now();
+        final samples = List<int>.from(_collectedBpmSamples);
+        final startTime = _sessionStartTime!;
+        final endTime = DateTime.now();
 
-      await repo.saveWorkoutSession(
-        startTime: startTime,
-        endTime: endTime,
-        samples: samples,
-        sensorLocationIndex: _sessionSensorLocationIndex ?? BodySensorLocation.other.index,
-        macAddress: _sessionDeviceId!,
-        name: _sessionDeviceName!,
+        await repo.saveWorkoutSession(
+          startTime: startTime,
+          endTime: endTime,
+          samples: samples,
+          sensorLocationIndex: _sessionSensorLocationIndex ?? BodySensorLocation.other.index,
+          macAddress: _sessionDeviceId!,
+          name: _sessionDeviceName!,
+        );
+      }
+    } catch (e) {
+      debugPrint(
+        '[HrMonitorNotifier] Failed to persist workout session (data may be lost): $e',
       );
+    } finally {
+      _collectedBpmSamples.clear();
+      _sessionStartTime = null;
+      _sessionDeviceId = null;
+      _sessionDeviceName = null;
+      _sessionSensorLocationIndex = null;
     }
-    _collectedBpmSamples.clear();
-    _sessionStartTime = null;
-    _sessionDeviceId = null;
-    _sessionDeviceName = null;
-    _sessionSensorLocationIndex = null;
   }
 
   /// Convenience method combining [disconnect] and [connect] for the UI
