@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../../../workout/infrastructure/models/workout_session_dto.dart';
-import '../utils/heart_rate_export_helper.dart';
-import '../utils/heart_rate_zones.dart';
+import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/workout_session_dto.dart';
+import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_export_helper.dart';
+import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_zones.dart';
 
 /// Full-screen details for a single workout session: header, summary grid,
 /// and a custom-painted BPM waveform chart.
 class WorkoutDetailsView extends StatelessWidget {
   const WorkoutDetailsView({required this.session, super.key});
+
+  static const Color _kBackgroundColor = Color(0xFF0D0D0D);
+  static const Color _kCardBackgroundColor = Color(0xFF1E1E1E);
+  static const Color _kBadgeBackgroundColor = Color(0xFF2A2A2A);
+  static const Color _kAvgBpmIconColor = Color(0xFFFF6B6B);
+  static const Color _kPeakBpmIconColor = Color(0xFFFFD93D);
+  static const Color _kDurationIconColor = Color(0xFF6BCB77);
+  static const Color _kSamplesIconColor = Color(0xFF4D96FF);
+  static const double _kDefaultPadding = 16.0;
+  static const double _kCardBorderRadius = 12.0;
+  static const double _kBadgeBorderRadius = 6.0;
+  static const double _kChartHeight = 250.0;
+  static const double _kSectionSpacing = 24.0;
+  static const double _kSubSectionSpacing = 12.0;
+  static const double _kTileSpacing = 12.0;
 
   final WorkoutSessionDto session;
 
@@ -19,9 +34,9 @@ class WorkoutDetailsView extends StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D0D),
+      backgroundColor: _kBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0D0D0D),
+        backgroundColor: _kBackgroundColor,
         elevation: 0,
         foregroundColor: Colors.white,
         leading: IconButton(
@@ -48,7 +63,7 @@ class WorkoutDetailsView extends StatelessWidget {
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(_kDefaultPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -56,12 +71,12 @@ class WorkoutDetailsView extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1E1E1E),
-                      borderRadius: BorderRadius.circular(12),
+                      color: _kCardBackgroundColor,
+                      borderRadius: BorderRadius.circular(_kCardBorderRadius),
                       border: Border.all(color: Colors.white10, width: 1),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(_kDefaultPadding),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -82,8 +97,8 @@ class WorkoutDetailsView extends StatelessWidget {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF2A2A2A),
-                                  borderRadius: BorderRadius.circular(6),
+                                  color: _kBadgeBackgroundColor,
+                                  borderRadius: BorderRadius.circular(_kBadgeBorderRadius),
                                 ),
                                 child: Text(
                                   duration,
@@ -111,7 +126,7 @@ class WorkoutDetailsView extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: _kSectionSpacing),
 
                   // Summary grid
                   const Text(
@@ -130,21 +145,21 @@ class WorkoutDetailsView extends StatelessWidget {
                           label: 'Average BPM',
                           value: '${session.avgBpm}',
                           icon: Icons.favorite,
-                          iconColor: const Color(0xFFFF6B6B),
+                          iconColor: _kAvgBpmIconColor,
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _summaryTile(
-                          label: 'Peak BPM',
+                       const SizedBox(width: _kTileSpacing),
+                       Expanded(
+                         child: _summaryTile(
+                           label: 'Peak BPM',
                           value: '${session.maxBpm}',
                           icon: Icons.favorite_border,
-                          iconColor: const Color(0xFFFFD93D),
+                          iconColor: _kPeakBpmIconColor,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: _kSubSectionSpacing),
                   Row(
                     children: [
                       Expanded(
@@ -152,22 +167,22 @@ class WorkoutDetailsView extends StatelessWidget {
                           label: 'Duration',
                           value: duration,
                           icon: Icons.timer,
-                          iconColor: const Color(0xFF6BCB77),
+                          iconColor: _kDurationIconColor,
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _summaryTile(
-                          label: 'Samples',
+                       const SizedBox(width: _kTileSpacing),
+                       Expanded(
+                         child: _summaryTile(
+                           label: 'Samples',
                           value: '${session.bpmSamples.length}',
                           icon: Icons.show_chart,
-                          iconColor: const Color(0xFF4D96FF),
+                          iconColor: _kSamplesIconColor,
                         ),
                       ),
                     ],
                   ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: _kSectionSpacing),
 
                   // BPM chart
                   const Text(
@@ -178,14 +193,14 @@ class WorkoutDetailsView extends StatelessWidget {
                       fontSize: 18,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: _kSubSectionSpacing),
                   if (session.bpmSamples.isEmpty || session.bpmSamples.any((s) => s <= 0))
                     Container(
                       width: double.infinity,
-                      height: 250,
+                      height: _kChartHeight,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E1E1E),
-                        borderRadius: BorderRadius.circular(12),
+                        color: _kCardBackgroundColor,
+                        borderRadius: BorderRadius.circular(_kCardBorderRadius),
                         border: Border.all(color: Colors.white10, width: 1),
                       ),
                       child: Center(
@@ -197,7 +212,7 @@ class WorkoutDetailsView extends StatelessWidget {
                               size: 48,
                               color: Colors.grey,
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: _kSubSectionSpacing),
                             Text(
                               'No workout data captured',
                               style: TextStyle(
@@ -221,10 +236,10 @@ class WorkoutDetailsView extends StatelessWidget {
                   else
                     Container(
                       width: double.infinity,
-                      height: 250,
+                      height: _kChartHeight,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E1E1E),
-                        borderRadius: BorderRadius.circular(12),
+                        color: _kCardBackgroundColor,
+                        borderRadius: BorderRadius.circular(_kCardBorderRadius),
                         border: Border.all(color: Colors.white10, width: 1),
                       ),
                       child: Padding(
@@ -243,11 +258,11 @@ class WorkoutDetailsView extends StatelessWidget {
                     ),
 
                   if (session.bpmSamples.isNotEmpty && !session.bpmSamples.any((s) => s <= 0))
-                    const SizedBox(height: 16),
+                    const SizedBox(height: _kDefaultPadding),
                   if (session.bpmSamples.isNotEmpty && !session.bpmSamples.any((s) => s <= 0))
                     const _HrZoneLegend(),
 
-                  const SizedBox(height: 32),
+                  const SizedBox(height: _kDefaultPadding * 2),
                 ],
               ),
             ),
@@ -264,10 +279,10 @@ class WorkoutDetailsView extends StatelessWidget {
     required Color iconColor,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(_kDefaultPadding),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(12),
+        color: _kCardBackgroundColor,
+        borderRadius: BorderRadius.circular(_kCardBorderRadius),
         border: Border.all(color: Colors.white10, width: 1),
       ),
       child: Column(
