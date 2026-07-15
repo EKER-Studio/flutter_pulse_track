@@ -191,8 +191,19 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     // --- Phase 1: Physical link-layer handshake --------------------------------
     state = const MonitorState.connecting();
 
-    // Start foreground service to protect connection before establishing it
-    await ref.read(foregroundServiceManagerProvider).startService();
+    // Synchronize device ID with the foreground service manager, then attempt
+    // to start the foreground service. Both calls are wrapped defensively so
+    // a failure here does not prevent the physical BLE connection attempt.
+    try {
+      final fsm = ref.read(foregroundServiceManagerProvider);
+      await fsm.setSelectedDeviceId(deviceId);
+      await fsm.startService();
+    } catch (e) {
+      debugPrint(
+        '[HrMonitorNotifier] Foreground service startup failed (continuing '
+        'BLE connection anyway): $e',
+      );
+    }
 
     try {
       await _device!.connect(autoConnect: false).timeout(_kConnectionTimeout);
@@ -201,6 +212,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
         '[HrMonitorNotifier] Physical connection timed out after '
         '${_kConnectionTimeout.inSeconds}s.',
       );
+      await ref.read(foregroundServiceManagerProvider).stopService();
       await _safeDisconnectDevice();
       state = const MonitorState.failure(
         message:
@@ -209,6 +221,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       return;
     } catch (e, st) {
       debugPrint('[HrMonitorNotifier] connect() threw unexpectedly: $e\n$st');
+      await ref.read(foregroundServiceManagerProvider).stopService();
       await _safeDisconnectDevice();
       state = MonitorState.failure(
         message: 'Failed to connect: ${e.toString()}',
@@ -250,6 +263,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
         '${_kDiscoverServicesTimeout.inSeconds}s deadline — '
         'executing mandatory link-layer disconnect.',
       );
+      await ref.read(foregroundServiceManagerProvider).stopService();
       await _safeDisconnectDevice();
       state = const MonitorState.failure(
         message:
@@ -258,6 +272,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       return;
     } catch (e, st) {
       debugPrint('[HrMonitorNotifier] discoverServices() threw: $e\n$st');
+      await ref.read(foregroundServiceManagerProvider).stopService();
       await _safeDisconnectDevice();
       state = MonitorState.failure(
         message: 'Service discovery failed: ${e.toString()}',
@@ -279,6 +294,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
         '[HrMonitorNotifier] Heart Rate Service (0x180D) not found — '
         'this device is not a standard HR sensor.',
       );
+      await ref.read(foregroundServiceManagerProvider).stopService();
       await _safeDisconnectDevice();
       state = const MonitorState.failure(
         message:
@@ -301,6 +317,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
         '[HrMonitorNotifier] HR Measurement Characteristic (0x2A37) not found '
         'on the Heart Rate Service.',
       );
+      await ref.read(foregroundServiceManagerProvider).stopService();
       await _safeDisconnectDevice();
       state = const MonitorState.failure(
         message:
@@ -342,6 +359,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       await hrCharacteristic.setNotifyValue(true);
     } catch (e, st) {
       debugPrint('[HrMonitorNotifier] setNotifyValue(true) failed: $e\n$st');
+      await ref.read(foregroundServiceManagerProvider).stopService();
       await _safeDisconnectDevice();
       state = MonitorState.failure(
         message: 'Failed to enable HR notifications: ${e.toString()}',
