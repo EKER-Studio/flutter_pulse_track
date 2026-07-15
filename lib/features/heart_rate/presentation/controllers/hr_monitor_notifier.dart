@@ -106,17 +106,39 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
 
   // --- Session persistence state ---------------------------------------------
 
+  /// Accumulated BPM samples collected during the active session. Flushed to disk
+  /// via [_saveSessionToDisk] on disconnect or unexpected disconnection, then
+  /// cleared to prepare for the next session.
   final List<int> _collectedBpmSamples = [];
+
+  /// Timestamp when the current session began. Null when no session is active.
   DateTime? _sessionStartTime;
+
+  /// MAC address / unique identifier of the sensor for the current session.
   String? _sessionDeviceId;
+
+  /// Human-readable name of the sensor for the current session.
   String? _sessionDeviceName;
+
+  /// Integer index of the resolved [BodySensorLocation] for the current session.
+  /// Read once during GATT discovery and persisted alongside the workout session.
   int? _sessionSensorLocationIndex;
+
+  /// Latest battery percentage received from the sensor's Battery Service.
+  /// Null if the device does not expose a Battery Service or the read failed.
   int? _currentBatteryLevel;
 
   // ---------------------------------------------------------------------------
   // Riverpod build — register disposal and return initial state
   // ---------------------------------------------------------------------------
 
+  /// Registers the [_cleanup] disposal callback and returns the initial
+  /// [MonitorState.disconnected] state.
+  ///
+  /// Riverpod invokes [build] when the provider is first created. The
+  /// [ref.onDispose] registration guarantees that [_cleanup] runs when the
+  /// provider is removed from the [ProviderScope] (e.g., app termination or
+  /// explicit provider disposal).
   @override
   MonitorState build() {
     ref.onDispose(() => _cleanup());
@@ -643,6 +665,14 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
 
   /// Full disposal: cancels subscriptions and disconnects the device.
   /// Registered with [ref.onDispose] and called synchronously by Riverpod.
+  ///
+  /// Riverpod's [onDispose] callback is **synchronous** — it does not support
+  /// `async`/`await`. Because BLE disconnect and subscription cancel operations
+  /// return `Future`s, this method invokes them as fire-and-forget calls. This
+  /// is intentional: it prevents the disposal pipeline from blocking while
+  /// still ensuring that all resources are released. The catch-all error
+  /// handling in [_safeDisconnectDevice] and [StreamSubscription.cancel]
+  /// guarantees that a failed teardown never surfaces as an unhandled exception.
   void _cleanup() {
     debugPrint(
       '[HrMonitorNotifier] Disposing — releasing all GATT and BLE resources.',
