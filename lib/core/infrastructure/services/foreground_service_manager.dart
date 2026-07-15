@@ -7,10 +7,10 @@ import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../features/heart_rate/domain/models/hr_measurement.dart';
-import '../../../features/heart_rate/infrastructure/data/mappers/hr_measurement_mapper.dart';
-import '../../../features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
-import '../../../features/workout/infrastructure/models/isar_hr_measurement.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
+import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/device_profile_dto.dart';
+import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/workout_session_dto.dart';
 
 part 'foreground_service_manager.g.dart';
 
@@ -38,7 +38,7 @@ class MyTaskHandler extends TaskHandler {
 
     final dir = await getApplicationDocumentsDirectory();
     _isar = await Isar.open(
-      [HrWorkoutSessionSchema],
+      [DeviceProfileDtoSchema, WorkoutSessionDtoSchema],
       directory: dir.path,
     );
 
@@ -49,31 +49,8 @@ class MyTaskHandler extends TaskHandler {
 
   @override
   void onRepeatEvent(DateTime timestamp) {
-    debugPrint('MyTaskHandler.onRepeatEvent: Periodic event at $timestamp');
-
-    final isar = _isar;
-    if (isar == null) {
-      debugPrint('MyTaskHandler.onRepeatEvent: Isar not initialized, skipping write');
-      return;
-    }
-
-    final session = HrWorkoutSession()
-      ..startTime = timestamp
-      ..endTime = timestamp
-      ..samples = [
-        IsarHrSample()
-          ..bpm = 75
-          ..rrIntervals = [0.8, 0.82, 0.79]
-          ..timestamp = timestamp,
-      ];
-
-    isar.writeTxn(() async {
-      await isar.collection<HrWorkoutSession>().put(session);
-    }).then((_) {
-      debugPrint('MyTaskHandler.onRepeatEvent: Wrote HrWorkoutSession to background Isar instance');
-    }).catchError((error) {
-      debugPrint('MyTaskHandler.onRepeatEvent: Failed to write HrWorkoutSession: $error');
-    });
+    // Intentionally empty — mock telemetry generation has been removed.
+    // Only real BLE-captured heart rate data is persisted via _hrSubscription.
   }
 
   Future<void> _setupBleSubscription() async {
@@ -143,15 +120,18 @@ class MyTaskHandler extends TaskHandler {
       return;
     }
 
-    final sample = HrMeasurementMapper.toIsarSample(measurement);
-
     isar.writeTxn(() async {
-      final session = HrWorkoutSession()
+      final session = WorkoutSessionDto()
         ..startTime = measurement.timestamp
         ..endTime = measurement.timestamp
-        ..samples = [sample];
+        ..avgBpm = measurement.bpm
+        ..maxBpm = measurement.bpm
+        ..bpmSamples = [measurement.bpm]
+        ..sensorLocationIndex = 0
+        ..deviceMacAddress = ''
+        ..deviceName = '';
 
-      await isar.collection<HrWorkoutSession>().put(session);
+      await isar.collection<WorkoutSessionDto>().put(session);
     }).then((_) {
       debugPrint('MyTaskHandler: Wrote HR measurement to Isar: ${measurement.bpm} bpm');
     }).catchError((error) {
