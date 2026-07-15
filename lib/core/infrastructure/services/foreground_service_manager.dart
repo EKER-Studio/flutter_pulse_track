@@ -77,8 +77,8 @@ class MyTaskHandler extends TaskHandler {
   }
 
   Future<void> _setupBleSubscription() async {
-    final deviceId = _getSelectedDeviceId();
-    if (deviceId.isEmpty) {
+    final deviceId = await _getSelectedDeviceId();
+    if (deviceId == null) {
       debugPrint('MyTaskHandler: No selected device ID, skipping BLE subscription');
       return;
     }
@@ -159,8 +159,8 @@ class MyTaskHandler extends TaskHandler {
     });
   }
 
-  String _getSelectedDeviceId() {
-    return ForegroundServiceManager.selectedDeviceId ?? '';
+  Future<String?> _getSelectedDeviceId() async {
+    return await FlutterForegroundTask.getData<String>(key: 'selected_device_id');
   }
 
   @override
@@ -190,15 +190,11 @@ class MyTaskHandler extends TaskHandler {
 /// Foreground Service to keep the BLE connection alive in the background.
 class ForegroundServiceManager {
   bool _isInitialized = false;
-  static String? _selectedDeviceId;
 
   /// Registers the currently selected BLE device ID for use by the background task.
-  void setSelectedDeviceId(String deviceId) {
-    _selectedDeviceId = deviceId;
+  Future<void> setSelectedDeviceId(String deviceId) async {
+    await FlutterForegroundTask.saveData(key: 'selected_device_id', value: deviceId);
   }
-
-  /// Returns the currently registered BLE device ID for the background task.
-  static String? get selectedDeviceId => _selectedDeviceId;
 
   /// Initializes the foreground task configuration. Must be called before starting.
   Future<void> init() async {
