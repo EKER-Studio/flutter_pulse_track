@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-
 import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/workout_session_dto.dart';
 import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_export_helper.dart';
 import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_zones.dart';
+import 'package:flutter/material.dart';
 
 /// Full-screen details view for a single completed or in-progress workout session.
 ///
@@ -481,21 +480,21 @@ class BpmChart extends CustomPainter {
     // Precompute coordinates and build the fill path in a single pass.
     // Guard: when samples.length == 1, divisor would be 0, producing NaN offsets.
     final divisor = samples.length > 1 ? samples.length - 1 : 1;
-    final points = <Offset>[];
-    points.growTo(samples.length);
 
-    final fillPath = Path();
-    for (int i = 0; i < samples.length; i++) {
+    // Idiomatically initialize a fixed-size list in Dart
+    final points = List<Offset>.generate(samples.length, (i) {
       final x = (i / divisor) * chartWidth;
       final yRatio = (samples[i] - rangeMin) / effectiveRange;
       final y = chartHeight - (yRatio * chartHeight);
+      return Offset(x, y);
+    });
 
-      points[i] = Offset(x, y);
-
+    final fillPath = Path();
+    for (int i = 0; i < points.length; i++) {
       if (i == 0) {
-        fillPath.moveTo(x, y);
+        fillPath.moveTo(points[i].dx, points[i].dy);
       } else {
-        fillPath.lineTo(x, y);
+        fillPath.lineTo(points[i].dx, points[i].dy);
       }
     }
 
