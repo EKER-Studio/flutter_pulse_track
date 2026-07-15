@@ -4,9 +4,15 @@ import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/wo
 import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_export_helper.dart';
 import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_zones.dart';
 
-/// Full-screen details for a single workout session: header, summary grid,
-/// and a custom-painted BPM waveform chart.
+/// Full-screen details view for a single completed or in-progress workout session.
+///
+/// Displays a header card with session date and device name, a summary grid
+/// showing average BPM, peak BPM, duration, and sample count, and a custom-
+/// painted BPM waveform chart colored by heart-rate zones.
+///
+/// Navigated to from the workout history list via the workout feature route.
 class WorkoutDetailsView extends StatelessWidget {
+  /// Creates a [WorkoutDetailsView] for the given [session].
   const WorkoutDetailsView({required this.session, super.key});
 
   static const Color _kBackgroundColor = Color(0xFF0D0D0D);
@@ -24,14 +30,15 @@ class WorkoutDetailsView extends StatelessWidget {
   static const double _kSubSectionSpacing = 12.0;
   static const double _kTileSpacing = 12.0;
 
+  /// The workout session whose details are displayed.
   final WorkoutSessionDto session;
 
+  /// Builds the workout details screen with header, summary grid, and BPM chart.
   @override
   Widget build(BuildContext context) {
-    final duration = _formatDuration(
-      session.startTime,
-      session.endTime,
-    );
+    // Format once so the duration string is shared between the header badge
+    // and the summary grid tile.
+    final duration = _formatDuration(session.startTime, session.endTime);
 
     return Scaffold(
       backgroundColor: _kBackgroundColor,
@@ -45,10 +52,7 @@ class WorkoutDetailsView extends StatelessWidget {
         ),
         title: const Text(
           'Workout Details',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         actions: [
           IconButton(
@@ -98,7 +102,9 @@ class WorkoutDetailsView extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: _kBadgeBackgroundColor,
-                                  borderRadius: BorderRadius.circular(_kBadgeBorderRadius),
+                                  borderRadius: BorderRadius.circular(
+                                    _kBadgeBorderRadius,
+                                  ),
                                 ),
                                 child: Text(
                                   duration,
@@ -148,10 +154,10 @@ class WorkoutDetailsView extends StatelessWidget {
                           iconColor: _kAvgBpmIconColor,
                         ),
                       ),
-                       const SizedBox(width: _kTileSpacing),
-                       Expanded(
-                         child: _summaryTile(
-                           label: 'Peak BPM',
+                      const SizedBox(width: _kTileSpacing),
+                      Expanded(
+                        child: _summaryTile(
+                          label: 'Peak BPM',
                           value: '${session.maxBpm}',
                           icon: Icons.favorite_border,
                           iconColor: _kPeakBpmIconColor,
@@ -170,10 +176,10 @@ class WorkoutDetailsView extends StatelessWidget {
                           iconColor: _kDurationIconColor,
                         ),
                       ),
-                       const SizedBox(width: _kTileSpacing),
-                       Expanded(
-                         child: _summaryTile(
-                           label: 'Samples',
+                      const SizedBox(width: _kTileSpacing),
+                      Expanded(
+                        child: _summaryTile(
+                          label: 'Samples',
                           value: '${session.bpmSamples.length}',
                           icon: Icons.show_chart,
                           iconColor: _kSamplesIconColor,
@@ -194,7 +200,8 @@ class WorkoutDetailsView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: _kSubSectionSpacing),
-                  if (session.bpmSamples.isEmpty || session.bpmSamples.any((s) => s <= 0))
+                  if (session.bpmSamples.isEmpty ||
+                      session.bpmSamples.any((s) => s <= 0))
                     Container(
                       width: double.infinity,
                       height: _kChartHeight,
@@ -257,9 +264,11 @@ class WorkoutDetailsView extends StatelessWidget {
                       ),
                     ),
 
-                  if (session.bpmSamples.isNotEmpty && !session.bpmSamples.any((s) => s <= 0))
+                  if (session.bpmSamples.isNotEmpty &&
+                      !session.bpmSamples.any((s) => s <= 0))
                     const SizedBox(height: _kDefaultPadding),
-                  if (session.bpmSamples.isNotEmpty && !session.bpmSamples.any((s) => s <= 0))
+                  if (session.bpmSamples.isNotEmpty &&
+                      !session.bpmSamples.any((s) => s <= 0))
                     const _HrZoneLegend(),
 
                   const SizedBox(height: _kDefaultPadding * 2),
@@ -272,6 +281,7 @@ class WorkoutDetailsView extends StatelessWidget {
     );
   }
 
+  /// Builds a single summary tile showing an icon, a numeric [value], and a [label].
   Widget _summaryTile({
     required String label,
     required String value,
@@ -298,26 +308,34 @@ class WorkoutDetailsView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.grey[500],
-              fontSize: 12,
-            ),
-          ),
+          Text(label, style: TextStyle(color: Colors.grey[500], fontSize: 12)),
         ],
       ),
     );
   }
 
+  /// Returns a human-readable date string in the form "Mon DD, YYYY".
   String _formatDate(DateTime date) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
+  /// Returns a human-readable duration string from [start] to [end].
+  ///
+  /// If [end] is `null`, returns "In Progress" to indicate an active session.
   String _formatDuration(DateTime start, DateTime? end) {
     if (end == null) return 'In Progress';
     final duration = end.difference(start);
@@ -332,6 +350,10 @@ class WorkoutDetailsView extends StatelessWidget {
     return parts.join(' ');
   }
 
+  /// Returns a user-friendly explanation for why the BPM chart area is empty.
+  ///
+  /// Distinguishes between an incomplete session, a sensor disconnect, and
+  /// a session that ran but recorded no valid heart-rate samples.
   String _getEmptyDataReason(WorkoutSessionDto session) {
     if (session.endTime == null) {
       return 'The workout was not completed';
@@ -343,6 +365,10 @@ class WorkoutDetailsView extends StatelessWidget {
   }
 }
 
+/// Displays a color-coded legend for the heart-rate training zones.
+///
+/// Each zone is rendered as a colored dot followed by its label and the
+/// corresponding percentage range of maximum heart rate.
 class _HrZoneLegend extends StatelessWidget {
   const _HrZoneLegend();
 
@@ -354,48 +380,58 @@ class _HrZoneLegend extends StatelessWidget {
       runSpacing: 8,
       children: List.generate(
         kHeartRateZones.length,
-            (i) =>
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: kHeartRateZones[i].color,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  '${kHeartRateZones[i].label} ${(kHeartRateZones[i]
-                      .minPercent * 100).toInt()}%-${(kHeartRateZones[i]
-                      .maxPercent * 100).toInt()}%',
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
+        (i) => Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                color: kHeartRateZones[i].color,
+                shape: BoxShape.circle,
+              ),
             ),
+            const SizedBox(width: 4),
+            Text(
+              '${kHeartRateZones[i].label} ${(kHeartRateZones[i].minPercent * 100).toInt()}%-${(kHeartRateZones[i].maxPercent * 100).toInt()}%',
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// Custom painter that draws a BPM waveform chart from raw samples.
+/// Custom painter that draws a BPM waveform chart from raw heart-rate samples.
 ///
-/// The chart maps the sample index to the horizontal axis and BPM values
-/// to the vertical axis, clipping to the available bounds.
+/// The chart maps sample index to the horizontal axis and BPM values to the
+/// vertical axis. Each line segment is colored according to the heart-rate
+/// zone the sample falls into. A gradient fill is drawn beneath the waveform.
+///
+/// **Chart math notes:**
+/// - A 10% vertical *padding* is added around the min/max BPM range so the
+///   waveform never clips at the absolute top or bottom edge of the canvas.
+///   The padding is clamped to `[0, 20]` BPM to avoid excessive whitespace.
+/// - A *divisor* guard (`samples.length > 1 ? samples.length - 1 : 1`)
+///   prevents division by zero when only a single sample is provided,
+///   which would otherwise produce `NaN` / `Infinity` offsets and crash
+///   the canvas paint pass.
 class BpmChart extends CustomPainter {
+  /// Creates a [BpmChart] painter for the given BPM [samples].
   BpmChart({
     required this.samples,
     required this.startTime,
     required this.endTime,
   });
 
+  /// Individual BPM readings ordered chronologically.
   final List<int> samples;
+
+  /// Timestamp of the first sample in the session.
   final DateTime startTime;
+
+  /// Timestamp of the last sample, or `null` if the session is still active.
   final DateTime? endTime;
 
   @override
@@ -408,7 +444,8 @@ class BpmChart extends CustomPainter {
     final bpmMin = samples.reduce((a, b) => a < b ? a : b);
     final bpmMax = samples.reduce((a, b) => a > b ? a : b);
 
-    // Add 10% padding to the BPM range so the line doesn't touch edges
+    // Vertical padding: expands the Y-axis range by 10% of the observed spread
+    // (clamped to 20 BPM) so the waveform never clips at the canvas edge.
     final padding = (bpmMax - bpmMin).toDouble().clamp(0.0, 20.0);
     final rangeMin = (bpmMin - padding).toDouble();
     final rangeMax = (bpmMax + padding).toDouble();
@@ -426,10 +463,7 @@ class BpmChart extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5;
 
-    final labelStyle = const TextStyle(
-      color: Colors.grey,
-      fontSize: 10,
-    );
+    final labelStyle = const TextStyle(color: Colors.grey, fontSize: 10);
 
     // Draw 4 horizontal grid lines
     for (int i = 0; i < 4; i++) {
@@ -437,21 +471,14 @@ class BpmChart extends CustomPainter {
       final bpmValue = rangeMin + effectiveRange * ratio;
       final y = chartBottom - (ratio * chartHeight);
 
-      canvas.drawLine(
-        Offset(chartLeft, y),
-        Offset(chartRight, y),
-        gridPaint,
-      );
+      canvas.drawLine(Offset(chartLeft, y), Offset(chartRight, y), gridPaint);
 
       final tp = TextPainter(
         text: TextSpan(text: '${bpmValue.round()}', style: labelStyle),
         textDirection: TextDirection.ltr,
       );
       tp.layout();
-      tp.paint(
-        canvas,
-        Offset(4, y - 6),
-      );
+      tp.paint(canvas, Offset(4, y - 6));
     }
 
     final linePaint = Paint()
@@ -459,6 +486,7 @@ class BpmChart extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     // BPM waveform line with zone-colored segments
+    // Guard: when samples.length == 1, divisor would be 0, producing NaN offsets.
     final divisor = samples.length > 1 ? samples.length - 1 : 1;
     for (int i = 0; i < samples.length - 1; i++) {
       final x1 = chartLeft + (i / divisor) * size.width;
@@ -470,11 +498,7 @@ class BpmChart extends CustomPainter {
 
       linePaint.color = getZoneColor(samples[i]);
 
-      canvas.drawLine(
-        Offset(x1, y1),
-        Offset(x2, y2),
-        linePaint,
-      );
+      canvas.drawLine(Offset(x1, y1), Offset(x2, y2), linePaint);
     }
 
     // Gradient fill under the line
@@ -482,7 +506,7 @@ class BpmChart extends CustomPainter {
     fillPath.addPolygon(
       List.generate(
         samples.length,
-            (i) => Offset(
+        (i) => Offset(
           chartLeft + (i / divisor) * size.width,
           chartBottom -
               ((samples[i] - rangeMin) / effectiveRange) * chartHeight,
@@ -507,14 +531,13 @@ class BpmChart extends CustomPainter {
     canvas.drawPath(fillPath, fillPaint);
   }
 
+  /// Always repaint so the chart reflects the latest sample data.
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 
+  /// Paints a centered "No data" label when the sample list is empty.
   void _drawEmpty(Canvas canvas, Size size) {
-    const labelStyle = TextStyle(
-      color: Colors.grey,
-      fontSize: 14,
-    );
+    const labelStyle = TextStyle(color: Colors.grey, fontSize: 14);
 
     final tp = TextPainter(
       text: const TextSpan(text: 'No data', style: labelStyle),
