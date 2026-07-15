@@ -4,12 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/models/body_sensor_location.dart';
-import '../../domain/models/hr_measurement.dart';
-import '../../domain/models/monitor_state.dart';
-import '../../infrastructure/parsers/hr_packet_parser.dart';
-import '../../../../core/infrastructure/services/foreground_service_manager.dart';
-import '../../../workout/infrastructure/repositories/workout_persistence_repository.dart';
+import 'package:ble_heart_rate_monitor/core/infrastructure/services/foreground_service_manager.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/body_sensor_location.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/monitor_state.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
+import 'package:ble_heart_rate_monitor/features/workout/infrastructure/repositories/workout_persistence_repository.dart';
 
 part 'hr_monitor_notifier.g.dart';
 
