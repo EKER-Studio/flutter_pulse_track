@@ -451,11 +451,8 @@ class BpmChart extends CustomPainter {
     final rangeMax = (bpmMax + padding).toDouble();
     final effectiveRange = rangeMax - rangeMin == 0 ? 1.0 : rangeMax - rangeMin;
 
-    final double chartLeft = 0;
-    final double chartRight = size.width;
-    final double chartTop = 0;
-    final double chartBottom = size.height;
-    final double chartHeight = chartBottom - chartTop;
+    final chartWidth = size.width;
+    final chartHeight = size.height;
 
     // Grid lines and labels
     final gridPaint = Paint()
@@ -463,15 +460,15 @@ class BpmChart extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5;
 
-    final labelStyle = const TextStyle(color: Colors.grey, fontSize: 10);
+    const labelStyle = TextStyle(color: Colors.grey, fontSize: 10);
 
     // Draw 4 horizontal grid lines
     for (int i = 0; i < 4; i++) {
       final ratio = i / 3;
       final bpmValue = rangeMin + effectiveRange * ratio;
-      final y = chartBottom - (ratio * chartHeight);
+      final y = chartHeight - (ratio * chartHeight);
 
-      canvas.drawLine(Offset(chartLeft, y), Offset(chartRight, y), gridPaint);
+      canvas.drawLine(Offset(0, y), Offset(chartWidth, y), gridPaint);
 
       final tp = TextPainter(
         text: TextSpan(text: '${bpmValue.round()}', style: labelStyle),
@@ -481,41 +478,33 @@ class BpmChart extends CustomPainter {
       tp.paint(canvas, Offset(4, y - 6));
     }
 
+    // Precompute all chart points in a single pass to avoid redundant
+    // coordinate calculations for both the line segments and the fill path.
+    // Guard: when samples.length == 1, divisor would be 0, producing NaN offsets.
+    final divisor = samples.length > 1 ? samples.length - 1 : 1;
+    final points = <Offset>[];
+    points.growTo(samples.length);
+    for (int i = 0; i < samples.length; i++) {
+      final x = (i / divisor) * chartWidth;
+      final ratio = (samples[i] - rangeMin) / effectiveRange;
+      final y = chartHeight - (ratio * chartHeight);
+      points[i] = Offset(x, y);
+    }
+
+    // BPM waveform line with zone-colored segments
     final linePaint = Paint()
       ..strokeWidth = 2.0
       ..strokeCap = StrokeCap.round;
 
-    // BPM waveform line with zone-colored segments
-    // Guard: when samples.length == 1, divisor would be 0, producing NaN offsets.
-    final divisor = samples.length > 1 ? samples.length - 1 : 1;
     for (int i = 0; i < samples.length - 1; i++) {
-      final x1 = chartLeft + (i / divisor) * size.width;
-      final x2 = chartLeft + ((i + 1) / divisor) * size.width;
-      final ratio1 = (samples[i] - rangeMin) / effectiveRange;
-      final ratio2 = (samples[i + 1] - rangeMin) / effectiveRange;
-      final y1 = chartBottom - (ratio1 * chartHeight);
-      final y2 = chartBottom - (ratio2 * chartHeight);
-
       linePaint.color = getZoneColor(samples[i]);
-
-      canvas.drawLine(Offset(x1, y1), Offset(x2, y2), linePaint);
+      canvas.drawLine(points[i], points[i + 1], linePaint);
     }
 
     // Gradient fill under the line
-    final fillPath = Path();
-    fillPath.addPolygon(
-      List.generate(
-        samples.length,
-        (i) => Offset(
-          chartLeft + (i / divisor) * size.width,
-          chartBottom -
-              ((samples[i] - rangeMin) / effectiveRange) * chartHeight,
-        ),
-      ),
-      false,
-    );
-    fillPath.lineTo(chartRight, chartBottom);
-    fillPath.lineTo(chartLeft, chartBottom);
+    final fillPath = Path()..addPolygon(points, false);
+    fillPath.lineTo(chartWidth, chartHeight);
+    fillPath.lineTo(0, chartHeight);
     fillPath.close();
 
     final fillPaint = Paint()
@@ -526,7 +515,7 @@ class BpmChart extends CustomPainter {
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-      ).createShader(Rect.fromLTWH(0, 0, size.width, chartHeight));
+      ).createShader(Rect.fromLTWH(0, 0, chartWidth, chartHeight));
 
     canvas.drawPath(fillPath, fillPaint);
   }
