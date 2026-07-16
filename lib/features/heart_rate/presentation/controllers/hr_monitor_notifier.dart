@@ -191,13 +191,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     // --- Phase 1: Physical link-layer handshake --------------------------------
     state = const MonitorState.connecting();
 
-    // Synchronize device ID with the foreground service manager, then attempt
-    // to start the foreground service. Both calls are wrapped defensively so
-    // a failure here does not prevent the physical BLE connection attempt.
+    // Start the foreground service. Wrapped defensively so a failure here
+    // does not prevent the physical BLE connection attempt.
     try {
-      final fsm = ref.read(foregroundServiceManagerProvider);
-      await fsm.setSelectedDeviceId(deviceId);
-      await fsm.startService();
+      await ref.read(foregroundServiceManagerProvider).startService();
     } catch (e) {
       debugPrint(
         '[HrMonitorNotifier] Foreground service startup failed (continuing '
