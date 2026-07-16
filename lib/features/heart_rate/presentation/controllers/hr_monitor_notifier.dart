@@ -135,6 +135,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// `finally` block so the notifier is always ready for future connections.
   bool _isDisconnecting = false;
 
+  /// Explicit timer guarding the physical BLE link-layer handshake.
+  /// Cancelled at the start of [connect] and in every failure/cleanup path
+  /// to prevent stale callbacks from racing with a new connection attempt.
+  Timer? _connectTimer;
+
   // ---------------------------------------------------------------------------
   // Riverpod build — register disposal and return initial state
   // ---------------------------------------------------------------------------
@@ -172,6 +177,12 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// The method is idempotent: a second call while [connecting] or
   /// [discoveringServices] is in progress is safely ignored.
   Future<void> connect(String deviceId, String deviceName) async {
+    // Cancel any lingering connection timer from a previous attempt before
+    // doing anything else, so a stale callback can never race with a fresh
+    // connection flow.
+    _connectTimer?.cancel();
+    _connectTimer = null;
+
     if (state is ConnectingMonitorState ||
         state is DiscoveringServicesMonitorState) {
       debugPrint(
@@ -209,28 +220,49 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       );
     }
 
-    try {
-      await _device!.connect(autoConnect: false).timeout(_kConnectionTimeout);
-    } on TimeoutException {
+    // Explicit timer guarding the link-layer handshake. The callback is
+    // guarded: it only transitions to failure when the state is still
+    // ConnectingMonitorState, so a fast reconnect that changes state first
+    // is never clobbered by a stale timer firing.
+    _connectTimer = Timer(_kConnectionTimeout, () {
+      if (state is! ConnectingMonitorState) {
+        debugPrint(
+          '[HrMonitorNotifier] Connect timer fired but state is no longer '
+          'connecting — ignoring stale callback.',
+        );
+        return;
+      }
       debugPrint(
         '[HrMonitorNotifier] Physical connection timed out after '
         '${_kConnectionTimeout.inSeconds}s.',
       );
-      await ref.read(foregroundServiceManagerProvider).stopService();
-      await _safeDisconnectDevice();
+      _connectTimer?.cancel();
+      _connectTimer = null;
+      ref.read(foregroundServiceManagerProvider).stopService();
+      _safeDisconnectDevice();
       state = const MonitorState.failure(
         message:
             'Connection timed out. Make sure the sensor is nearby and powered on.',
       );
-      return;
+    });
+
+    try {
+      await _device!.connect(autoConnect: false);
     } catch (e, st) {
-      debugPrint('[HrMonitorNotifier] connect() threw unexpectedly: $e\n$st');
+      debugPrint('[HrMonitorNotifier] connect() threw: $e\n$st');
+      _connectTimer?.cancel();
+      _connectTimer = null;
       await ref.read(foregroundServiceManagerProvider).stopService();
       await _safeDisconnectDevice();
       state = MonitorState.failure(
         message: 'Failed to connect: ${e.toString()}',
       );
       return;
+    } finally {
+      // Connection succeeded or was cancelled — stop the timer so it never
+      // fires after we leave the connecting state.
+      _connectTimer?.cancel();
+      _connectTimer = null;
     }
 
     debugPrint(
@@ -428,6 +460,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// and transitions to [DisconnectedMonitorState].
   Future<void> disconnect() async {
     debugPrint('[HrMonitorNotifier] disconnect() called.');
+    _connectTimer?.cancel();
+    _connectTimer = null;
     _isDisconnecting = true;
     try {
       await _saveSessionToDisk();
@@ -757,6 +791,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     // Fire-and-forget async operations from a sync dispose callback.
     // Riverpod does not await onDispose callbacks; best-effort teardown is
     // the correct behaviour here to avoid holding up ProviderScope disposal.
+    _connectTimer?.cancel();
+    _connectTimer = null;
     _hrNotificationSubscription?.cancel();
     _batteryNotificationSubscription?.cancel();
     _connectionStateSubscription?.cancel();
