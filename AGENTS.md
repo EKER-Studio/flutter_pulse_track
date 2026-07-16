@@ -71,14 +71,12 @@ For every public class/method, add a doc comment following the language's standa
 - Run tests: `flutter test`
 
 ### Architecture & Layer Boundaries
-This is a Local-First, AI-Native mobile application utilizing Clean Architecture under a Feature-First approach.
-- **Domain Layer (`lib/features/[feature_name]/domain/`)**: Pure Dart business logic, entities, and repository interfaces. NO Flutter or Riverpod imports allowed here.
-- **Data Layer (`lib/features/[feature_name]/data/`)**: Repository implementations, models, and mappers utilizing `isar_community` (Isar Database).
-- **Presentation Layer (`lib/features/[feature_name]/presentation/`)**: Responsive UI components, state management via Riverpod 3.x generators (`@riverpod`), and controllers/notifiers.
-
-### State Management & Reactivity
+This is a Local-First, AI-Native boilerplate utilizing Clean Architecture under a Feature-First approach, structured as:
+- **Domain Layer** (`lib/features/<feature>/domain/`): Pure Dart logic — entities, repository interfaces, use cases. NO Flutter or Riverpod imports allowed here.
+- **Data Layer** (`lib/features/<feature>/data/`): Repository implementations and local storage handlers utilizing `isar_community`.
+- **Presentation Layer** (`lib/features/<feature>/presentation/`): UI (`ConsumerWidget`) and state management via Riverpod 3.x generators (`@riverpod`).
 - **State Management:** Riverpod 3.x strictly.
-- **Data Flow:** UI (`ConsumerWidget`) -> Notifier (`@riverpod`) -> Repository Interface (`domain`) -> Repository Impl (`data`) -> Local DB (`isar_community`).
+- **Data Flow:** UI (`ConsumerWidget`) -> Notifier (`@riverpod`) -> Repository Interface (domain) -> Repository Impl (data) -> Local DB (`isar_community`).
 - **Reactivity:** Handled purely via Isar streams. Notifiers listen to Isar collections and pipe data directly into `AsyncValue` state.
 
 ### Lifecycle & Resource Disposal Checklist
@@ -94,4 +92,4 @@ After any modification within the `lib/**` directory, you MUST execute the follo
 2. `flutter analyze`
 3. `flutter test`
 
-A task is NOT considered complete until all steps pass with zero errors and zero failing tests, AND the Lifecycle & Resource Disposal Checklist above has been explicitly verified for any touched code involving streams/timers/BLE/background tasks. Fix any arising issues autonomously, subject to the Guardrails above.
+A task is NOT considered complete until all steps pass with zero errors and zero failing tests, AND the Lifecycle & Resource Disposal Checklist above has been explicitly verified. Fix any arising issues autonomously, subject to the Guardrails above.
