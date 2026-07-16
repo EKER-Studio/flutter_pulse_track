@@ -31,8 +31,9 @@ For every public class/method, add a doc comment following the language's standa
 - Never introduce a new dependency to solve a problem that can be reasonably solved with existing project dependencies or stdlib.
 
 ### Git & Version Control
-- Do NOT commit automatically unless explicitly instructed — some tools default to auto-commit, this project does not.
-- If committing is requested, write descriptive, atomic commit messages (what changed and why, not just "fix").
+- Once the full Mandatory Verification Pipeline has passed (all steps green, zero errors, zero failing tests) for a completed, atomic logical change, commit it without asking for permission first.
+- Do NOT commit if any pipeline step failed, was skipped, or could not be run — stop and report instead, per Guardrails and Verification Honesty above.
+- Write descriptive, atomic commit messages (what changed and why, not just "fix").
 - NEVER force-push, rewrite shared history, or delete branches without explicit confirmation.
 
 ### Security
