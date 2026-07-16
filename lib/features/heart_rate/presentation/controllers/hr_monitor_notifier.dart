@@ -128,6 +128,12 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// Null if the device does not expose a Battery Service or the read failed.
   int? _currentBatteryLevel;
 
+  /// Guard flag that prevents [_onDeviceConnectionStateChanged] from treating
+  /// an intentional, user-initiated disconnect as an unexpected link drop.
+  /// Set to `true` at the start of [disconnect] and reset to `false` in the
+  /// `finally` block so the notifier is always ready for future connections.
+  bool _isDisconnecting = false;
+
   // ---------------------------------------------------------------------------
   // Riverpod build — register disposal and return initial state
   // ---------------------------------------------------------------------------
@@ -401,13 +407,16 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       },
       onDone: () {
         // The characteristic stream closed, typically because the device
-        // disconnected. Only transition if we haven't already surfaced a
-        // failure state (e.g., from the connection state listener).
+        // disconnected. Transition to a failure state so the user sees a
+        // recovery screen with a "Retry" CTA instead of being silently
+        // returned to the idle screen.
         debugPrint(
           '[HrMonitorNotifier] HR notification stream closed by remote device.',
         );
         if (state is ConnectedMonitorState) {
-          state = const MonitorState.disconnected();
+          state = const MonitorState.failure(
+            message: 'Heart rate stream was unexpectedly terminated.',
+          );
         }
       },
       cancelOnError: false,
@@ -418,11 +427,16 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// and transitions to [DisconnectedMonitorState].
   Future<void> disconnect() async {
     debugPrint('[HrMonitorNotifier] disconnect() called.');
-    await _saveSessionToDisk();
-    await _cancelSubscriptions();
-    await _safeDisconnectDevice();
-    await ref.read(foregroundServiceManagerProvider).stopService();
-    state = const MonitorState.disconnected();
+    _isDisconnecting = true;
+    try {
+      await _saveSessionToDisk();
+      await _cancelSubscriptions();
+      await _safeDisconnectDevice();
+      await ref.read(foregroundServiceManagerProvider).stopService();
+      state = const MonitorState.disconnected();
+    } finally {
+      _isDisconnecting = false;
+    }
   }
 
   /// Flushes collected session telemetry to disk asynchronously via the repository,
@@ -645,12 +659,23 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// If the device drops the connection while data is streaming (e.g., sensor
   /// battery dies, device moves out of range), this callback surfaces a
   /// [FailureMonitorState] so the UI shows the recovery screen immediately.
+  ///
+  /// Returns early if [_isDisconnecting] is `true`, preventing the callback
+  /// from treating a user-initiated disconnect as an unexpected link drop.
   void _onDeviceConnectionStateChanged(
     BluetoothConnectionState connectionState,
   ) {
     debugPrint(
       '[HrMonitorNotifier] Device connection state → ${connectionState.name}',
     );
+
+    if (_isDisconnecting) {
+      debugPrint(
+        '[HrMonitorNotifier] Ignoring connection state event — '
+        'disconnect is already in progress.',
+      );
+      return;
+    }
 
     if (connectionState == BluetoothConnectionState.disconnected) {
       // Guard against firing during an intentional disconnect triggered by
