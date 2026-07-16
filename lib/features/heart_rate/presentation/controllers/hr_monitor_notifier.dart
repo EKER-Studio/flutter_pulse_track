@@ -670,6 +670,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
 
       if (supportsNotify || supportsIndicate) {
         await batteryChar.setNotifyValue(true);
+
+        // Post-await guard: if the notifier was disposed while awaiting
+        if (!ref.mounted) return;
+
         _batteryNotificationSubscription = batteryChar.onValueReceived.listen(
           (List<int> bytes) {
             if (!ref.mounted) return;
