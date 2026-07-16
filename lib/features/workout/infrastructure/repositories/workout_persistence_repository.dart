@@ -4,14 +4,18 @@ import 'package:isar_community/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/infrastructure/storage/isar_provider.dart';
+import '../../domain/repositories/workout_persistence_repository.dart'
+    as domain;
 import '../models/device_profile_dto.dart';
 import '../models/workout_session_dto.dart';
 
 part 'workout_persistence_repository.g.dart';
 
+/// Concrete Isar-backed implementation of [WorkoutPersistenceRepository].
+///
 /// Repository abstracting local Isar database persistence for BLE sensor profiles
 /// and immutable workout sessions.
-class WorkoutPersistenceRepository {
+class WorkoutPersistenceRepository implements domain.WorkoutPersistenceRepository {
   final Isar _isar;
 
   const WorkoutPersistenceRepository(this._isar);
@@ -19,8 +23,9 @@ class WorkoutPersistenceRepository {
   /// Caches the BLE sensor profile to the database.
   ///
   /// Uses an upsert-by-MAC semantic via the `replace: true` index in Isar.
-  /// This ensures we only keep the freshest profile (e.g. updated name or 
+  /// This ensures we only keep the freshest profile (e.g. updated name or
   /// battery location) for a given physical sensor.
+  @override
   Future<void> saveDeviceProfile({
     required String macAddress,
     required String name,
@@ -42,6 +47,7 @@ class WorkoutPersistenceRepository {
   /// Computes the `avgBpm` and `maxBpm` from the raw telemetry [samples] before
   /// performing an atomic write transaction. Empty sessions (0 samples) are
   /// silently discarded to avoid cluttering the history view.
+  @override
   Future<void> saveWorkoutSession({
     required DateTime startTime,
     required DateTime endTime,
