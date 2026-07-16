@@ -225,10 +225,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     // ConnectingMonitorState, so a fast reconnect that changes state first
     // is never clobbered by a stale timer firing.
     _connectTimer = Timer(_kConnectionTimeout, () {
-      if (state is! ConnectingMonitorState) {
+      if (!ref.mounted || state is! ConnectingMonitorState) {
         debugPrint(
-          '[HrMonitorNotifier] Connect timer fired but state is no longer '
-          'connecting — ignoring stale callback.',
+          '[HrMonitorNotifier] Connect timer fired but notifier is inactive '
+          'or state is no longer connecting — ignoring stale callback.',
         );
         return;
       }
@@ -263,6 +263,17 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       // fires after we leave the connecting state.
       _connectTimer?.cancel();
       _connectTimer = null;
+    }
+
+    // Post-await guard: if the notifier was disposed while awaiting the
+    // connect() call above, _cleanup() has already set _device to null.
+    // Abort cleanly to avoid a NullPointer on the force-unwrap below.
+    if (!ref.mounted || _device == null) {
+      debugPrint(
+        '[HrMonitorNotifier] connect() aborted — notifier disposed '
+        'while awaiting physical link.',
+      );
+      return;
     }
 
     debugPrint(
@@ -312,6 +323,16 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       await _safeDisconnectDevice();
       state = MonitorState.failure(
         message: 'Service discovery failed: ${e.toString()}',
+      );
+      return;
+    }
+
+    // Post-await guard: if the notifier was disposed while awaiting
+    // discoverServices(), _cleanup() has already set _device to null.
+    if (!ref.mounted || _device == null) {
+      debugPrint(
+        '[HrMonitorNotifier] connect() aborted — notifier disposed '
+        'while awaiting GATT discovery.',
       );
       return;
     }
@@ -403,12 +424,24 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       return;
     }
 
+    // Post-await guard: if the notifier was disposed while awaiting
+    // setNotifyValue(), _cleanup() has already nullified _device.
+    if (!ref.mounted || _device == null) {
+      debugPrint(
+        '[HrMonitorNotifier] connect() aborted — notifier disposed '
+        'while awaiting GATT notification setup.',
+      );
+      return;
+    }
+
     debugPrint(
       '[HrMonitorNotifier] GATT HR notifications active — streaming live data.',
     );
 
     _hrNotificationSubscription = hrCharacteristic.onValueReceived.listen(
       (List<int> rawBytes) {
+        if (!ref.mounted) return;
+
         final HrMeasurement? measurement = HrPacketParser.parseRawBytes(
           rawBytes,
         );
@@ -431,6 +464,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
         state = MonitorState.connected(measurement: enrichedMeasurement);
       },
       onError: (Object error, StackTrace stack) {
+        if (!ref.mounted) return;
         debugPrint(
           '[HrMonitorNotifier] HR notification stream error: $error\n$stack',
         );
@@ -439,6 +473,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
         );
       },
       onDone: () {
+        if (!ref.mounted) return;
         // The characteristic stream closed, typically because the device
         // disconnected. Transition to a failure state so the user sees a
         // recovery screen with a "Retry" CTA instead of being silently
@@ -637,11 +672,13 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
         await batteryChar.setNotifyValue(true);
         _batteryNotificationSubscription = batteryChar.onValueReceived.listen(
           (List<int> bytes) {
+            if (!ref.mounted) return;
             if (bytes.isNotEmpty) {
               _updateStateWithBatteryLevel(bytes.first.clamp(0, 100));
             }
           },
           onError: (Object error, StackTrace stack) {
+            if (!ref.mounted) return;
             debugPrint(
               '[HrMonitorNotifier] Battery notification stream error: $error',
             );
@@ -700,6 +737,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   Future<void> _onDeviceConnectionStateChanged(
     BluetoothConnectionState connectionState,
   ) async {
+    if (!ref.mounted) return;
+
     debugPrint(
       '[HrMonitorNotifier] Device connection state → ${connectionState.name}',
     );
