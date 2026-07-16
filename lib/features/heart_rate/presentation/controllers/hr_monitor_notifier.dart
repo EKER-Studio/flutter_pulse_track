@@ -662,9 +662,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   ///
   /// Returns early if [_isDisconnecting] is `true`, preventing the callback
   /// from treating a user-initiated disconnect as an unexpected link drop.
-  void _onDeviceConnectionStateChanged(
+  Future<void> _onDeviceConnectionStateChanged(
     BluetoothConnectionState connectionState,
-  ) {
+  ) async {
     debugPrint(
       '[HrMonitorNotifier] Device connection state → ${connectionState.name}',
     );
@@ -691,7 +691,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
         _batteryNotificationSubscription?.cancel();
         _hrNotificationSubscription = null;
         _batteryNotificationSubscription = null;
-        _saveSessionToDisk(); // Flush recorded session safely
+        await _saveSessionToDisk();
+        await ref.read(foregroundServiceManagerProvider).stopService();
         state = const MonitorState.failure(
           message:
               'Connection lost. The sensor may be out of range or powered off.',
