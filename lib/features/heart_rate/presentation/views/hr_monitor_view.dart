@@ -10,7 +10,10 @@ import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/controll
 /// Implements an exhaustive state machine UI reacting to [MonitorState]
 /// emitted by [hrMonitorProvider].
 class HrMonitorView extends ConsumerStatefulWidget {
+  /// Unique BLE identifier of the target heart rate sensor.
   final String deviceId;
+
+  /// Human-readable display name of the target heart rate sensor.
   final String deviceName;
 
   const HrMonitorView({
@@ -39,6 +42,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
 
   @override
   Widget build(BuildContext context) {
+    // Watches [hrMonitorProvider] for reactive updates from the BLE heart rate stream.
+    // Delegates to a dedicated builder per [MonitorState] variant to keep the
+    // state machine UI clean and exhaustive.
     final state = ref.watch(hrMonitorProvider);
     final notifier = ref.read(hrMonitorProvider.notifier);
 
@@ -98,9 +104,8 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     );
   }
 
+  /// Renders the UI for a hard-disconnected state with a button to return to the scanner.
   Widget _buildDisconnectedState(BuildContext context) {
-    // Optionally pop the route if the user gets to a hard disconnected state.
-    // For UI stability, we'll just show a graceful disconnected message.
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -129,6 +134,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     );
   }
 
+  /// Renders a centered loading indicator with a progress message during connection setup.
   Widget _buildLoadingState(String message) {
     return Center(
       child: Padding(
@@ -156,6 +162,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     );
   }
 
+  /// Renders the live telemetry dashboard showing BPM, R-R intervals, sensor location, and battery.
   Widget _buildConnectedState(HrMeasurement metric) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
@@ -288,6 +295,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     );
   }
 
+  /// Renders an error card with the failure message and options to retry or go back.
   Widget _buildFailureState(
     BuildContext context,
     String message,

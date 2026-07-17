@@ -9,12 +9,20 @@ class HeartRateZone {
     required this.color,
   });
 
+  /// Short display name for the zone (e.g. "Z1").
   final String label;
+
+  /// Lower bound of the zone as a fraction of max heart rate (0.0–1.0).
   final double minPercent;
+
+  /// Upper bound of the zone as a fraction of max heart rate (0.0–1.0).
   final double maxPercent;
+
+  /// Visual color used to represent this zone on charts and legends.
   final Color color;
 }
 
+/// Palette of zone colors ordered from Z1 through Z5.
 const List<Color> kZoneColors = [
   Color(0xFF4D96FF),
   Color(0xFF6BCB77),
@@ -23,6 +31,7 @@ const List<Color> kZoneColors = [
   Color(0xFFFF6B6B),
 ];
 
+/// Default assumed maximum heart rate used when none is provided.
 const int kDefaultMaxHr = 190;
 
 const List<HeartRateZone> kHeartRateZones = [

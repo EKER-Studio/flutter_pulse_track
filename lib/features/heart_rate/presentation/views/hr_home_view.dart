@@ -207,6 +207,7 @@ class HrHomeView extends ConsumerWidget {
     );
   }
 
+  /// Builds a tappable placeholder card for a feature section.
   Widget _buildPlaceholderSection(
     BuildContext context, {
     required String title,

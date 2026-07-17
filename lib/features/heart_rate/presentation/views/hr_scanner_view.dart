@@ -62,10 +62,12 @@ class HrScannerView extends ConsumerWidget {
     );
   }
 
+  /// Returns true if any device type filter is currently active.
   bool _isFilterActive(BleScannerNotifier notifier) {
     return notifier.filtersEnabled;
   }
 
+  /// Builds the idle state UI displayed when no scan is active and no devices have been found.
   Widget _buildIdleState(BleScannerNotifier notifier) {
     return Center(
       child: Column(
@@ -111,6 +113,7 @@ class HrScannerView extends ConsumerWidget {
     );
   }
 
+  /// Builds the UI displayed when the Bluetooth adapter is off.
   Widget _buildAdapterOffState() {
     return Container(
       width: double.infinity,
@@ -142,6 +145,7 @@ class HrScannerView extends ConsumerWidget {
     );
   }
 
+  /// Builds the empty state UI displayed when scanning has completed but no devices were found.
   Widget _buildEmptyState(BleScannerNotifier notifier) {
     return Center(
       child: Padding(
@@ -201,6 +205,7 @@ class HrScannerView extends ConsumerWidget {
     );
   }
 
+  /// Builds the failure state UI displayed when the scan could not be started.
   Widget _buildFailureState(String message, BleScannerNotifier notifier) {
     return Center(
       child: Padding(
@@ -256,6 +261,7 @@ class HrScannerView extends ConsumerWidget {
     );
   }
 
+  /// Builds the scanning state UI with an animated indicator and the list of discovered devices.
   Widget _buildScanningState(
     BuildContext context,
     BleScannerNotifier notifier,
@@ -359,12 +365,14 @@ class HrScannerView extends ConsumerWidget {
           );
   }
 
+  /// Returns a color representing signal strength for the given RSSI value.
   Color _getRssiColor(int rssi) {
     if (rssi >= -65) return Colors.greenAccent;
     if (rssi >= -85) return Colors.orangeAccent;
     return Colors.redAccent;
   }
 
+  /// Returns an icon representing signal strength for the given RSSI value.
   IconData _getRssiIcon(int rssi) {
     if (rssi >= -65) return Icons.signal_cellular_alt;
     if (rssi >= -85) return Icons.signal_cellular_alt_2_bar;

@@ -8,13 +8,22 @@ part 'save_workout_session_usecase.g.dart';
 
 /// Encapsulates the application logic for persisting a completed workout session.
 ///
-/// The [HrMonitorNotifier] in the presentation layer depends on this Use Case
-/// instead of reaching into the infrastructure layer directly.
+/// Invoked when a workout ends (user-initiated stop or connection loss). Writes
+/// the full BPM sample trace, timing metadata, and device identifier into local
+/// storage as an immutable record for historical replay and analytics.
 class SaveWorkoutSessionUseCase {
   final WorkoutPersistenceRepository _repository;
 
+  /// Creates an instance backed by the given [_repository].
   SaveWorkoutSessionUseCase(this._repository);
 
+  /// Persists a workout session snapshot to local storage.
+  ///
+  /// The [startTime] and [endTime] delimit the session window. The [samples] list
+  /// contains chronologically ordered BPM readings captured during the session.
+  /// The [sensorLocationIndex], [macAddress], and [name] are captured from the
+  /// connected sensor at session start and stored alongside the samples to ensure
+  /// the record remains self-contained even if the device profile is later deleted.
   Future<void> call({
     required DateTime startTime,
     required DateTime endTime,
@@ -32,6 +41,8 @@ class SaveWorkoutSessionUseCase {
   );
 }
 
+/// Riverpod provider that supplies a [SaveWorkoutSessionUseCase] wired to the
+/// concrete [WorkoutPersistenceRepository] implementation.
 @riverpod
 SaveWorkoutSessionUseCase saveWorkoutSessionUseCase(Ref ref) {
   return SaveWorkoutSessionUseCase(

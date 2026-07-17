@@ -7,14 +7,26 @@ import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_con
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/services/bluetooth_connection_service.dart';
 
 /// FlutterBluePlus implementation of the connection service, safe for production releases.
+///
+/// Manages a single active BLE connection at a time. Emits [BleConnectionStatus]
+/// updates via a broadcast stream so multiple listeners can react to state changes.
 class FbpBluetoothConnectionService implements BluetoothConnectionService {
+  /// The currently connected peripheral, or `null` when disconnected.
   BluetoothDevice? _activeDevice;
+
+  /// Broadcast controller that emits connection state transitions.
   final _statusController = StreamController<BleConnectionStatus>.broadcast();
 
   @override
+  /// Stream of connection state changes for the active peripheral.
   Stream<BleConnectionStatus> get connectionStatus => _statusController.stream;
 
   @override
+  /// Connects to the peripheral identified by [deviceId].
+  ///
+  /// Emits [BleConnectionStatus.connecting] immediately, followed by either
+  /// [BleConnectionStatus.connected] on success or [BleConnectionStatus.disconnected]
+  /// plus an error on failure. The native connect call is bounded by a 4-second timeout.
   Future<void> connect(String deviceId) async {
     try {
       debugPrint('--- [CONN SERVICE] Initializing connection to $deviceId ---');
@@ -43,6 +55,9 @@ class FbpBluetoothConnectionService implements BluetoothConnectionService {
   }
 
   @override
+  /// Disconnects from the active peripheral and clears the internal device reference.
+  ///
+  /// Emits [BleConnectionStatus.disconnected] upon completion. No-op if already disconnected.
   Future<void> disconnect() async {
     if (_activeDevice != null) {
       debugPrint(

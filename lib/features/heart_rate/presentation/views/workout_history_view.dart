@@ -11,6 +11,7 @@ import 'package:ble_heart_rate_monitor/features/workout/presentation/views/worko
 class WorkoutHistoryView extends ConsumerWidget {
   const WorkoutHistoryView({super.key});
 
+  /// Builds the workout history list from an Isar stream.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isar = ref.watch(isarProvider);
@@ -77,6 +78,7 @@ class WorkoutHistoryView extends ConsumerWidget {
     );
   }
 
+  /// Renders a centered empty-state message when no workout sessions exist.
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
@@ -107,6 +109,10 @@ class WorkoutHistoryView extends ConsumerWidget {
     );
   }
 
+  /// Builds a tappable card for a single workout session.
+  ///
+  /// Tapping navigates to [WorkoutDetailsView]. Swiping right dismisses
+  /// and deletes the session from Isar.
   Widget _buildWorkoutCard(BuildContext context, WorkoutSessionDto session) {
     final duration = _formatDuration(session.startTime, session.endTime);
     final formattedDate = _formatDate(session.startTime);
@@ -189,6 +195,7 @@ class WorkoutHistoryView extends ConsumerWidget {
     );
   }
 
+  /// Builds a vertical metric pair showing a bold numeric [value] above a [label].
   Widget _buildMetricColumn(String label, String value) {
     return Column(
       children: [
@@ -206,6 +213,7 @@ class WorkoutHistoryView extends ConsumerWidget {
     );
   }
 
+  /// Returns a relative date string ("Today, HH:mm", "Yesterday…", or "Mon, MMM DD, HH:mm").
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -221,12 +229,14 @@ class WorkoutHistoryView extends ConsumerWidget {
     }
   }
 
+  /// Returns a 24-hour time string in the form "HH:mm".
   String _formatTime(DateTime date) {
     final hour = date.hour.toString().padLeft(2, '0');
     final minute = date.minute.toString().padLeft(2, '0');
     return '$hour:$minute';
   }
 
+  /// Returns a compact month-day string (e.g. "Jan 5").
   String _formatMonthDay(DateTime date) {
     final months = [
       'Jan',
@@ -245,11 +255,13 @@ class WorkoutHistoryView extends ConsumerWidget {
     return '${months[date.month - 1]} ${date.day}';
   }
 
+  /// Returns the abbreviated day-of-week name (e.g. "Mon").
   String _getDayOfWeek(DateTime date) {
     final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     return days[(date.weekday - 1) % 7];
   }
 
+  /// Formats the elapsed time between [start] and [end] into a compact "Xh Ym" string.
   String _formatDuration(DateTime start, DateTime? end) {
     final endTime = end ?? DateTime.now();
     final duration = endTime.difference(start);

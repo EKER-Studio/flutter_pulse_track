@@ -9,18 +9,38 @@ import 'package:ble_heart_rate_monitor/features/heart_rate/domain/services/heart
 import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
 
 /// FlutterBluePlus implementation of the heart rate repository with embedded connection-resilience logic.
+///
+/// Handles the full GATT lifecycle: connects to the peripheral, discovers services,
+/// reads optional characteristics (body sensor location, battery level), and sets up
+/// notifications on the Heart Rate Measurement characteristic. All optional reads are
+/// defensive — failures do not interrupt the telemetry stream.
 class FbpHeartRateRepository implements HeartRateRepository {
   final BluetoothDevice _device;
 
+  /// UUID for the standard Heart Rate service (0x180D).
   static final Guid _hrServiceUuid = Guid('180d');
+
+  /// UUID for the Heart Rate Measurement characteristic (0x2A37).
   static final Guid _hrCharacteristicUuid = Guid('2a37');
+
+  /// UUID for the standard Battery Service (0x180F).
   static final Guid _batteryServiceUuid = Guid('180f');
+
+  /// UUID for the Battery Level characteristic (0x2A19).
   static final Guid _batteryLevelUuid = Guid('2a19');
 
+  /// Creates a repository bound to the device identified by [deviceId].
   FbpHeartRateRepository(String deviceId)
     : _device = BluetoothDevice.fromId(deviceId);
 
   @override
+  /// Returns a stream of [HrMeasurement] objects parsed from raw GATT notifications.
+  ///
+  /// On first access, performs a hard connect and service discovery. Optionally reads
+  /// the Body Sensor Location (0x2A38) and Battery Level (0x2A19) characteristics,
+  /// injecting the discovered values into every emitted measurement. The returned
+  /// stream controller is self-cleaning: cancelling the stream disposes the underlying
+  /// GATT notification subscription.
   Stream<HrMeasurement> get heartRateStream {
     final controller = StreamController<HrMeasurement>();
     StreamSubscription<List<int>>? notificationSubscription;

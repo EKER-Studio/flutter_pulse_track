@@ -1,10 +1,17 @@
 import 'body_sensor_location.dart';
 
+/// Single heart rate data point captured from a BLE sensor.
+///
+/// Aggregates instantaneous BPM, R-R intervals, sensor metadata, and
+/// battery level into one immutable snapshot.
 class HrMeasurement {
+  /// Instantaneous heart rate in beats per minute.
   final int bpm;
 
   /// R-R intervals stored in seconds to closely align with standard sport metrics and HRV analysis.
   final List<double> rrIntervals;
+
+  /// UTC moment at which this measurement was captured.
   final DateTime timestamp;
 
   /// Dynamic hardware placement location decoded via BLE GATT characteristic 0x2A38.
