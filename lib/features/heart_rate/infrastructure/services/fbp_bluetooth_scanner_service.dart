@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-import '../../domain/models/ble_device.dart';
-import '../../domain/services/bluetooth_scanner_service.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_device.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/services/bluetooth_scanner_service.dart';
 
 /// FlutterBluePlus implementation of the BLE scanner service, optimized for performance and production safe logging.
 class FbpBluetoothScannerService implements BluetoothScannerService {

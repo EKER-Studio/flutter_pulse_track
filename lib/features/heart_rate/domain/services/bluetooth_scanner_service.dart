@@ -1,4 +1,4 @@
-import '../models/ble_device.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_device.dart';
 
 /// Contract for discovering nearby Bluetooth Low Energy peripherals.
 abstract class BluetoothScannerService {

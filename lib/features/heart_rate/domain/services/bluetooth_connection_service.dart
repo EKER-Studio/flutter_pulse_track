@@ -1,4 +1,4 @@
-import '../models/ble_connection_status.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_connection_status.dart';
 
 /// Contract for managing the lifecycle of a physical connection with a BLE device.
 abstract class BluetoothConnectionService {

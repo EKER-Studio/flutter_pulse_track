@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/models/ble_device.dart';
-import '../../domain/models/ble_scanner_state.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_device.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_scanner_state.dart';
 
 part 'ble_scanner_notifier.g.dart';
 
@@ -180,9 +180,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
         '(hardware scan window closed).',
       );
     } catch (e) {
-      debugPrint(
-        '[BleScannerNotifier] FlutterBluePlus.startScan() threw: $e',
-      );
+      debugPrint('[BleScannerNotifier] FlutterBluePlus.startScan() threw: $e');
       _cancelEmptyStateTimer();
       await _scanResultsSubscription?.cancel();
       _scanResultsSubscription = null;
@@ -255,9 +253,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   /// [FlutterBluePlus.adapterState]. A power-off event immediately overrides
   /// any other state and cancels all in-flight scan operations.
   void _onAdapterStateChanged(BluetoothAdapterState adapterState) {
-    debugPrint(
-      '[BleScannerNotifier] Adapter state → ${adapterState.name}',
-    );
+    debugPrint('[BleScannerNotifier] Adapter state → ${adapterState.name}');
 
     switch (adapterState) {
       case BluetoothAdapterState.off:
@@ -320,8 +316,9 @@ class BleScannerNotifier extends _$BleScannerNotifier {
       );
     }
 
-    final List<BleDevice> qualifiedDevices =
-        uniqueDevices.values.toList(growable: false);
+    final List<BleDevice> qualifiedDevices = uniqueDevices.values.toList(
+      growable: false,
+    );
 
     if (qualifiedDevices.isNotEmpty) {
       // At least one device passed the filters — cancel the empty-state timer

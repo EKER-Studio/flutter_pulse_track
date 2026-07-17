@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/models/ble_device.dart';
-import '../../domain/models/ble_scanner_state.dart';
-import '../controllers/ble_scanner_notifier.dart';
-import 'hr_monitor_view.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_device.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_scanner_state.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/controllers/ble_scanner_notifier.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/views/hr_monitor_view.dart';
 
 /// Main entry point for discovering BLE heart rate sensors.
 ///

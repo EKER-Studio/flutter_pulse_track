@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../workout/infrastructure/models/workout_session_dto.dart';
+import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/workout_session_dto.dart';
 
 /// Utility for exporting heart rate workout sessions to CSV and sharing them
 /// via the native system share sheet.
@@ -49,10 +49,7 @@ class HeartRateExportHelper {
       // written to disk.
       if (!navigator.canPop()) return;
 
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: 'My Workout HR Export',
-      );
+      await Share.shareXFiles([XFile(file.path)], text: 'My Workout HR Export');
 
       // Guard: the share sheet may have caused the route to pop.
       if (!navigator.canPop()) return;
@@ -96,7 +93,9 @@ class HeartRateExportHelper {
     for (var i = 0; i < sampleCount; i++) {
       final elapsed = totalDuration.inMilliseconds > 0
           ? Duration(
-              milliseconds: (i / (sampleCount - 1) * totalDuration.inMilliseconds).toInt(),
+              milliseconds:
+                  (i / (sampleCount - 1) * totalDuration.inMilliseconds)
+                      .toInt(),
             )
           : Duration.zero;
 
@@ -122,5 +121,4 @@ class HeartRateExportHelper {
     final second = date.second.toString().padLeft(2, '0');
     return '$year-$month-$day $hour:$minute:$second';
   }
-
 }

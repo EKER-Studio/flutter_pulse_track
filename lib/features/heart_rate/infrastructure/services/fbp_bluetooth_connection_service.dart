@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart'; // used for debugPrint
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-import '../../domain/models/ble_connection_status.dart';
-import '../../domain/services/bluetooth_connection_service.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_connection_status.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/services/bluetooth_connection_service.dart';
 
 /// FlutterBluePlus implementation of the connection service, safe for production releases.
 class FbpBluetoothConnectionService implements BluetoothConnectionService {

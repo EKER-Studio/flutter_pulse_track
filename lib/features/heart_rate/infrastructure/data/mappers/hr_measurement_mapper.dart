@@ -1,5 +1,5 @@
-import '../../../../workout/infrastructure/models/isar_hr_measurement.dart';
-import '../../../domain/models/hr_measurement.dart';
+import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/isar_hr_measurement.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
 
 /// Data mapper translating domain-level heart rate measurements into local Isar infrastructure models and vice versa.
 class HrMeasurementMapper {

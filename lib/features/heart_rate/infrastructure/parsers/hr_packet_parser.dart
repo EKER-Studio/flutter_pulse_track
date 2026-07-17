@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import '../../domain/models/hr_measurement.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
 
 /// Low-level binary parser responsible for decoding raw Bluetooth GATT Heart Rate Measurement packets (0x2A37).
 class HrPacketParser {

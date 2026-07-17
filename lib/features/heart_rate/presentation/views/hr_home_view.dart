@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar_community/isar.dart';
 
-import '../../../../core/infrastructure/storage/isar_provider.dart';
-import '../../../workout/infrastructure/models/device_profile_dto.dart';
-import 'hr_monitor_view.dart';
-import 'hr_scanner_view.dart';
-import 'workout_history_view.dart';
+import 'package:ble_heart_rate_monitor/core/infrastructure/storage/isar_provider.dart';
+import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/device_profile_dto.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/views/hr_monitor_view.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/views/hr_scanner_view.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/views/workout_history_view.dart';
 
 /// Central dashboard hub for the heart rate monitoring application.
 ///
@@ -31,8 +31,7 @@ class HrHomeView extends ConsumerWidget {
         ),
       ),
       body: StreamBuilder<List<DeviceProfileDto>>(
-        stream: isar
-            .deviceProfileDtos
+        stream: isar.deviceProfileDtos
             .where()
             .sortByLastConnectedAtDesc()
             .watch(fireImmediately: true),
@@ -140,7 +139,10 @@ class HrHomeView extends ConsumerWidget {
               // --- SCAN FOR NEW SENSOR CTA ---
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 24.0,
+                  ),
                   child: SizedBox(
                     width: double.infinity,
                     height: 52,
@@ -197,9 +199,7 @@ class HrHomeView extends ConsumerWidget {
                 ),
               ),
 
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 32),
-              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 32)),
             ],
           );
         },
@@ -235,11 +235,7 @@ class HrHomeView extends ConsumerWidget {
                   color: const Color(0xFF2A2A2A),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
-                  icon,
-                  color: Colors.blueAccent,
-                  size: 24,
-                ),
+                child: Icon(icon, color: Colors.blueAccent, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -257,19 +253,12 @@ class HrHomeView extends ConsumerWidget {
                     const SizedBox(height: 4),
                     Text(
                       description,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                   ],
                 ),
               ),
-              const Icon(
-                Icons.chevron_right,
-                color: Colors.grey,
-                size: 20,
-              ),
+              const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
             ],
           ),
         ),

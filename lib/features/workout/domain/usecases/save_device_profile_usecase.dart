@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../repositories/workout_persistence_repository.dart';
-import '../../infrastructure/repositories/workout_persistence_repository.dart'
+import 'package:ble_heart_rate_monitor/features/workout/domain/repositories/workout_persistence_repository.dart';
+import 'package:ble_heart_rate_monitor/features/workout/infrastructure/repositories/workout_persistence_repository.dart'
     as impl;
 
 part 'save_device_profile_usecase.g.dart';
@@ -19,15 +19,16 @@ class SaveDeviceProfileUseCase {
     required String macAddress,
     required String name,
     required int sensorLocationIndex,
-  }) =>
-      _repository.saveDeviceProfile(
-        macAddress: macAddress,
-        name: name,
-        sensorLocationIndex: sensorLocationIndex,
-      );
+  }) => _repository.saveDeviceProfile(
+    macAddress: macAddress,
+    name: name,
+    sensorLocationIndex: sensorLocationIndex,
+  );
 }
 
 @riverpod
 SaveDeviceProfileUseCase saveDeviceProfileUseCase(Ref ref) {
-  return SaveDeviceProfileUseCase(ref.watch(impl.workoutPersistenceRepositoryProvider));
+  return SaveDeviceProfileUseCase(
+    ref.watch(impl.workoutPersistenceRepositoryProvider),
+  );
 }

@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-import '../../domain/models/body_sensor_location.dart';
-import '../../domain/models/hr_measurement.dart';
-import '../../domain/services/heart_rate_repository.dart';
-import '../parsers/hr_packet_parser.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/body_sensor_location.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/services/heart_rate_repository.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
 
 /// FlutterBluePlus implementation of the heart rate repository with embedded connection-resilience logic.
 class FbpHeartRateRepository implements HeartRateRepository {
@@ -35,11 +35,11 @@ class FbpHeartRateRepository implements HeartRateRepository {
         await _device
             .connect(autoConnect: false)
             .timeout(
-          const Duration(seconds: 4),
-          onTimeout: () => debugPrint(
-            '--- [HARD REPO] Device already connecting or handled by system ---',
-          ),
-        );
+              const Duration(seconds: 4),
+              onTimeout: () => debugPrint(
+                '--- [HARD REPO] Device already connecting or handled by system ---',
+              ),
+            );
 
         debugPrint(
           '--- [HARD REPO] Triggering discoverServices() with safety timeout ---',
@@ -48,7 +48,7 @@ class FbpHeartRateRepository implements HeartRateRepository {
         final services = await _device.discoverServices().timeout(
           const Duration(seconds: 5),
           onTimeout: () =>
-          throw TimeoutException('GATT service discovery timed out'),
+              throw TimeoutException('GATT service discovery timed out'),
         );
         debugPrint(
           '--- [HARD REPO] Services discovered: ${services.length} ---',
@@ -84,9 +84,9 @@ class FbpHeartRateRepository implements HeartRateRepository {
 
           if (locationChar != null) {
             debugPrint('--- [HARD REPO] Reading Body Sensor Location... ---');
-            final List<int> locationBytes = await locationChar
-                .read()
-                .timeout(const Duration(seconds: 2));
+            final List<int> locationBytes = await locationChar.read().timeout(
+              const Duration(seconds: 2),
+            );
 
             if (locationBytes.isNotEmpty) {
               final int locationCode = locationBytes.first;
@@ -99,12 +99,16 @@ class FbpHeartRateRepository implements HeartRateRepository {
                 6 => BodySensorLocation.foot,
                 _ => BodySensorLocation.other,
               };
-              debugPrint('--- [HARD REPO] Sensor Location resolved: ${discoveredLocation.name} ---');
+              debugPrint(
+                '--- [HARD REPO] Sensor Location resolved: ${discoveredLocation.name} ---',
+              );
             }
           }
         } catch (e) {
           // Defensive fallback: do not interrupt telemetry stream if 0x2A38 reading fails
-          debugPrint('--- [HARD REPO] Optional Sensor Location read failed or unsupported: $e ---');
+          debugPrint(
+            '--- [HARD REPO] Optional Sensor Location read failed or unsupported: $e ---',
+          );
         }
 
         // --- Dynamic Battery Level Read (0x180F -> 0x2A19) ---
@@ -121,29 +125,33 @@ class FbpHeartRateRepository implements HeartRateRepository {
 
             if (batteryChar != null) {
               debugPrint('--- [HARD REPO] Reading Battery Level... ---');
-              final List<int> batteryBytes = await batteryChar
-                  .read()
-                  .timeout(const Duration(seconds: 2));
+              final List<int> batteryBytes = await batteryChar.read().timeout(
+                const Duration(seconds: 2),
+              );
 
               if (batteryBytes.isNotEmpty) {
                 final rawBattery = batteryBytes.first;
                 // Clamp value between 0 and 100 just to clean up rogue hardware frames
                 discoveredBatteryLevel = rawBattery.clamp(0, 100);
-                debugPrint('--- [HARD REPO] Battery Level resolved: $discoveredBatteryLevel% ---');
+                debugPrint(
+                  '--- [HARD REPO] Battery Level resolved: $discoveredBatteryLevel% ---',
+                );
               }
             }
           }
         } catch (e) {
           // Defensive fallback: do not interrupt telemetry stream if battery reading fails
-          debugPrint('--- [HARD REPO] Optional Battery Service read failed or unsupported: $e ---');
+          debugPrint(
+            '--- [HARD REPO] Optional Battery Service read failed or unsupported: $e ---',
+          );
         }
 
         await characteristic.setNotifyValue(true);
         debugPrint('--- [HARD REPO] GATT Notifications Active! ---');
 
         notificationSubscription = characteristic.onValueReceived.listen((
-            rawBytes,
-            ) {
+          rawBytes,
+        ) {
           final measurement = HrPacketParser.parseRawBytes(rawBytes);
           if (measurement != null && !controller.isClosed) {
             // Enforce the dynamically discovered hardware states on every incoming domain entity

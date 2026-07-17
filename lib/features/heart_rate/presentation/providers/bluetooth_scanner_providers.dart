@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/models/ble_device.dart';
-import '../../domain/services/bluetooth_scanner_service.dart';
-import '../../infrastructure/services/fbp_bluetooth_scanner_service.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_device.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/services/bluetooth_scanner_service.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/services/fbp_bluetooth_scanner_service.dart';
 
 part 'bluetooth_scanner_providers.g.dart';
 

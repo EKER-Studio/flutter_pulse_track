@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:isar_community/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/infrastructure/storage/isar_provider.dart';
-import '../../domain/repositories/workout_persistence_repository.dart'
+import 'package:ble_heart_rate_monitor/core/infrastructure/storage/isar_provider.dart';
+import 'package:ble_heart_rate_monitor/features/workout/domain/repositories/workout_persistence_repository.dart'
     as domain;
-import '../models/device_profile_dto.dart';
-import '../models/workout_session_dto.dart';
+import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/device_profile_dto.dart';
+import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/workout_session_dto.dart';
 
 part 'workout_persistence_repository.g.dart';
 
@@ -15,7 +15,8 @@ part 'workout_persistence_repository.g.dart';
 ///
 /// Repository abstracting local Isar database persistence for BLE sensor profiles
 /// and immutable workout sessions.
-class WorkoutPersistenceRepository implements domain.WorkoutPersistenceRepository {
+class WorkoutPersistenceRepository
+    implements domain.WorkoutPersistenceRepository {
   final Isar _isar;
 
   const WorkoutPersistenceRepository(this._isar);

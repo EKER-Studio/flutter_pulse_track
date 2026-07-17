@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/models/hr_measurement.dart';
-import '../../domain/models/monitor_state.dart';
-import '../controllers/hr_monitor_notifier.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/monitor_state.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/controllers/hr_monitor_notifier.dart';
 
 /// Telemetry dashboard and BLE connection lifecycle view.
 ///
@@ -81,15 +81,19 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
       body: switch (state) {
         DisconnectedMonitorState() => _buildDisconnectedState(context),
         ConnectingMonitorState() => _buildLoadingState(
-            'Connecting to device...\nLink-layer handshake in progress',
-          ),
+          'Connecting to device...\nLink-layer handshake in progress',
+        ),
         DiscoveringServicesMonitorState() => _buildLoadingState(
-            'Discovering Services... Please wait...',
-          ),
-        ConnectedMonitorState(:final measurement) =>
-          _buildConnectedState(measurement),
-        FailureMonitorState(:final message) =>
-          _buildFailureState(context, message, notifier),
+          'Discovering Services... Please wait...',
+        ),
+        ConnectedMonitorState(:final measurement) => _buildConnectedState(
+          measurement,
+        ),
+        FailureMonitorState(:final message) => _buildFailureState(
+          context,
+          message,
+          notifier,
+        ),
       },
     );
   }
@@ -113,12 +117,12 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           ),
           const SizedBox(height: 32),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Return to Scanner',
-                style: TextStyle(color: Colors.white)),
+            child: const Text(
+              'Return to Scanner',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -216,10 +220,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
             ),
             child: Row(
               children: [
-                const Icon(
-                  Icons.accessibility_new,
-                  color: Colors.blueAccent,
-                ),
+                const Icon(Icons.accessibility_new, color: Colors.blueAccent),
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,7 +255,8 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                   metric.batteryLevel != null && metric.batteryLevel! > 20
                       ? Icons.battery_full
                       : Icons.battery_alert,
-                  color: metric.batteryLevel != null && metric.batteryLevel! > 20
+                  color:
+                      metric.batteryLevel != null && metric.batteryLevel! > 20
                       ? Colors.greenAccent
                       : Colors.redAccent,
                 ),
@@ -304,7 +306,11 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline, size: 48, color: Colors.redAccent),
+              const Icon(
+                Icons.error_outline,
+                size: 48,
+                color: Colors.redAccent,
+              ),
               const SizedBox(height: 16),
               const Text(
                 'Connection Failed',
@@ -334,9 +340,13 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                   icon: const Icon(Icons.refresh, color: Colors.white),
                   label: const Text(
                     'Retry Connection',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  onPressed: () => notifier.retry(widget.deviceId, widget.deviceName),
+                  onPressed: () =>
+                      notifier.retry(widget.deviceId, widget.deviceName),
                 ),
               ),
               const SizedBox(height: 12),

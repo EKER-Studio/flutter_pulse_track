@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar_community/isar.dart';
 
-import '../../../../core/infrastructure/storage/isar_provider.dart';
-import '../../../workout/infrastructure/models/workout_session_dto.dart';
-import '../../../workout/presentation/views/workout_details_view.dart';
+import 'package:ble_heart_rate_monitor/core/infrastructure/storage/isar_provider.dart';
+import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/workout_session_dto.dart';
+import 'package:ble_heart_rate_monitor/features/workout/presentation/views/workout_details_view.dart';
 
 /// Reactive workout history screen that displays all stored [WorkoutSessionDto]
 /// records from Isar, sorted by [WorkoutSessionDto.startTime] descending.
@@ -26,11 +26,9 @@ class WorkoutHistoryView extends ConsumerWidget {
         ),
       ),
       body: StreamBuilder<List<WorkoutSessionDto>>(
-        stream: isar
-            .workoutSessionDtos
-            .where()
-            .sortByStartTimeDesc()
-            .watch(fireImmediately: true),
+        stream: isar.workoutSessionDtos.where().sortByStartTimeDesc().watch(
+          fireImmediately: true,
+        ),
         builder: (context, snapshot) {
           final sessions = snapshot.data;
 
@@ -47,7 +45,8 @@ class WorkoutHistoryView extends ConsumerWidget {
           return ListView.separated(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             itemCount: sessions.length,
-            separatorBuilder: (BuildContext _, int index) => const SizedBox(height: 8),
+            separatorBuilder: (BuildContext _, int index) =>
+                const SizedBox(height: 8),
             itemBuilder: (context, index) {
               final session = sessions[index];
               return Dismissible(
@@ -85,11 +84,7 @@ class WorkoutHistoryView extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.fitness_center,
-              size: 80,
-              color: Colors.grey[600],
-            ),
+            Icon(Icons.fitness_center, size: 80, color: Colors.grey[600]),
             const SizedBox(height: 24),
             Text(
               'No workouts recorded yet',
@@ -103,10 +98,7 @@ class WorkoutHistoryView extends ConsumerWidget {
             const SizedBox(height: 8),
             Text(
               'Complete a heart rate monitoring session to see your workout history here.',
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.grey[600], fontSize: 14),
               textAlign: TextAlign.center,
             ),
           ],
@@ -179,10 +171,7 @@ class WorkoutHistoryView extends ConsumerWidget {
                   session.deviceName.isEmpty
                       ? 'Unknown Sensor'
                       : session.deviceName,
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Colors.grey[500], fontSize: 12),
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -212,13 +201,7 @@ class WorkoutHistoryView extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 2),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 11,
-          ),
-        ),
+        Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 11)),
       ],
     );
   }
@@ -246,16 +229,24 @@ class WorkoutHistoryView extends ConsumerWidget {
 
   String _formatMonthDay(DateTime date) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}';
   }
 
   String _getDayOfWeek(DateTime date) {
-    final days = [
-      'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
-    ];
+    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     return days[(date.weekday - 1) % 7];
   }
 

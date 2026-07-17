@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/models/hr_measurement.dart';
-import '../../domain/services/heart_rate_repository.dart';
-import '../../infrastructure/services/fbp_heart_rate_repository.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/domain/services/heart_rate_repository.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/services/fbp_heart_rate_repository.dart';
 
 part 'heart_rate_providers.g.dart';
 
