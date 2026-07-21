@@ -90,12 +90,15 @@ class HeartRateExportHelper {
         ? session.endTime!.difference(session.startTime)
         : Duration.zero;
 
+    // Guard against division by zero when a session has exactly one sample
+    // (e.g. connect-then-immediate-disconnect) — sampleCount - 1 would be 0.
+    final divisor = sampleCount > 1 ? sampleCount - 1 : 1;
+
     for (var i = 0; i < sampleCount; i++) {
       final elapsed = totalDuration.inMilliseconds > 0
           ? Duration(
-              milliseconds:
-                  (i / (sampleCount - 1) * totalDuration.inMilliseconds)
-                      .toInt(),
+              milliseconds: (i / divisor * totalDuration.inMilliseconds)
+                  .toInt(),
             )
           : Duration.zero;
 
