@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -10,6 +10,7 @@ import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_meas
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/monitor_state.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/save_device_profile_usecase.dart';
+import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/save_partial_workout_session_usecase.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/save_workout_session_usecase.dart';
 
 part 'hr_monitor_notifier.g.dart';
@@ -48,6 +49,11 @@ final Guid _kBatteryServiceUuid = Guid('180f');
 /// GATT Battery Level Characteristic UUID (0x2A19).
 final Guid _kBatteryLevelCharacteristicUuid = Guid('2a19');
 
+/// Interval at which accumulated BPM samples are written to Isar as partial
+/// checkpoint records. Checkpoints keep the session "active" (endTime = null)
+/// so a final [SaveWorkoutSessionUseCase] call can complete it later.
+const Duration _kCheckpointInterval = Duration(seconds: 30);
+
 // ---------------------------------------------------------------------------
 // Notifier
 // ---------------------------------------------------------------------------
@@ -82,7 +88,10 @@ final Guid _kBatteryLevelCharacteristicUuid = Guid('2a19');
 /// with [ref.onDispose]. The active [BluetoothDevice] is disconnected if the
 /// notifier is disposed while a session is live.
 @riverpod
-class HrMonitorNotifier extends _$HrMonitorNotifier {
+
+@riverpod
+class HrMonitorNotifier extends _$HrMonitorNotifier
+    with WidgetsBindingObserver {
   // --- Active BLE device reference -------------------------------------------
 
   /// The currently targeted [BluetoothDevice]. Null when in [disconnected] state.
@@ -140,11 +149,17 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// to prevent stale callbacks from racing with a new connection attempt.
   Timer? _connectTimer;
 
+  /// Periodic timer that checkpoints accumulated BPM samples to Isar every
+  /// [_kCheckpointInterval] to prevent data loss if the process is terminated
+  /// while the app is in the background.
+  Timer? _checkpointTimer;
+
   // ---------------------------------------------------------------------------
   // Riverpod build — register disposal and return initial state
   // ---------------------------------------------------------------------------
 
-  /// Registers the [_cleanup] disposal callback and returns the initial
+  /// Registers the [_cleanup] disposal callback, adds the notifier as a
+  /// [WidgetsBindingObserver] for lifecycle events, and returns the initial
   /// [MonitorState.disconnected] state.
   ///
   /// Riverpod invokes [build] when the provider is first created. The
@@ -153,6 +168,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// explicit provider disposal).
   @override
   MonitorState build() {
+    WidgetsBinding.instance.addObserver(this);
     ref.onDispose(() => _cleanup());
     return const MonitorState.disconnected();
   }
@@ -503,6 +519,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       },
       cancelOnError: false,
     );
+
+    _startCheckpointTimer();
   }
 
   /// Gracefully terminates the active connection, cancels all subscriptions,
@@ -511,6 +529,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     debugPrint('[HrMonitorNotifier] disconnect() called.');
     _connectTimer?.cancel();
     _connectTimer = null;
+    _stopCheckpointTimer();
     _isDisconnecting = true;
     try {
       await _saveSessionToDisk();
@@ -562,6 +581,71 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
       _sessionDeviceId = null;
       _sessionDeviceName = null;
       _sessionSensorLocationIndex = null;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Checkpoint timer & lifecycle
+  // ---------------------------------------------------------------------------
+
+  /// Starts the periodic checkpoint timer that writes accumulated BPM samples
+  /// to Isar every [_kCheckpointInterval].
+  void _startCheckpointTimer() {
+    _stopCheckpointTimer();
+    _checkpointTimer = Timer.periodic(_kCheckpointInterval, (_) {
+      unawaited(_checkpoint());
+    });
+  }
+
+  /// Cancels the periodic checkpoint timer if active.
+  void _stopCheckpointTimer() {
+    _checkpointTimer?.cancel();
+    _checkpointTimer = null;
+  }
+
+  /// Persists accumulated BPM samples as a partial checkpoint record to Isar.
+  ///
+  /// The record has [endTime] set to `null`, keeping it in an "active" state
+  /// so the final [SaveWorkoutSessionUseCase] call can complete the session
+  /// with accurate timing and the full sample list.
+  Future<void> _checkpoint() async {
+    if (state is! ConnectedMonitorState ||
+        _collectedBpmSamples.isEmpty ||
+        _sessionStartTime == null ||
+        _sessionDeviceId == null ||
+        _sessionDeviceName == null) {
+      return;
+    }
+
+    try {
+      final savePartial = ref.read(savePartialWorkoutSessionUseCaseProvider);
+      await savePartial.call(
+        startTime: _sessionStartTime!,
+        samples: List<int>.of(_collectedBpmSamples),
+        sensorLocationIndex:
+            _sessionSensorLocationIndex ?? BodySensorLocation.other.index,
+        macAddress: _sessionDeviceId!,
+        name: _sessionDeviceName!,
+      );
+      debugPrint(
+        '[HrMonitorNotifier] Checkpoint saved at ${DateTime.now()} '
+        'with ${_collectedBpmSamples.length} samples.',
+      );
+    } catch (e) {
+      debugPrint('[HrMonitorNotifier] Checkpoint failed: $e');
+    }
+  }
+
+  /// Called by [WidgetsBinding] on app lifecycle transitions.
+  ///
+  /// When the app leaves the foreground ([paused] or [detached]), accumulated
+  /// BPM samples are flushed to Isar as a checkpoint to prevent data loss if
+  /// the process is terminated while in the background.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      unawaited(_checkpoint());
     }
   }
 
@@ -850,6 +934,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     // the correct behaviour here to avoid holding up ProviderScope disposal.
     _connectTimer?.cancel();
     _connectTimer = null;
+    _stopCheckpointTimer();
     _hrNotificationSubscription?.cancel();
     _batteryNotificationSubscription?.cancel();
     _connectionStateSubscription?.cancel();
@@ -858,6 +943,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     _connectionStateSubscription = null;
     _device?.disconnect();
     _device = null;
+    WidgetsBinding.instance.removeObserver(this);
     ref.read(foregroundServiceManagerProvider).stopService();
   }
 }

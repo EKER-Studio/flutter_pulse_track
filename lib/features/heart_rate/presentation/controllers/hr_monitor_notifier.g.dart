@@ -128,7 +128,7 @@ final class HrMonitorNotifierProvider
   }
 }
 
-String _$hrMonitorNotifierHash() => r'837725d1311185ff60068f18f6b9bee0ca9bdbda';
+String _$hrMonitorNotifierHash() => r'e59eb4356b3c288f8ba8020d0d6c5546d74ef77d';
 
 /// State machine notifier governing the complete BLE connection and heart rate
 /// streaming lifecycle for a single active sensor session.
