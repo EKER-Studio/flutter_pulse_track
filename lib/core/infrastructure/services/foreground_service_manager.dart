@@ -21,7 +21,9 @@ void startCallback() {
 class MyTaskHandler extends TaskHandler {
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    debugPrint('MyTaskHandler.onStart: Foreground service started at $timestamp');
+    debugPrint(
+      'MyTaskHandler.onStart: Foreground service started at $timestamp',
+    );
   }
 
   @override
@@ -51,7 +53,8 @@ class ForegroundServiceManager {
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: 'workout_channel',
         channelName: 'Workout Session',
-        channelDescription: 'Keeps the heart rate monitor alive in the background',
+        channelDescription:
+            'Keeps the heart rate monitor alive in the background',
         channelImportance: NotificationChannelImportance.LOW,
         priority: NotificationPriority.LOW,
       ),
@@ -80,9 +83,7 @@ class ForegroundServiceManager {
     await FlutterForegroundTask.startService(
       notificationTitle: 'Heart Rate Monitor',
       notificationText: 'Recording workout...',
-      notificationIcon: const NotificationIcon(
-        metaDataName: 'ic_launcher',
-      ),
+      notificationIcon: const NotificationIcon(metaDataName: 'ic_launcher'),
       callback: startCallback,
     );
   }

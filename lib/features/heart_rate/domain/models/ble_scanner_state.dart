@@ -26,9 +26,8 @@ sealed class BleScannerState {
 
   /// An active hardware scan is in progress; [devices] contains all peripherals
   /// that have passed the currently active quality filters.
-  factory BleScannerState.scanning({
-    required List<BleDevice> devices,
-  }) = _ScanningScannerState;
+  factory BleScannerState.scanning({required List<BleDevice> devices}) =
+      _ScanningScannerState;
 
   /// The 6-second sliding window elapsed without any device passing the active
   /// filters. The user should be prompted to retry or relax the filters.
@@ -40,9 +39,8 @@ sealed class BleScannerState {
 
   /// An unrecoverable error occurred during the scanning operation.
   /// [message] is a human-readable description suitable for UI display.
-  const factory BleScannerState.failure({
-    required String message,
-  }) = _FailureScannerState;
+  const factory BleScannerState.failure({required String message}) =
+      _FailureScannerState;
 }
 
 // ---------------------------------------------------------------------------

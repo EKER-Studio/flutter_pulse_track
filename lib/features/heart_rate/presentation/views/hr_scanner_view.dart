@@ -284,86 +284,86 @@ class HrScannerView extends ConsumerWidget {
             separatorBuilder: (_, _) =>
                 const Divider(color: Colors.white10, height: 1),
             itemBuilder: (context, index) {
-                final device = devices[index];
-                return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 8,
+              final device = devices[index];
+              return ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
+                leading: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2A2A2A),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF2A2A2A),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.bluetooth,
+                  child: const Icon(
+                    Icons.bluetooth,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+                title: Flexible(
+                  child: Text(
+                    device.name.isEmpty ? 'Unknown Device' : device.name,
+                    style: const TextStyle(
                       color: Colors.white,
-                      size: 24,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  title: Flexible(
-                    child: Text(
-                      device.name.isEmpty ? 'Unknown Device' : device.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
+                ),
+                subtitle: Flexible(
+                  child: Text(
+                    device.id,
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                      fontFamily: 'monospace',
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                trailing: SizedBox(
+                  width: 56,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        _getRssiIcon(device.rssi),
+                        color: _getRssiColor(device.rssi),
+                        size: 22,
                       ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  subtitle: Flexible(
-                    child: Text(
-                      device.id,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                        fontFamily: 'monospace',
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  trailing: SizedBox(
-                    width: 56,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          _getRssiIcon(device.rssi),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${device.rssi} dBm',
+                        style: TextStyle(
                           color: _getRssiColor(device.rssi),
-                          size: 22,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${device.rssi} dBm',
-                          style: TextStyle(
-                            color: _getRssiColor(device.rssi),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    notifier.stopScan();
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => HrMonitorView(
-                          deviceId: device.id,
-                          deviceName: device.name.isEmpty
-                              ? 'Unknown Device'
-                              : device.name,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'monospace',
                         ),
                       ),
-                    );
-                  },
-                );
-              },
-            );
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  notifier.stopScan();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => HrMonitorView(
+                        deviceId: device.id,
+                        deviceName: device.name.isEmpty
+                            ? 'Unknown Device'
+                            : device.name,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          );
   }
 
   /// Returns a color representing signal strength for the given RSSI value.

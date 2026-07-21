@@ -39,9 +39,8 @@ sealed class MonitorState {
 
   /// Service discovery succeeded and GATT notifications are active.
   /// [measurement] holds the most recently parsed heart rate packet.
-  factory MonitorState.connected({
-    required HrMeasurement measurement,
-  }) = ConnectedMonitorState;
+  factory MonitorState.connected({required HrMeasurement measurement}) =
+      ConnectedMonitorState;
 
   /// A non-recoverable error occurred during connection or streaming.
   /// [message] is a human-readable string suitable for the recovery screen CTA.
