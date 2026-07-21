@@ -66,19 +66,25 @@ class WorkoutHistoryView extends ConsumerWidget {
                     size: 24,
                   ),
                 ),
-                onDismissed: (_) async {
-                  try {
-                    await ref
-                        .read(deleteWorkoutSessionUseCaseProvider)
-                        .call(session.id);
-                  } catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Failed to delete session: $e')),
-                      );
+                confirmDismiss: (direction) async {
+                  if (direction == DismissDirection.endToStart) {
+                    try {
+                      await ref
+                          .read(deleteWorkoutSessionUseCaseProvider)
+                          .call(session.id);
+                      return true;
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Failed to delete session: $e')),
+                        );
+                      }
+                      return false;
                     }
                   }
+                  return true;
                 },
+                onDismissed: (_) {},
                 child: _buildWorkoutCard(context, session),
               );
             },
