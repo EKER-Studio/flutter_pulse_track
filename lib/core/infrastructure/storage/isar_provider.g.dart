@@ -8,40 +8,25 @@ part of 'isar_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provides the active Isar database instance globally.
+/// Synchronous provider that returns the initialized Isar database instance.
 ///
-/// This provider is declared synchronously to allow zero-latency, reactive DB
-/// reads in the UI layer. Because Isar initialization requires async disk access,
-/// this provider throws [UnimplementedError] by default.
-///
-/// **Startup Contract:**
-/// The application bootstrap in `main.dart` MUST await `Isar.open()` and
-/// override this provider in the root [ProviderScope].
+/// Throws [UnimplementedError] if accessed before [main] has completed
+/// initialization and overridden the provider in [ProviderScope].
 
 @ProviderFor(isar)
 final isarProvider = IsarProvider._();
 
-/// Provides the active Isar database instance globally.
+/// Synchronous provider that returns the initialized Isar database instance.
 ///
-/// This provider is declared synchronously to allow zero-latency, reactive DB
-/// reads in the UI layer. Because Isar initialization requires async disk access,
-/// this provider throws [UnimplementedError] by default.
-///
-/// **Startup Contract:**
-/// The application bootstrap in `main.dart` MUST await `Isar.open()` and
-/// override this provider in the root [ProviderScope].
+/// Throws [UnimplementedError] if accessed before [main] has completed
+/// initialization and overridden the provider in [ProviderScope].
 
 final class IsarProvider extends $FunctionalProvider<Isar, Isar, Isar>
     with $Provider<Isar> {
-  /// Provides the active Isar database instance globally.
+  /// Synchronous provider that returns the initialized Isar database instance.
   ///
-  /// This provider is declared synchronously to allow zero-latency, reactive DB
-  /// reads in the UI layer. Because Isar initialization requires async disk access,
-  /// this provider throws [UnimplementedError] by default.
-  ///
-  /// **Startup Contract:**
-  /// The application bootstrap in `main.dart` MUST await `Isar.open()` and
-  /// override this provider in the root [ProviderScope].
+  /// Throws [UnimplementedError] if accessed before [main] has completed
+  /// initialization and overridden the provider in [ProviderScope].
   IsarProvider._()
     : super(
         from: null,
