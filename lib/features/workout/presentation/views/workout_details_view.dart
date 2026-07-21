@@ -527,9 +527,9 @@ class BpmChart extends CustomPainter {
     canvas.drawPath(fillPath, fillPaint);
   }
 
-  /// Always repaint so the chart reflects the latest sample data.
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant BpmChart oldDelegate) =>
+      oldDelegate.samples != samples;
 
   /// Paints a centered "No data" label when the sample list is empty.
   void _drawEmpty(Canvas canvas, Size size) {
