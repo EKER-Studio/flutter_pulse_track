@@ -4,6 +4,8 @@ import 'package:isar_community/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:ble_heart_rate_monitor/core/infrastructure/storage/isar_provider.dart';
+import 'package:ble_heart_rate_monitor/features/workout/domain/models/device_profile.dart';
+import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/repositories/workout_persistence_repository.dart'
     as domain;
 import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/device_profile_dto.dart';
@@ -76,6 +78,57 @@ class WorkoutPersistenceRepository
       await _isar.workoutSessionDtos.put(session);
     });
   }
+
+  /// Reactively streams every saved [DeviceProfileDto], mapped to the
+  /// domain-level [DeviceProfile], most-recently connected first.
+  @override
+  Stream<List<DeviceProfile>> watchSavedDeviceProfiles() {
+    return _isar.deviceProfileDtos
+        .where()
+        .sortByLastConnectedAtDesc()
+        .watch(fireImmediately: true)
+        .map((dtos) => dtos.map(_deviceProfileFromDto).toList());
+  }
+
+  /// Reactively streams every persisted [WorkoutSessionDto], mapped to the
+  /// domain-level [WorkoutSession], most recent first.
+  @override
+  Stream<List<WorkoutSession>> watchWorkoutHistory() {
+    return _isar.workoutSessionDtos
+        .where()
+        .sortByStartTimeDesc()
+        .watch(fireImmediately: true)
+        .map((dtos) => dtos.map(_workoutSessionFromDto).toList());
+  }
+
+  /// Permanently deletes the workout session identified by [sessionId].
+  @override
+  Future<void> deleteWorkoutSession(int sessionId) async {
+    await _isar.writeTxn(() async {
+      await _isar.workoutSessionDtos.delete(sessionId);
+    });
+  }
+
+  DeviceProfile _deviceProfileFromDto(DeviceProfileDto dto) => DeviceProfile(
+    id: dto.id,
+    macAddress: dto.macAddress,
+    name: dto.name,
+    lastConnectedAt: dto.lastConnectedAt,
+    lastSensorLocationIndex: dto.lastSensorLocationIndex,
+  );
+
+  WorkoutSession _workoutSessionFromDto(WorkoutSessionDto dto) =>
+      WorkoutSession(
+        id: dto.id,
+        startTime: dto.startTime,
+        endTime: dto.endTime,
+        avgBpm: dto.avgBpm,
+        maxBpm: dto.maxBpm,
+        bpmSamples: dto.bpmSamples,
+        sensorLocationIndex: dto.sensorLocationIndex,
+        deviceMacAddress: dto.deviceMacAddress,
+        deviceName: dto.deviceName,
+      );
 }
 
 @riverpod
