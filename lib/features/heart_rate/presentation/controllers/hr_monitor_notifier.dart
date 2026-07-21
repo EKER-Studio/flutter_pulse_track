@@ -401,13 +401,20 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     _sessionSensorLocationIndex = sensorLocation.index;
 
     // Cache the device profile via the domain-layer Use Case.
-    ref
-        .read(saveDeviceProfileUseCaseProvider)
-        .call(
-          macAddress: deviceId,
-          name: deviceName,
-          sensorLocationIndex: sensorLocation.index,
-        );
+    try {
+      await ref
+          .read(saveDeviceProfileUseCaseProvider)
+          .call(
+            macAddress: deviceId,
+            name: deviceName,
+            sensorLocationIndex: sensorLocation.index,
+          );
+    } catch (e) {
+      // Best-effort cache write — a failure here must not abort the
+      // in-progress connection, but it must not be a silent unhandled
+      // Future rejection either.
+      debugPrint('[HrMonitorNotifier] saveDeviceProfile() failed: $e');
+    }
 
     debugPrint(
       '[HrMonitorNotifier] Body sensor location: ${sensorLocation.displayName}',
