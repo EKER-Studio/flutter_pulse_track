@@ -8,9 +8,12 @@ part of 'foreground_service_manager.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Provider for the [ForegroundServiceManager] instance.
 
 @ProviderFor(foregroundServiceManager)
 final foregroundServiceManagerProvider = ForegroundServiceManagerProvider._();
+
+/// Provider for the [ForegroundServiceManager] instance.
 
 final class ForegroundServiceManagerProvider
     extends
@@ -20,13 +23,14 @@ final class ForegroundServiceManagerProvider
           ForegroundServiceManager
         >
     with $Provider<ForegroundServiceManager> {
+  /// Provider for the [ForegroundServiceManager] instance.
   ForegroundServiceManagerProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'foregroundServiceManagerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -55,4 +59,4 @@ final class ForegroundServiceManagerProvider
 }
 
 String _$foregroundServiceManagerHash() =>
-    r'ea17081dd6c5ba8a1670e2f3d7fb0bd95d39e234';
+    r'e1b6eeb81c5e352d529b071feec1b13e2d6c7a30';

@@ -96,7 +96,8 @@ class ForegroundServiceManager {
   }
 }
 
-@riverpod
+/// Provider for the [ForegroundServiceManager] instance.
+@Riverpod(keepAlive: true)
 ForegroundServiceManager foregroundServiceManager(Ref ref) {
   return ForegroundServiceManager();
 }
