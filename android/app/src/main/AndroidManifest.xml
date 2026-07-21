@@ -47,7 +47,7 @@
 
         <service
             android:name="com.boskokg.flutter_blue_plus.FlutterBluePlusBackgroundService"
-            android:foregroundServiceType="connectedDevice"
+            android:foregroundServiceType="connectedDevice|health"
             android:exported="false" />
 
         <service
