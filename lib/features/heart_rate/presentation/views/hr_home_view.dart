@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar_community/isar.dart';
 
-import 'package:ble_heart_rate_monitor/core/infrastructure/storage/isar_provider.dart';
-import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/device_profile_dto.dart';
+import 'package:ble_heart_rate_monitor/features/workout/domain/models/device_profile.dart';
+import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/views/hr_monitor_view.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/views/hr_scanner_view.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/views/workout_history_view.dart';
 
 /// Central dashboard hub for the heart rate monitoring application.
 ///
-/// Displays a reactive list of saved sensor profiles from the local Isar
-/// database for instant direct-connect, alongside navigation placeholders
-/// for future features (Workout History, Build in Public Guide).
+/// Displays a reactive list of saved sensor profiles (via
+/// [watchSavedDeviceProfilesStreamProvider]) for instant direct-connect,
+/// alongside navigation placeholders for future features (Workout History,
+/// Build in Public Guide).
 class HrHomeView extends ConsumerWidget {
   const HrHomeView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isar = ref.watch(isarProvider);
+    final savedProfilesAsync = ref.watch(
+      watchSavedDeviceProfilesStreamProvider,
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
@@ -30,13 +32,10 @@ class HrHomeView extends ConsumerWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: StreamBuilder<List<DeviceProfileDto>>(
-        stream: isar.deviceProfileDtos
-            .where()
-            .sortByLastConnectedAtDesc()
-            .watch(fireImmediately: true),
-        builder: (context, snapshot) {
-          final savedProfiles = snapshot.data ?? [];
+      body: Builder(
+        builder: (context) {
+          final List<DeviceProfile> savedProfiles =
+              savedProfilesAsync.valueOrNull ?? [];
 
           return CustomScrollView(
             slivers: [

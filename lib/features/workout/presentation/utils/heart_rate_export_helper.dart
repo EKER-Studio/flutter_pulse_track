@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/workout_session_dto.dart';
+import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
 
 /// Utility for exporting heart rate workout sessions to CSV and sharing them
 /// via the native system share sheet.
@@ -19,8 +19,8 @@ class HeartRateExportHelper {
   ///
   /// The CSV contains three columns: `Timestamp`, `BPM`, and `Elapsed_Seconds`.
   /// Timestamps are computed by adding the elapsed duration of each sample
-  /// index to [WorkoutSessionDto.startTime]. BPM values come directly from
-  /// [WorkoutSessionDto.bpmSamples]. Elapsed seconds are relative to the
+  /// index to [WorkoutSession.startTime]. BPM values come directly from
+  /// [WorkoutSession.bpmSamples]. Elapsed seconds are relative to the
   /// session start time.
   ///
   /// Shows a snackbar on [context] with a success or error message.
@@ -29,7 +29,7 @@ class HeartRateExportHelper {
   /// accessing a disposed context.
   static Future<void> shareWorkoutAsCsv(
     BuildContext context,
-    WorkoutSessionDto session,
+    WorkoutSession session,
   ) async {
     // Capture navigator and scaffold messenger before any await to guard
     // against the context being unmounted during the async file I/O.
@@ -77,7 +77,7 @@ class HeartRateExportHelper {
   }
 
   /// Generates an RFC 4180 compliant CSV string from [session].
-  static String _generateCsv(WorkoutSessionDto session) {
+  static String _generateCsv(WorkoutSession session) {
     const header = 'Timestamp,BPM,Elapsed_Seconds';
     final lines = <String>[header];
 

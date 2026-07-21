@@ -1,4 +1,4 @@
-import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/workout_session_dto.dart';
+import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
 import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_export_helper.dart';
 import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_zones.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,7 @@ class WorkoutDetailsView extends StatelessWidget {
   static const double _kTileSpacing = 12.0;
 
   /// The workout session whose details are displayed.
-  final WorkoutSessionDto session;
+  final WorkoutSession session;
 
   /// Builds the workout details screen with header, summary grid, and BPM chart.
   @override
@@ -353,7 +353,7 @@ class WorkoutDetailsView extends StatelessWidget {
   ///
   /// Distinguishes between an incomplete session, a sensor disconnect, and
   /// a session that ran but recorded no valid heart-rate samples.
-  String _getEmptyDataReason(WorkoutSessionDto session) {
+  String _getEmptyDataReason(WorkoutSession session) {
     if (session.endTime == null) {
       return 'The workout was not completed';
     }

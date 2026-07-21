@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar_community/isar.dart';
 
-import 'package:ble_heart_rate_monitor/core/infrastructure/storage/isar_provider.dart';
-import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/workout_session_dto.dart';
+import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
+import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/delete_workout_session_usecase.dart';
+import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/watch_workout_history_usecase.dart';
 import 'package:ble_heart_rate_monitor/features/workout/presentation/views/workout_details_view.dart';
 
-/// Reactive workout history screen that displays all stored [WorkoutSessionDto]
-/// records from Isar, sorted by [WorkoutSessionDto.startTime] descending.
+/// Reactive workout history screen that displays every persisted
+/// [WorkoutSession], sorted by start time descending, via
+/// [watchWorkoutHistoryStreamProvider].
 class WorkoutHistoryView extends ConsumerWidget {
   const WorkoutHistoryView({super.key});
 
-  /// Builds the workout history list from an Isar stream.
+  /// Builds the workout history list from [watchWorkoutHistoryStreamProvider].
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isar = ref.watch(isarProvider);
+    final historyAsync = ref.watch(watchWorkoutHistoryStreamProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
@@ -26,19 +27,21 @@ class WorkoutHistoryView extends ConsumerWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: StreamBuilder<List<WorkoutSessionDto>>(
-        stream: isar.workoutSessionDtos.where().sortByStartTimeDesc().watch(
-          fireImmediately: true,
+      body: historyAsync.when(
+        loading: () => const Center(
+          child: CircularProgressIndicator(color: Colors.blueAccent),
         ),
-        builder: (context, snapshot) {
-          final sessions = snapshot.data;
-
-          if (sessions == null) {
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.blueAccent),
-            );
-          }
-
+        error: (error, stackTrace) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Text(
+              'Failed to load workout history: $error',
+              style: TextStyle(color: Colors.grey[400]),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        data: (sessions) {
           if (sessions.isEmpty) {
             return _buildEmptyState();
           }
@@ -64,10 +67,17 @@ class WorkoutHistoryView extends ConsumerWidget {
                   ),
                 ),
                 onDismissed: (_) async {
-                  final isar = ref.read(isarProvider);
-                  await isar.writeTxn(() async {
-                    await isar.workoutSessionDtos.delete(session.id);
-                  });
+                  try {
+                    await ref
+                        .read(deleteWorkoutSessionUseCaseProvider)
+                        .call(session.id);
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to delete session: $e')),
+                      );
+                    }
+                  }
                 },
                 child: _buildWorkoutCard(context, session),
               );
@@ -113,7 +123,7 @@ class WorkoutHistoryView extends ConsumerWidget {
   ///
   /// Tapping navigates to [WorkoutDetailsView]. Swiping right dismisses
   /// and deletes the session from Isar.
-  Widget _buildWorkoutCard(BuildContext context, WorkoutSessionDto session) {
+  Widget _buildWorkoutCard(BuildContext context, WorkoutSession session) {
     final duration = _formatDuration(session.startTime, session.endTime);
     final formattedDate = _formatDate(session.startTime);
 
