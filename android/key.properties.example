@@ -1,0 +1,11 @@
+## Copy this file to `android/key.properties` (NOT committed — see .gitignore)
+## and fill in the values for your real upload keystore.
+##
+## Generate a keystore first if you don't have one:
+##   keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA \
+##     -keysize 2048 -validity 10000 -alias upload
+
+storePassword=REPLACE_ME
+keyPassword=REPLACE_ME
+keyAlias=upload
+storeFile=/absolute/path/to/upload-keystore.jks
