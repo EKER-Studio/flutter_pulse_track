@@ -174,8 +174,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
   /// Enables GATT notifications on 0x2A37 and subscribes to incoming packets.
   /// Every successfully decoded [HrMeasurement] updates state to [connected].
   ///
-  /// The method is idempotent: a second call while [connecting] or
-  /// [discoveringServices] is in progress is safely ignored.
+  /// The method is idempotent: a second call while [connecting],
+  /// [discoveringServices], or already [connected] is safely ignored unless
+  /// the caller explicitly [disconnect]s first — this prevents orphaning a
+  /// live GATT connection by silently overwriting [_device].
   Future<void> connect(String deviceId, String deviceName) async {
     // Cancel any lingering connection timer from a previous attempt before
     // doing anything else, so a stale callback can never race with a fresh
@@ -184,10 +186,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     _connectTimer = null;
 
     if (state is ConnectingMonitorState ||
-        state is DiscoveringServicesMonitorState) {
+        state is DiscoveringServicesMonitorState ||
+        state is ConnectedMonitorState) {
       debugPrint(
-        '[HrMonitorNotifier] connect() ignored — a connection attempt '
-        'is already in progress.',
+        '[HrMonitorNotifier] connect() ignored — already connecting or '
+        'connected. Call disconnect() first to switch devices.',
       );
       return;
     }
@@ -199,6 +202,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier {
     _sessionDeviceId = deviceId;
     _sessionDeviceName = deviceName;
     _sessionSensorLocationIndex = null;
+    // Reset stale telemetry from a previous device — otherwise a sensor
+    // without Battery Service would keep showing the last-connected
+    // device's battery level indefinitely.
+    _currentBatteryLevel = null;
 
     _device = BluetoothDevice.fromId(deviceId);
 
