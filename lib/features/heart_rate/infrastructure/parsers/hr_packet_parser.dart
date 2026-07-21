@@ -22,6 +22,7 @@ class HrPacketParser {
     currentOffset += 1;
 
     final bool isHeartRate16Bit = (flags & 0x01) != 0;
+    final bool hasEnergyExpended = (flags & 0x08) != 0;
     final bool hasRrIntervals = (flags & 0x10) != 0;
 
     int bpm;
@@ -33,6 +34,15 @@ class HrPacketParser {
       if (byteData.lengthInBytes < currentOffset + 1) return null;
       bpm = byteData.getUint8(currentOffset);
       currentOffset += 1;
+    }
+
+    // Bluetooth SIG standard: when flag bit 3 is set, a 2-byte Energy
+    // Expended field (kJ, uint16) is present immediately before any R-R
+    // intervals. Skipping this check would silently misalign every
+    // subsequent R-R interval read for sensors that report energy expended.
+    if (hasEnergyExpended) {
+      if (byteData.lengthInBytes < currentOffset + 2) return null;
+      currentOffset += 2;
     }
 
     final List<double> rrIntervals = [];
