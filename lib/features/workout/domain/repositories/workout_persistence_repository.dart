@@ -31,6 +31,20 @@ abstract class WorkoutPersistenceRepository {
   /// Reactively streams every persisted [WorkoutSession], most recent first.
   Stream<List<WorkoutSession>> watchWorkoutHistory();
 
+  /// Persists an in-progress workout session checkpoint.
+  ///
+  /// Unlike [saveWorkoutSession], the [endTime] is left as `null` so the
+  /// record remains editable while the workout is still active. The [samples]
+  /// list should contain all samples collected up to the moment this checkpoint
+  /// is written.
+  Future<void> saveWorkoutCheckpoint({
+    required DateTime startTime,
+    required List<int> samples,
+    required int sensorLocationIndex,
+    required String macAddress,
+    required String name,
+  });
+
   /// Permanently deletes the workout session identified by [sessionId].
   Future<void> deleteWorkoutSession(int sessionId);
 }

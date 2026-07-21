@@ -79,6 +79,39 @@ class WorkoutPersistenceRepository
     });
   }
 
+  /// Persists an in-progress workout session checkpoint.
+  ///
+  /// The [endTime] is left as `null` so the record remains editable while the
+  /// workout is still active. Computes partial `avgBpm` / `maxBpm` so the
+  /// checkpoint carries meaningful summary statistics.
+  @override
+  Future<void> saveWorkoutCheckpoint({
+    required DateTime startTime,
+    required List<int> samples,
+    required int sensorLocationIndex,
+    required String macAddress,
+    required String name,
+  }) async {
+    if (samples.isEmpty) return;
+
+    final maxBpm = samples.reduce(max);
+    final avgBpm = (samples.reduce((a, b) => a + b) / samples.length).round();
+
+    final session = WorkoutSessionDto()
+      ..startTime = startTime.toUtc()
+      ..endTime = null
+      ..avgBpm = avgBpm
+      ..maxBpm = maxBpm
+      ..bpmSamples = samples
+      ..sensorLocationIndex = sensorLocationIndex
+      ..deviceMacAddress = macAddress
+      ..deviceName = name;
+
+    await _isar.writeTxn(() async {
+      await _isar.workoutSessionDtos.put(session);
+    });
+  }
+
   /// Reactively streams every saved [DeviceProfileDto], mapped to the
   /// domain-level [DeviceProfile], most-recently connected first.
   @override
