@@ -202,13 +202,29 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _connectTimer = null;
 
     if (state is ConnectingMonitorState ||
-        state is DiscoveringServicesMonitorState ||
-        state is ConnectedMonitorState) {
+        state is DiscoveringServicesMonitorState) {
       debugPrint(
-        '[HrMonitorNotifier] connect() ignored — already connecting or '
-        'connected. Call disconnect() first to switch devices.',
+        '[HrMonitorNotifier] connect() ignored — already connecting. '
+        'Call disconnect() first to cancel this attempt.',
       );
       return;
+    }
+
+    if (state is ConnectedMonitorState) {
+      debugPrint(
+        '[HrMonitorNotifier] connect() — device already connected; '
+        'disconnecting old device before reconnecting.',
+      );
+      await _cancelSubscriptions();
+      await _safeDisconnectDevice();
+      await ref.read(foregroundServiceManagerProvider).stopService();
+      _collectedBpmSamples.clear();
+      _sessionStartTime = null;
+      _sessionDeviceId = null;
+      _sessionDeviceName = null;
+      _sessionSensorLocationIndex = null;
+      _currentBatteryLevel = null;
+      state = const MonitorState.disconnected();
     }
 
     // Release any resources from a previous session before starting a new one.
