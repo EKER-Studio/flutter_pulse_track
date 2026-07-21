@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/models/device_profile.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/views/hr_monitor_view.dart';
@@ -23,9 +24,9 @@ class HrHomeView extends ConsumerWidget {
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: AppColors.scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: AppColors.surfaceBackground,
         elevation: 0,
         title: const Text(
           'HR Companion',
@@ -92,7 +93,7 @@ class HrHomeView extends ConsumerWidget {
                                     horizontal: 4.0,
                                   ),
                                   child: ActionChip(
-                                    backgroundColor: const Color(0xFF2A2A2A),
+                                    backgroundColor: AppColors.badgeBackground,
                                     side: BorderSide.none,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
@@ -218,7 +219,7 @@ class HrHomeView extends ConsumerWidget {
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
+        color: AppColors.surfaceBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white10, width: 1),
       ),
@@ -232,7 +233,7 @@ class HrHomeView extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2A2A2A),
+                  color: AppColors.badgeBackground,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(icon, color: Colors.blueAccent, size: 24),

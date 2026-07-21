@@ -24,6 +24,11 @@ class HrPacketParser {
     final bool isHeartRate16Bit = (flags & 0x01) != 0;
     final bool hasEnergyExpended = (flags & 0x08) != 0;
     final bool hasRrIntervals = (flags & 0x10) != 0;
+    final int sensorContactBits = (flags >> 1) & 0x03;
+    final bool sensorContactSupported = sensorContactBits != 0;
+    final bool? sensorContactActive = sensorContactSupported
+        ? sensorContactBits == 0x03
+        : null;
 
     int bpm;
     if (isHeartRate16Bit) {
@@ -59,6 +64,8 @@ class HrPacketParser {
       bpm: bpm,
       rrIntervals: rrIntervals,
       timestamp: DateTime.now(),
+      sensorContactSupported: sensorContactSupported,
+      sensorContactActive: sensorContactActive,
     );
   }
 }

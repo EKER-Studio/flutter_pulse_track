@@ -20,12 +20,20 @@ class HrMeasurement {
   /// Remaining device battery percentage (0-100), null if unsupported by hardware.
   final int? batteryLevel;
 
+  /// Whether the sensor supports skin contact detection per Bluetooth SIG spec.
+  final bool sensorContactSupported;
+
+  /// Whether skin contact is detected, null if [sensorContactSupported] is false.
+  final bool? sensorContactActive;
+
   const HrMeasurement({
     required this.bpm,
     required this.rrIntervals,
     required this.timestamp,
     this.sensorLocation = BodySensorLocation.unknown,
     this.batteryLevel,
+    this.sensorContactSupported = false,
+    this.sensorContactActive,
   });
 
   @override
@@ -37,6 +45,8 @@ class HrMeasurement {
           timestamp == other.timestamp &&
           sensorLocation == other.sensorLocation &&
           batteryLevel == other.batteryLevel &&
+          sensorContactSupported == other.sensorContactSupported &&
+          sensorContactActive == other.sensorContactActive &&
           _listEquals(rrIntervals, other.rrIntervals);
 
   @override
@@ -45,6 +55,8 @@ class HrMeasurement {
       timestamp.hashCode ^
       sensorLocation.hashCode ^
       batteryLevel.hashCode ^
+      sensorContactSupported.hashCode ^
+      sensorContactActive.hashCode ^
       rrIntervals.fold(0, (a, b) => a ^ b.hashCode);
 
   bool _listEquals(List<double> a, List<double> b) {

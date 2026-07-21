@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_device.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_scanner_state.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/controllers/ble_scanner_notifier.dart';
@@ -19,9 +20,9 @@ class HrScannerView extends ConsumerWidget {
     final notifier = ref.read(bleScannerProvider.notifier);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: AppColors.scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: AppColors.surfaceBackground,
         elevation: 0,
         title: const Text(
           'Scanner',
@@ -213,7 +214,7 @@ class HrScannerView extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E1E1E),
+            color: AppColors.surfaceBackground,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
           ),
@@ -293,7 +294,7 @@ class HrScannerView extends ConsumerWidget {
                 leading: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2A2A2A),
+                    color: AppColors.badgeBackground,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(

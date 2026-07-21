@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/monitor_state.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/controllers/hr_monitor_notifier.dart';
@@ -49,9 +50,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     final notifier = ref.read(hrMonitorProvider.notifier);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: AppColors.scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: AppColors.surfaceBackground,
         elevation: 0,
         title: Text(
           widget.deviceName,
@@ -222,7 +223,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF1E1E1E),
+              color: AppColors.surfaceBackground,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -253,7 +254,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF1E1E1E),
+              color: AppColors.surfaceBackground,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -307,7 +308,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E1E1E),
+            color: AppColors.surfaceBackground,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
           ),

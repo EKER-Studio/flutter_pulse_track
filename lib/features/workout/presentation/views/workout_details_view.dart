@@ -1,3 +1,4 @@
+import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
 import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_export_helper.dart';
 import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_zones.dart';
@@ -15,9 +16,9 @@ class WorkoutDetailsView extends StatelessWidget {
   /// Creates a [WorkoutDetailsView] for the given [session].
   const WorkoutDetailsView({required this.session, super.key});
 
-  static const Color _kBackgroundColor = Color(0xFF0D0D0D);
-  static const Color _kCardBackgroundColor = Color(0xFF1E1E1E);
-  static const Color _kBadgeBackgroundColor = Color(0xFF2A2A2A);
+  static const Color _kBackgroundColor = AppColors.darkerBackground;
+  static const Color _kCardBackgroundColor = AppColors.surfaceBackground;
+  static const Color _kBadgeBackgroundColor = AppColors.badgeBackground;
   static const Color _kAvgBpmIconColor = Color(0xFFFF6B6B);
   static const Color _kPeakBpmIconColor = Color(0xFFFFD93D);
   static const Color _kDurationIconColor = Color(0xFF6BCB77);

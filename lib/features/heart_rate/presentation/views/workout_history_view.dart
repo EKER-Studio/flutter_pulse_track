@@ -1,3 +1,4 @@
+import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/delete_workout_session_usecase.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/watch_workout_history_usecase.dart';
@@ -18,9 +19,9 @@ class WorkoutHistoryView extends ConsumerWidget {
     final historyAsync = ref.watch(watchWorkoutHistoryStreamProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: AppColors.scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: AppColors.surfaceBackground,
         elevation: 0,
         title: const Text(
           'Workout History',
@@ -150,7 +151,7 @@ class WorkoutHistoryView extends ConsumerWidget {
           width: double.infinity,
           margin: const EdgeInsets.symmetric(horizontal: 16.0),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E1E1E),
+            color: AppColors.surfaceBackground,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.white10, width: 1),
           ),
@@ -176,7 +177,7 @@ class WorkoutHistoryView extends ConsumerWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2A2A2A),
+                        color: AppColors.badgeBackground,
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
