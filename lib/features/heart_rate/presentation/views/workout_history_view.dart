@@ -235,7 +235,7 @@ class WorkoutHistoryView extends ConsumerWidget {
     } else if (difference == 1) {
       return 'Yesterday, ${intl.DateFormat.Hm().format(date)}';
     } else {
-      return '${intl.DateFormat.E().format(date)}, ${intl.DateFormat.Md().format(date)}, ${intl.DateFormat.Hm().format(date)}';
+      return '${intl.DateFormat.EEEE().format(date)}, ${intl.DateFormat.Md().format(date)} at ${intl.DateFormat.Hm().format(date)}';
     }
   }
 
