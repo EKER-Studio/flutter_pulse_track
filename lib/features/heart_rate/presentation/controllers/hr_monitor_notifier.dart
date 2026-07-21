@@ -9,163 +9,51 @@ import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/body_se
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/monitor_state.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
+import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/services/fbp_heart_rate_monitor_service.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/save_device_profile_usecase.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/save_partial_workout_session_usecase.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/save_workout_session_usecase.dart';
 
 part 'hr_monitor_notifier.g.dart';
 
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
-/// Maximum time allowed for the physical BLE link-layer handshake to complete.
-/// If the native [BluetoothDevice.connect] call does not resolve within this
-/// duration, a [TimeoutException] is raised and the state transitions to
-/// [FailureMonitorState].
 const Duration _kConnectionTimeout = Duration(seconds: 4);
 
-/// Maximum time allowed for GATT service discovery to complete after the link
-/// is established. [discoverServices] can hang indefinitely on certain
-/// firmware combinations; this boundary guarantees the UI is never permanently
-/// stuck in the [DiscoveringServicesMonitorState] screen.
-///
-/// When this deadline fires, the notifier performs a link-layer disconnect
-/// before transitioning to [FailureMonitorState] to prevent resource leaks.
 const Duration _kDiscoverServicesTimeout = Duration(seconds: 5);
 
-/// GATT Heart Rate Service UUID (Bluetooth SIG assigned number 0x180D).
 final Guid _kHrServiceUuid = Guid('180d');
 
-/// GATT Heart Rate Measurement Characteristic UUID (0x2A37).
 final Guid _kHrMeasurementCharUuid = Guid('2a37');
 
-/// GATT Body Sensor Location Characteristic UUID (0x2A38).
 final Guid _kBodySensorLocationCharUuid = Guid('2a38');
 
-/// GATT Battery Service UUID (Bluetooth SIG assigned number 0x180F).
 final Guid _kBatteryServiceUuid = Guid('180f');
 
-/// GATT Battery Level Characteristic UUID (0x2A19).
 final Guid _kBatteryLevelCharacteristicUuid = Guid('2a19');
 
-/// Interval at which accumulated BPM samples are written to Isar as partial
-/// checkpoint records. Checkpoints keep the session "active" (endTime = null)
-/// so a final [SaveWorkoutSessionUseCase] call can complete it later.
 const Duration _kCheckpointInterval = Duration(seconds: 30);
-
-// ---------------------------------------------------------------------------
-// Notifier
-// ---------------------------------------------------------------------------
-
-/// State machine notifier governing the complete BLE connection and heart rate
-/// streaming lifecycle for a single active sensor session.
-///
-/// ### Lifecycle
-///
-/// 1. **disconnected** — initial state; no resources held.
-/// 2. **connecting** — [BluetoothDevice.connect] is in flight (≤ [_kConnectionTimeout]).
-/// 3. **discoveringServices** — link is up; GATT enumeration is in flight
-///    (≤ [_kDiscoverServicesTimeout]).  If the timeout fires, a link-layer
-///    disconnect is executed and the state transitions to [failure].
-/// 4. **connected(measurement)** — GATT notifications are active; state is
-///    updated with every decoded [HrMeasurement] packet.
-/// 5. **failure(message)** — a non-recoverable error terminated the session.
-///    The UI should render a recovery screen with a "Retry" CTA.
-///
-/// ### Timeout contract
-///
-/// [discoverServices] is guarded with a **strict 5-second timeout boundary**.
-/// When the deadline fires:
-///   - [FlutterBluePlus] is instructed to disconnect at the link layer.
-///   - The GATT notification subscription is cancelled.
-///   - The state transitions to [FailureMonitorState] with a user-facing message.
-///   - No dangling resources are left alive.
-///
-/// ### Disposal
-///
-/// All stream subscriptions are cancelled in [_cleanup], which is registered
-/// with [ref.onDispose]. The active [BluetoothDevice] is disconnected if the
-/// notifier is disposed while a session is live.
-@riverpod
 
 @riverpod
 class HrMonitorNotifier extends _$HrMonitorNotifier
     with WidgetsBindingObserver {
-  // --- Active BLE device reference -------------------------------------------
+  HeartRateMonitorService get _monitorService =>
+      ref.read(heartRateMonitorServiceProvider);
 
-  /// The currently targeted [BluetoothDevice]. Null when in [disconnected] state.
   BluetoothDevice? _device;
 
-  // --- Stream subscriptions ---------------------------------------------------
-
-  /// Subscription to [BluetoothCharacteristic.onValueReceived] for the Heart Rate
-  /// Measurement characteristic (0x2A37). Drives state updates from raw bytes
-  /// decoded by [HrPacketParser].
   StreamSubscription<List<int>>? _hrNotificationSubscription;
-
-  /// Subscription to [BluetoothDevice.connectionState]. Used to detect
-  /// unexpected link-layer disconnections (e.g., device moved out of range)
-  /// and surface them as [FailureMonitorState] without the user pressing
-  /// "Disconnect" first.
   StreamSubscription<BluetoothConnectionState>? _connectionStateSubscription;
-
-  /// Subscription to [BluetoothCharacteristic.onValueReceived] for the Battery
-  /// Level characteristic (0x2A19). Drives live battery percentage updates.
   StreamSubscription<List<int>>? _batteryNotificationSubscription;
 
-  // --- Session persistence state ---------------------------------------------
-
-  /// Accumulated BPM samples collected during the active session. Flushed to disk
-  /// via [_saveSessionToDisk] on disconnect or unexpected disconnection, then
-  /// cleared to prepare for the next session.
   final List<int> _collectedBpmSamples = [];
-
-  /// Timestamp when the current session began. Null when no session is active.
   DateTime? _sessionStartTime;
-
-  /// MAC address / unique identifier of the sensor for the current session.
   String? _sessionDeviceId;
-
-  /// Human-readable name of the sensor for the current session.
   String? _sessionDeviceName;
-
-  /// Integer index of the resolved [BodySensorLocation] for the current session.
-  /// Read once during GATT discovery and persisted alongside the workout session.
   int? _sessionSensorLocationIndex;
-
-  /// Latest battery percentage received from the sensor's Battery Service.
-  /// Null if the device does not expose a Battery Service or the read failed.
   int? _currentBatteryLevel;
-
-  /// Guard flag that prevents [_onDeviceConnectionStateChanged] from treating
-  /// an intentional, user-initiated disconnect as an unexpected link drop.
-  /// Set to `true` at the start of [disconnect] and reset to `false` in the
-  /// `finally` block so the notifier is always ready for future connections.
   bool _isDisconnecting = false;
-
-  /// Explicit timer guarding the physical BLE link-layer handshake.
-  /// Cancelled at the start of [connect] and in every failure/cleanup path
-  /// to prevent stale callbacks from racing with a new connection attempt.
   Timer? _connectTimer;
-
-  /// Periodic timer that checkpoints accumulated BPM samples to Isar every
-  /// [_kCheckpointInterval] to prevent data loss if the process is terminated
-  /// while the app is in the background.
   Timer? _checkpointTimer;
 
-  // ---------------------------------------------------------------------------
-  // Riverpod build — register disposal and return initial state
-  // ---------------------------------------------------------------------------
-
-  /// Registers the [_cleanup] disposal callback, adds the notifier as a
-  /// [WidgetsBindingObserver] for lifecycle events, and returns the initial
-  /// [MonitorState.disconnected] state.
-  ///
-  /// Riverpod invokes [build] when the provider is first created. The
-  /// [ref.onDispose] registration guarantees that [_cleanup] runs when the
-  /// provider is removed from the [ProviderScope] (e.g., app termination or
-  /// explicit provider disposal).
   @override
   MonitorState build() {
     WidgetsBinding.instance.addObserver(this);
@@ -173,31 +61,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     return const MonitorState.disconnected();
   }
 
-  // ---------------------------------------------------------------------------
-  // Public interface
-  // ---------------------------------------------------------------------------
-
-  /// Initiates the full two-phase connection sequence for [deviceId].
-  ///
-  /// **Phase 1 — Physical link (≤ [_kConnectionTimeout]):**
-  /// Calls [BluetoothDevice.connect]. Transitions through [connecting].
-  ///
-  /// **Phase 2 — GATT discovery (≤ [_kDiscoverServicesTimeout]):**
-  /// Calls [discoverServices]. Transitions through [discoveringServices].
-  /// If the timeout fires, the link is torn down and [failure] is emitted.
-  ///
-  /// **Phase 3 — Streaming:**
-  /// Enables GATT notifications on 0x2A37 and subscribes to incoming packets.
-  /// Every successfully decoded [HrMeasurement] updates state to [connected].
-  ///
-  /// The method is idempotent: a second call while [connecting],
-  /// [discoveringServices], or already [connected] is safely ignored unless
-  /// the caller explicitly [disconnect]s first — this prevents orphaning a
-  /// live GATT connection by silently overwriting [_device].
   Future<void> connect(String deviceId, String deviceName) async {
-    // Cancel any lingering connection timer from a previous attempt before
-    // doing anything else, so a stale callback can never race with a fresh
-    // connection flow.
     _connectTimer?.cancel();
     _connectTimer = null;
 
@@ -227,29 +91,22 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       state = const MonitorState.disconnected();
     }
 
-    // Release any resources from a previous session before starting a new one.
     await _cancelSubscriptions();
     _collectedBpmSamples.clear();
     _sessionStartTime = DateTime.now();
     _sessionDeviceId = deviceId;
     _sessionDeviceName = deviceName;
     _sessionSensorLocationIndex = null;
-    // Reset stale telemetry from a previous device — otherwise a sensor
-    // without Battery Service would keep showing the last-connected
-    // device's battery level indefinitely.
     _currentBatteryLevel = null;
 
-    _device = BluetoothDevice.fromId(deviceId);
+    _device = _monitorService.fromId(deviceId);
 
     debugPrint(
       '[HrMonitorNotifier] Connecting to "$deviceName" ($deviceId)...',
     );
 
-    // --- Phase 1: Physical link-layer handshake --------------------------------
     state = const MonitorState.connecting();
 
-    // Start the foreground service. Wrapped defensively so a failure here
-    // does not prevent the physical BLE connection attempt.
     try {
       await ref.read(foregroundServiceManagerProvider).startService();
     } catch (e) {
@@ -259,10 +116,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       );
     }
 
-    // Explicit timer guarding the link-layer handshake. The callback is
-    // guarded: it only transitions to failure when the state is still
-    // ConnectingMonitorState, so a fast reconnect that changes state first
-    // is never clobbered by a stale timer firing.
     _connectTimer = Timer(_kConnectionTimeout, () {
       if (!ref.mounted || state is! ConnectingMonitorState) {
         debugPrint(
@@ -286,7 +139,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     });
 
     try {
-      await _device!.connect(autoConnect: false);
+      await _monitorService.connect(_device!, autoConnect: false);
     } catch (e, st) {
       debugPrint('[HrMonitorNotifier] connect() threw: $e\n$st');
       _connectTimer?.cancel();
@@ -298,15 +151,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       );
       return;
     } finally {
-      // Connection succeeded or was cancelled — stop the timer so it never
-      // fires after we leave the connecting state.
       _connectTimer?.cancel();
       _connectTimer = null;
     }
 
-    // Post-await guard: if the notifier was disposed while awaiting the
-    // connect() call above, _cleanup() has already set _device to null.
-    // Abort cleanly to avoid a NullPointer on the force-unwrap below.
     if (!ref.mounted || _device == null) {
       debugPrint(
         '[HrMonitorNotifier] connect() aborted — notifier disposed '
@@ -319,13 +167,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       '[HrMonitorNotifier] Physical link established for "$deviceName".',
     );
 
-    // Subscribe to the device's connection state stream so unexpected drops
-    // (range loss, sensor power-off) are surfaced to the UI immediately.
-    _connectionStateSubscription = _device!.connectionState.listen(
+    _connectionStateSubscription =
+        _monitorService.connectionState(_device!).listen(
       _onDeviceConnectionStateChanged,
     );
 
-    // --- Phase 2: GATT service discovery --------------------------------------
     state = const MonitorState.discoveringServices();
 
     debugPrint(
@@ -335,15 +181,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     List<BluetoothService> services;
     try {
-      services = await _device!.discoverServices().timeout(
+      services = await _monitorService.discoverServices(_device!).timeout(
         _kDiscoverServicesTimeout,
-        // No onTimeout callback: allow the TimeoutException to propagate so
-        // the catch block below can execute the mandatory link-layer teardown.
       );
     } on TimeoutException {
-      // STRICT TIMEOUT CONTRACT: discoverServices froze beyond the deadline.
-      // Execute a link-layer disconnect before transitioning to failure so no
-      // orphaned GATT connection consumes system resources.
       debugPrint(
         '[HrMonitorNotifier] discoverServices() exceeded '
         '${_kDiscoverServicesTimeout.inSeconds}s deadline — '
@@ -366,8 +207,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       return;
     }
 
-    // Post-await guard: if the notifier was disposed while awaiting
-    // discoverServices(), _cleanup() has already set _device to null.
     if (!ref.mounted || _device == null) {
       debugPrint(
         '[HrMonitorNotifier] connect() aborted — notifier disposed '
@@ -380,7 +219,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       '[HrMonitorNotifier] Discovered ${services.length} GATT service(s).',
     );
 
-    // --- Validate Heart Rate Service presence ---------------------------------
     final BluetoothService? hrService = services
         .where((BluetoothService s) => s.serviceUuid == _kHrServiceUuid)
         .firstOrNull;
@@ -400,7 +238,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       return;
     }
 
-    // --- Validate HR Measurement Characteristic presence ----------------------
     final BluetoothCharacteristic? hrCharacteristic = hrService.characteristics
         .where(
           (BluetoothCharacteristic c) =>
@@ -423,16 +260,12 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       return;
     }
 
-    // --- Optional: read Body Sensor Location (0x2A38) -------------------------
-    // This is a best-effort read. Any error is silently swallowed so a firmware
-    // that omits 0x2A38 does not block the telemetry stream from starting.
     final BodySensorLocation sensorLocation = await _readBodySensorLocation(
       hrService,
     );
 
     _sessionSensorLocationIndex = sensorLocation.index;
 
-    // Cache the device profile via the domain-layer Use Case.
     try {
       await ref
           .read(saveDeviceProfileUseCaseProvider)
@@ -442,9 +275,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
             sensorLocationIndex: sensorLocation.index,
           );
     } catch (e) {
-      // Best-effort cache write — a failure here must not abort the
-      // in-progress connection, but it must not be a silent unhandled
-      // Future rejection either.
       debugPrint('[HrMonitorNotifier] saveDeviceProfile() failed: $e');
     }
 
@@ -452,14 +282,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       '[HrMonitorNotifier] Body sensor location: ${sensorLocation.displayName}',
     );
 
-    // --- Optional: resolve Battery Service (0x180F) -------------------------
-    // Best-effort discovery. If the sensor omits the Battery Service, we
-    // gracefully fall back to null without interrupting the HR stream.
     await _resolveBatteryService(services);
 
-    // --- Phase 3: Enable GATT notifications and begin streaming ---------------
     try {
-      await hrCharacteristic.setNotifyValue(true);
+      await _monitorService.setNotifyValue(hrCharacteristic, true);
     } catch (e, st) {
       debugPrint('[HrMonitorNotifier] setNotifyValue(true) failed: $e\n$st');
       await ref.read(foregroundServiceManagerProvider).stopService();
@@ -470,8 +296,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       return;
     }
 
-    // Post-await guard: if the notifier was disposed while awaiting
-    // setNotifyValue(), _cleanup() has already nullified _device.
     if (!ref.mounted || _device == null) {
       debugPrint(
         '[HrMonitorNotifier] connect() aborted — notifier disposed '
@@ -484,7 +308,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       '[HrMonitorNotifier] GATT HR notifications active — streaming live data.',
     );
 
-    _hrNotificationSubscription = hrCharacteristic.onValueReceived.listen(
+    _hrNotificationSubscription =
+        _monitorService.onValueReceived(hrCharacteristic).listen(
       (List<int> rawBytes) {
         if (!ref.mounted) return;
 
@@ -493,12 +318,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         );
         if (measurement == null) return;
 
-        // Persist the raw integer directly into our telemetry buffer
         _collectedBpmSamples.add(measurement.bpm);
 
-        // Stamp the dynamically resolved sensor location onto every emitted
-        // measurement. The location is read once at session start and held
-        // constant — it does not change while the device is connected.
         final HrMeasurement enrichedMeasurement = HrMeasurement(
           bpm: measurement.bpm,
           rrIntervals: measurement.rrIntervals,
@@ -520,10 +341,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       },
       onDone: () {
         if (!ref.mounted) return;
-        // The characteristic stream closed, typically because the device
-        // disconnected. Transition to a failure state so the user sees a
-        // recovery screen with a "Retry" CTA instead of being silently
-        // returned to the idle screen.
         debugPrint(
           '[HrMonitorNotifier] HR notification stream closed by remote device.',
         );
@@ -539,8 +356,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _startCheckpointTimer();
   }
 
-  /// Gracefully terminates the active connection, cancels all subscriptions,
-  /// and transitions to [DisconnectedMonitorState].
   Future<void> disconnect() async {
     debugPrint('[HrMonitorNotifier] disconnect() called.');
     _connectTimer?.cancel();
@@ -558,13 +373,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
-  /// Flushes collected session telemetry to disk asynchronously via the repository,
-  /// then clears the in-memory session state to prepare for the next session.
-  ///
-  /// The persistence call is wrapped in a try-catch-finally block to guarantee
-  /// that in-memory state is always reset, even if the database write fails.
-  /// Foreground service lifecycle is managed by [disconnect] and is not
-  /// duplicated here to avoid double-stop when both are in the call stack.
   Future<void> _saveSessionToDisk() async {
     try {
       if (_collectedBpmSamples.isNotEmpty &&
@@ -600,12 +408,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Checkpoint timer & lifecycle
-  // ---------------------------------------------------------------------------
-
-  /// Starts the periodic checkpoint timer that writes accumulated BPM samples
-  /// to Isar every [_kCheckpointInterval].
   void _startCheckpointTimer() {
     _stopCheckpointTimer();
     _checkpointTimer = Timer.periodic(_kCheckpointInterval, (_) {
@@ -613,17 +415,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     });
   }
 
-  /// Cancels the periodic checkpoint timer if active.
   void _stopCheckpointTimer() {
     _checkpointTimer?.cancel();
     _checkpointTimer = null;
   }
 
-  /// Persists accumulated BPM samples as a partial checkpoint record to Isar.
-  ///
-  /// The record has [endTime] set to `null`, keeping it in an "active" state
-  /// so the final [SaveWorkoutSessionUseCase] call can complete the session
-  /// with accurate timing and the full sample list.
   Future<void> _checkpoint() async {
     if (state is! ConnectedMonitorState ||
         _collectedBpmSamples.isEmpty ||
@@ -652,11 +448,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
-  /// Called by [WidgetsBinding] on app lifecycle transitions.
-  ///
-  /// When the app leaves the foreground ([paused] or [detached]), accumulated
-  /// BPM samples are flushed to Isar as a checkpoint to prevent data loss if
-  /// the process is terminated while in the background.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
@@ -665,11 +456,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
-  /// Convenience method combining [disconnect] and [connect] for the UI
-  /// "Retry" CTA on the [FailureMonitorState] recovery screen.
-  ///
-  /// This ensures all stale resources are fully released before a fresh
-  /// connection attempt begins, preventing GATT handle leaks.
   Future<void> retry(String deviceId, String deviceName) async {
     debugPrint(
       '[HrMonitorNotifier] retry() — tearing down current session '
@@ -679,14 +465,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     await connect(deviceId, deviceName);
   }
 
-  // ---------------------------------------------------------------------------
-  // Private — optional GATT reads
-  // ---------------------------------------------------------------------------
-
-  /// Attempts to read the Body Sensor Location from characteristic 0x2A38.
-  ///
-  /// Returns [BodySensorLocation.unknown] on any error so that an optional
-  /// GATT characteristic never blocks the critical HR data stream.
   Future<BodySensorLocation> _readBodySensorLocation(
     BluetoothService hrService,
   ) async {
@@ -700,9 +478,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
       if (locationChar == null) return BodySensorLocation.unknown;
 
-      final List<int> bytes = await locationChar.read().timeout(
-        const Duration(seconds: 2),
-      );
+      final List<int> bytes = await _monitorService
+          .read(locationChar)
+          .timeout(const Duration(seconds: 2));
 
       if (bytes.isEmpty) return BodySensorLocation.unknown;
 
@@ -723,12 +501,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
-  /// Best-effort resolution of the Battery Service (0x180F) and Battery Level
-  /// Characteristic (0x2A19).
-  ///
-  /// Executes a guarded initial read (2 s timeout), then optionally enables
-  /// notifications if the GATT properties allow it. Any failure is logged and
-  /// swallowed — the primary HR telemetry stream is never blocked.
   Future<void> _resolveBatteryService(List<BluetoothService> services) async {
     try {
       final BluetoothService? batteryService = services
@@ -757,12 +529,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         return;
       }
 
-      // Guarded initial read — 2 s timeout so a slow GATT response does not
-      // hold up the connection flow.
       try {
-        final List<int> initialBytes = await batteryChar.read().timeout(
-          const Duration(seconds: 2),
-        );
+        final List<int> initialBytes = await _monitorService
+            .read(batteryChar)
+            .timeout(const Duration(seconds: 2));
         if (initialBytes.isNotEmpty) {
           _currentBatteryLevel = initialBytes.first.clamp(0, 100);
           debugPrint(
@@ -778,17 +548,16 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         debugPrint('[HrMonitorNotifier] Battery level initial read failed: $e');
       }
 
-      // Enable notifications only if the characteristic advertises the property.
       final bool supportsNotify = batteryChar.properties.notify;
       final bool supportsIndicate = batteryChar.properties.indicate;
 
       if (supportsNotify || supportsIndicate) {
-        await batteryChar.setNotifyValue(true);
+        await _monitorService.setNotifyValue(batteryChar, true);
 
-        // Post-await guard: if the notifier was disposed while awaiting
         if (!ref.mounted) return;
 
-        _batteryNotificationSubscription = batteryChar.onValueReceived.listen(
+        _batteryNotificationSubscription =
+            _monitorService.onValueReceived(batteryChar).listen(
           (List<int> bytes) {
             if (!ref.mounted) return;
             if (bytes.isNotEmpty) {
@@ -816,11 +585,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
-  /// Parses a new battery percentage and synchronizes it into both the cached
-  /// field and the active [ConnectedMonitorState] (if currently connected).
-  ///
-  /// Only triggers a state transition when the value actually changes, avoiding
-  /// unnecessary UI repaints.
   void _updateStateWithBatteryLevel(int newLevel) {
     if (_currentBatteryLevel == newLevel) return;
     _currentBatteryLevel = newLevel;
@@ -840,18 +604,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Private — connection state watcher
-  // ---------------------------------------------------------------------------
-
-  /// Handles unexpected link-layer disconnection events from the device.
-  ///
-  /// If the device drops the connection while data is streaming (e.g., sensor
-  /// battery dies, device moves out of range), this callback surfaces a
-  /// [FailureMonitorState] so the UI shows the recovery screen immediately.
-  ///
-  /// Returns early if [_isDisconnecting] is `true`, preventing the callback
-  /// from treating a user-initiated disconnect as an unexpected link drop.
   Future<void> _onDeviceConnectionStateChanged(
     BluetoothConnectionState connectionState,
   ) async {
@@ -870,8 +622,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
 
     if (connectionState == BluetoothConnectionState.disconnected) {
-      // Guard against firing during an intentional disconnect triggered by
-      // the user, which already transitions state via disconnect().
       if (state is ConnectedMonitorState ||
           state is ConnectingMonitorState ||
           state is DiscoveringServicesMonitorState) {
@@ -893,13 +643,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Private — resource management
-  // ---------------------------------------------------------------------------
-
-  /// Cancels all active stream subscriptions without touching the BLE link.
-  /// Called before starting a new session to prevent events from a stale
-  /// subscription polluting the new state machine.
   Future<void> _cancelSubscriptions() async {
     await _hrNotificationSubscription?.cancel();
     await _batteryNotificationSubscription?.cancel();
@@ -909,15 +652,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _connectionStateSubscription = null;
   }
 
-  /// Instructs [FlutterBluePlus] to disconnect [_device] at the link layer.
-  ///
-  /// All errors are caught and logged rather than re-thrown so that a failed
-  /// disconnect attempt never cascades into an unhandled exception inside an
-  /// already-failing error-handling path.
   Future<void> _safeDisconnectDevice() async {
     if (_device == null) return;
     try {
-      await _device!.disconnect();
+      await _monitorService.disconnect(_device!);
       debugPrint(
         '[HrMonitorNotifier] Link-layer disconnect completed for '
         '${_device!.remoteId}.',
@@ -931,23 +669,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
-  /// Full disposal: cancels subscriptions and disconnects the device.
-  /// Registered with [ref.onDispose] and called synchronously by Riverpod.
-  ///
-  /// Riverpod's [onDispose] callback is **synchronous** — it does not support
-  /// `async`/`await`. Because BLE disconnect and subscription cancel operations
-  /// return `Future`s, this method invokes them as fire-and-forget calls. This
-  /// is intentional: it prevents the disposal pipeline from blocking while
-  /// still ensuring that all resources are released. The catch-all error
-  /// handling in [_safeDisconnectDevice] and [StreamSubscription.cancel]
-  /// guarantees that a failed teardown never surfaces as an unhandled exception.
   void _cleanup() {
     debugPrint(
       '[HrMonitorNotifier] Disposing — releasing all GATT and BLE resources.',
     );
-    // Fire-and-forget async operations from a sync dispose callback.
-    // Riverpod does not await onDispose callbacks; best-effort teardown is
-    // the correct behaviour here to avoid holding up ProviderScope disposal.
     _connectTimer?.cancel();
     _connectTimer = null;
     _stopCheckpointTimer();
@@ -957,8 +682,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _hrNotificationSubscription = null;
     _batteryNotificationSubscription = null;
     _connectionStateSubscription = null;
-    _device?.disconnect();
-    _device = null;
+    if (_device != null) {
+      _monitorService.disconnect(_device!);
+      _device = null;
+    }
     WidgetsBinding.instance.removeObserver(this);
     ref.read(foregroundServiceManagerProvider).stopService();
   }

@@ -8,69 +8,12 @@ part of 'ble_scanner_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// State machine notifier governing the complete BLE scanner lifecycle.
-///
-/// This notifier owns all hardware interactions related to device discovery:
-///
-/// - It reactively monitors [FlutterBluePlus.adapterState] and immediately
-///   transitions to [BleScannerState.adapterOff] if Bluetooth is disabled,
-///   preempting any other state.
-/// - It applies two composable device-quality filters controlled by
-///   [toggleFilters]:
-///     • **Names filter** — discards peripherals with an empty platform name.
-///     • **Nearby filter** — discards peripherals with RSSI < [_kRssiThreshold].
-/// - It arms a [_kEmptyStateWindow] sliding-window [Timer] on scan start.
-///   If no peripheral passes the active filters within that window, the state
-///   transitions to [BleScannerState.empty] so the UI shows a clear prompt.
-/// - [retry] and [toggleFilters] provide clean intent-based recovery actions
-///   for the UI without exposing raw BLE primitives.
-///
-/// Lifecycle: created on first use, disposed with the enclosing [ProviderScope].
-/// All stream subscriptions and timers are cancelled in [_cleanup].
 
 @ProviderFor(BleScannerNotifier)
 final bleScannerProvider = BleScannerNotifierProvider._();
 
-/// State machine notifier governing the complete BLE scanner lifecycle.
-///
-/// This notifier owns all hardware interactions related to device discovery:
-///
-/// - It reactively monitors [FlutterBluePlus.adapterState] and immediately
-///   transitions to [BleScannerState.adapterOff] if Bluetooth is disabled,
-///   preempting any other state.
-/// - It applies two composable device-quality filters controlled by
-///   [toggleFilters]:
-///     • **Names filter** — discards peripherals with an empty platform name.
-///     • **Nearby filter** — discards peripherals with RSSI < [_kRssiThreshold].
-/// - It arms a [_kEmptyStateWindow] sliding-window [Timer] on scan start.
-///   If no peripheral passes the active filters within that window, the state
-///   transitions to [BleScannerState.empty] so the UI shows a clear prompt.
-/// - [retry] and [toggleFilters] provide clean intent-based recovery actions
-///   for the UI without exposing raw BLE primitives.
-///
-/// Lifecycle: created on first use, disposed with the enclosing [ProviderScope].
-/// All stream subscriptions and timers are cancelled in [_cleanup].
 final class BleScannerNotifierProvider
     extends $NotifierProvider<BleScannerNotifier, BleScannerState> {
-  /// State machine notifier governing the complete BLE scanner lifecycle.
-  ///
-  /// This notifier owns all hardware interactions related to device discovery:
-  ///
-  /// - It reactively monitors [FlutterBluePlus.adapterState] and immediately
-  ///   transitions to [BleScannerState.adapterOff] if Bluetooth is disabled,
-  ///   preempting any other state.
-  /// - It applies two composable device-quality filters controlled by
-  ///   [toggleFilters]:
-  ///     • **Names filter** — discards peripherals with an empty platform name.
-  ///     • **Nearby filter** — discards peripherals with RSSI < [_kRssiThreshold].
-  /// - It arms a [_kEmptyStateWindow] sliding-window [Timer] on scan start.
-  ///   If no peripheral passes the active filters within that window, the state
-  ///   transitions to [BleScannerState.empty] so the UI shows a clear prompt.
-  /// - [retry] and [toggleFilters] provide clean intent-based recovery actions
-  ///   for the UI without exposing raw BLE primitives.
-  ///
-  /// Lifecycle: created on first use, disposed with the enclosing [ProviderScope].
-  /// All stream subscriptions and timers are cancelled in [_cleanup].
   BleScannerNotifierProvider._()
     : super(
         from: null,
@@ -99,27 +42,7 @@ final class BleScannerNotifierProvider
 }
 
 String _$bleScannerNotifierHash() =>
-    r'5a57b24c32a9b2fe6413777da9acd1fc0f8e60e3';
-
-/// State machine notifier governing the complete BLE scanner lifecycle.
-///
-/// This notifier owns all hardware interactions related to device discovery:
-///
-/// - It reactively monitors [FlutterBluePlus.adapterState] and immediately
-///   transitions to [BleScannerState.adapterOff] if Bluetooth is disabled,
-///   preempting any other state.
-/// - It applies two composable device-quality filters controlled by
-///   [toggleFilters]:
-///     • **Names filter** — discards peripherals with an empty platform name.
-///     • **Nearby filter** — discards peripherals with RSSI < [_kRssiThreshold].
-/// - It arms a [_kEmptyStateWindow] sliding-window [Timer] on scan start.
-///   If no peripheral passes the active filters within that window, the state
-///   transitions to [BleScannerState.empty] so the UI shows a clear prompt.
-/// - [retry] and [toggleFilters] provide clean intent-based recovery actions
-///   for the UI without exposing raw BLE primitives.
-///
-/// Lifecycle: created on first use, disposed with the enclosing [ProviderScope].
-/// All stream subscriptions and timers are cancelled in [_cleanup].
+    r'69d026b782f1b9c9b1eafc913c4853a89bd48b0a';
 
 abstract class _$BleScannerNotifier extends $Notifier<BleScannerState> {
   BleScannerState build();
