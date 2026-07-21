@@ -314,9 +314,8 @@ class WorkoutDetailsView extends StatelessWidget {
     );
   }
 
-  /// Returns a human-readable date string in the form "Mon DD, YYYY".
   String _formatDate(DateTime date) {
-    return '${intl.DateFormat.E().format(date)} ${intl.DateFormat.Md().format(date)}, ${intl.DateFormat.y().format(date)}';
+    return intl.DateFormat('E, MMM d, y').format(date);
   }
 
   /// Returns a human-readable duration string from [start] to [end].
@@ -515,8 +514,13 @@ class BpmChart extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant BpmChart oldDelegate) =>
-      oldDelegate.samples != samples;
+  bool shouldRepaint(covariant BpmChart oldDelegate) {
+    if (oldDelegate.samples.length != samples.length) return true;
+    for (int i = 0; i < samples.length; i++) {
+      if (oldDelegate.samples[i] != samples[i]) return true;
+    }
+    return false;
+  }
 
   /// Paints a centered "No data" label when the sample list is empty.
   void _drawEmpty(Canvas canvas, Size size) {
