@@ -262,26 +262,28 @@ class HrScannerView extends ConsumerWidget {
   }
 
   /// Builds the scanning state UI with an animated indicator and the list of discovered devices.
+  ///
+  /// Returned directly as `Scaffold.body` — must NOT be wrapped in `Expanded`,
+  /// since `Expanded` requires a `Flex` (Row/Column) ancestor, which
+  /// `Scaffold.body` is not. `Center`/`ListView` already fill the available
+  /// space on their own here.
   Widget _buildScanningState(
     BuildContext context,
     BleScannerNotifier notifier,
     List<BleDevice> devices,
   ) {
     return devices.isEmpty
-        ? const Expanded(
-            child: Center(
-              child: Text(
-                'Searching for active sensors...',
-                style: TextStyle(color: Colors.grey),
-              ),
+        ? const Center(
+            child: Text(
+              'Searching for active sensors...',
+              style: TextStyle(color: Colors.grey),
             ),
           )
-        : Expanded(
-            child: ListView.separated(
-              itemCount: devices.length,
-              separatorBuilder: (_, _) =>
-                  const Divider(color: Colors.white10, height: 1),
-              itemBuilder: (context, index) {
+        : ListView.separated(
+            itemCount: devices.length,
+            separatorBuilder: (_, _) =>
+                const Divider(color: Colors.white10, height: 1),
+            itemBuilder: (context, index) {
                 final device = devices[index];
                 return ListTile(
                   contentPadding: const EdgeInsets.symmetric(
@@ -361,8 +363,7 @@ class HrScannerView extends ConsumerWidget {
                   },
                 );
               },
-            ),
-          );
+            );
   }
 
   /// Returns a color representing signal strength for the given RSSI value.
