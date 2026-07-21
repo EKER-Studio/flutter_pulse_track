@@ -18,7 +18,7 @@ part 'hr_monitor_notifier.g.dart';
 
 const Duration _kConnectionTimeout = Duration(seconds: 4);
 
-const Duration _kDiscoverServicesTimeout = Duration(seconds: 5);
+const Duration _kDiscoverServicesTimeout = Duration(seconds: 8);
 
 final Guid _kHrServiceUuid = Guid('180d');
 
@@ -167,10 +167,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       '[HrMonitorNotifier] Physical link established for "$deviceName".',
     );
 
-    _connectionStateSubscription =
-        _monitorService.connectionState(_device!).listen(
-      _onDeviceConnectionStateChanged,
-    );
+    _connectionStateSubscription = _monitorService
+        .connectionState(_device!)
+        .listen(_onDeviceConnectionStateChanged);
 
     state = const MonitorState.discoveringServices();
 
@@ -181,9 +180,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     List<BluetoothService> services;
     try {
-      services = await _monitorService.discoverServices(_device!).timeout(
-        _kDiscoverServicesTimeout,
-      );
+      services = await _monitorService
+          .discoverServices(_device!)
+          .timeout(_kDiscoverServicesTimeout);
     } on TimeoutException {
       debugPrint(
         '[HrMonitorNotifier] discoverServices() exceeded '
@@ -308,50 +307,51 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       '[HrMonitorNotifier] GATT HR notifications active — streaming live data.',
     );
 
-    _hrNotificationSubscription =
-        _monitorService.onValueReceived(hrCharacteristic).listen(
-      (List<int> rawBytes) {
-        if (!ref.mounted) return;
+    _hrNotificationSubscription = _monitorService
+        .onValueReceived(hrCharacteristic)
+        .listen(
+          (List<int> rawBytes) {
+            if (!ref.mounted) return;
 
-        final HrMeasurement? measurement = HrPacketParser.parseRawBytes(
-          rawBytes,
-        );
-        if (measurement == null) return;
+            final HrMeasurement? measurement = HrPacketParser.parseRawBytes(
+              rawBytes,
+            );
+            if (measurement == null) return;
 
-        _collectedBpmSamples.add(measurement.bpm);
+            _collectedBpmSamples.add(measurement.bpm);
 
-        final HrMeasurement enrichedMeasurement = HrMeasurement(
-          bpm: measurement.bpm,
-          rrIntervals: measurement.rrIntervals,
-          timestamp: measurement.timestamp,
-          sensorLocation: sensorLocation,
-          batteryLevel: _currentBatteryLevel ?? measurement.batteryLevel,
-        );
+            final HrMeasurement enrichedMeasurement = HrMeasurement(
+              bpm: measurement.bpm,
+              rrIntervals: measurement.rrIntervals,
+              timestamp: measurement.timestamp,
+              sensorLocation: sensorLocation,
+              batteryLevel: _currentBatteryLevel ?? measurement.batteryLevel,
+            );
 
-        state = MonitorState.connected(measurement: enrichedMeasurement);
-      },
-      onError: (Object error, StackTrace stack) {
-        if (!ref.mounted) return;
-        debugPrint(
-          '[HrMonitorNotifier] HR notification stream error: $error\n$stack',
+            state = MonitorState.connected(measurement: enrichedMeasurement);
+          },
+          onError: (Object error, StackTrace stack) {
+            if (!ref.mounted) return;
+            debugPrint(
+              '[HrMonitorNotifier] HR notification stream error: $error\n$stack',
+            );
+            state = MonitorState.failure(
+              message: 'Live data stream error: ${error.toString()}',
+            );
+          },
+          onDone: () {
+            if (!ref.mounted) return;
+            debugPrint(
+              '[HrMonitorNotifier] HR notification stream closed by remote device.',
+            );
+            if (state is ConnectedMonitorState) {
+              state = const MonitorState.failure(
+                message: 'Heart rate stream was unexpectedly terminated.',
+              );
+            }
+          },
+          cancelOnError: false,
         );
-        state = MonitorState.failure(
-          message: 'Live data stream error: ${error.toString()}',
-        );
-      },
-      onDone: () {
-        if (!ref.mounted) return;
-        debugPrint(
-          '[HrMonitorNotifier] HR notification stream closed by remote device.',
-        );
-        if (state is ConnectedMonitorState) {
-          state = const MonitorState.failure(
-            message: 'Heart rate stream was unexpectedly terminated.',
-          );
-        }
-      },
-      cancelOnError: false,
-    );
 
     _startCheckpointTimer();
   }
@@ -556,22 +556,23 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
         if (!ref.mounted) return;
 
-        _batteryNotificationSubscription =
-            _monitorService.onValueReceived(batteryChar).listen(
-          (List<int> bytes) {
-            if (!ref.mounted) return;
-            if (bytes.isNotEmpty) {
-              _updateStateWithBatteryLevel(bytes.first.clamp(0, 100));
-            }
-          },
-          onError: (Object error, StackTrace stack) {
-            if (!ref.mounted) return;
-            debugPrint(
-              '[HrMonitorNotifier] Battery notification stream error: $error',
+        _batteryNotificationSubscription = _monitorService
+            .onValueReceived(batteryChar)
+            .listen(
+              (List<int> bytes) {
+                if (!ref.mounted) return;
+                if (bytes.isNotEmpty) {
+                  _updateStateWithBatteryLevel(bytes.first.clamp(0, 100));
+                }
+              },
+              onError: (Object error, StackTrace stack) {
+                if (!ref.mounted) return;
+                debugPrint(
+                  '[HrMonitorNotifier] Battery notification stream error: $error',
+                );
+              },
+              cancelOnError: false,
             );
-          },
-          cancelOnError: false,
-        );
       } else {
         debugPrint(
           '[HrMonitorNotifier] Battery characteristic found but does not '

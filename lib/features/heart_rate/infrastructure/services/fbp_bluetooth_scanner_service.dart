@@ -22,10 +22,7 @@ abstract class BluetoothScannerService {
   bool get isScanningNow;
 
   /// Initiates a hardware BLE scan.
-  Future<void> startScan({
-    required List<Guid> withServices,
-    Duration? timeout,
-  });
+  Future<void> startScan({required List<Guid> withServices, Duration? timeout});
 
   /// Halts the active hardware scan.
   Future<void> stopScan();

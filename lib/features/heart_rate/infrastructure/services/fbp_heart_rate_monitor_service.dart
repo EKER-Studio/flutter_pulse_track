@@ -27,7 +27,10 @@ abstract class HeartRateMonitorService {
   Future<List<BluetoothService>> discoverServices(BluetoothDevice device);
 
   /// Enables or disables GATT notifications on [characteristic].
-  Future<void> setNotifyValue(BluetoothCharacteristic characteristic, bool value);
+  Future<void> setNotifyValue(
+    BluetoothCharacteristic characteristic,
+    bool value,
+  );
 
   /// Broadcast stream of incoming notification/indication values for
   /// [characteristic]. Only emits while notifications are enabled.
@@ -40,11 +43,13 @@ abstract class HeartRateMonitorService {
 /// Concrete [HeartRateMonitorService] backed by [FlutterBluePlus].
 class FbpHeartRateMonitorService implements HeartRateMonitorService {
   @override
-  BluetoothDevice fromId(String deviceId) =>
-      BluetoothDevice.fromId(deviceId);
+  BluetoothDevice fromId(String deviceId) => BluetoothDevice.fromId(deviceId);
 
   @override
-  Future<void> connect(BluetoothDevice device, {bool autoConnect = false}) async {
+  Future<void> connect(
+    BluetoothDevice device, {
+    bool autoConnect = false,
+  }) async {
     try {
       await device.connect(autoConnect: autoConnect);
     } catch (e) {
@@ -68,7 +73,9 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
       device.connectionState;
 
   @override
-  Future<List<BluetoothService>> discoverServices(BluetoothDevice device) async {
+  Future<List<BluetoothService>> discoverServices(
+    BluetoothDevice device,
+  ) async {
     try {
       return await device.discoverServices();
     } catch (e) {
