@@ -2,6 +2,7 @@ import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_se
 import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_export_helper.dart';
 import 'package:ble_heart_rate_monitor/features/workout/presentation/utils/heart_rate_zones.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 
 /// Full-screen details view for a single completed or in-progress workout session.
 ///
@@ -315,21 +316,7 @@ class WorkoutDetailsView extends StatelessWidget {
 
   /// Returns a human-readable date string in the form "Mon DD, YYYY".
   String _formatDate(DateTime date) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+    return '${intl.DateFormat.E().format(date)} ${intl.DateFormat.Md().format(date)}, ${intl.DateFormat.y().format(date)}';
   }
 
   /// Returns a human-readable duration string from [start] to [end].

@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/delete_workout_session_usecase.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/watch_workout_history_usecase.dart';
 import 'package:ble_heart_rate_monitor/features/workout/presentation/views/workout_details_view.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart' as intl;
 
 /// Reactive workout history screen that displays every persisted
 /// [WorkoutSession], sorted by start time descending, via
@@ -231,44 +231,12 @@ class WorkoutHistoryView extends ConsumerWidget {
     final difference = today.difference(workoutDay).inDays;
 
     if (difference == 0) {
-      return 'Today, ${_formatTime(date)}';
+      return 'Today, ${intl.DateFormat.Hm().format(date)}';
     } else if (difference == 1) {
-      return 'Yesterday, ${_formatTime(date)}';
+      return 'Yesterday, ${intl.DateFormat.Hm().format(date)}';
     } else {
-      return '${_getDayOfWeek(date)}, ${_formatMonthDay(date)}, ${_formatTime(date)}';
+      return '${intl.DateFormat.E().format(date)}, ${intl.DateFormat.Md().format(date)}, ${intl.DateFormat.Hm().format(date)}';
     }
-  }
-
-  /// Returns a 24-hour time string in the form "HH:mm".
-  String _formatTime(DateTime date) {
-    final hour = date.hour.toString().padLeft(2, '0');
-    final minute = date.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
-  }
-
-  /// Returns a compact month-day string (e.g. "Jan 5").
-  String _formatMonthDay(DateTime date) {
-    final months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return '${months[date.month - 1]} ${date.day}';
-  }
-
-  /// Returns the abbreviated day-of-week name (e.g. "Mon").
-  String _getDayOfWeek(DateTime date) {
-    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return days[(date.weekday - 1) % 7];
   }
 
   /// Formats the elapsed time between [start] and [end] into a compact "Xh Ym" string.
