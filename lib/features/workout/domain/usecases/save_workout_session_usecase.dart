@@ -24,6 +24,10 @@ class SaveWorkoutSessionUseCase {
   /// The [sensorLocationIndex], [macAddress], and [name] are captured from the
   /// connected sensor at session start and stored alongside the samples to ensure
   /// the record remains self-contained even if the device profile is later deleted.
+  ///
+  /// Pass [existingId] (the id returned by the session's last checkpoint call,
+  /// if any) so this final write updates that same row instead of leaving it
+  /// behind as an orphaned duplicate.
   Future<void> call({
     required DateTime startTime,
     required DateTime endTime,
@@ -33,6 +37,7 @@ class SaveWorkoutSessionUseCase {
     required String name,
     required int avgBpm,
     required int maxBpm,
+    int? existingId,
   }) => _repository.saveWorkoutSession(
     startTime: startTime,
     endTime: endTime,
@@ -42,6 +47,7 @@ class SaveWorkoutSessionUseCase {
     name: name,
     avgBpm: avgBpm,
     maxBpm: maxBpm,
+    existingId: existingId,
   );
 }
 

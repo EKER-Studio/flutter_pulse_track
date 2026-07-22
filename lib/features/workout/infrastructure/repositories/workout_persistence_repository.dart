@@ -45,9 +45,10 @@ class WorkoutPersistenceRepository
 
   /// Persists an immutable workout session after the BLE connection is closed.
   ///
-  /// Computes the `avgBpm` and `maxBpm` from the raw telemetry [samples] before
-  /// performing an atomic write transaction. Empty sessions (0 samples) are
-  /// silently discarded to avoid cluttering the history view.
+  /// [avgBpm]/[maxBpm] are computed incrementally by the caller. Empty
+  /// sessions (0 samples) are silently discarded to avoid cluttering the
+  /// history view. If [existingId] is given, updates that row in place
+  /// instead of inserting a new one.
   @override
   Future<void> saveWorkoutSession({
     required DateTime startTime,
@@ -58,10 +59,12 @@ class WorkoutPersistenceRepository
     required String name,
     required int avgBpm,
     required int maxBpm,
+    int? existingId,
   }) async {
     if (samples.isEmpty) return;
 
     final session = WorkoutSessionDto()
+      ..id = existingId ?? Isar.autoIncrement
       ..startTime = startTime.toUtc()
       ..endTime = endTime.toUtc()
       ..avgBpm = avgBpm
@@ -79,10 +82,15 @@ class WorkoutPersistenceRepository
   /// Persists an in-progress workout session checkpoint.
   ///
   /// The [endTime] is left as `null` so the record remains editable while the
-  /// workout is still active. Computes partial `avgBpm` / `maxBpm` so the
-  /// checkpoint carries meaningful summary statistics.
+  /// workout is still active. [avgBpm]/[maxBpm] are computed incrementally by
+  /// the caller.
+  ///
+  /// If [existingId] is given, updates that row in place (returning the same
+  /// id back). Otherwise inserts a new row and returns its freshly-assigned
+  /// id — callers are responsible for passing that id into subsequent calls,
+  /// or every checkpoint will insert a new duplicate row.
   @override
-  Future<void> saveWorkoutCheckpoint({
+  Future<int> saveWorkoutCheckpoint({
     required DateTime startTime,
     required List<int> samples,
     required int sensorLocationIndex,
@@ -90,10 +98,12 @@ class WorkoutPersistenceRepository
     required String name,
     required int avgBpm,
     required int maxBpm,
+    int? existingId,
   }) async {
-    if (samples.isEmpty) return;
+    if (samples.isEmpty) return existingId ?? Isar.autoIncrement;
 
     final session = WorkoutSessionDto()
+      ..id = existingId ?? Isar.autoIncrement
       ..startTime = startTime.toUtc()
       ..endTime = null
       ..avgBpm = avgBpm
@@ -103,8 +113,8 @@ class WorkoutPersistenceRepository
       ..deviceMacAddress = macAddress
       ..deviceName = name;
 
-    await _isar.writeTxn(() async {
-      await _isar.workoutSessionDtos.put(session);
+    return _isar.writeTxn(() async {
+      return _isar.workoutSessionDtos.put(session);
     });
   }
 

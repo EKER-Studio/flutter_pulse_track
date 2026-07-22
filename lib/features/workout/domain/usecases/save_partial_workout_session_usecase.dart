@@ -26,7 +26,13 @@ class SavePartialWorkoutSessionUseCase {
   /// record active. The [samples] list contains the accumulated BPM readings
   /// captured to date. The [sensorLocationIndex], [macAddress], and [name] are
   /// captured from the connected sensor at session start.
-  Future<void> call({
+  ///
+  /// Pass [existingId] (the id returned by a previous call to this use case
+  /// for the same session) so this checkpoint updates that row in place.
+  /// Returns the row's id — callers MUST store it and pass it back into the
+  /// next checkpoint call (and into [SaveWorkoutSessionUseCase] at the end of
+  /// the session), or every checkpoint will insert a new duplicate row.
+  Future<int> call({
     required DateTime startTime,
     required List<int> samples,
     required int sensorLocationIndex,
@@ -34,6 +40,7 @@ class SavePartialWorkoutSessionUseCase {
     required String name,
     required int avgBpm,
     required int maxBpm,
+    int? existingId,
   }) => _repository.saveWorkoutCheckpoint(
     startTime: startTime,
     samples: samples,
@@ -42,6 +49,7 @@ class SavePartialWorkoutSessionUseCase {
     name: name,
     avgBpm: avgBpm,
     maxBpm: maxBpm,
+    existingId: existingId,
   );
 }
 

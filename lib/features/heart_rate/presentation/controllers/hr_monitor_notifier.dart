@@ -57,6 +57,13 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   Timer? _connectTimer;
   Timer? _checkpointTimer;
 
+  /// Isar row id returned by the session's most recent checkpoint write, if
+  /// any. Passed back into subsequent checkpoint calls — and into the final
+  /// [_saveSessionToDisk] write — so every write after the first UPDATES the
+  /// same row instead of INSERTing a new one. Reset to null whenever session
+  /// fields are reset (new connection, or after a completed save).
+  int? _checkpointSessionId;
+
   @override
   MonitorState build() {
     WidgetsBinding.instance.addObserver(this);
@@ -85,6 +92,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       await _cancelSubscriptions();
       await _safeDisconnectDevice();
       await ref.read(foregroundServiceManagerProvider).stopService();
+      _stopCheckpointTimer();
       _collectedBpmSamples.clear();
       _currentBpmSum = 0;
       _currentMaxBpm = 0;
@@ -93,6 +101,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       _sessionDeviceName = null;
       _sessionSensorLocationIndex = null;
       _currentBatteryLevel = null;
+      _checkpointSessionId = null;
       state = const MonitorState.disconnected();
     }
 
@@ -105,6 +114,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _sessionDeviceName = deviceName;
     _sessionSensorLocationIndex = null;
     _currentBatteryLevel = null;
+    _checkpointSessionId = null;
 
     _device = _monitorService.fromId(deviceId);
 
@@ -409,6 +419,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           name: _sessionDeviceName!,
           avgBpm: avgBpm,
           maxBpm: _currentMaxBpm,
+          existingId: _checkpointSessionId,
         );
       }
     } catch (e) {
@@ -424,6 +435,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       _sessionDeviceId = null;
       _sessionDeviceName = null;
       _sessionSensorLocationIndex = null;
+      _checkpointSessionId = null;
     }
   }
 
@@ -451,7 +463,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     try {
       final savePartial = ref.read(savePartialWorkoutSessionUseCaseProvider);
       final avgBpm = (_currentBpmSum / _collectedBpmSamples.length).round();
-      await savePartial.call(
+      _checkpointSessionId = await savePartial.call(
         startTime: _sessionStartTime!,
         samples: List<int>.of(_collectedBpmSamples),
         sensorLocationIndex:
@@ -460,10 +472,12 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         name: _sessionDeviceName!,
         avgBpm: avgBpm,
         maxBpm: _currentMaxBpm,
+        existingId: _checkpointSessionId,
       );
       log.d(
         '[HrMonitorNotifier] Checkpoint saved at ${DateTime.now()} '
-        'with ${_collectedBpmSamples.length} samples.',
+        'with ${_collectedBpmSamples.length} samples (row id: '
+        '$_checkpointSessionId).',
       );
     } catch (e) {
       log.e('[HrMonitorNotifier] Checkpoint failed', error: e);
