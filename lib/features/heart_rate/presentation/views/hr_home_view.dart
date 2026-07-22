@@ -36,8 +36,10 @@ class HrHomeView extends ConsumerWidget {
       ),
       body: Builder(
         builder: (context) {
-          final List<DeviceProfile> savedProfiles =
-              savedProfilesAsync.value ?? [];
+          final savedProfiles = savedProfilesAsync.maybeWhen(
+            data: (profiles) => profiles,
+            orElse: () => <DeviceProfile>[],
+          );
 
           return CustomScrollView(
             slivers: [
