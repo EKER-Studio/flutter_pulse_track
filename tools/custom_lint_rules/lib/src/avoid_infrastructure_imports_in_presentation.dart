@@ -13,20 +13,20 @@ class AvoidInfrastructureImportsInPresentation extends DartLintRule {
     name: 'avoid_infrastructure_imports_in_presentation',
     problemMessage:
         'Presentation layer must not import infrastructure or database internals.',
-    errorSeverity: ErrorSeverity.ERROR,
+    errorSeverity: DiagnosticSeverity.ERROR,
   );
 
   @override
   void run(
     CustomLintResolver resolver,
-    ErrorReporter reporter,
+    DiagnosticReporter reporter,
     CustomLintContext context,
   ) {
     final path = resolver.path;
     if (!path.contains(_presentationSegment)) return;
 
     context.registry.addImportDirective((ImportDirective node) {
-      final uri = node.uri?.stringValue;
+      final uri = node.uri.stringValue;
       if (uri == null) return;
 
       for (final pattern in _forbiddenPackagePatterns) {

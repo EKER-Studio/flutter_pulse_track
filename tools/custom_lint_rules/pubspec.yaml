@@ -8,3 +8,5 @@ environment:
 
 dependencies:
   custom_lint_builder: ^0.8.1
+  custom_lint_core: ^0.8.1
+  analyzer: ^8.0.0

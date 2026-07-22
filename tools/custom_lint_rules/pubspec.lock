@@ -10,7 +10,7 @@ packages:
     source: hosted
     version: "91.0.0"
   analyzer:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: analyzer
       sha256: a40a0cee526a7e1f387c6847bd8a5ccbf510a75952ef8a28338e989558072cb0
@@ -114,7 +114,7 @@ packages:
     source: hosted
     version: "0.8.1"
   custom_lint_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: custom_lint_core
       sha256: "85b339346154d5646952d44d682965dfe9e12cae5febd706f0db3aa5010d6423"

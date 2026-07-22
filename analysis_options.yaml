@@ -19,6 +19,14 @@ analyzer:
   # `build_runner` invocation, so suppressing them here is safe.
   exclude:
     - "**/*.g.dart"
+    # Flutter generated
+    - ".dart_tool/**"
+    - "build/**"
+    # Swift Package Manager
+    - "ios/Pods/**"
+    - "build/ios/**"
+    # Android
+    - "android/**"
 
 custom_lint:
   rules:
