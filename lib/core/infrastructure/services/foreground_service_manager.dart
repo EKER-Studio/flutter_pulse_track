@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'package:ble_heart_rate_monitor/core/utils/app_logger.dart';
 
 part 'foreground_service_manager.g.dart';
 
@@ -21,7 +22,7 @@ void startCallback() {
 class MyTaskHandler extends TaskHandler {
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    debugPrint(
+    log.i(
       'MyTaskHandler.onStart: Foreground service started at $timestamp',
     );
   }
@@ -33,7 +34,7 @@ class MyTaskHandler extends TaskHandler {
 
   @override
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
-    debugPrint(
+    log.i(
       'MyTaskHandler.onDestroy: Foreground service destroyed '
       '(timeout: $isTimeout) at $timestamp',
     );

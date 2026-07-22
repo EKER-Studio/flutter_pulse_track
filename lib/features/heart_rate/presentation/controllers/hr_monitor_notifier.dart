@@ -5,6 +5,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:ble_heart_rate_monitor/core/infrastructure/services/foreground_service_manager.dart';
+import 'package:ble_heart_rate_monitor/core/utils/app_logger.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/body_sensor_location.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/monitor_state.dart';
@@ -67,7 +68,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     if (state is ConnectingMonitorState ||
         state is DiscoveringServicesMonitorState) {
-      debugPrint(
+      log.w(
         '[HrMonitorNotifier] connect() ignored — already connecting. '
         'Call disconnect() first to cancel this attempt.',
       );
@@ -75,7 +76,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
 
     if (state is ConnectedMonitorState) {
-      debugPrint(
+      log.w(
         '[HrMonitorNotifier] connect() — device already connected; '
         'disconnecting old device before reconnecting.',
       );
@@ -101,7 +102,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     _device = _monitorService.fromId(deviceId);
 
-    debugPrint(
+    log.i(
       '[HrMonitorNotifier] Connecting to "$deviceName" ($deviceId)...',
     );
 
@@ -110,21 +111,22 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     try {
       await ref.read(foregroundServiceManagerProvider).startService();
     } catch (e) {
-      debugPrint(
+      log.w(
         '[HrMonitorNotifier] Foreground service startup failed (continuing '
-        'BLE connection anyway): $e',
+        'BLE connection anyway)',
+        error: e,
       );
     }
 
     _connectTimer = Timer(_kConnectionTimeout, () {
       if (!ref.mounted || state is! ConnectingMonitorState) {
-        debugPrint(
+        log.d(
           '[HrMonitorNotifier] Connect timer fired but notifier is inactive '
           'or state is no longer connecting — ignoring stale callback.',
         );
         return;
       }
-      debugPrint(
+      log.e(
         '[HrMonitorNotifier] Physical connection timed out after '
         '${_kConnectionTimeout.inSeconds}s.',
       );
@@ -141,7 +143,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     try {
       await _monitorService.connect(_device!, autoConnect: false);
     } catch (e, st) {
-      debugPrint('[HrMonitorNotifier] connect() threw: $e\n$st');
+      log.e(
+        '[HrMonitorNotifier] connect() threw',
+        error: e,
+        stackTrace: st,
+      );
       _connectTimer?.cancel();
       _connectTimer = null;
       await ref.read(foregroundServiceManagerProvider).stopService();
@@ -156,14 +162,14 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
 
     if (!ref.mounted || _device == null) {
-      debugPrint(
+      log.w(
         '[HrMonitorNotifier] connect() aborted — notifier disposed '
         'while awaiting physical link.',
       );
       return;
     }
 
-    debugPrint(
+    log.i(
       '[HrMonitorNotifier] Physical link established for "$deviceName".',
     );
 
@@ -173,7 +179,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     state = const MonitorState.discoveringServices();
 
-    debugPrint(
+    log.i(
       '[HrMonitorNotifier] Discovering GATT services '
       '(timeout: ${_kDiscoverServicesTimeout.inSeconds}s)...',
     );
@@ -184,7 +190,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           .discoverServices(_device!)
           .timeout(_kDiscoverServicesTimeout);
     } on TimeoutException {
-      debugPrint(
+      log.e(
         '[HrMonitorNotifier] discoverServices() exceeded '
         '${_kDiscoverServicesTimeout.inSeconds}s deadline — '
         'executing mandatory link-layer disconnect.',
@@ -197,7 +203,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       );
       return;
     } catch (e, st) {
-      debugPrint('[HrMonitorNotifier] discoverServices() threw: $e\n$st');
+      log.e(
+        '[HrMonitorNotifier] discoverServices() threw',
+        error: e,
+        stackTrace: st,
+      );
       await ref.read(foregroundServiceManagerProvider).stopService();
       await _safeDisconnectDevice();
       state = MonitorState.failure(
@@ -207,14 +217,14 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
 
     if (!ref.mounted || _device == null) {
-      debugPrint(
+      log.w(
         '[HrMonitorNotifier] connect() aborted — notifier disposed '
         'while awaiting GATT discovery.',
       );
       return;
     }
 
-    debugPrint(
+    log.d(
       '[HrMonitorNotifier] Discovered ${services.length} GATT service(s).',
     );
 
@@ -223,7 +233,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         .firstOrNull;
 
     if (hrService == null) {
-      debugPrint(
+      log.w(
         '[HrMonitorNotifier] Heart Rate Service (0x180D) not found — '
         'this device is not a standard HR sensor.',
       );
@@ -245,7 +255,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         .firstOrNull;
 
     if (hrCharacteristic == null) {
-      debugPrint(
+      log.w(
         '[HrMonitorNotifier] HR Measurement Characteristic (0x2A37) not found '
         'on the Heart Rate Service.',
       );
@@ -274,10 +284,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
             sensorLocationIndex: sensorLocation.index,
           );
     } catch (e) {
-      debugPrint('[HrMonitorNotifier] saveDeviceProfile() failed: $e');
+      log.e('[HrMonitorNotifier] saveDeviceProfile() failed', error: e);
     }
 
-    debugPrint(
+    log.d(
       '[HrMonitorNotifier] Body sensor location: ${sensorLocation.displayName}',
     );
 
@@ -286,7 +296,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     try {
       await _monitorService.setNotifyValue(hrCharacteristic, true);
     } catch (e, st) {
-      debugPrint('[HrMonitorNotifier] setNotifyValue(true) failed: $e\n$st');
+      log.e(
+        '[HrMonitorNotifier] setNotifyValue(true) failed',
+        error: e,
+        stackTrace: st,
+      );
       await ref.read(foregroundServiceManagerProvider).stopService();
       await _safeDisconnectDevice();
       state = MonitorState.failure(
@@ -296,14 +310,14 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
 
     if (!ref.mounted || _device == null) {
-      debugPrint(
+      log.w(
         '[HrMonitorNotifier] connect() aborted — notifier disposed '
         'while awaiting GATT notification setup.',
       );
       return;
     }
 
-    debugPrint(
+    log.i(
       '[HrMonitorNotifier] GATT HR notifications active — streaming live data.',
     );
 
@@ -332,8 +346,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           },
           onError: (Object error, StackTrace stack) {
             if (!ref.mounted) return;
-            debugPrint(
-              '[HrMonitorNotifier] HR notification stream error: $error\n$stack',
+            log.e(
+              '[HrMonitorNotifier] HR notification stream error',
+              error: error,
+              stackTrace: stack,
             );
             state = MonitorState.failure(
               message: 'Live data stream error: ${error.toString()}',
@@ -341,7 +357,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           },
           onDone: () {
             if (!ref.mounted) return;
-            debugPrint(
+            log.w(
               '[HrMonitorNotifier] HR notification stream closed by remote device.',
             );
             if (state is ConnectedMonitorState) {
@@ -357,7 +373,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   }
 
   Future<void> disconnect() async {
-    debugPrint('[HrMonitorNotifier] disconnect() called.');
+    log.i('[HrMonitorNotifier] disconnect() called.');
     _connectTimer?.cancel();
     _connectTimer = null;
     _stopCheckpointTimer();
@@ -396,8 +412,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         );
       }
     } catch (e) {
-      debugPrint(
-        '[HrMonitorNotifier] Failed to persist workout session (data may be lost): $e',
+      log.e(
+        '[HrMonitorNotifier] Failed to persist workout session (data may be lost)',
+        error: e,
       );
     } finally {
       _collectedBpmSamples.clear();
@@ -439,12 +456,12 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         macAddress: _sessionDeviceId!,
         name: _sessionDeviceName!,
       );
-      debugPrint(
+      log.d(
         '[HrMonitorNotifier] Checkpoint saved at ${DateTime.now()} '
         'with ${_collectedBpmSamples.length} samples.',
       );
     } catch (e) {
-      debugPrint('[HrMonitorNotifier] Checkpoint failed: $e');
+      log.e('[HrMonitorNotifier] Checkpoint failed', error: e);
     }
   }
 
@@ -457,7 +474,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   }
 
   Future<void> retry(String deviceId, String deviceName) async {
-    debugPrint(
+    log.i(
       '[HrMonitorNotifier] retry() — tearing down current session '
       'then reconnecting to "$deviceName".',
     );
@@ -494,8 +511,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         _ => BodySensorLocation.other,
       };
     } catch (e) {
-      debugPrint(
-        '[HrMonitorNotifier] Optional 0x2A38 read failed (ignored): $e',
+      log.w(
+        '[HrMonitorNotifier] Optional 0x2A38 read failed (ignored)',
+        error: e,
       );
       return BodySensorLocation.unknown;
     }
@@ -508,7 +526,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           .firstOrNull;
 
       if (batteryService == null) {
-        debugPrint(
+        log.d(
           '[HrMonitorNotifier] Battery Service (0x180F) not found on device.',
         );
         return;
@@ -523,7 +541,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           .firstOrNull;
 
       if (batteryChar == null) {
-        debugPrint(
+        log.d(
           '[HrMonitorNotifier] Battery Level Characteristic (0x2A19) not found.',
         );
         return;
@@ -535,17 +553,17 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
             .timeout(const Duration(seconds: 2));
         if (initialBytes.isNotEmpty) {
           _currentBatteryLevel = initialBytes.first.clamp(0, 100);
-          debugPrint(
+          log.d(
             '[HrMonitorNotifier] Initial battery level read: $_currentBatteryLevel%',
           );
         }
       } on TimeoutException {
-        debugPrint(
+        log.w(
           '[HrMonitorNotifier] Battery level initial read timed out (2 s) — '
           'will rely on notifications if available.',
         );
       } catch (e) {
-        debugPrint('[HrMonitorNotifier] Battery level initial read failed: $e');
+        log.e('[HrMonitorNotifier] Battery level initial read failed', error: e);
       }
 
       final bool supportsNotify = batteryChar.properties.notify;
@@ -567,21 +585,23 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
               },
               onError: (Object error, StackTrace stack) {
                 if (!ref.mounted) return;
-                debugPrint(
-                  '[HrMonitorNotifier] Battery notification stream error: $error',
+                log.e(
+                  '[HrMonitorNotifier] Battery notification stream error',
+                  error: error,
                 );
               },
               cancelOnError: false,
             );
       } else {
-        debugPrint(
+        log.d(
           '[HrMonitorNotifier] Battery characteristic found but does not '
           'support notifications/indications. Using initial read value.',
         );
       }
     } catch (e) {
-      debugPrint(
-        '[HrMonitorNotifier] Battery service resolution failed (ignored): $e',
+      log.w(
+        '[HrMonitorNotifier] Battery service resolution failed (ignored)',
+        error: e,
       );
     }
   }
@@ -589,7 +609,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   void _updateStateWithBatteryLevel(int newLevel) {
     if (_currentBatteryLevel == newLevel) return;
     _currentBatteryLevel = newLevel;
-    debugPrint('[HrMonitorNotifier] Battery level updated: $newLevel%');
+    log.d('[HrMonitorNotifier] Battery level updated: $newLevel%');
 
     if (state is ConnectedMonitorState) {
       final current = state as ConnectedMonitorState;
@@ -610,12 +630,12 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   ) async {
     if (!ref.mounted) return;
 
-    debugPrint(
+    log.d(
       '[HrMonitorNotifier] Device connection state → ${connectionState.name}',
     );
 
     if (_isDisconnecting) {
-      debugPrint(
+      log.d(
         '[HrMonitorNotifier] Ignoring connection state event — '
         'disconnect is already in progress.',
       );
@@ -626,7 +646,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       if (state is ConnectedMonitorState ||
           state is ConnectingMonitorState ||
           state is DiscoveringServicesMonitorState) {
-        debugPrint(
+        log.w(
           '[HrMonitorNotifier] Unexpected disconnection detected — '
           'surfacing failure state.',
         );
@@ -657,13 +677,14 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     if (_device == null) return;
     try {
       await _monitorService.disconnect(_device!);
-      debugPrint(
+      log.d(
         '[HrMonitorNotifier] Link-layer disconnect completed for '
         '${_device!.remoteId}.',
       );
     } catch (e) {
-      debugPrint(
-        '[HrMonitorNotifier] _safeDisconnectDevice() error (logged, not re-thrown): $e',
+      log.w(
+        '[HrMonitorNotifier] _safeDisconnectDevice() error (logged, not re-thrown)',
+        error: e,
       );
     } finally {
       _device = null;
@@ -671,7 +692,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   }
 
   void _cleanup() {
-    debugPrint(
+    log.i(
       '[HrMonitorNotifier] Disposing — releasing all GATT and BLE resources.',
     );
     _connectTimer?.cancel();

@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'package:ble_heart_rate_monitor/core/utils/app_logger.dart';
 
 part 'fbp_heart_rate_monitor_service.g.dart';
 
@@ -53,7 +54,7 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
     try {
       await device.connect(autoConnect: autoConnect);
     } catch (e) {
-      debugPrint('[FbpHeartRateMonitorService] connect failed: $e');
+      log.e('[FbpHeartRateMonitorService] connect failed', error: e);
       rethrow;
     }
   }
@@ -63,7 +64,7 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
     try {
       await device.disconnect();
     } catch (e) {
-      debugPrint('[FbpHeartRateMonitorService] disconnect failed: $e');
+      log.e('[FbpHeartRateMonitorService] disconnect failed', error: e);
       rethrow;
     }
   }
@@ -79,7 +80,7 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
     try {
       return await device.discoverServices();
     } catch (e) {
-      debugPrint('[FbpHeartRateMonitorService] discoverServices failed: $e');
+      log.e('[FbpHeartRateMonitorService] discoverServices failed', error: e);
       rethrow;
     }
   }
@@ -92,7 +93,7 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
     try {
       await characteristic.setNotifyValue(value);
     } catch (e) {
-      debugPrint('[FbpHeartRateMonitorService] setNotifyValue failed: $e');
+      log.e('[FbpHeartRateMonitorService] setNotifyValue failed', error: e);
       rethrow;
     }
   }
@@ -106,7 +107,7 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
     try {
       return await characteristic.read();
     } catch (e) {
-      debugPrint('[FbpHeartRateMonitorService] read failed: $e');
+      log.e('[FbpHeartRateMonitorService] read failed', error: e);
       rethrow;
     }
   }

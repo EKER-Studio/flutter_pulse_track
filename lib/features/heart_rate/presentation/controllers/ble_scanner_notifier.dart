@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:ble_heart_rate_monitor/core/utils/app_logger.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_device.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_scanner_state.dart';
 import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/services/fbp_bluetooth_scanner_service.dart';
@@ -36,8 +36,10 @@ class BleScannerNotifier extends _$BleScannerNotifier {
     _adapterStateSubscription = _scannerService.adapterState.listen(
       _onAdapterStateChanged,
       onError: (Object error, StackTrace stack) {
-        debugPrint(
-          '[BleScannerNotifier] Adapter state stream error: $error\n$stack',
+        log.e(
+          '[BleScannerNotifier] Adapter state stream error',
+          error: error,
+          stackTrace: stack,
         );
       },
     );
@@ -49,20 +51,20 @@ class BleScannerNotifier extends _$BleScannerNotifier {
 
   Future<void> startScan() async {
     if (state is AdapterOffScannerState) {
-      debugPrint(
+      log.w(
         '[BleScannerNotifier] startScan() skipped — Bluetooth adapter is off.',
       );
       return;
     }
 
     if (_scannerService.isScanningNow) {
-      debugPrint(
+      log.w(
         '[BleScannerNotifier] startScan() skipped — scan already in progress.',
       );
       return;
     }
 
-    debugPrint('[BleScannerNotifier] Starting Heart Rate scan...');
+    log.i('[BleScannerNotifier] Starting Heart Rate scan...');
 
     await _scanResultsSubscription?.cancel();
     _scanResultsSubscription = null;
@@ -75,8 +77,10 @@ class BleScannerNotifier extends _$BleScannerNotifier {
     _scanResultsSubscription = _scannerService.scanResults.listen(
       _onScanResultsReceived,
       onError: (Object error, StackTrace stack) {
-        debugPrint(
-          '[BleScannerNotifier] scanResults stream error: $error\n$stack',
+        log.e(
+          '[BleScannerNotifier] scanResults stream error',
+          error: error,
+          stackTrace: stack,
         );
         state = BleScannerState.failure(message: error.toString());
       },
@@ -87,12 +91,12 @@ class BleScannerNotifier extends _$BleScannerNotifier {
         withServices: [_kHeartRateServiceUuid],
         timeout: _kHardScanTimeout,
       );
-      debugPrint(
+      log.d(
         '[BleScannerNotifier] startScan() returned '
         '(hardware scan window closed).',
       );
     } catch (e) {
-      debugPrint('[BleScannerNotifier] startScan() threw: $e');
+      log.e('[BleScannerNotifier] startScan() threw', error: e);
       _cancelEmptyStateTimer();
       await _scanResultsSubscription?.cancel();
       _scanResultsSubscription = null;
@@ -101,7 +105,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   }
 
   Future<void> stopScan() async {
-    debugPrint('[BleScannerNotifier] Stopping scan...');
+    log.i('[BleScannerNotifier] Stopping scan...');
     _cancelEmptyStateTimer();
 
     await _scanResultsSubscription?.cancel();
@@ -115,14 +119,14 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   }
 
   Future<void> retry() async {
-    debugPrint('[BleScannerNotifier] retry() — resetting and restarting scan.');
+    log.i('[BleScannerNotifier] retry() — resetting and restarting scan.');
     await stopScan();
     await startScan();
   }
 
   void toggleFilters() {
     _filtersEnabled = !_filtersEnabled;
-    debugPrint(
+    log.d(
       '[BleScannerNotifier] Filters toggled — '
       'filtersEnabled: $_filtersEnabled.',
     );
@@ -133,7 +137,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   }
 
   void _onAdapterStateChanged(BluetoothAdapterState adapterState) {
-    debugPrint('[BleScannerNotifier] Adapter state → ${adapterState.name}');
+    log.i('[BleScannerNotifier] Adapter state → ${adapterState.name}');
 
     switch (adapterState) {
       case BluetoothAdapterState.off:
@@ -193,7 +197,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   void _resetEmptyStateTimer() {
     _cancelEmptyStateTimer();
     _emptyStateTimer = Timer(_kEmptyStateWindow, _onEmptyStateWindowElapsed);
-    debugPrint(
+    log.d(
       '[BleScannerNotifier] Empty-state timer armed '
       '(${_kEmptyStateWindow.inSeconds}s window).',
     );
@@ -202,7 +206,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   void _ensureEmptyStateTimerRunning() {
     if (_emptyStateTimer == null || !_emptyStateTimer!.isActive) {
       _emptyStateTimer = Timer(_kEmptyStateWindow, _onEmptyStateWindowElapsed);
-      debugPrint(
+      log.d(
         '[BleScannerNotifier] Empty-state timer re-armed '
         '(${_kEmptyStateWindow.inSeconds}s window).',
       );
@@ -215,7 +219,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   }
 
   void _onEmptyStateWindowElapsed() {
-    debugPrint(
+    log.d(
       '[BleScannerNotifier] Empty-state window elapsed — '
       'no qualified devices found during active scan.',
     );
@@ -225,7 +229,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   }
 
   void _cleanup() {
-    debugPrint(
+    log.i(
       '[BleScannerNotifier] Disposing — releasing all BLE scan resources.',
     );
     _cancelEmptyStateTimer();

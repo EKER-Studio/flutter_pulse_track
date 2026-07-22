@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'package:ble_heart_rate_monitor/core/utils/app_logger.dart';
 
 part 'fbp_bluetooth_scanner_service.g.dart';
 
@@ -51,7 +52,7 @@ class FbpBluetoothScannerService implements BluetoothScannerService {
         timeout: timeout,
       );
     } catch (e) {
-      debugPrint('[FbpBluetoothScannerService] startScan failed: $e');
+      log.e('[FbpBluetoothScannerService] startScan failed', error: e);
       rethrow;
     }
   }
@@ -63,7 +64,7 @@ class FbpBluetoothScannerService implements BluetoothScannerService {
         await FlutterBluePlus.stopScan();
       }
     } catch (e) {
-      debugPrint('[FbpBluetoothScannerService] stopScan failed: $e');
+      log.e('[FbpBluetoothScannerService] stopScan failed', error: e);
       rethrow;
     }
   }
