@@ -9,7 +9,7 @@
 - Feature-First layered structure inside `lib/features/[feature_name]/`
 - Layers inside each feature MUST be strictly separated:
   - `domain/` (entities, abstract repositories) - Pure Dart, NO external frameworks.
-  - `data/` (models, mappers, repository implementations, Isar collections).
+  - `infrastructure/` (models, mappers, repository implementations, Isar collections).
   - `presentation/` (screens, widgets, riverpod providers/notifiers).
 
 ## Coding Standards & Patterns
