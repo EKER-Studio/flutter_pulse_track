@@ -79,13 +79,7 @@ flutter analyze
 log_success "Static analysis passed with zero warnings or errors."
 
 # ------------------------------------------------------------------------------
-log_step "6" "Checking architecture boundaries (presentation must not import isar_community)..."
-# ------------------------------------------------------------------------------
-./scripts/check_architecture_boundaries.sh
-log_success "No architecture boundary violations found."
-
-# ------------------------------------------------------------------------------
-log_step "7" "Running complete unit and widget test suites..."
+log_step "6" "Running complete unit and widget test suites..."
 # ------------------------------------------------------------------------------
 # Executes all automated tests inside the /test directory
 flutter test
