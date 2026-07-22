@@ -22,6 +22,8 @@ abstract class WorkoutPersistenceRepository {
     required int sensorLocationIndex,
     required String macAddress,
     required String name,
+    required int avgBpm,
+    required int maxBpm,
   });
 
   /// Reactively streams every saved sensor [DeviceProfile], most-recently
@@ -43,6 +45,8 @@ abstract class WorkoutPersistenceRepository {
     required int sensorLocationIndex,
     required String macAddress,
     required String name,
+    required int avgBpm,
+    required int maxBpm,
   });
 
   /// Permanently deletes the workout session identified by [sessionId].

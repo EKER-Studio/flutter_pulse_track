@@ -32,12 +32,16 @@ class SavePartialWorkoutSessionUseCase {
     required int sensorLocationIndex,
     required String macAddress,
     required String name,
+    required int avgBpm,
+    required int maxBpm,
   }) => _repository.saveWorkoutCheckpoint(
     startTime: startTime,
     samples: samples,
     sensorLocationIndex: sensorLocationIndex,
     macAddress: macAddress,
     name: name,
+    avgBpm: avgBpm,
+    maxBpm: maxBpm,
   );
 }
 

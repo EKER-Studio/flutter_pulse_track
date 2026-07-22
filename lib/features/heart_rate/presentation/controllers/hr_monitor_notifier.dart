@@ -51,6 +51,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   String? _sessionDeviceName;
   int? _sessionSensorLocationIndex;
   int? _currentBatteryLevel;
+  int _currentBpmSum = 0;
+  int _currentMaxBpm = 0;
   bool _isDisconnecting = false;
   Timer? _connectTimer;
   Timer? _checkpointTimer;
@@ -84,6 +86,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       await _safeDisconnectDevice();
       await ref.read(foregroundServiceManagerProvider).stopService();
       _collectedBpmSamples.clear();
+      _currentBpmSum = 0;
+      _currentMaxBpm = 0;
       _sessionStartTime = null;
       _sessionDeviceId = null;
       _sessionDeviceName = null;
@@ -94,6 +98,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     await _cancelSubscriptions();
     _collectedBpmSamples.clear();
+    _currentBpmSum = 0;
+    _currentMaxBpm = 0;
     _sessionStartTime = DateTime.now();
     _sessionDeviceId = deviceId;
     _sessionDeviceName = deviceName;
@@ -102,9 +108,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     _device = _monitorService.fromId(deviceId);
 
-    log.i(
-      '[HrMonitorNotifier] Connecting to "$deviceName" ($deviceId)...',
-    );
+    log.i('[HrMonitorNotifier] Connecting to "$deviceName" ($deviceId)...');
 
     state = const MonitorState.connecting();
 
@@ -143,11 +147,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     try {
       await _monitorService.connect(_device!, autoConnect: false);
     } catch (e, st) {
-      log.e(
-        '[HrMonitorNotifier] connect() threw',
-        error: e,
-        stackTrace: st,
-      );
+      log.e('[HrMonitorNotifier] connect() threw', error: e, stackTrace: st);
       _connectTimer?.cancel();
       _connectTimer = null;
       await ref.read(foregroundServiceManagerProvider).stopService();
@@ -169,9 +169,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       return;
     }
 
-    log.i(
-      '[HrMonitorNotifier] Physical link established for "$deviceName".',
-    );
+    log.i('[HrMonitorNotifier] Physical link established for "$deviceName".');
 
     _connectionStateSubscription = _monitorService
         .connectionState(_device!)
@@ -224,9 +222,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       return;
     }
 
-    log.d(
-      '[HrMonitorNotifier] Discovered ${services.length} GATT service(s).',
-    );
+    log.d('[HrMonitorNotifier] Discovered ${services.length} GATT service(s).');
 
     final BluetoothService? hrService = services
         .where((BluetoothService s) => s.serviceUuid == _kHrServiceUuid)
@@ -333,6 +329,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
             if (measurement == null) return;
 
             _collectedBpmSamples.add(measurement.bpm);
+            _currentBpmSum += measurement.bpm;
+            if (measurement.bpm > _currentMaxBpm) {
+              _currentMaxBpm = measurement.bpm;
+            }
 
             final HrMeasurement enrichedMeasurement = HrMeasurement(
               bpm: measurement.bpm,
@@ -400,6 +400,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         final samples = List<int>.from(_collectedBpmSamples);
         final startTime = _sessionStartTime!;
         final endTime = DateTime.now();
+        final avgBpm = (_currentBpmSum / samples.length).round();
 
         await useCase.call(
           startTime: startTime,
@@ -409,6 +410,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
               _sessionSensorLocationIndex ?? BodySensorLocation.other.index,
           macAddress: _sessionDeviceId!,
           name: _sessionDeviceName!,
+          avgBpm: avgBpm,
+          maxBpm: _currentMaxBpm,
         );
       }
     } catch (e) {
@@ -418,6 +421,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       );
     } finally {
       _collectedBpmSamples.clear();
+      _currentBpmSum = 0;
+      _currentMaxBpm = 0;
       _sessionStartTime = null;
       _sessionDeviceId = null;
       _sessionDeviceName = null;
@@ -448,6 +453,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     try {
       final savePartial = ref.read(savePartialWorkoutSessionUseCaseProvider);
+      final avgBpm = (_currentBpmSum / _collectedBpmSamples.length).round();
       await savePartial.call(
         startTime: _sessionStartTime!,
         samples: List<int>.of(_collectedBpmSamples),
@@ -455,6 +461,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
             _sessionSensorLocationIndex ?? BodySensorLocation.other.index,
         macAddress: _sessionDeviceId!,
         name: _sessionDeviceName!,
+        avgBpm: avgBpm,
+        maxBpm: _currentMaxBpm,
       );
       log.d(
         '[HrMonitorNotifier] Checkpoint saved at ${DateTime.now()} '
@@ -563,7 +571,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           'will rely on notifications if available.',
         );
       } catch (e) {
-        log.e('[HrMonitorNotifier] Battery level initial read failed', error: e);
+        log.e(
+          '[HrMonitorNotifier] Battery level initial read failed',
+          error: e,
+        );
       }
 
       final bool supportsNotify = batteryChar.properties.notify;

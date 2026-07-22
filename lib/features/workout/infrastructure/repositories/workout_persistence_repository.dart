@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:isar_community/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -58,11 +56,10 @@ class WorkoutPersistenceRepository
     required int sensorLocationIndex,
     required String macAddress,
     required String name,
+    required int avgBpm,
+    required int maxBpm,
   }) async {
     if (samples.isEmpty) return;
-
-    final maxBpm = samples.reduce(max);
-    final avgBpm = (samples.reduce((a, b) => a + b) / samples.length).round();
 
     final session = WorkoutSessionDto()
       ..startTime = startTime.toUtc()
@@ -91,11 +88,10 @@ class WorkoutPersistenceRepository
     required int sensorLocationIndex,
     required String macAddress,
     required String name,
+    required int avgBpm,
+    required int maxBpm,
   }) async {
     if (samples.isEmpty) return;
-
-    final maxBpm = samples.reduce(max);
-    final avgBpm = (samples.reduce((a, b) => a + b) / samples.length).round();
 
     final session = WorkoutSessionDto()
       ..startTime = startTime.toUtc()

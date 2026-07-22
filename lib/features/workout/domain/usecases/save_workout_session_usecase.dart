@@ -31,6 +31,8 @@ class SaveWorkoutSessionUseCase {
     required int sensorLocationIndex,
     required String macAddress,
     required String name,
+    required int avgBpm,
+    required int maxBpm,
   }) => _repository.saveWorkoutSession(
     startTime: startTime,
     endTime: endTime,
@@ -38,6 +40,8 @@ class SaveWorkoutSessionUseCase {
     sensorLocationIndex: sensorLocationIndex,
     macAddress: macAddress,
     name: name,
+    avgBpm: avgBpm,
+    maxBpm: maxBpm,
   );
 }
 
