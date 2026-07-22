@@ -57,5 +57,8 @@ jobs:
       - name: Static analysis
         run: flutter analyze
 
+      - name: Check architecture boundaries (presentation must not import isar_community)
+        run: ./scripts/check_architecture_boundaries.sh
+
       - name: Run unit and widget tests
         run: flutter test
