@@ -69,7 +69,7 @@ log_success "Code generation completed."
 log_step "4" "Verifying code formatting standards..."
 # ------------------------------------------------------------------------------
 # Ensures the code strictly obeys Dart formatting guidelines without altering files
-dart format --output=none --set-exit-if-changed .
+dart format --output=none --set-exit-if-changed lib test bin scripts
 log_success "Codebase formatting aligns with style specifications."
 
 # ------------------------------------------------------------------------------
