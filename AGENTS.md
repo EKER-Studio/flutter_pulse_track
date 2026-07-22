@@ -33,7 +33,7 @@ All colors live in `lib/core/presentation/theme/app_colors.dart` — never use r
 
 Use the top-level `log` singleton from `lib/core/utils/app_logger.dart` — never `debugPrint` or `print` (`avoid_print` lint is active). The codebase already has zero `debugPrint` calls.
 ```dart
-import 'package:ble_heart_rate_monitor/core/utils/app_logger.dart';
+import 'package:pulse_track/core/utils/app_logger.dart';
 log.d('debug message');
 log.e('error context', error: e, stackTrace: st);
 log.w('warning');

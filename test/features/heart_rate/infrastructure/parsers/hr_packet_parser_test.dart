@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
+import 'package:pulse_track/features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

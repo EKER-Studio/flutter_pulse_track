@@ -4,16 +4,16 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:ble_heart_rate_monitor/core/infrastructure/services/foreground_service_manager.dart';
-import 'package:ble_heart_rate_monitor/core/utils/app_logger.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/body_sensor_location.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/monitor_state.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/services/fbp_heart_rate_monitor_service.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/save_device_profile_usecase.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/save_partial_workout_session_usecase.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/save_workout_session_usecase.dart';
+import 'package:pulse_track/core/infrastructure/services/foreground_service_manager.dart';
+import 'package:pulse_track/core/utils/app_logger.dart';
+import 'package:pulse_track/features/heart_rate/domain/models/body_sensor_location.dart';
+import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
+import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
+import 'package:pulse_track/features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
+import 'package:pulse_track/features/heart_rate/infrastructure/services/fbp_heart_rate_monitor_service.dart';
+import 'package:pulse_track/features/workout/domain/usecases/save_device_profile_usecase.dart';
+import 'package:pulse_track/features/workout/domain/usecases/save_partial_workout_session_usecase.dart';
+import 'package:pulse_track/features/workout/domain/usecases/save_workout_session_usecase.dart';
 
 part 'hr_monitor_notifier.g.dart';
 

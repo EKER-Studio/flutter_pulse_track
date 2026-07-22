@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:ble_heart_rate_monitor/core/utils/app_logger.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_device.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/ble_scanner_state.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/infrastructure/services/fbp_bluetooth_scanner_service.dart';
+import 'package:pulse_track/core/utils/app_logger.dart';
+import 'package:pulse_track/features/heart_rate/domain/models/ble_device.dart';
+import 'package:pulse_track/features/heart_rate/domain/models/ble_scanner_state.dart';
+import 'package:pulse_track/features/heart_rate/infrastructure/services/fbp_bluetooth_scanner_service.dart';
 
 part 'ble_scanner_notifier.g.dart';
 

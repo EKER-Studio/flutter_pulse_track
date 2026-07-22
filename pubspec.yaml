@@ -1,5 +1,5 @@
-name: ble_heart_rate_monitor
-description: "A Flutter application for monitoring heart rate via BLE devices."
+name: pulse_track
+description: "PulseTrack: Professional Heart Rate Monitor & Workout Analytics."
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

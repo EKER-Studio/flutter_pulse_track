@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
+import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
+import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 
 /// Utility for exporting heart rate workout sessions to CSV and sharing them
 /// via the native system share sheet.

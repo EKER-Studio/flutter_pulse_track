@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:ble_heart_rate_monitor/features/workout/domain/repositories/workout_persistence_repository.dart';
-import 'package:ble_heart_rate_monitor/features/workout/infrastructure/repositories/workout_persistence_repository.dart'
+import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart';
+import 'package:pulse_track/features/workout/infrastructure/repositories/workout_persistence_repository.dart'
     as impl;
 
 part 'save_device_profile_usecase.g.dart';

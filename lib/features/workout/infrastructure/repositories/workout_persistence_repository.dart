@@ -1,13 +1,13 @@
 import 'package:isar_community/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:ble_heart_rate_monitor/core/infrastructure/storage/isar_provider.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/models/device_profile.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/repositories/workout_persistence_repository.dart'
+import 'package:pulse_track/core/infrastructure/storage/isar_provider.dart';
+import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
+import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
+import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart'
     as domain;
-import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/device_profile_dto.dart';
-import 'package:ble_heart_rate_monitor/features/workout/infrastructure/models/workout_session_dto.dart';
+import 'package:pulse_track/features/workout/infrastructure/models/device_profile_dto.dart';
+import 'package:pulse_track/features/workout/infrastructure/models/workout_session_dto.dart';
 
 part 'workout_persistence_repository.g.dart';
 

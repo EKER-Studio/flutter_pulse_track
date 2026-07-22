@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/hr_measurement.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/domain/models/monitor_state.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/controllers/hr_monitor_notifier.dart';
+import 'package:pulse_track/core/presentation/theme/app_colors.dart';
+import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
+import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
+import 'package:pulse_track/features/heart_rate/presentation/controllers/hr_monitor_notifier.dart';
 
 /// Telemetry dashboard and BLE connection lifecycle view.
 ///

@@ -1,5 +1,5 @@
-import 'package:ble_heart_rate_monitor/features/workout/domain/models/device_profile.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
+import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
+import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 
 /// Repository contract for persisting workout sessions and device profiles.
 ///

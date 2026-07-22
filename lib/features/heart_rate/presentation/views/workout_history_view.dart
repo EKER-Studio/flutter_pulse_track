@@ -1,9 +1,9 @@
-import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
-import 'package:ble_heart_rate_monitor/core/utils/app_logger.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/delete_workout_session_usecase.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/watch_workout_history_usecase.dart';
-import 'package:ble_heart_rate_monitor/features/workout/presentation/views/workout_details_view.dart';
+import 'package:pulse_track/core/presentation/theme/app_colors.dart';
+import 'package:pulse_track/core/utils/app_logger.dart';
+import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
+import 'package:pulse_track/features/workout/domain/usecases/delete_workout_session_usecase.dart';
+import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
+import 'package:pulse_track/features/workout/presentation/views/workout_details_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;

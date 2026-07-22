@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ble_heart_rate_monitor/l10n/app_localizations.dart';
-import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/models/device_profile.dart';
-import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/views/hr_monitor_view.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/views/hr_scanner_view.dart';
-import 'package:ble_heart_rate_monitor/features/heart_rate/presentation/views/workout_history_view.dart';
+import 'package:pulse_track/l10n/app_localizations.dart';
+import 'package:pulse_track/core/presentation/theme/app_colors.dart';
+import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
+import 'package:pulse_track/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
+import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
+import 'package:pulse_track/features/heart_rate/presentation/views/hr_scanner_view.dart';
+import 'package:pulse_track/features/heart_rate/presentation/views/workout_history_view.dart';
 
 /// Central dashboard hub for the heart rate monitoring application.
 ///

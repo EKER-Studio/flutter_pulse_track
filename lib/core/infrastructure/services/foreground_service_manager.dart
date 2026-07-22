@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:ble_heart_rate_monitor/core/utils/app_logger.dart';
+import 'package:pulse_track/core/utils/app_logger.dart';
 
 part 'foreground_service_manager.g.dart';
 

@@ -1,4 +1,4 @@
-import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
+import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 /// Heart rate zone definitions and utilities based on a configurable max heart rate.
