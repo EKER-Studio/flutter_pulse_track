@@ -7,7 +7,7 @@ const _presentationSegment = '/presentation/';
 const _forbiddenPackagePatterns = ['package:isar_community'];
 
 class AvoidInfrastructureImportsInPresentation extends DartLintRule {
-  AvoidInfrastructureImportsInPresentation() : super(code: _code);
+  const AvoidInfrastructureImportsInPresentation() : super(code: _code);
 
   static const _code = LintCode(
     name: 'avoid_infrastructure_imports_in_presentation',
