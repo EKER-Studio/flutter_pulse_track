@@ -46,16 +46,15 @@ trap error_handler ERR
 log_info "Launching comprehensive pre-push verification pipeline..."
 
 # ------------------------------------------------------------------------------
-log_step "1" "Cleaning environment and fetching dependencies..."
+log_step "1" "Fetching workspace dependencies..."
 # ------------------------------------------------------------------------------
-flutter clean > /dev/null
 flutter pub get > /dev/null
-log_success "Workspace cleaned and dependencies resolved."
+log_success "Dependencies resolved."
 
 # ------------------------------------------------------------------------------
 log_step "2" "Generating localization files (i18n)..."
 # ------------------------------------------------------------------------------
-flutter gen-l10n
+flutter gen-l10n > /dev/null
 log_success "Localization classes generated successfully."
 
 # ------------------------------------------------------------------------------
@@ -80,13 +79,13 @@ flutter analyze
 log_success "Static analysis passed with zero warnings or errors."
 
 # ------------------------------------------------------------------------------
-log_step "5b" "Checking architecture boundaries (presentation must not import isar_community)..."
+log_step "6" "Checking architecture boundaries (presentation must not import isar_community)..."
 # ------------------------------------------------------------------------------
 ./scripts/check_architecture_boundaries.sh
 log_success "No architecture boundary violations found."
 
 # ------------------------------------------------------------------------------
-log_step "6" "Running complete unit and widget test suites..."
+log_step "7" "Running complete unit and widget test suites..."
 # ------------------------------------------------------------------------------
 # Executes all automated tests inside the /test directory
 flutter test
