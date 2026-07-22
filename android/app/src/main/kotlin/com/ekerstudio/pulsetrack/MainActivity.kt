@@ -1,4 +1,4 @@
-package com.ekerstudio.ble_heart_rate_monitor
+package com.ekerstudio.pulsetrack
 
 import io.flutter.embedding.android.FlutterActivity
 

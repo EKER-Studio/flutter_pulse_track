@@ -15,7 +15,7 @@ if (hasKeystoreProperties) {
 }
 
 android {
-    namespace = "com.ekerstudio.ble_heart_rate_monitor"
+    namespace = "com.ekerstudio.pulsetrack"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -25,7 +25,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.ekerstudio.ble_heart_rate_monitor"
+        applicationId = "com.ekerstudio.pulsetrack"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
