@@ -78,7 +78,7 @@ class WorkoutDetailsView extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: _kCardBackgroundColor,
                       borderRadius: BorderRadius.circular(_kCardBorderRadius),
-                      border: Border.all(color: Colors.white10, width: 1),
+                      border: Border.all(color: AppColors.borderSubtle, width: 1),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(_kDefaultPadding),
@@ -110,7 +110,7 @@ class WorkoutDetailsView extends StatelessWidget {
                                 child: Text(
                                   duration,
                                   style: const TextStyle(
-                                    color: Colors.blueAccent,
+                                    color: AppColors.accentBlue,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -209,7 +209,7 @@ class WorkoutDetailsView extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: _kCardBackgroundColor,
                         borderRadius: BorderRadius.circular(_kCardBorderRadius),
-                        border: Border.all(color: Colors.white10, width: 1),
+                        border: Border.all(color: AppColors.borderSubtle, width: 1),
                       ),
                       child: Center(
                         child: Column(
@@ -248,7 +248,7 @@ class WorkoutDetailsView extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: _kCardBackgroundColor,
                         borderRadius: BorderRadius.circular(_kCardBorderRadius),
-                        border: Border.all(color: Colors.white10, width: 1),
+                        border: Border.all(color: AppColors.borderSubtle, width: 1),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -294,7 +294,7 @@ class WorkoutDetailsView extends StatelessWidget {
       decoration: BoxDecoration(
         color: _kCardBackgroundColor,
         borderRadius: BorderRadius.circular(_kCardBorderRadius),
-        border: Border.all(color: Colors.white10, width: 1),
+        border: Border.all(color: AppColors.borderSubtle, width: 1),
       ),
       child: Column(
         children: [

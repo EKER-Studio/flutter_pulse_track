@@ -66,13 +66,13 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
             TextButton.icon(
               icon: const Icon(
                 Icons.power_settings_new,
-                color: Colors.redAccent,
+                color: AppColors.accentRed,
                 size: 18,
               ),
               label: const Text(
                 'Disconnect',
                 style: TextStyle(
-                  color: Colors.redAccent,
+                  color: AppColors.accentRed,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -123,7 +123,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           ),
           const SizedBox(height: 32),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.accentBlue),
             onPressed: () => Navigator.of(context).pop(),
             child: const Text(
               'Return to Scanner',
@@ -144,7 +144,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const CircularProgressIndicator(
-              color: Colors.blueAccent,
+              color: AppColors.accentBlue,
               strokeWidth: 3,
             ),
             const SizedBox(height: 32),
@@ -186,7 +186,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              const Icon(Icons.favorite, color: Colors.redAccent, size: 44),
+              const Icon(Icons.favorite, color: AppColors.accentRed, size: 44),
               const SizedBox(width: 12),
               Text(
                 '${metric.bpm}',
@@ -212,7 +212,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
             Text(
               'R-R: ${metric.rrIntervals.map((e) => '${(e * 1000).toStringAsFixed(0)}ms').join(', ')}',
               style: const TextStyle(
-                color: Colors.greenAccent,
+                color: AppColors.accentGreen,
                 fontSize: 14,
                 fontFamily: 'monospace',
               ),
@@ -228,7 +228,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.accessibility_new, color: Colors.blueAccent),
+                const Icon(Icons.accessibility_new, color: AppColors.accentBlue),
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,8 +265,8 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                       : Icons.battery_alert,
                   color:
                       metric.batteryLevel != null && metric.batteryLevel! > 20
-                      ? Colors.greenAccent
-                      : Colors.redAccent,
+                      ? AppColors.accentGreen
+                      : AppColors.accentRed,
                 ),
                 const SizedBox(width: 16),
                 Column(
@@ -310,7 +310,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           decoration: BoxDecoration(
             color: AppColors.surfaceBackground,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
+            border: Border.all(color: AppColors.accentRed.withValues(alpha: 0.3)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -318,7 +318,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
               const Icon(
                 Icons.error_outline,
                 size: 48,
-                color: Colors.redAccent,
+                color: AppColors.accentRed,
               ),
               const SizedBox(height: 16),
               const Text(
@@ -340,7 +340,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: AppColors.accentBlue,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

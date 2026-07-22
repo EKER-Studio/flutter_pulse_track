@@ -30,7 +30,7 @@ class WorkoutHistoryView extends ConsumerWidget {
       ),
       body: historyAsync.when(
         loading: () => const Center(
-          child: CircularProgressIndicator(color: Colors.blueAccent),
+          child: CircularProgressIndicator(color: AppColors.accentBlue),
         ),
         error: (error, stackTrace) => Center(
           child: Padding(
@@ -153,7 +153,7 @@ class WorkoutHistoryView extends ConsumerWidget {
           decoration: BoxDecoration(
             color: AppColors.surfaceBackground,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white10, width: 1),
+            border: Border.all(color: AppColors.borderSubtle, width: 1),
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -183,7 +183,7 @@ class WorkoutHistoryView extends ConsumerWidget {
                       child: Text(
                         duration,
                         style: const TextStyle(
-                          color: Colors.blueAccent,
+                          color: AppColors.accentBlue,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),

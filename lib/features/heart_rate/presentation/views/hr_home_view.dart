@@ -46,9 +46,9 @@ class HrHomeView extends ConsumerWidget {
                   child: Container(
                     width: double.infinity,
                     decoration: const BoxDecoration(
-                      color: Color(0xFF1E1E1E),
+                      color: AppColors.surfaceBackground,
                       border: Border(
-                        bottom: BorderSide(color: Colors.white10, width: 1),
+                        bottom: BorderSide(color: AppColors.borderSubtle, width: 1),
                       ),
                     ),
                     child: Padding(
@@ -62,7 +62,7 @@ class HrHomeView extends ConsumerWidget {
                               children: [
                                 Icon(
                                   Icons.bluetooth_connected,
-                                  color: Colors.blueAccent,
+                                  color: AppColors.accentBlue,
                                   size: 18,
                                 ),
                                 SizedBox(width: 8),
@@ -100,7 +100,7 @@ class HrHomeView extends ConsumerWidget {
                                     ),
                                     avatar: const Icon(
                                       Icons.bluetooth_connected,
-                                      color: Colors.greenAccent,
+                                      color: AppColors.accentGreen,
                                       size: 14,
                                     ),
                                     label: Text(
@@ -150,7 +150,7 @@ class HrHomeView extends ConsumerWidget {
                       builder: (context, ref, _) {
                         return ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
+                            backgroundColor: AppColors.accentBlue,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -221,7 +221,7 @@ class HrHomeView extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white10, width: 1),
+        border: Border.all(color: AppColors.borderSubtle, width: 1),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
@@ -236,7 +236,7 @@ class HrHomeView extends ConsumerWidget {
                   color: AppColors.badgeBackground,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: Colors.blueAccent, size: 24),
+                child: Icon(icon, color: AppColors.accentBlue, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(

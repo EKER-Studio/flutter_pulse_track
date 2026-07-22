@@ -37,7 +37,7 @@ class HrScannerView extends ConsumerWidget {
                     ? Icons.filter_list
                     : Icons.filter_list_off,
                 color: _isFilterActive(notifier)
-                    ? Colors.blueAccent
+                    ? AppColors.accentBlue
                     : Colors.grey,
               ),
               tooltip: 'Toggle Names & Nearby Filter',
@@ -92,7 +92,7 @@ class HrScannerView extends ConsumerWidget {
           const SizedBox(height: 32),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: AppColors.accentBlue,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -118,13 +118,13 @@ class HrScannerView extends ConsumerWidget {
   Widget _buildAdapterOffState() {
     return Container(
       width: double.infinity,
-      color: Colors.redAccent.withValues(alpha: 0.05),
+      color: AppColors.accentRed.withValues(alpha: 0.05),
       child: const Padding(
         padding: EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.bluetooth_disabled, size: 80, color: Colors.redAccent),
+            Icon(Icons.bluetooth_disabled, size: 80, color: AppColors.accentRed),
             SizedBox(height: 24),
             Text(
               'Bluetooth Required',
@@ -157,7 +157,7 @@ class HrScannerView extends ConsumerWidget {
             const Icon(
               Icons.device_unknown,
               size: 80,
-              color: Colors.orangeAccent,
+              color: AppColors.accentOrange,
             ),
             const SizedBox(height: 24),
             const Text(
@@ -180,7 +180,7 @@ class HrScannerView extends ConsumerWidget {
             const SizedBox(height: 32),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orangeAccent,
+                backgroundColor: AppColors.accentOrange,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 16,
@@ -216,7 +216,7 @@ class HrScannerView extends ConsumerWidget {
           decoration: BoxDecoration(
             color: AppColors.surfaceBackground,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
+            border: Border.all(color: AppColors.accentRed.withValues(alpha: 0.3)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -224,7 +224,7 @@ class HrScannerView extends ConsumerWidget {
               const Icon(
                 Icons.error_outline,
                 size: 48,
-                color: Colors.redAccent,
+                color: AppColors.accentRed,
               ),
               const SizedBox(height: 16),
               const Text(
@@ -244,7 +244,7 @@ class HrScannerView extends ConsumerWidget {
               const SizedBox(height: 24),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
+                  backgroundColor: AppColors.accentRed,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -283,7 +283,7 @@ class HrScannerView extends ConsumerWidget {
         : ListView.separated(
             itemCount: devices.length,
             separatorBuilder: (_, _) =>
-                const Divider(color: Colors.white10, height: 1),
+                const Divider(color: AppColors.borderSubtle, height: 1),
             itemBuilder: (context, index) {
               final device = devices[index];
               return ListTile(
@@ -369,9 +369,9 @@ class HrScannerView extends ConsumerWidget {
 
   /// Returns a color representing signal strength for the given RSSI value.
   Color _getRssiColor(int rssi) {
-    if (rssi >= -65) return Colors.greenAccent;
-    if (rssi >= -85) return Colors.orangeAccent;
-    return Colors.redAccent;
+    if (rssi >= -65) return AppColors.accentGreen;
+    if (rssi >= -85) return AppColors.accentOrange;
+    return AppColors.accentRed;
   }
 
   /// Returns an icon representing signal strength for the given RSSI value.
