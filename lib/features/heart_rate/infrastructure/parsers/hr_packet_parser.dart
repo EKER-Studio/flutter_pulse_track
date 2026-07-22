@@ -24,10 +24,9 @@ class HrPacketParser {
     final bool isHeartRate16Bit = (flags & 0x01) != 0;
     final bool hasEnergyExpended = (flags & 0x08) != 0;
     final bool hasRrIntervals = (flags & 0x10) != 0;
-    final int sensorContactBits = (flags >> 1) & 0x03;
-    final bool sensorContactSupported = sensorContactBits != 0;
+    final bool sensorContactSupported = (flags & 0x04) != 0;
     final bool? sensorContactActive = sensorContactSupported
-        ? sensorContactBits == 0x03
+        ? (flags & 0x02) != 0
         : null;
 
     int bpm;

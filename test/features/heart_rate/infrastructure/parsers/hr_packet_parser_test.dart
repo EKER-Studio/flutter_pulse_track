@@ -25,6 +25,8 @@ void main() {
         expect(result, isNotNull);
         expect(result!.bpm, 120);
         expect(result.rrIntervals, isEmpty);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('parses BPM = 0', () {
@@ -33,6 +35,8 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 0);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('parses BPM = 255 (max 8-bit value)', () {
@@ -41,6 +45,8 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 255);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('handles GrowableList input', () {
@@ -49,6 +55,8 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 75);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
     });
 
@@ -62,6 +70,8 @@ void main() {
         expect(result, isNotNull);
         expect(result!.bpm, 180);
         expect(result.rrIntervals, isEmpty);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('parses 16-bit BPM = 0', () {
@@ -70,6 +80,8 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 0);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('parses 16-bit BPM = 65535 (max uint16)', () {
@@ -78,6 +90,8 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 65535);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('parses 16-bit BPM with mid-range value', () {
@@ -87,6 +101,8 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 12345);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
     });
 
@@ -101,6 +117,8 @@ void main() {
         expect(result, isNotNull);
         expect(result!.bpm, 90);
         expect(result.rrIntervals, isEmpty);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('handles energy expended = 0', () {
@@ -110,6 +128,8 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 60);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('handles energy expended = 65535 (max uint16)', () {
@@ -119,6 +139,8 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 100);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
     });
 
@@ -134,6 +156,8 @@ void main() {
         expect(result!.bpm, 60);
         expect(result.rrIntervals, hasLength(1));
         expect(result.rrIntervals[0], closeTo(1.0, 1e-6));
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('parses multiple R-R intervals', () {
@@ -155,6 +179,8 @@ void main() {
         expect(result.rrIntervals[0], closeTo(0.5, 1e-6));
         expect(result.rrIntervals[1], closeTo(1.0, 1e-6));
         expect(result.rrIntervals[2], closeTo(2.0, 1e-6));
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('parses R-R interval = 0', () {
@@ -165,6 +191,8 @@ void main() {
         expect(result!.bpm, 80);
         expect(result.rrIntervals, hasLength(1));
         expect(result.rrIntervals[0], 0.0);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('parses R-R interval with max uint16 value', () {
@@ -176,6 +204,8 @@ void main() {
         expect(result!.bpm, 80);
         expect(result.rrIntervals, hasLength(1));
         expect(result.rrIntervals[0], closeTo(65535 / 1024.0, 1e-6));
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('parses partial R-R interval data (truncated)', () {
@@ -188,6 +218,8 @@ void main() {
         expect(result, isNotNull);
         expect(result!.bpm, 60);
         expect(result.rrIntervals, isEmpty);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
     });
 
@@ -209,6 +241,8 @@ void main() {
         expect(result!.bpm, 150);
         expect(result.rrIntervals, hasLength(1));
         expect(result.rrIntervals[0], closeTo(1.0, 1e-6));
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('parses 8-bit BPM + energy expended + R-R intervals', () {
@@ -230,6 +264,8 @@ void main() {
         expect(result.rrIntervals, hasLength(2));
         expect(result.rrIntervals[0], closeTo(0.5, 1e-6));
         expect(result.rrIntervals[1], closeTo(2.0, 1e-6));
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
     });
 
@@ -287,6 +323,8 @@ void main() {
               result.timestamp.isAtSameMomentAs(after),
           true,
         );
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
     });
 
@@ -298,6 +336,8 @@ void main() {
         expect(result, isNotNull);
         expect(result!.bpm, 70);
         expect(result.rrIntervals, isEmpty);
+        expect(result.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
 
       test('handles flags = 0xFF (all flags set, 16-bit BPM)', () {
@@ -317,6 +357,53 @@ void main() {
         expect(result!.bpm, 100);
         expect(result.rrIntervals, hasLength(1));
         expect(result.rrIntervals[0], closeTo(1.0, 1e-6));
+        expect(result.sensorContactSupported, true);
+        expect(result.sensorContactActive, true);
+      });
+    });
+
+    group('Sensor Contact Status', () {
+      test('Case A: flags = 0x00 (sensor contact not supported)', () {
+        const flags = 0x00;
+        final rawData = Uint8List.fromList([flags, 72]);
+        final result = HrPacketParser.parseRawBytes(rawData);
+
+        expect(result, isNotNull);
+        expect(result!.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
+      });
+
+      test('Case B: flags = 0x04 (sensor contact supported, not detected)', () {
+        // bit2 = 1 (supported), bit1 = 0 (not detected)
+        const flags = 0x04;
+        final rawData = Uint8List.fromList([flags, 72]);
+        final result = HrPacketParser.parseRawBytes(rawData);
+
+        expect(result, isNotNull);
+        expect(result!.sensorContactSupported, true);
+        expect(result.sensorContactActive, false);
+      });
+
+      test('Case C: flags = 0x06 (sensor contact supported and detected)', () {
+        // bit2 = 1 (supported), bit1 = 1 (detected)
+        const flags = 0x06;
+        final rawData = Uint8List.fromList([flags, 72]);
+        final result = HrPacketParser.parseRawBytes(rawData);
+
+        expect(result, isNotNull);
+        expect(result!.sensorContactSupported, true);
+        expect(result.sensorContactActive, true);
+      });
+
+      test('Case D: flags = 0x02 (bit1 active without bit2 support)', () {
+        // bit2 = 0, bit1 = 1 → must NOT be treated as supported
+        const flags = 0x02;
+        final rawData = Uint8List.fromList([flags, 72]);
+        final result = HrPacketParser.parseRawBytes(rawData);
+
+        expect(result, isNotNull);
+        expect(result!.sensorContactSupported, false);
+        expect(result.sensorContactActive, isNull);
       });
     });
   });
