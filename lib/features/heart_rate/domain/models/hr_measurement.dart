@@ -36,6 +36,28 @@ class HrMeasurement {
     this.sensorContactActive,
   });
 
+  /// Creates a copy of this measurement but with the given fields replaced with the new values.
+  HrMeasurement copyWith({
+    int? bpm,
+    List<double>? rrIntervals,
+    DateTime? timestamp,
+    BodySensorLocation? sensorLocation,
+    int? batteryLevel,
+    bool? sensorContactSupported,
+    bool? sensorContactActive,
+  }) {
+    return HrMeasurement(
+      bpm: bpm ?? this.bpm,
+      rrIntervals: rrIntervals ?? this.rrIntervals,
+      timestamp: timestamp ?? this.timestamp,
+      sensorLocation: sensorLocation ?? this.sensorLocation,
+      batteryLevel: batteryLevel ?? this.batteryLevel,
+      sensorContactSupported:
+          sensorContactSupported ?? this.sensorContactSupported,
+      sensorContactActive: sensorContactActive ?? this.sensorContactActive,
+    );
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

@@ -334,10 +334,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
               _currentMaxBpm = measurement.bpm;
             }
 
-            final HrMeasurement enrichedMeasurement = HrMeasurement(
-              bpm: measurement.bpm,
-              rrIntervals: measurement.rrIntervals,
-              timestamp: measurement.timestamp,
+            final HrMeasurement enrichedMeasurement = measurement.copyWith(
               sensorLocation: sensorLocation,
               batteryLevel: _currentBatteryLevel ?? measurement.batteryLevel,
             );
@@ -625,13 +622,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     if (state is ConnectedMonitorState) {
       final current = state as ConnectedMonitorState;
       state = MonitorState.connected(
-        measurement: HrMeasurement(
-          bpm: current.measurement.bpm,
-          rrIntervals: current.measurement.rrIntervals,
-          timestamp: current.measurement.timestamp,
-          sensorLocation: current.measurement.sensorLocation,
-          batteryLevel: newLevel,
-        ),
+        measurement: current.measurement.copyWith(batteryLevel: newLevel),
       );
     }
   }
