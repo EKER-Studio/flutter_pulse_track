@@ -29,7 +29,7 @@ class HrHomeView extends ConsumerWidget {
         backgroundColor: AppColors.surfaceBackground,
         elevation: 0,
         title: const Text(
-          'HR Companion',
+          'EKER Studio HR Companion',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
