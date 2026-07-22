@@ -80,10 +80,10 @@ flutter analyze
 log_success "Static analysis passed with zero warnings or errors."
 
 # ------------------------------------------------------------------------------
-log_step "6" "Running complete unit and widget test suites (Excluding Goldens)..."
+log_step "6" "Running complete unit and widget test suites..."
 # ------------------------------------------------------------------------------
-# Executes all non-visual automated tests inside the /test directory
-flutter test --exclude-tags golden
+# Executes all automated tests inside the /test directory
+flutter test
 log_success "All automated unit and widget tests completed successfully."
 
 # ==============================================================================
