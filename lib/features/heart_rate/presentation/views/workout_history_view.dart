@@ -1,4 +1,5 @@
 import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
+import 'package:ble_heart_rate_monitor/core/utils/app_logger.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/models/workout_session.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/delete_workout_session_usecase.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/watch_workout_history_usecase.dart';
@@ -32,16 +33,23 @@ class WorkoutHistoryView extends ConsumerWidget {
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.accentBlue),
         ),
-        error: (error, stackTrace) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Text(
-              'Failed to load workout history: $error',
-              style: TextStyle(color: AppColors.textMuted),
-              textAlign: TextAlign.center,
+        error: (error, stackTrace) {
+          log.e(
+            'Failed to load workout history',
+            error: error,
+            stackTrace: stackTrace,
+          );
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Text(
+                'Unable to load workout history. Please try again later.',
+                style: TextStyle(color: AppColors.textMuted),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        ),
+          );
+        },
         data: (sessions) {
           if (sessions.isEmpty) {
             return _buildEmptyState();
@@ -74,11 +82,18 @@ class WorkoutHistoryView extends ConsumerWidget {
                           .read(deleteWorkoutSessionUseCaseProvider)
                           .call(session.id);
                       return true;
-                    } catch (e) {
+                    } catch (e, st) {
+                      log.e(
+                        'Failed to delete session',
+                        error: e,
+                        stackTrace: st,
+                      );
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Failed to delete session: $e'),
+                          const SnackBar(
+                            content: Text(
+                              'Unable to delete session. Please try again.',
+                            ),
                           ),
                         );
                       }
