@@ -21,7 +21,7 @@ class App extends ConsumerWidget {
   /// [Colors.redAccent].
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      title: 'EKER Studio HR Companion',
+      title: 'PulseTrack',
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get homeTitle => 'HR Companion';
+  String get homeTitle => 'PulseTrack';
 
   @override
   String get savedSensorsSectionTitle => 'Saved Sensors (Direct Connect)';

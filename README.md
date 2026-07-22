@@ -1,4 +1,4 @@
-# EKER Studio HR Companion
+# PulseTrack: Heart Rate Monitor
 
 A production-ready, high-performance Flutter application for real-time heart rate monitoring via
 Bluetooth Low Energy (BLE). Built with a Local-First architecture, utilizing Riverpod for reactive

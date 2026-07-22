@@ -1,6 +1,6 @@
 {
    "@@locale":"en",
-   "homeTitle":"HR Companion",
+   "homeTitle":"PulseTrack",
    "@homeTitle":{
       "description":"Title shown in the app bar of the home dashboard screen."
    },

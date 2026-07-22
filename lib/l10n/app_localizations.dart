@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// Title shown in the app bar of the home dashboard screen.
   ///
   /// In en, this message translates to:
-  /// **'HR Companion'**
+  /// **'PulseTrack'**
   String get homeTitle;
 
   /// Header above the horizontal list of previously-connected BLE sensors.
