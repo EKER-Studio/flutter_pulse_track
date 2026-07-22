@@ -30,16 +30,28 @@ class FirebaseCrashlyticsOutput extends LogOutput {
   void output(OutputEvent event) {
     if (kDebugMode) return;
 
-    for (final line in event.lines) {
-      if (event.level.index >= Level.error.index) {
-        FirebaseCrashlytics.instance.recordError(
-          event.origin.error ?? line,
-          event.origin.stackTrace,
-          reason: event.origin.message,
-        );
-      } else if (event.level.index >= Level.info.index) {
-        FirebaseCrashlytics.instance.log(line);
+    try {
+      // Structural guard: Verify if Firebase has been bootstrapped in main.dart
+      // If not initialized, this will safely fail here and skip remote log delivery
+      final _ = FirebaseCrashlytics.instance;
+
+      for (final line in event.lines) {
+        if (event.level.index >= Level.error.index) {
+          FirebaseCrashlytics.instance.recordError(
+            event.origin.error ?? line,
+            event.origin.stackTrace,
+            reason: event.origin.message,
+          );
+        } else if (event.level.index >= Level.info.index) {
+          FirebaseCrashlytics.instance.log(line);
+        }
       }
+    } catch (e) {
+      // Firebase infrastructure is not ready yet. Fallback silently to prevent [core/no-app] crashes.
+      // We use a raw print here as an emergency diagnostic override.
+      debugPrint(
+        '--- Firebase Crashlytics not initialized. Operational log skipped in release. ---',
+      );
     }
   }
 }
