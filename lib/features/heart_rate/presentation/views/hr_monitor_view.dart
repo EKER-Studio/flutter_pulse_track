@@ -123,7 +123,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           ),
           const SizedBox(height: 32),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.accentBlue),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.accentBlue,
+            ),
             onPressed: () => Navigator.of(context).pop(),
             child: const Text(
               'Return to Scanner',
@@ -228,7 +230,10 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.accessibility_new, color: AppColors.accentBlue),
+                const Icon(
+                  Icons.accessibility_new,
+                  color: AppColors.accentBlue,
+                ),
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -310,7 +315,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           decoration: BoxDecoration(
             color: AppColors.surfaceBackground,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.accentRed.withValues(alpha: 0.3)),
+            border: Border.all(
+              color: AppColors.accentRed.withValues(alpha: 0.3),
+            ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

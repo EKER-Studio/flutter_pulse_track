@@ -12,10 +12,7 @@ final log = Logger(
     dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
   ),
   filter: ProductionFilter(),
-  output: MultiOutput([
-    ConsoleOutput(),
-    FirebaseCrashlyticsOutput(),
-  ]),
+  output: MultiOutput([ConsoleOutput(), FirebaseCrashlyticsOutput()]),
 );
 
 class ProductionFilter extends LogFilter {

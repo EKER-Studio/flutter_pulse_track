@@ -48,7 +48,10 @@ class HrHomeView extends ConsumerWidget {
                     decoration: const BoxDecoration(
                       color: AppColors.surfaceBackground,
                       border: Border(
-                        bottom: BorderSide(color: AppColors.borderSubtle, width: 1),
+                        bottom: BorderSide(
+                          color: AppColors.borderSubtle,
+                          width: 1,
+                        ),
                       ),
                     ),
                     child: Padding(

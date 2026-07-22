@@ -78,7 +78,10 @@ class WorkoutDetailsView extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: _kCardBackgroundColor,
                       borderRadius: BorderRadius.circular(_kCardBorderRadius),
-                      border: Border.all(color: AppColors.borderSubtle, width: 1),
+                      border: Border.all(
+                        color: AppColors.borderSubtle,
+                        width: 1,
+                      ),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(_kDefaultPadding),
@@ -209,7 +212,10 @@ class WorkoutDetailsView extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: _kCardBackgroundColor,
                         borderRadius: BorderRadius.circular(_kCardBorderRadius),
-                        border: Border.all(color: AppColors.borderSubtle, width: 1),
+                        border: Border.all(
+                          color: AppColors.borderSubtle,
+                          width: 1,
+                        ),
                       ),
                       child: Center(
                         child: Column(
@@ -248,7 +254,10 @@ class WorkoutDetailsView extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: _kCardBackgroundColor,
                         borderRadius: BorderRadius.circular(_kCardBorderRadius),
-                        border: Border.all(color: AppColors.borderSubtle, width: 1),
+                        border: Border.all(
+                          color: AppColors.borderSubtle,
+                          width: 1,
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(

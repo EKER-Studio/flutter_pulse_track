@@ -124,7 +124,11 @@ class HrScannerView extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.bluetooth_disabled, size: 80, color: AppColors.accentRed),
+            Icon(
+              Icons.bluetooth_disabled,
+              size: 80,
+              color: AppColors.accentRed,
+            ),
             SizedBox(height: 24),
             Text(
               'Bluetooth Required',
@@ -216,7 +220,9 @@ class HrScannerView extends ConsumerWidget {
           decoration: BoxDecoration(
             color: AppColors.surfaceBackground,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.accentRed.withValues(alpha: 0.3)),
+            border: Border.all(
+              color: AppColors.accentRed.withValues(alpha: 0.3),
+            ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

@@ -229,9 +229,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   }
 
   void _cleanup() {
-    log.i(
-      '[BleScannerNotifier] Disposing — releasing all BLE scan resources.',
-    );
+    log.i('[BleScannerNotifier] Disposing — releasing all BLE scan resources.');
     _cancelEmptyStateTimer();
     _scanResultsSubscription?.cancel();
     _adapterStateSubscription?.cancel();

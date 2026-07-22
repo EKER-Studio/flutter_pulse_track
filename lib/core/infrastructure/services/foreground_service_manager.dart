@@ -22,9 +22,7 @@ void startCallback() {
 class MyTaskHandler extends TaskHandler {
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    log.i(
-      'MyTaskHandler.onStart: Foreground service started at $timestamp',
-    );
+    log.i('MyTaskHandler.onStart: Foreground service started at $timestamp');
   }
 
   @override
