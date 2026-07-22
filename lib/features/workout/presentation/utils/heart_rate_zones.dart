@@ -1,3 +1,4 @@
+import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 /// Heart rate zone definitions and utilities based on a configurable max heart rate.
@@ -24,11 +25,11 @@ class HeartRateZone {
 
 /// Palette of zone colors ordered from Z1 through Z5.
 const List<Color> kZoneColors = [
-  Color(0xFF4D96FF),
-  Color(0xFF6BCB77),
-  Color(0xFFFFD93D),
-  Color(0xFFFF9F45),
-  Color(0xFFFF6B6B),
+  AppColors.hrZone1,
+  AppColors.hrZone2,
+  AppColors.hrZone3,
+  AppColors.hrZone4,
+  AppColors.hrZone5,
 ];
 
 /// Default assumed maximum heart rate used when none is provided.
@@ -39,31 +40,31 @@ const List<HeartRateZone> kHeartRateZones = [
     label: 'Z1',
     minPercent: 0.50,
     maxPercent: 0.60,
-    color: Color(0xFF4D96FF),
+    color: AppColors.hrZone1,
   ),
   HeartRateZone(
     label: 'Z2',
     minPercent: 0.60,
     maxPercent: 0.70,
-    color: Color(0xFF6BCB77),
+    color: AppColors.hrZone2,
   ),
   HeartRateZone(
     label: 'Z3',
     minPercent: 0.70,
     maxPercent: 0.80,
-    color: Color(0xFFFFD93D),
+    color: AppColors.hrZone3,
   ),
   HeartRateZone(
     label: 'Z4',
     minPercent: 0.80,
     maxPercent: 0.90,
-    color: Color(0xFFFF9F45),
+    color: AppColors.hrZone4,
   ),
   HeartRateZone(
     label: 'Z5',
     minPercent: 0.90,
     maxPercent: 1.00,
-    color: Color(0xFFFF6B6B),
+    color: AppColors.hrZone5,
   ),
 ];
 

@@ -72,7 +72,7 @@ class HrHomeView extends ConsumerWidget {
                                 Text(
                                   'Saved Sensors (Direct Connect)',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: AppColors.textPrimary,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,
                                   ),
@@ -111,7 +111,7 @@ class HrHomeView extends ConsumerWidget {
                                           ? 'Unknown Sensor'
                                           : profile.name,
                                       style: const TextStyle(
-                                        color: Colors.white,
+                                        color: AppColors.textPrimary,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 13,
                                       ),
@@ -160,13 +160,13 @@ class HrHomeView extends ConsumerWidget {
                           ),
                           icon: const Icon(
                             Icons.search,
-                            color: Colors.white,
+                            color: AppColors.textPrimary,
                             size: 22,
                           ),
                           label: const Text(
                             'Scan for New Sensor',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppColors.textPrimary,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -249,7 +249,7 @@ class HrHomeView extends ConsumerWidget {
                     Text(
                       title,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.textPrimary,
                         fontWeight: FontWeight.w600,
                         fontSize: 15,
                       ),
@@ -257,12 +257,19 @@ class HrHomeView extends ConsumerWidget {
                     const SizedBox(height: 4),
                     Text(
                       description,
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+              const Icon(
+                Icons.chevron_right,
+                color: AppColors.textSecondary,
+                size: 20,
+              ),
             ],
           ),
         ),

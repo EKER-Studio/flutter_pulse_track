@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -57,7 +58,7 @@ class HeartRateExportHelper {
       messenger?.showSnackBar(
         const SnackBar(
           content: Text('Workout exported and ready to share'),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.successGreen,
           duration: Duration(seconds: 3),
         ),
       );
@@ -69,7 +70,7 @@ class HeartRateExportHelper {
       messenger?.showSnackBar(
         SnackBar(
           content: Text('Failed to export workout: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.errorRed,
           duration: const Duration(seconds: 3),
         ),
       );

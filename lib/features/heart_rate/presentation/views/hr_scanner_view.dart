@@ -38,7 +38,7 @@ class HrScannerView extends ConsumerWidget {
                     : Icons.filter_list_off,
                 color: _isFilterActive(notifier)
                     ? AppColors.accentBlue
-                    : Colors.grey,
+                    : AppColors.textSecondary,
               ),
               tooltip: 'Toggle Names & Nearby Filter',
               onPressed: () => notifier.toggleFilters(),
@@ -74,12 +74,16 @@ class HrScannerView extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.bluetooth_searching, size: 80, color: Colors.grey),
+          const Icon(
+            Icons.bluetooth_searching,
+            size: 80,
+            color: AppColors.textSecondary,
+          ),
           const SizedBox(height: 24),
           const Text(
             'Ready to scan',
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.textPrimary,
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
@@ -87,7 +91,7 @@ class HrScannerView extends ConsumerWidget {
           const SizedBox(height: 8),
           const Text(
             'Tap Scan to begin searching for sensors.',
-            style: TextStyle(color: Colors.grey, fontSize: 16),
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
           ),
           const SizedBox(height: 32),
           ElevatedButton.icon(
@@ -98,11 +102,11 @@ class HrScannerView extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            icon: const Icon(Icons.search, color: Colors.white),
+            icon: const Icon(Icons.search, color: AppColors.textPrimary),
             label: const Text(
               'Scan',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -133,7 +137,7 @@ class HrScannerView extends ConsumerWidget {
             Text(
               'Bluetooth Required',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -142,7 +146,11 @@ class HrScannerView extends ConsumerWidget {
             Text(
               'Bluetooth adapter is powered off or unauthorized. Please enable Bluetooth and grant local infrastructure permissions to scan for sensors.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 16, height: 1.4),
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 16,
+                height: 1.4,
+              ),
             ),
           ],
         ),
@@ -167,7 +175,7 @@ class HrScannerView extends ConsumerWidget {
             const Text(
               "CAN'T SEE YOUR DEVICE?",
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -178,7 +186,11 @@ class HrScannerView extends ConsumerWidget {
               '• Check the sensor battery.\n'
               '• Move closer to the device.\n'
               '• Try disabling the scan filters.',
-              style: TextStyle(color: Colors.grey, fontSize: 16, height: 1.5),
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 16,
+                height: 1.5,
+              ),
               textAlign: TextAlign.left,
             ),
             const SizedBox(height: 32),
@@ -193,11 +205,11 @@ class HrScannerView extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              icon: const Icon(Icons.refresh, color: Colors.white),
+              icon: const Icon(Icons.refresh, color: AppColors.textPrimary),
               label: const Text(
                 'Retry Scan',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -236,7 +248,7 @@ class HrScannerView extends ConsumerWidget {
               const Text(
                 'Scan Failed',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.textPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -245,7 +257,10 @@ class HrScannerView extends ConsumerWidget {
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey, fontSize: 14),
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 14,
+                ),
               ),
               const SizedBox(height: 24),
               ElevatedButton(
@@ -258,7 +273,7 @@ class HrScannerView extends ConsumerWidget {
                 onPressed: () => notifier.startScan(),
                 child: const Text(
                   'Retry',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppColors.textPrimary),
                 ),
               ),
             ],
@@ -283,7 +298,7 @@ class HrScannerView extends ConsumerWidget {
         ? const Center(
             child: Text(
               'Searching for active sensors...',
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
           )
         : ListView.separated(
@@ -305,7 +320,7 @@ class HrScannerView extends ConsumerWidget {
                   ),
                   child: const Icon(
                     Icons.bluetooth,
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                     size: 24,
                   ),
                 ),
@@ -313,7 +328,7 @@ class HrScannerView extends ConsumerWidget {
                   child: Text(
                     device.name.isEmpty ? 'Unknown Device' : device.name,
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                     ),
@@ -324,7 +339,7 @@ class HrScannerView extends ConsumerWidget {
                   child: Text(
                     device.id,
                     style: const TextStyle(
-                      color: Colors.grey,
+                      color: AppColors.textSecondary,
                       fontSize: 12,
                       fontFamily: 'monospace',
                     ),

@@ -19,10 +19,10 @@ class WorkoutDetailsView extends StatelessWidget {
   static const Color _kBackgroundColor = AppColors.darkerBackground;
   static const Color _kCardBackgroundColor = AppColors.surfaceBackground;
   static const Color _kBadgeBackgroundColor = AppColors.badgeBackground;
-  static const Color _kAvgBpmIconColor = Color(0xFFFF6B6B);
-  static const Color _kPeakBpmIconColor = Color(0xFFFFD93D);
-  static const Color _kDurationIconColor = Color(0xFF6BCB77);
-  static const Color _kSamplesIconColor = Color(0xFF4D96FF);
+  static const Color _kAvgBpmIconColor = AppColors.statIconAvg;
+  static const Color _kPeakBpmIconColor = AppColors.statIconPeak;
+  static const Color _kDurationIconColor = AppColors.statIconDuration;
+  static const Color _kSamplesIconColor = AppColors.statIconSamples;
   static const double _kDefaultPadding = 16.0;
   static const double _kCardBorderRadius = 12.0;
   static const double _kBadgeBorderRadius = 6.0;
@@ -46,14 +46,17 @@ class WorkoutDetailsView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: _kBackgroundColor,
         elevation: 0,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.textPrimary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
           'Workout Details',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         actions: [
           IconButton(
@@ -94,7 +97,7 @@ class WorkoutDetailsView extends StatelessWidget {
                               Text(
                                 _formatDate(session.startTime),
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: AppColors.textPrimary,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 15,
                                 ),
@@ -127,7 +130,7 @@ class WorkoutDetailsView extends StatelessWidget {
                                 ? 'Unknown Sensor'
                                 : session.deviceName,
                             style: TextStyle(
-                              color: Colors.grey[500],
+                              color: AppColors.textSecondary,
                               fontSize: 12,
                             ),
                           ),
@@ -142,7 +145,7 @@ class WorkoutDetailsView extends StatelessWidget {
                   const Text(
                     'Summary',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
                     ),
@@ -198,7 +201,7 @@ class WorkoutDetailsView extends StatelessWidget {
                   const Text(
                     'Heart Rate Over Time',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
                     ),
@@ -224,13 +227,13 @@ class WorkoutDetailsView extends StatelessWidget {
                             const Icon(
                               Icons.monitor_heart,
                               size: 48,
-                              color: Colors.grey,
+                              color: AppColors.textSecondary,
                             ),
                             const SizedBox(height: _kSubSectionSpacing),
                             Text(
                               'No workout data captured',
                               style: TextStyle(
-                                color: Colors.grey[400],
+                                color: AppColors.textMuted,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -239,7 +242,7 @@ class WorkoutDetailsView extends StatelessWidget {
                             Text(
                               _getEmptyDataReason(session),
                               style: TextStyle(
-                                color: Colors.grey[600],
+                                color: AppColors.textTertiary,
                                 fontSize: 13,
                               ),
                             ),
@@ -312,13 +315,16 @@ class WorkoutDetailsView extends StatelessWidget {
           Text(
             value,
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.textPrimary,
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
           ),
           const SizedBox(height: 4),
-          Text(label, style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+          Text(
+            label,
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+          ),
         ],
       ),
     );
@@ -389,7 +395,10 @@ class _HrZoneLegend extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               '${kHeartRateZones[i].label} ${(kHeartRateZones[i].minPercent * 100).toInt()}%-${(kHeartRateZones[i].maxPercent * 100).toInt()}%',
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 12,
+              ),
             ),
           ],
         ),
@@ -451,11 +460,14 @@ class BpmChart extends CustomPainter {
 
     // Grid lines and labels
     final gridPaint = Paint()
-      ..color = Colors.white12
+      ..color = AppColors.chartGridLine
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5;
 
-    const gridLabelStyle = TextStyle(color: Colors.grey, fontSize: 10);
+    const gridLabelStyle = TextStyle(
+      color: AppColors.textSecondary,
+      fontSize: 10,
+    );
 
     // Draw 4 horizontal grid lines
     for (int i = 0; i < 4; i++) {
@@ -512,10 +524,7 @@ class BpmChart extends CustomPainter {
     // Gradient fill under the line
     final fillPaint = Paint()
       ..shader = LinearGradient(
-        colors: [
-          Colors.white.withValues(alpha: 0.05),
-          Colors.white.withValues(alpha: 0.0),
-        ],
+        colors: [AppColors.chartFillStart, AppColors.chartFillEnd],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
       ).createShader(Rect.fromLTWH(0, 0, chartWidth, chartHeight));
@@ -534,7 +543,7 @@ class BpmChart extends CustomPainter {
 
   /// Paints a centered "No data" label when the sample list is empty.
   void _drawEmpty(Canvas canvas, Size size) {
-    const labelStyle = TextStyle(color: Colors.grey, fontSize: 14);
+    const labelStyle = TextStyle(color: AppColors.textSecondary, fontSize: 14);
 
     final tp = TextPainter(
       text: const TextSpan(text: 'No data', style: labelStyle),

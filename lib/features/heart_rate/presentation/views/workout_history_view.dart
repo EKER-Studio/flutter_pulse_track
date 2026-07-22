@@ -37,7 +37,7 @@ class WorkoutHistoryView extends ConsumerWidget {
             padding: const EdgeInsets.all(32.0),
             child: Text(
               'Failed to load workout history: $error',
-              style: TextStyle(color: Colors.grey[400]),
+              style: TextStyle(color: AppColors.textMuted),
               textAlign: TextAlign.center,
             ),
           ),
@@ -60,7 +60,7 @@ class WorkoutHistoryView extends ConsumerWidget {
                 background: Container(
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 16.0),
-                  color: Colors.red,
+                  color: AppColors.errorRed,
                   child: const Icon(
                     Icons.delete,
                     color: Colors.white,
@@ -105,12 +105,12 @@ class WorkoutHistoryView extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.fitness_center, size: 80, color: Colors.grey[600]),
+            Icon(Icons.fitness_center, size: 80, color: AppColors.textTertiary),
             const SizedBox(height: 24),
             Text(
               'No workouts recorded yet',
               style: TextStyle(
-                color: Colors.grey[400],
+                color: AppColors.textMuted,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
@@ -119,7 +119,7 @@ class WorkoutHistoryView extends ConsumerWidget {
             const SizedBox(height: 8),
             Text(
               'Complete a heart rate monitoring session to see your workout history here.',
-              style: TextStyle(color: Colors.grey[600], fontSize: 14),
+              style: TextStyle(color: AppColors.textTertiary, fontSize: 14),
               textAlign: TextAlign.center,
             ),
           ],
@@ -166,7 +166,7 @@ class WorkoutHistoryView extends ConsumerWidget {
                     Text(
                       formattedDate,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.textPrimary,
                         fontWeight: FontWeight.w600,
                         fontSize: 15,
                       ),
@@ -196,7 +196,10 @@ class WorkoutHistoryView extends ConsumerWidget {
                   session.deviceName.isEmpty
                       ? 'Unknown Sensor'
                       : session.deviceName,
-                  style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -221,13 +224,16 @@ class WorkoutHistoryView extends ConsumerWidget {
         Text(
           value,
           style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+            fontSize: 15,
           ),
         ),
         const SizedBox(height: 2),
-        Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 11)),
+        Text(
+          label,
+          style: TextStyle(color: AppColors.textTertiary, fontSize: 11),
+        ),
       ],
     );
   }

@@ -111,12 +111,16 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.bluetooth_disabled, size: 80, color: Colors.grey),
+          const Icon(
+            Icons.bluetooth_disabled,
+            size: 80,
+            color: AppColors.textSecondary,
+          ),
           const SizedBox(height: 24),
           const Text(
             'Disconnected',
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.textPrimary,
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
@@ -129,7 +133,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
             onPressed: () => Navigator.of(context).pop(),
             child: const Text(
               'Return to Scanner',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: AppColors.textPrimary),
             ),
           ),
         ],
@@ -154,7 +158,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
               message,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                color: Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 16,
                 height: 1.5,
               ),
@@ -176,7 +180,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           const Text(
             'Heart rate',
             style: TextStyle(
-              color: Colors.grey,
+              color: AppColors.textSecondary,
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
@@ -195,7 +199,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                 style: const TextStyle(
                   fontSize: 84,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(width: 8),
@@ -203,7 +207,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                 'BPM',
                 style: TextStyle(
                   fontSize: 24,
-                  color: Colors.grey,
+                  color: AppColors.textSecondary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -240,12 +244,15 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                   children: [
                     const Text(
                       'Body sensor location',
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
                     ),
                     Text(
                       metric.sensorLocation.displayName,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -279,14 +286,17 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                   children: [
                     const Text(
                       'Sensor battery',
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
                     ),
                     Text(
                       metric.batteryLevel != null
                           ? '${metric.batteryLevel}%'
                           : 'N/A',
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -331,7 +341,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
               const Text(
                 'Connection Failed',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.textPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -340,7 +350,10 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey, fontSize: 14),
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 14,
+                ),
               ),
               const SizedBox(height: 32),
               SizedBox(
@@ -353,11 +366,11 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  icon: const Icon(Icons.refresh, color: Colors.white),
+                  icon: const Icon(Icons.refresh, color: AppColors.textPrimary),
                   label: const Text(
                     'Retry Connection',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.textPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -375,7 +388,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text(
                     'Go Back',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: AppColors.textSecondary),
                   ),
                 ),
               ),

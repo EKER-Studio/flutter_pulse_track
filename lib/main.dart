@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'app.dart';
 import 'core/infrastructure/storage/isar_provider.dart';
+import 'core/presentation/theme/app_colors.dart';
 import 'features/workout/infrastructure/models/device_profile_dto.dart';
 import 'features/workout/infrastructure/models/workout_session_dto.dart';
 
@@ -55,19 +56,19 @@ class _DatabaseErrorApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: const Color(0xFF0D0D0D),
+        backgroundColor: AppColors.darkerBackground,
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(32),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.storage, size: 64, color: Colors.redAccent),
+                const Icon(Icons.storage, size: 64, color: AppColors.accentRed),
                 const SizedBox(height: 24),
                 const Text(
                   'Database Error',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                     fontSize: 22,
                     fontWeight: FontWeight.w600,
                   ),
@@ -76,7 +77,10 @@ class _DatabaseErrorApp extends StatelessWidget {
                 Text(
                   'Failed to open the local database:\n$error',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                  ),
                 ),
               ],
             ),
