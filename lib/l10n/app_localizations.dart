@@ -93,6 +93,48 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('en')];
+
+  /// Title shown in the app bar of the home dashboard screen.
+  ///
+  /// In en, this message translates to:
+  /// **'HR Companion'**
+  String get homeTitle;
+
+  /// Header above the horizontal list of previously-connected BLE sensors.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Sensors (Direct Connect)'**
+  String get savedSensorsSectionTitle;
+
+  /// Fallback label shown when a saved device profile has an empty name.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Sensor'**
+  String get unknownSensorLabel;
+
+  /// Fallback device name passed to the monitor screen when a saved profile has an empty name.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Sensor'**
+  String get savedSensorFallbackName;
+
+  /// Label for the primary call-to-action button that opens the BLE scanner screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan for New Sensor'**
+  String get scanForNewSensorButton;
+
+  /// Title of the workout history placeholder card and its screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout History'**
+  String get workoutHistoryTitle;
+
+  /// Subtitle text under the workout history placeholder card on the home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'View past heart rate sessions and analytics.'**
+  String get workoutHistoryDescription;
 }
 
 class _AppLocalizationsDelegate

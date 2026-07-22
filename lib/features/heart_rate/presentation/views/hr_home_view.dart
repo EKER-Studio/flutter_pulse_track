@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:ble_heart_rate_monitor/l10n/app_localizations.dart';
 import 'package:ble_heart_rate_monitor/core/presentation/theme/app_colors.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/models/device_profile.dart';
 import 'package:ble_heart_rate_monitor/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
@@ -22,15 +22,16 @@ class HrHomeView extends ConsumerWidget {
     final savedProfilesAsync = ref.watch(
       watchSavedDeviceProfilesStreamProvider,
     );
+    var l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       appBar: AppBar(
         backgroundColor: AppColors.surfaceBackground,
         elevation: 0,
-        title: const Text(
-          'EKER Studio HR Companion',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          l10n.homeTitle,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: Builder(
@@ -59,19 +60,21 @@ class HrHomeView extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                            ),
                             child: Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.bluetooth_connected,
                                   color: AppColors.accentBlue,
                                   size: 18,
                                 ),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 8),
                                 Text(
-                                  'Saved Sensors (Direct Connect)',
-                                  style: TextStyle(
+                                  l10n.savedSensorsSectionTitle,
+                                  style: const TextStyle(
                                     color: AppColors.textPrimary,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,
@@ -108,7 +111,7 @@ class HrHomeView extends ConsumerWidget {
                                     ),
                                     label: Text(
                                       profile.name.isEmpty
-                                          ? 'Unknown Sensor'
+                                          ? l10n.unknownSensorLabel
                                           : profile.name,
                                       style: const TextStyle(
                                         color: AppColors.textPrimary,
@@ -122,7 +125,7 @@ class HrHomeView extends ConsumerWidget {
                                           builder: (_) => HrMonitorView(
                                             deviceId: profile.macAddress,
                                             deviceName: profile.name.isEmpty
-                                                ? 'Saved Sensor'
+                                                ? l10n.savedSensorFallbackName
                                                 : profile.name,
                                           ),
                                         ),
@@ -163,9 +166,9 @@ class HrHomeView extends ConsumerWidget {
                             color: AppColors.textPrimary,
                             size: 22,
                           ),
-                          label: const Text(
-                            'Scan for New Sensor',
-                            style: TextStyle(
+                          label: Text(
+                            l10n.scanForNewSensorButton,
+                            style: const TextStyle(
                               color: AppColors.textPrimary,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -189,9 +192,9 @@ class HrHomeView extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: _buildPlaceholderSection(
                   context,
-                  title: 'Workout History',
+                  title: l10n.workoutHistoryTitle,
                   icon: Icons.fitness_center,
-                  description: 'View past heart rate sessions and analytics.',
+                  description: l10n.workoutHistoryDescription,
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

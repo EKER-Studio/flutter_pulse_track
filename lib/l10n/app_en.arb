@@ -1,0 +1,31 @@
+{
+   "@@locale":"en",
+   "homeTitle":"HR Companion",
+   "@homeTitle":{
+      "description":"Title shown in the app bar of the home dashboard screen."
+   },
+   "savedSensorsSectionTitle":"Saved Sensors (Direct Connect)",
+   "@savedSensorsSectionTitle":{
+      "description":"Header above the horizontal list of previously-connected BLE sensors."
+   },
+   "unknownSensorLabel":"Unknown Sensor",
+   "@unknownSensorLabel":{
+      "description":"Fallback label shown when a saved device profile has an empty name."
+   },
+   "savedSensorFallbackName":"Saved Sensor",
+   "@savedSensorFallbackName":{
+      "description":"Fallback device name passed to the monitor screen when a saved profile has an empty name."
+   },
+   "scanForNewSensorButton":"Scan for New Sensor",
+   "@scanForNewSensorButton":{
+      "description":"Label for the primary call-to-action button that opens the BLE scanner screen."
+   },
+   "workoutHistoryTitle":"Workout History",
+   "@workoutHistoryTitle":{
+      "description":"Title of the workout history placeholder card and its screen."
+   },
+   "workoutHistoryDescription":"View past heart rate sessions and analytics.",
+   "@workoutHistoryDescription":{
+      "description":"Subtitle text under the workout history placeholder card on the home screen."
+   }
+}

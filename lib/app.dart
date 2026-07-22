@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'features/heart_rate/presentation/views/hr_home_view.dart';
+import 'l10n/app_localizations.dart';
 
 /// Root widget that configures the MaterialApp with a dark theme.
 ///
@@ -29,6 +31,13 @@ class App extends ConsumerWidget {
         useMaterial3: true,
       ),
       home: const HrHomeView(),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }
