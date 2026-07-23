@@ -33,7 +33,7 @@ class FlutterForegroundTaskPlatform implements ForegroundTaskPlatform {
   @override
   Future<void> startService({required void Function() callback}) {
     return FlutterForegroundTask.startService(
-      notificationTitle: 'Heart Rate Monitor',
+      notificationTitle: 'PulseTrack',
       notificationText: 'Recording workout...',
       notificationIcon: const NotificationIcon(metaDataName: 'ic_launcher'),
       callback: callback,
