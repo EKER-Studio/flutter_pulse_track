@@ -36,8 +36,8 @@ const Duration _kCheckpointInterval = Duration(seconds: 30);
 @riverpod
 class HrMonitorNotifier extends _$HrMonitorNotifier
     with WidgetsBindingObserver {
-  HeartRateMonitorService get _monitorService =>
-      ref.read(heartRateMonitorServiceProvider);
+  late final HeartRateMonitorService _monitorService;
+  late final ForegroundServiceManager _foregroundServiceManager;
 
   BluetoothDevice? _device;
 
@@ -66,6 +66,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
   @override
   MonitorState build() {
+    _monitorService = ref.read(heartRateMonitorServiceProvider);
+    _foregroundServiceManager = ref.read(foregroundServiceManagerProvider);
     WidgetsBinding.instance.addObserver(this);
     ref.onDispose(() => _cleanup());
     return const MonitorState.disconnected();
@@ -91,7 +93,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       );
       await _cancelSubscriptions();
       await _safeDisconnectDevice();
-      await ref.read(foregroundServiceManagerProvider).stopService();
+      await _foregroundServiceManager.stopService();
       _stopCheckpointTimer();
       _collectedBpmSamples.clear();
       _currentBpmSum = 0;
@@ -123,7 +125,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     state = const MonitorState.connecting();
 
     try {
-      await ref.read(foregroundServiceManagerProvider).startService();
+      await _foregroundServiceManager.startService();
     } catch (e) {
       log.w(
         '[HrMonitorNotifier] Foreground service startup failed (continuing '
@@ -146,7 +148,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       );
       _connectTimer?.cancel();
       _connectTimer = null;
-      ref.read(foregroundServiceManagerProvider).stopService();
+      _foregroundServiceManager.stopService();
       _safeDisconnectDevice();
       state = const MonitorState.failure(
         message:
@@ -160,7 +162,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       log.e('[HrMonitorNotifier] connect() threw', error: e, stackTrace: st);
       _connectTimer?.cancel();
       _connectTimer = null;
-      await ref.read(foregroundServiceManagerProvider).stopService();
+      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
       state = MonitorState.failure(
         message: 'Failed to connect: ${e.toString()}',
@@ -203,7 +205,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         '${_kDiscoverServicesTimeout.inSeconds}s deadline — '
         'executing mandatory link-layer disconnect.',
       );
-      await ref.read(foregroundServiceManagerProvider).stopService();
+      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
       state = const MonitorState.failure(
         message:
@@ -216,7 +218,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         error: e,
         stackTrace: st,
       );
-      await ref.read(foregroundServiceManagerProvider).stopService();
+      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
       state = MonitorState.failure(
         message: 'Service discovery failed: ${e.toString()}',
@@ -243,7 +245,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         '[HrMonitorNotifier] Heart Rate Service (0x180D) not found — '
         'this device is not a standard HR sensor.',
       );
-      await ref.read(foregroundServiceManagerProvider).stopService();
+      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
       state = const MonitorState.failure(
         message:
@@ -265,7 +267,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         '[HrMonitorNotifier] HR Measurement Characteristic (0x2A37) not found '
         'on the Heart Rate Service.',
       );
-      await ref.read(foregroundServiceManagerProvider).stopService();
+      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
       state = const MonitorState.failure(
         message:
@@ -307,7 +309,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         error: e,
         stackTrace: st,
       );
-      await ref.read(foregroundServiceManagerProvider).stopService();
+      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
       state = MonitorState.failure(
         message: 'Failed to enable HR notifications: ${e.toString()}',
@@ -367,7 +369,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
             log.w(
               '[HrMonitorNotifier] HR notification stream closed by remote device.',
             );
-            if (state is ConnectedMonitorState) {
+            if (state is ConnectedMonitorState ||
+                state is DiscoveringServicesMonitorState) {
               state = const MonitorState.failure(
                 message: 'Heart rate stream was unexpectedly terminated.',
               );
@@ -389,7 +392,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       await _saveSessionToDisk();
       await _cancelSubscriptions();
       await _safeDisconnectDevice();
-      await ref.read(foregroundServiceManagerProvider).stopService();
+      await _foregroundServiceManager.stopService();
       state = const MonitorState.disconnected();
     } finally {
       _isDisconnecting = false;
@@ -671,7 +674,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         _hrNotificationSubscription = null;
         _batteryNotificationSubscription = null;
         await _saveSessionToDisk();
-        await ref.read(foregroundServiceManagerProvider).stopService();
+        await _foregroundServiceManager.stopService();
         state = const MonitorState.failure(
           message:
               'Connection lost. The sensor may be out of range or powered off.',
@@ -725,6 +728,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       _device = null;
     }
     WidgetsBinding.instance.removeObserver(this);
-    ref.read(foregroundServiceManagerProvider).stopService();
+    _foregroundServiceManager.stopService();
   }
 }
