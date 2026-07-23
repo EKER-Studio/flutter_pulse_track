@@ -135,8 +135,6 @@ void main() {
       ).called(1);
     });
 
-    
-
     test('propagates repository exceptions', () async {
       when(
         () => repository.saveWorkoutSession(
