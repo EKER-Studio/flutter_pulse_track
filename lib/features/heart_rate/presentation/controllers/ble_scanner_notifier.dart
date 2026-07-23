@@ -18,10 +18,9 @@ const int _kRssiThreshold = -65;
 
 final Guid _kHeartRateServiceUuid = Guid('180d');
 
-@riverpod
+@Riverpod(keepAlive: true)
 class BleScannerNotifier extends _$BleScannerNotifier {
-  BluetoothScannerService get _scannerService =>
-      ref.read(bluetoothScannerServiceProvider);
+  late final BluetoothScannerService _scannerService;
 
   StreamSubscription<BluetoothAdapterState>? _adapterStateSubscription;
   StreamSubscription<List<ScanResult>>? _scanResultsSubscription;
@@ -33,6 +32,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
 
   @override
   BleScannerState build() {
+    _scannerService = ref.read(bluetoothScannerServiceProvider);
     _adapterStateSubscription = _scannerService.adapterState.listen(
       _onAdapterStateChanged,
       onError: (Object error, StackTrace stack) {

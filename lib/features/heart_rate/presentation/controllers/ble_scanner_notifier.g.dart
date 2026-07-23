@@ -20,7 +20,7 @@ final class BleScannerNotifierProvider
         argument: null,
         retry: null,
         name: r'bleScannerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -42,7 +42,7 @@ final class BleScannerNotifierProvider
 }
 
 String _$bleScannerNotifierHash() =>
-    r'c7042da74f2b7f9379c81232f58db7b7a891ad23';
+    r'0d0b47f3d0d953f48f992071c7a2d846d480d13f';
 
 abstract class _$BleScannerNotifier extends $Notifier<BleScannerState> {
   BleScannerState build();
