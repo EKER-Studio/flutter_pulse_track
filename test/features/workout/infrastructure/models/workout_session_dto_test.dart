@@ -44,22 +44,19 @@ void main() {
     });
 
     test('accepts null endTime after assignment', () {
-      final dto = WorkoutSessionDto()
-        ..endTime = null;
+      final dto = WorkoutSessionDto()..endTime = null;
 
       expect(dto.endTime, isNull);
     });
 
     test('accepts empty bpmSamples after assignment', () {
-      final dto = WorkoutSessionDto()
-        ..bpmSamples = [];
+      final dto = WorkoutSessionDto()..bpmSamples = [];
 
       expect(dto.bpmSamples, isEmpty);
     });
 
     test('id can be changed from default', () {
-      final dto = WorkoutSessionDto()
-        ..id = 99;
+      final dto = WorkoutSessionDto()..id = 99;
 
       expect(dto.id, 99);
       expect(dto.id, isNot(equals(Isar.autoIncrement)));

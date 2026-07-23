@@ -121,11 +121,13 @@ void main() {
           name: 'Test',
           sensorLocationIndex: 1,
         ),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Save failed'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Save failed'),
+          ),
+        ),
       );
     });
   });

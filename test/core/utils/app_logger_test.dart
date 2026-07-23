@@ -71,7 +71,11 @@ void main() {
 
     test('does not throw with error and stackTrace', () {
       expect(
-        () => log.e('error context', error: Exception('fail'), stackTrace: StackTrace.current),
+        () => log.e(
+          'error context',
+          error: Exception('fail'),
+          stackTrace: StackTrace.current,
+        ),
         returnsNormally,
       );
     });

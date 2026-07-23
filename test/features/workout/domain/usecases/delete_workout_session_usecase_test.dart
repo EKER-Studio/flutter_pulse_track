@@ -16,9 +16,7 @@ void main() {
   setUp(() {
     repository = _MockRepository();
     useCase = DeleteWorkoutSessionUseCase(repository);
-    when(
-      () => repository.deleteWorkoutSession(any()),
-    ).thenAnswer((_) async {});
+    when(() => repository.deleteWorkoutSession(any())).thenAnswer((_) async {});
   });
 
   group('call', () {
@@ -59,11 +57,13 @@ void main() {
 
       expect(
         () => useCase(1),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Delete failed'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Delete failed'),
+          ),
+        ),
       );
     });
   });

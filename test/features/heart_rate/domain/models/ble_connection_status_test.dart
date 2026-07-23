@@ -8,19 +8,31 @@ void main() {
     });
 
     test('contains disconnected', () {
-      expect(BleConnectionStatus.values, contains(BleConnectionStatus.disconnected));
+      expect(
+        BleConnectionStatus.values,
+        contains(BleConnectionStatus.disconnected),
+      );
     });
 
     test('contains connecting', () {
-      expect(BleConnectionStatus.values, contains(BleConnectionStatus.connecting));
+      expect(
+        BleConnectionStatus.values,
+        contains(BleConnectionStatus.connecting),
+      );
     });
 
     test('contains connected', () {
-      expect(BleConnectionStatus.values, contains(BleConnectionStatus.connected));
+      expect(
+        BleConnectionStatus.values,
+        contains(BleConnectionStatus.connected),
+      );
     });
 
     test('contains disconnecting', () {
-      expect(BleConnectionStatus.values, contains(BleConnectionStatus.disconnecting));
+      expect(
+        BleConnectionStatus.values,
+        contains(BleConnectionStatus.disconnecting),
+      );
     });
 
     test('exhaustive switch over all variants', () {

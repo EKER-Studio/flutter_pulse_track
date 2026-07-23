@@ -14,23 +14,37 @@ void main() {
     });
 
     test('scanning can be constructed with devices', () {
-      final device = BleDevice(id: 'AA:BB:CC:DD:EE:FF', name: 'Polar H10', rssi: -55);
+      final device = BleDevice(
+        id: 'AA:BB:CC:DD:EE:FF',
+        name: 'Polar H10',
+        rssi: -55,
+      );
       final state = BleScannerState.scanning(devices: [device]);
 
       expect(state, isA<BleScannerState>());
     });
 
     test('scanning provides devices', () {
-      final device = BleDevice(id: 'AA:BB:CC:DD:EE:FF', name: 'Polar H10', rssi: -55);
-      final state = BleScannerState.scanning(devices: [device]) as ScanningScannerState;
+      final device = BleDevice(
+        id: 'AA:BB:CC:DD:EE:FF',
+        name: 'Polar H10',
+        rssi: -55,
+      );
+      final state =
+          BleScannerState.scanning(devices: [device]) as ScanningScannerState;
 
       expect(state.devices, [device]);
     });
 
     test('scanning with multiple devices', () {
-      final d1 = BleDevice(id: 'AA:BB:CC:DD:EE:FF', name: 'Polar H10', rssi: -55);
+      final d1 = BleDevice(
+        id: 'AA:BB:CC:DD:EE:FF',
+        name: 'Polar H10',
+        rssi: -55,
+      );
       final d2 = BleDevice(id: '11:22:33:44:55:66', name: 'Garmin', rssi: -60);
-      final state = BleScannerState.scanning(devices: [d1, d2]) as ScanningScannerState;
+      final state =
+          BleScannerState.scanning(devices: [d1, d2]) as ScanningScannerState;
 
       expect(state.devices, hasLength(2));
       expect(state.devices[0], d1);
@@ -38,7 +52,8 @@ void main() {
     });
 
     test('scanning with empty devices list', () {
-      final state = BleScannerState.scanning(devices: []) as ScanningScannerState;
+      final state =
+          BleScannerState.scanning(devices: []) as ScanningScannerState;
 
       expect(state.devices, isEmpty);
     });
@@ -67,8 +82,9 @@ void main() {
     });
 
     test('failure provides message', () {
-      final state = BleScannerState.failure(message: 'Bluetooth crashed')
-          as FailureScannerState;
+      final state =
+          BleScannerState.failure(message: 'Bluetooth crashed')
+              as FailureScannerState;
 
       expect(state.message, 'Bluetooth crashed');
     });

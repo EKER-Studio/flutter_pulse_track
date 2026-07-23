@@ -4,7 +4,6 @@ import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 
 void main() {
   group('AppColors', () {
-
     group('backgrounds', () {
       test('scaffoldBackground is a Color', () {
         expect(AppColors.scaffoldBackground, isA<Color>());

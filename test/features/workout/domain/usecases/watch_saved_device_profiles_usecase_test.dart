@@ -41,15 +41,17 @@ void main() {
 
   group('call', () {
     test('returns a Stream', () {
-      when(() => repository.watchSavedDeviceProfiles())
-          .thenAnswer((_) => const Stream.empty());
+      when(
+        () => repository.watchSavedDeviceProfiles(),
+      ).thenAnswer((_) => const Stream.empty());
 
       expect(useCase.call(), isA<Stream<List<DeviceProfile>>>());
     });
 
     test('delegates to repository.watchSavedDeviceProfiles', () {
-      when(() => repository.watchSavedDeviceProfiles())
-          .thenAnswer((_) => const Stream.empty());
+      when(
+        () => repository.watchSavedDeviceProfiles(),
+      ).thenAnswer((_) => const Stream.empty());
 
       useCase.call();
 
@@ -58,31 +60,31 @@ void main() {
 
     test('returns the same stream instance from repository', () {
       final stream = Stream<List<DeviceProfile>>.empty();
-      when(() => repository.watchSavedDeviceProfiles())
-          .thenAnswer((_) => stream);
+      when(
+        () => repository.watchSavedDeviceProfiles(),
+      ).thenAnswer((_) => stream);
 
       expect(useCase.call(), same(stream));
     });
 
     test('emits the list of profiles from repository', () {
       final profiles = [_profile(id: 1), _profile(id: 2)];
-      when(() => repository.watchSavedDeviceProfiles())
-          .thenAnswer((_) => Stream.value(profiles));
+      when(
+        () => repository.watchSavedDeviceProfiles(),
+      ).thenAnswer((_) => Stream.value(profiles));
 
       expect(useCase.call(), emits(profiles));
     });
 
     test('emits multiple updates sequentially', () async {
       final controller = StreamController<List<DeviceProfile>>();
-      when(() => repository.watchSavedDeviceProfiles())
-          .thenAnswer((_) => controller.stream);
+      when(
+        () => repository.watchSavedDeviceProfiles(),
+      ).thenAnswer((_) => controller.stream);
 
       final first = [_profile(id: 1)];
       final second = [_profile(id: 1), _profile(id: 2)];
-      final future = expectLater(
-        useCase.call(),
-        emitsInOrder([first, second]),
-      );
+      final future = expectLater(useCase.call(), emitsInOrder([first, second]));
 
       controller.add(first);
       controller.add(second);
@@ -91,29 +93,34 @@ void main() {
     });
 
     test('emits empty list when repository emits empty list', () {
-      when(() => repository.watchSavedDeviceProfiles())
-          .thenAnswer((_) => Stream.value([]));
+      when(
+        () => repository.watchSavedDeviceProfiles(),
+      ).thenAnswer((_) => Stream.value([]));
 
       expect(useCase.call(), emits(<DeviceProfile>[]));
     });
 
     test('forwards repository errors on the stream', () async {
-      when(() => repository.watchSavedDeviceProfiles())
-          .thenAnswer((_) => Stream.error(Exception('DB error')));
+      when(
+        () => repository.watchSavedDeviceProfiles(),
+      ).thenAnswer((_) => Stream.error(Exception('DB error')));
 
       expect(
         useCase.call(),
-        emitsError(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('DB error'),
-        )),
+        emitsError(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('DB error'),
+          ),
+        ),
       );
     });
 
     test('completes when repository stream completes', () async {
-      when(() => repository.watchSavedDeviceProfiles())
-          .thenAnswer((_) => const Stream.empty());
+      when(
+        () => repository.watchSavedDeviceProfiles(),
+      ).thenAnswer((_) => const Stream.empty());
 
       await expectLater(useCase.call(), emitsDone);
     });

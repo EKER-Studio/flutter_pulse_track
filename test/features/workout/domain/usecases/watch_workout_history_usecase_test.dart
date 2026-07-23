@@ -49,15 +49,17 @@ void main() {
 
   group('call', () {
     test('returns a Stream', () {
-      when(() => repository.watchWorkoutHistory())
-          .thenAnswer((_) => const Stream.empty());
+      when(
+        () => repository.watchWorkoutHistory(),
+      ).thenAnswer((_) => const Stream.empty());
 
       expect(useCase.call(), isA<Stream<List<WorkoutSession>>>());
     });
 
     test('delegates to repository.watchWorkoutHistory', () {
-      when(() => repository.watchWorkoutHistory())
-          .thenAnswer((_) => const Stream.empty());
+      when(
+        () => repository.watchWorkoutHistory(),
+      ).thenAnswer((_) => const Stream.empty());
 
       useCase.call();
 
@@ -73,26 +75,22 @@ void main() {
 
     test('emits the list of sessions from repository', () {
       final sessions = [_session(id: 1), _session(id: 2)];
-      when(() => repository.watchWorkoutHistory())
-          .thenAnswer((_) => Stream.value(sessions));
+      when(
+        () => repository.watchWorkoutHistory(),
+      ).thenAnswer((_) => Stream.value(sessions));
 
-      expect(
-        useCase.call(),
-        emits(sessions),
-      );
+      expect(useCase.call(), emits(sessions));
     });
 
     test('emits multiple updates sequentially', () async {
       final controller = StreamController<List<WorkoutSession>>();
-      when(() => repository.watchWorkoutHistory())
-          .thenAnswer((_) => controller.stream);
+      when(
+        () => repository.watchWorkoutHistory(),
+      ).thenAnswer((_) => controller.stream);
 
       final first = [_session(id: 1)];
       final second = [_session(id: 1), _session(id: 2)];
-      final future = expectLater(
-        useCase.call(),
-        emitsInOrder([first, second]),
-      );
+      final future = expectLater(useCase.call(), emitsInOrder([first, second]));
 
       controller.add(first);
       controller.add(second);
@@ -101,32 +99,34 @@ void main() {
     });
 
     test('emits empty list when repository emits empty list', () {
-      when(() => repository.watchWorkoutHistory())
-          .thenAnswer((_) => Stream.value([]));
+      when(
+        () => repository.watchWorkoutHistory(),
+      ).thenAnswer((_) => Stream.value([]));
 
-      expect(
-        useCase.call(),
-        emits(<WorkoutSession>[]),
-      );
+      expect(useCase.call(), emits(<WorkoutSession>[]));
     });
 
     test('forwards repository errors on the stream', () async {
-      when(() => repository.watchWorkoutHistory())
-          .thenAnswer((_) => Stream.error(Exception('DB error')));
+      when(
+        () => repository.watchWorkoutHistory(),
+      ).thenAnswer((_) => Stream.error(Exception('DB error')));
 
       expect(
         useCase.call(),
-        emitsError(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('DB error'),
-        )),
+        emitsError(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('DB error'),
+          ),
+        ),
       );
     });
 
     test('completes when repository stream completes', () async {
-      when(() => repository.watchWorkoutHistory())
-          .thenAnswer((_) => const Stream.empty());
+      when(
+        () => repository.watchWorkoutHistory(),
+      ).thenAnswer((_) => const Stream.empty());
 
       await expectLater(useCase.call(), emitsDone);
     });

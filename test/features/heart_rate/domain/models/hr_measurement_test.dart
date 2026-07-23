@@ -30,11 +30,7 @@ void main() {
   group('HrMeasurement constructor', () {
     test('sets all required fields', () {
       final ts = DateTime(2026, 7, 23, 14, 30, 0);
-      final m = HrMeasurement(
-        bpm: 120,
-        rrIntervals: [0.5, 1.0],
-        timestamp: ts,
-      );
+      final m = HrMeasurement(bpm: 120, rrIntervals: [0.5, 1.0], timestamp: ts);
       expect(m.bpm, 120);
       expect(m.rrIntervals, [0.5, 1.0]);
       expect(m.timestamp, ts);
@@ -109,18 +105,17 @@ void main() {
       expect(copy.batteryLevel, 50);
     });
 
-    test('nullable field defaults preserve existing value (copyWith limitation)',
-        () {
-      final m = _measurement(batteryLevel: 80, sensorContactActive: true);
-      final copy = m.copyWith(
-        batteryLevel: null,
-        sensorContactActive: null,
-      );
-      // copyWith uses ?? so null means "keep original" — construct a new
-      // instance directly when a nullable field needs to be cleared.
-      expect(copy.batteryLevel, 80);
-      expect(copy.sensorContactActive, isTrue);
-    });
+    test(
+      'nullable field defaults preserve existing value (copyWith limitation)',
+      () {
+        final m = _measurement(batteryLevel: 80, sensorContactActive: true);
+        final copy = m.copyWith(batteryLevel: null, sensorContactActive: null);
+        // copyWith uses ?? so null means "keep original" — construct a new
+        // instance directly when a nullable field needs to be cleared.
+        expect(copy.batteryLevel, 80);
+        expect(copy.sensorContactActive, isTrue);
+      },
+    );
   });
 
   group('operator ==', () {

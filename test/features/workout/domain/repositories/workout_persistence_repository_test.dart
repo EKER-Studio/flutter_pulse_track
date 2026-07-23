@@ -128,8 +128,9 @@ void main() {
     });
 
     test('watchSavedDeviceProfiles returns Stream<List<DeviceProfile>>', () {
-      when(() => repository.watchSavedDeviceProfiles())
-          .thenAnswer((_) => const Stream.empty());
+      when(
+        () => repository.watchSavedDeviceProfiles(),
+      ).thenAnswer((_) => const Stream.empty());
 
       final result = repository.watchSavedDeviceProfiles();
 
@@ -137,41 +138,44 @@ void main() {
     });
 
     test('watchWorkoutHistory returns Stream<List<WorkoutSession>>', () {
-      when(() => repository.watchWorkoutHistory())
-          .thenAnswer((_) => const Stream.empty());
+      when(
+        () => repository.watchWorkoutHistory(),
+      ).thenAnswer((_) => const Stream.empty());
 
       final result = repository.watchWorkoutHistory();
 
       expect(result, isA<Stream<List<WorkoutSession>>>());
     });
 
-    test('saveWorkoutCheckpoint accepts all parameters and returns Future<int>',
-        () async {
-      when(
-        () => repository.saveWorkoutCheckpoint(
-          startTime: any(named: 'startTime'),
-          samples: any(named: 'samples'),
-          sensorLocationIndex: any(named: 'sensorLocationIndex'),
-          macAddress: any(named: 'macAddress'),
-          name: any(named: 'name'),
-          avgBpm: any(named: 'avgBpm'),
-          maxBpm: any(named: 'maxBpm'),
-          existingId: any(named: 'existingId'),
-        ),
-      ).thenAnswer((_) async => 7);
+    test(
+      'saveWorkoutCheckpoint accepts all parameters and returns Future<int>',
+      () async {
+        when(
+          () => repository.saveWorkoutCheckpoint(
+            startTime: any(named: 'startTime'),
+            samples: any(named: 'samples'),
+            sensorLocationIndex: any(named: 'sensorLocationIndex'),
+            macAddress: any(named: 'macAddress'),
+            name: any(named: 'name'),
+            avgBpm: any(named: 'avgBpm'),
+            maxBpm: any(named: 'maxBpm'),
+            existingId: any(named: 'existingId'),
+          ),
+        ).thenAnswer((_) async => 7);
 
-      final id = await repository.saveWorkoutCheckpoint(
-        startTime: DateTime(2026, 1, 1),
-        samples: [60],
-        sensorLocationIndex: 0,
-        macAddress: 'AA:BB:CC:DD:EE:FF',
-        name: 'Test',
-        avgBpm: 60,
-        maxBpm: 60,
-      );
+        final id = await repository.saveWorkoutCheckpoint(
+          startTime: DateTime(2026, 1, 1),
+          samples: [60],
+          sensorLocationIndex: 0,
+          macAddress: 'AA:BB:CC:DD:EE:FF',
+          name: 'Test',
+          avgBpm: 60,
+          maxBpm: 60,
+        );
 
-      expect(id, 7);
-    });
+        expect(id, 7);
+      },
+    );
 
     test('saveWorkoutCheckpoint accepts existingId', () async {
       when(
@@ -202,8 +206,9 @@ void main() {
     });
 
     test('deleteWorkoutSession accepts sessionId', () async {
-      when(() => repository.deleteWorkoutSession(any()))
-          .thenAnswer((_) async {});
+      when(
+        () => repository.deleteWorkoutSession(any()),
+      ).thenAnswer((_) async {});
 
       await repository.deleteWorkoutSession(42);
 

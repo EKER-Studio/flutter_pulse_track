@@ -187,11 +187,13 @@ void main() {
           avgBpm: 60,
           maxBpm: 60,
         ),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('Checkpoint failed'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Checkpoint failed'),
+          ),
+        ),
       );
     });
   });

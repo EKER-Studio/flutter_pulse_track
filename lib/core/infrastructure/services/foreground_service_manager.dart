@@ -51,7 +51,7 @@ class ForegroundServiceManager {
   ///
   /// Defaults to [FlutterForegroundTaskPlatform] when none is provided.
   ForegroundServiceManager({ForegroundTaskPlatform? platform})
-      : _platform = platform ?? FlutterForegroundTaskPlatform();
+    : _platform = platform ?? FlutterForegroundTaskPlatform();
 
   /// Initializes the foreground task configuration. Must be called before starting.
   Future<void> init() async {

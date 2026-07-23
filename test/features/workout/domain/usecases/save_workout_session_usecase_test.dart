@@ -152,11 +152,13 @@ void main() {
 
       expect(
         () => _callUseCase(useCase, samples: [60]),
-        throwsA(isA<Exception>().having(
-          (e) => e.toString(),
-          'message',
-          contains('DB write failed'),
-        )),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('DB write failed'),
+          ),
+        ),
       );
     });
 

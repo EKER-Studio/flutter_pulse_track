@@ -47,7 +47,9 @@ void main() {
       });
 
       test('every displayName is unique', () {
-        final names = BodySensorLocation.values.map((e) => e.displayName).toSet();
+        final names = BodySensorLocation.values
+            .map((e) => e.displayName)
+            .toSet();
         expect(names.length, BodySensorLocation.values.length);
       });
     });

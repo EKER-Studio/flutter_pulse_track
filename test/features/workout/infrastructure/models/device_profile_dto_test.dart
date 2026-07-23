@@ -35,15 +35,17 @@ void main() {
       expect(dto.lastSensorLocationIndex, 2);
     });
 
-    test('defaults lastSensorLocationIndex to 0 (BodySensorLocation.other)',
-        () {
-      // Accessing a late field before assignment should throw, but the
-      // Isar collection contract always sets it — this test documents the
-      // expected default for freshly constructed instances.
-      final dto = DeviceProfileDto()..lastSensorLocationIndex = 0;
-      final location = BodySensorLocation.values[dto.lastSensorLocationIndex];
-      expect(location, BodySensorLocation.other);
-    });
+    test(
+      'defaults lastSensorLocationIndex to 0 (BodySensorLocation.other)',
+      () {
+        // Accessing a late field before assignment should throw, but the
+        // Isar collection contract always sets it — this test documents the
+        // expected default for freshly constructed instances.
+        final dto = DeviceProfileDto()..lastSensorLocationIndex = 0;
+        final location = BodySensorLocation.values[dto.lastSensorLocationIndex];
+        expect(location, BodySensorLocation.other);
+      },
+    );
 
     test('maps index to correct BodySensorLocation', () {
       final dto = DeviceProfileDto()..lastSensorLocationIndex = 1;
