@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 
 /// Utility for exporting heart rate workout sessions to CSV and sharing them
@@ -38,7 +38,7 @@ class HeartRateExportHelper {
     final messenger = ScaffoldMessenger.maybeOf(context);
 
     try {
-      final csv = _generateCsv(session);
+      final csv = generateCsv(session);
       final tempDir = await getTemporaryDirectory();
       final fileName =
           'heart_rate_workout_${session.startTime.millisecondsSinceEpoch}.csv';
@@ -78,7 +78,8 @@ class HeartRateExportHelper {
   }
 
   /// Generates an RFC 4180 compliant CSV string from [session].
-  static String _generateCsv(WorkoutSession session) {
+  @visibleForTesting
+  static String generateCsv(WorkoutSession session) {
     const header = 'Timestamp,BPM,Elapsed_Seconds';
     final lines = <String>[header];
 
@@ -104,7 +105,7 @@ class HeartRateExportHelper {
           : Duration.zero;
 
       final timestamp = session.startTime.add(elapsed);
-      final formattedTimestamp = _formatTimestamp(timestamp);
+      final formattedTimestamp = formatTimestamp(timestamp);
       final bpm = session.bpmSamples[i];
       final elapsedSeconds = elapsed.inSeconds;
 
@@ -116,7 +117,8 @@ class HeartRateExportHelper {
   }
 
   /// Formats [date] as `yyyy-MM-dd HH:mm:ss`.
-  static String _formatTimestamp(DateTime date) {
+  @visibleForTesting
+  static String formatTimestamp(DateTime date) {
     final year = date.year.toString();
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');
