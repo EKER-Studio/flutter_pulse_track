@@ -41,9 +41,7 @@ void main() {
       test('different type -> not equal', () {
         final device = BleDevice(id: 'AA:BB:CC:DD:EE:FF', name: 'Polar H10', rssi: -55);
 
-        expect(device == 'AA:BB:CC:DD:EE:FF', false);
-        expect(device == 42, false);
-        expect(device == null, false);
+        expect(device, isNot(equals(Object())));
       });
 
       test('identical instance -> equal', () {

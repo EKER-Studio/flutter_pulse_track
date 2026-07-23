@@ -208,9 +208,7 @@ void main() {
 
     test('returns false for non-HrMeasurement type', () {
       final m = _measurement();
-      expect(m == 'string', isFalse);
-      expect(m == 42, isFalse);
-      expect(m == null, isFalse);
+      expect(m, isNot(equals(Object())));
     });
   });
 

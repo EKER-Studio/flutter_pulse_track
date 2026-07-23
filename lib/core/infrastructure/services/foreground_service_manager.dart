@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:pulse_track/core/infrastructure/services/foreground_task_platform.dart';
+import 'package:pulse_track/core/infrastructure/services/flutter_foreground_task_platform.dart';
 import 'package:pulse_track/core/utils/app_logger.dart';
 
 part 'foreground_service_manager.g.dart';
@@ -42,32 +44,19 @@ class MyTaskHandler extends TaskHandler {
 /// Service wrapper encapsulating the configuration and lifecycle of the Android
 /// Foreground Service to keep the app process alive in the background.
 class ForegroundServiceManager {
+  final ForegroundTaskPlatform _platform;
   bool _isInitialized = false;
+
+  /// Creates an instance backed by the given [_platform].
+  ///
+  /// Defaults to [FlutterForegroundTaskPlatform] when none is provided.
+  ForegroundServiceManager({ForegroundTaskPlatform? platform})
+      : _platform = platform ?? FlutterForegroundTaskPlatform();
 
   /// Initializes the foreground task configuration. Must be called before starting.
   Future<void> init() async {
     if (_isInitialized) return;
-
-    FlutterForegroundTask.init(
-      androidNotificationOptions: AndroidNotificationOptions(
-        channelId: 'workout_channel',
-        channelName: 'Workout Session',
-        channelDescription:
-            'Keeps the heart rate monitor alive in the background',
-        channelImportance: NotificationChannelImportance.LOW,
-        priority: NotificationPriority.LOW,
-      ),
-      iosNotificationOptions: const IOSNotificationOptions(
-        showNotification: false,
-        playSound: false,
-      ),
-      foregroundTaskOptions: ForegroundTaskOptions(
-        eventAction: ForegroundTaskEventAction.nothing(),
-        autoRunOnBoot: false,
-        allowWakeLock: true,
-        allowWifiLock: false,
-      ),
-    );
+    await _platform.init();
     _isInitialized = true;
   }
 
@@ -75,22 +64,17 @@ class ForegroundServiceManager {
   Future<void> startService() async {
     await init();
 
-    if (await FlutterForegroundTask.isRunningService) {
+    if (await _platform.isRunningService()) {
       return;
     }
 
-    await FlutterForegroundTask.startService(
-      notificationTitle: 'Heart Rate Monitor',
-      notificationText: 'Recording workout...',
-      notificationIcon: const NotificationIcon(metaDataName: 'ic_launcher'),
-      callback: startCallback,
-    );
+    await _platform.startService(callback: startCallback);
   }
 
   /// Stops the foreground service and removes the notification.
   Future<void> stopService() async {
-    if (await FlutterForegroundTask.isRunningService) {
-      await FlutterForegroundTask.stopService();
+    if (await _platform.isRunningService()) {
+      await _platform.stopService();
     }
   }
 }
