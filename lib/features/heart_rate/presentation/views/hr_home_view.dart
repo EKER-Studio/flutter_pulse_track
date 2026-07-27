@@ -111,12 +111,18 @@ class HrHomeView extends ConsumerWidget {
                                     label: 'Connect to $profileName',
                                     tooltip: 'Connect to $profileName',
                                     child: Container(
-                                      constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 48,
+                                        minHeight: 48,
+                                      ),
                                       child: ActionChip(
-                                        backgroundColor: AppColors.badgeBackground,
+                                        backgroundColor:
+                                            AppColors.badgeBackground,
                                         side: BorderSide.none,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         avatar: const ExcludeSemantics(
                                           child: Icon(

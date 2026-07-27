@@ -75,6 +75,7 @@ class WorkoutHistoryView extends ConsumerWidget {
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 16.0),
                     color: AppColors.errorRed,
+                    constraints: const BoxConstraints(minHeight: 48),
                     child: const Icon(
                       Icons.delete,
                       color: AppColors.textPrimary,
