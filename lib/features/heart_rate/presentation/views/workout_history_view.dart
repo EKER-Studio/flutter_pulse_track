@@ -68,14 +68,18 @@ class WorkoutHistoryView extends ConsumerWidget {
               return Dismissible(
                 key: Key(session.id.toString()),
                 direction: DismissDirection.endToStart,
-                background: Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 16.0),
-                  color: AppColors.errorRed,
-                  child: const Icon(
-                    Icons.delete,
-                    color: AppColors.textPrimary,
-                    size: 24,
+                background: Semantics(
+                  button: true,
+                  label: 'Delete session',
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 16.0),
+                    color: AppColors.errorRed,
+                    child: const Icon(
+                      Icons.delete,
+                      color: AppColors.textPrimary,
+                      size: 24,
+                    ),
                   ),
                 ),
                 confirmDismiss: (direction) async {
@@ -181,6 +185,7 @@ class WorkoutHistoryView extends ConsumerWidget {
           child: Container(
             width: double.infinity,
             margin: const EdgeInsets.symmetric(horizontal: 16.0),
+            constraints: const BoxConstraints(minHeight: 48),
             decoration: BoxDecoration(
               color: AppColors.surfaceBackground,
               borderRadius: BorderRadius.circular(12),

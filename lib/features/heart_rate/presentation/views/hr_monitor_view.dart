@@ -416,6 +416,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.accentBlue,
                       padding: const EdgeInsets.symmetric(vertical: 16),
+                      minimumSize: const Size(180, 48),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

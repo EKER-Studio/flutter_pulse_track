@@ -110,40 +110,42 @@ class HrHomeView extends ConsumerWidget {
                                     button: true,
                                     label: 'Connect to $profileName',
                                     tooltip: 'Connect to $profileName',
-                                    child: ActionChip(
-                                      backgroundColor:
-                                          AppColors.badgeBackground,
-                                      side: BorderSide.none,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      avatar: const ExcludeSemantics(
-                                        child: Icon(
-                                          Icons.bluetooth_connected,
-                                          color: AppColors.accentGreen,
-                                          size: 14,
+                                    child: Container(
+                                      constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+                                      child: ActionChip(
+                                        backgroundColor: AppColors.badgeBackground,
+                                        side: BorderSide.none,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
-                                      ),
-                                      label: Text(
-                                        profileName,
-                                        style: const TextStyle(
-                                          color: AppColors.textPrimary,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (_) => HrMonitorView(
-                                              deviceId: profile.macAddress,
-                                              deviceName: profile.name.isEmpty
-                                                  ? l10n.savedSensorFallbackName
-                                                  : profile.name,
-                                            ),
+                                        avatar: const ExcludeSemantics(
+                                          child: Icon(
+                                            Icons.bluetooth_connected,
+                                            color: AppColors.accentGreen,
+                                            size: 14,
                                           ),
-                                        );
-                                      },
+                                        ),
+                                        label: Text(
+                                          profileName,
+                                          style: const TextStyle(
+                                            color: AppColors.textPrimary,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (_) => HrMonitorView(
+                                                deviceId: profile.macAddress,
+                                                deviceName: profile.name.isEmpty
+                                                    ? l10n.savedSensorFallbackName
+                                                    : profile.name,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                                 );
@@ -249,25 +251,25 @@ class HrHomeView extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.borderSubtle, width: 1),
       ),
-      child: Semantics(
-        button: true,
-        label: '$title, $description',
-        child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: onTap ?? () {},
+      constraints: const BoxConstraints(minHeight: 48),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap ?? () {},
+        child: Semantics(
+          button: true,
+          label: title,
+          hint: description,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                ExcludeSemantics(
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.badgeBackground,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(icon, color: AppColors.accentBlue, size: 24),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppColors.badgeBackground,
+                    borderRadius: BorderRadius.circular(10),
                   ),
+                  child: Icon(icon, color: AppColors.accentBlue, size: 24),
                 ),
                 const SizedBox(width: 16),
                 Expanded(

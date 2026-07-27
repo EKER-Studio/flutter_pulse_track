@@ -123,16 +123,17 @@ class HrScannerView extends ConsumerWidget {
             label: AppLocalizations.of(context).scan_button_semantic_label,
             button: true,
             child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accentBlue,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.accentBlue,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  minimumSize: const Size(180, 48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
               icon: const ExcludeSemantics(
                 child: Icon(Icons.search, color: AppColors.textPrimary),
               ),
@@ -242,16 +243,17 @@ class HrScannerView extends ConsumerWidget {
               label: AppLocalizations.of(context).retry_scan_semantic_label,
               button: true,
               child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accentOrange,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.accentOrange,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 16,
+                      ),
+                      minimumSize: const Size(180, 48),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                 icon: const ExcludeSemantics(
                   child: Icon(Icons.refresh, color: AppColors.textPrimary),
                 ),
@@ -379,7 +381,7 @@ class HrScannerView extends ConsumerWidget {
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
-                    vertical: 8,
+                    vertical: 12,
                   ),
                   leading: ExcludeSemantics(
                     child: Container(
