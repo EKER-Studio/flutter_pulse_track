@@ -16,7 +16,6 @@ class WorkoutDetailsView extends StatelessWidget {
   /// Creates a [WorkoutDetailsView] for the given [session].
   const WorkoutDetailsView({required this.session, super.key});
 
-  static const Color _kBackgroundColor = AppColors.darkerBackground;
   static const Color _kCardBackgroundColor = AppColors.surfaceBackground;
   static const Color _kBadgeBackgroundColor = AppColors.badgeBackground;
   static const Color _kAvgBpmIconColor = AppColors.statIconAvg;
@@ -42,21 +41,19 @@ class WorkoutDetailsView extends StatelessWidget {
     final duration = _formatDuration(session.startTime, session.endTime);
 
     return Scaffold(
-      backgroundColor: _kBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: _kBackgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
-        foregroundColor: AppColors.textPrimary,
+        title: Text(
+          'Workout Details',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text(
-          'Workout Details',
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.w600,
-          ),
         ),
         actions: [
           IconButton(

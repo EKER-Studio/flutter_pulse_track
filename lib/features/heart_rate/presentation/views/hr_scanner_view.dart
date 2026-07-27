@@ -7,6 +7,7 @@ import 'package:pulse_track/features/heart_rate/domain/models/ble_scanner_state.
 import 'package:pulse_track/features/heart_rate/presentation/controllers/ble_scanner_notifier.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
+
 /// Main entry point for discovering BLE heart rate sensors.
 ///
 /// Implements an exhaustive state machine UI reacting to [BleScannerState]
@@ -22,11 +23,13 @@ class HrScannerView extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.surfaceBackground,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         title: Text(
           AppLocalizations.of(context).scanner_title,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         actions: [
           // Filter toggle button only relevant when scanning or empty
@@ -79,21 +82,26 @@ class HrScannerView extends ConsumerWidget {
             Icons.bluetooth_searching,
             size: 80,
             color: AppColors.textSecondary,
-            semanticLabel: AppLocalizations.of(context).bluetooth_searching_label,
+            semanticLabel: AppLocalizations.of(
+              context,
+            ).bluetooth_searching_label,
           ),
           const SizedBox(height: 24),
-            Text(
-              AppLocalizations.of(context).ready_to_scan,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+          Text(
+            AppLocalizations.of(context).ready_to_scan,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
+          ),
           const SizedBox(height: 8),
           Text(
             AppLocalizations.of(context).start_scan_description,
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 16),
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 16,
+            ),
           ),
           const SizedBox(height: 32),
           ElevatedButton.icon(
@@ -134,7 +142,9 @@ class HrScannerView extends ConsumerWidget {
               Icons.bluetooth_disabled,
               size: 80,
               color: AppColors.accentRed,
-              semanticLabel: AppLocalizations.of(context).bluetooth_disabled_label,
+              semanticLabel: AppLocalizations.of(
+                context,
+              ).bluetooth_disabled_label,
             ),
             const SizedBox(height: 24),
             Text(
@@ -227,7 +237,11 @@ class HrScannerView extends ConsumerWidget {
   }
 
   /// Builds the failure state UI displayed when the scan could not be started.
-  Widget _buildFailureState(BuildContext context, String message, BleScannerNotifier notifier) {
+  Widget _buildFailureState(
+    BuildContext context,
+    String message,
+    BleScannerNotifier notifier,
+  ) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -326,12 +340,16 @@ class HrScannerView extends ConsumerWidget {
                     Icons.bluetooth,
                     color: AppColors.textPrimary,
                     size: 24,
-                    semanticLabel: AppLocalizations.of(context).bluetooth_device_label,
+                    semanticLabel: AppLocalizations.of(
+                      context,
+                    ).bluetooth_device_label,
                   ),
                 ),
                 title: Flexible(
                   child: Text(
-                    device.name.isEmpty ? AppLocalizations.of(context).unknown_device : device.name,
+                    device.name.isEmpty
+                        ? AppLocalizations.of(context).unknown_device
+                        : device.name,
                     style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
