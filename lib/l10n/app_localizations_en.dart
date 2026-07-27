@@ -86,4 +86,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unknown_device => 'Unknown Device';
+
+  @override
+  String get scan_button_semantic_label =>
+      'Start scanning for heart rate sensors';
+
+  @override
+  String get retry_scan_semantic_label => 'Retry scanning for sensors';
 }

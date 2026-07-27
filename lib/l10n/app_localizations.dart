@@ -243,6 +243,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unknown Device'**
   String get unknown_device;
+
+  /// Semantic label for the Scan button.
+  ///
+  /// In en, this message translates to:
+  /// **'Start scanning for heart rate sensors'**
+  String get scan_button_semantic_label;
+
+  /// Semantic label for the Retry Scan button in empty state.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry scanning for sensors'**
+  String get retry_scan_semantic_label;
 }
 
 class _AppLocalizationsDelegate

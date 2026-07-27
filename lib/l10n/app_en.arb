@@ -63,5 +63,9 @@
    "searching_sensors": "Searching for active sensors...",
    "@searching_sensors": {"description": "Message displayed while the scanner is actively searching."},
    "unknown_device": "Unknown Device",
-   "@unknown_device": {"description": "Placeholder name for a device that reports an empty name."}
+   "@unknown_device": {"description": "Placeholder name for a device that reports an empty name."},
+   "scan_button_semantic_label": "Start scanning for heart rate sensors",
+   "@scan_button_semantic_label": {"description": "Semantic label for the Scan button."},
+   "retry_scan_semantic_label": "Retry scanning for sensors",
+   "@retry_scan_semantic_label": {"description": "Semantic label for the Retry Scan button in empty state."}
 }

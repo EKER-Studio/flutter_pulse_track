@@ -108,24 +108,31 @@ class HrScannerView extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 32),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accentBlue,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+          Semantics(
+            label: AppLocalizations.of(context).scan_button_semantic_label,
+            button: true,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accentBlue,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-            ),
-            icon: const Icon(Icons.search, color: AppColors.textPrimary),
-            label: Text(
-              AppLocalizations.of(context).scan_button_label,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+              icon: const Icon(Icons.search, color: AppColors.textPrimary),
+              label: Text(
+                AppLocalizations.of(context).scan_button_label,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              onPressed: () => notifier.startScan(),
             ),
-            onPressed: () => notifier.startScan(),
           ),
         ],
       ),
@@ -212,27 +219,31 @@ class HrScannerView extends ConsumerWidget {
               textAlign: TextAlign.left,
             ),
             const SizedBox(height: 32),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accentOrange,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
+            Semantics(
+              label: AppLocalizations.of(context).retry_scan_semantic_label,
+              button: true,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.accentOrange,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                icon: const Icon(Icons.refresh, color: AppColors.textPrimary),
+                label: Text(
+                  AppLocalizations.of(context).retry_scan_label,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                onPressed: () => notifier.startScan(),
               ),
-              icon: const Icon(Icons.refresh, color: AppColors.textPrimary),
-              label: Text(
-                AppLocalizations.of(context).retry_scan_label,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onPressed: () => notifier.startScan(),
             ),
           ],
         ),
@@ -329,87 +340,92 @@ class HrScannerView extends ConsumerWidget {
                 const Divider(color: AppColors.borderSubtle, height: 1),
             itemBuilder: (context, index) {
               final device = devices[index];
-              return ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
-                ),
-                leading: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppColors.badgeBackground,
-                    borderRadius: BorderRadius.circular(10),
+              return Semantics(
+                label:
+                    '${device.name.isEmpty ? AppLocalizations.of(context).unknown_device : device.name}, RSSI ${device.rssi} dBm',
+                button: true,
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
                   ),
-                  child: Icon(
-                    Icons.bluetooth,
-                    color: AppColors.textPrimary,
-                    size: 24,
-                    semanticLabel: AppLocalizations.of(
-                      context,
-                    ).bluetooth_device_label,
-                  ),
-                ),
-                title: Flexible(
-                  child: Text(
-                    device.name.isEmpty
-                        ? AppLocalizations.of(context).unknown_device
-                        : device.name,
-                    style: const TextStyle(
+                  leading: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.badgeBackground,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.bluetooth,
                       color: AppColors.textPrimary,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                      size: 24,
+                      semanticLabel: AppLocalizations.of(
+                        context,
+                      ).bluetooth_device_label,
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                subtitle: Flexible(
-                  child: Text(
-                    device.id,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                      fontFamily: 'monospace',
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                trailing: SizedBox(
-                  width: 56,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        _getRssiIcon(device.rssi),
-                        color: _getRssiColor(device.rssi),
-                        size: 22,
+                  title: Flexible(
+                    child: Text(
+                      device.name.isEmpty
+                          ? AppLocalizations.of(context).unknown_device
+                          : device.name,
+                      style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '${device.rssi} dBm',
-                        style: TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  subtitle: Flexible(
+                    child: Text(
+                      device.id,
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                        fontFamily: 'monospace',
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  trailing: SizedBox(
+                    width: 56,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          _getRssiIcon(device.rssi),
                           color: _getRssiColor(device.rssi),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'monospace',
+                          size: 22,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${device.rssi} dBm',
+                          style: TextStyle(
+                            color: _getRssiColor(device.rssi),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'monospace',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    notifier.stopScan();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => HrMonitorView(
+                          deviceId: device.id,
+                          deviceName: device.name.isEmpty
+                              ? 'Unknown Device'
+                              : device.name,
                         ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
-                onTap: () {
-                  notifier.stopScan();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => HrMonitorView(
-                        deviceId: device.id,
-                        deviceName: device.name.isEmpty
-                            ? 'Unknown Device'
-                            : device.name,
-                      ),
-                    ),
-                  );
-                },
               );
             },
           );
