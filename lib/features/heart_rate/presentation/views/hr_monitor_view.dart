@@ -67,25 +67,33 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           if (state is ConnectedMonitorState ||
               state is ConnectingMonitorState ||
               state is DiscoveringServicesMonitorState)
-            TextButton.icon(
-              icon: const Icon(
-                Icons.power_settings_new,
-                color: AppColors.accentRed,
-                size: 18,
-              ),
-              label: const Text(
-                'Disconnect',
-                style: TextStyle(
-                  color: AppColors.accentRed,
-                  fontWeight: FontWeight.bold,
+            Semantics(
+              button: true,
+              label: 'Disconnect from ${widget.deviceName}',
+              tooltip: 'Disconnect from ${widget.deviceName}',
+              child: TextButton.icon(
+                style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+                icon: const ExcludeSemantics(
+                  child: Icon(
+                    Icons.power_settings_new,
+                    color: AppColors.accentRed,
+                    size: 18,
+                  ),
                 ),
+                label: const Text(
+                  'Disconnect',
+                  style: TextStyle(
+                    color: AppColors.accentRed,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () async {
+                  await notifier.disconnect();
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                },
               ),
-              onPressed: () async {
-                await notifier.disconnect();
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
-              },
             ),
         ],
       ),
@@ -115,10 +123,12 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.bluetooth_disabled,
-            size: 80,
-            color: AppColors.textSecondary,
+          const ExcludeSemantics(
+            child: Icon(
+              Icons.bluetooth_disabled,
+              size: 80,
+              color: AppColors.textSecondary,
+            ),
           ),
           const SizedBox(height: 24),
           const Text(
@@ -130,14 +140,19 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
             ),
           ),
           const SizedBox(height: 32),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accentBlue,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text(
-              'Return to Scanner',
-              style: TextStyle(color: AppColors.textPrimary),
+          Semantics(
+            button: true,
+            label: 'Return to device scanner',
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accentBlue,
+                minimumSize: const Size(180, 48),
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                'Return to Scanner',
+                style: TextStyle(color: AppColors.textPrimary),
+              ),
             ),
           ),
         ],
@@ -150,24 +165,28 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const CircularProgressIndicator(
-              color: AppColors.accentBlue,
-              strokeWidth: 3,
-            ),
-            const SizedBox(height: 32),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 16,
-                height: 1.5,
+        child: Semantics(
+          liveRegion: true,
+          label: message,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(
+                color: AppColors.accentBlue,
+                strokeWidth: 3,
               ),
-            ),
-          ],
+              const SizedBox(height: 32),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 16,
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -191,123 +210,149 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              const Icon(Icons.favorite, color: AppColors.accentRed, size: 44),
-              const SizedBox(width: 12),
-              Text(
-                '${metric.bpm}',
-                style: const TextStyle(
-                  fontSize: 84,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+          Semantics(
+            liveRegion: true,
+            label: 'Heart rate: ${metric.bpm} beats per minute',
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                const ExcludeSemantics(
+                  child: Icon(
+                    Icons.favorite,
+                    color: AppColors.accentRed,
+                    size: 44,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              const Text(
-                'BPM',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.w500,
+                const SizedBox(width: 12),
+                Text(
+                  '${metric.bpm}',
+                  style: const TextStyle(
+                    fontSize: 84,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+                const Text(
+                  'BPM',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
           ),
           if (metric.rrIntervals.isNotEmpty) ...[
             const SizedBox(height: 12),
-            Text(
-              'R-R: ${metric.rrIntervals.map((e) => '${(e * 1000).toStringAsFixed(0)}ms').join(', ')}',
-              style: const TextStyle(
-                color: AppColors.accentGreen,
-                fontSize: 14,
-                fontFamily: 'monospace',
+            Semantics(
+              label:
+                  'R-R intervals: ${metric.rrIntervals.map((e) => '${(e * 1000).toStringAsFixed(0)} milliseconds').join(', ')}',
+              child: Text(
+                'R-R: ${metric.rrIntervals.map((e) => '${(e * 1000).toStringAsFixed(0)}ms').join(', ')}',
+                style: const TextStyle(
+                  color: AppColors.accentGreen,
+                  fontSize: 14,
+                  fontFamily: 'monospace',
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
           ],
           const SizedBox(height: 48),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceBackground,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.accessibility_new,
-                  color: AppColors.accentBlue,
-                ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Body sensor location',
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 12,
-                      ),
+          Semantics(
+            label: 'Body sensor location: ${metric.sensorLocation.displayName}',
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceBackground,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  const ExcludeSemantics(
+                    child: Icon(
+                      Icons.accessibility_new,
+                      color: AppColors.accentBlue,
                     ),
-                    Text(
-                      metric.sensorLocation.displayName,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Body sensor location',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Text(
+                        metric.sensorLocation.displayName,
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceBackground,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  metric.batteryLevel != null && metric.batteryLevel! > 20
-                      ? Icons.battery_full
-                      : Icons.battery_alert,
-                  color:
+          Semantics(
+            label:
+                'Sensor battery level: ${metric.batteryLevel != null ? '${metric.batteryLevel} percent' : 'Not available'}',
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceBackground,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  ExcludeSemantics(
+                    child: Icon(
                       metric.batteryLevel != null && metric.batteryLevel! > 20
-                      ? AppColors.accentGreen
-                      : AppColors.accentRed,
-                ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Sensor battery',
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 12,
-                      ),
+                          ? Icons.battery_full
+                          : Icons.battery_alert,
+                      color:
+                          metric.batteryLevel != null &&
+                              metric.batteryLevel! > 20
+                          ? AppColors.accentGreen
+                          : AppColors.accentRed,
                     ),
-                    Text(
-                      metric.batteryLevel != null
-                          ? '${metric.batteryLevel}%'
-                          : 'N/A',
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Sensor battery',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Text(
+                        metric.batteryLevel != null
+                            ? '${metric.batteryLevel}%'
+                            : 'N/A',
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -336,10 +381,12 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.error_outline,
-                size: 48,
-                color: AppColors.accentRed,
+              const ExcludeSemantics(
+                child: Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: AppColors.accentRed,
+                ),
               ),
               const SizedBox(height: 16),
               const Text(
@@ -362,37 +409,48 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
               const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accentBlue,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                child: Semantics(
+                  button: true,
+                  label: 'Retry connection to device',
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.accentBlue,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                  ),
-                  icon: const Icon(Icons.refresh, color: AppColors.textPrimary),
-                  label: const Text(
-                    'Retry Connection',
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.bold,
+                    icon: const ExcludeSemantics(
+                      child: Icon(Icons.refresh, color: AppColors.textPrimary),
                     ),
+                    label: const Text(
+                      'Retry Connection',
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () =>
+                        notifier.retry(widget.deviceId, widget.deviceName),
                   ),
-                  onPressed: () =>
-                      notifier.retry(widget.deviceId, widget.deviceName),
                 ),
               ),
               const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    'Go Back',
-                    style: TextStyle(color: AppColors.textSecondary),
+                child: Semantics(
+                  button: true,
+                  label: 'Go back to previous screen',
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      minimumSize: const Size(48, 48),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text(
+                      'Go Back',
+                      style: TextStyle(color: AppColors.textSecondary),
+                    ),
                   ),
                 ),
               ),

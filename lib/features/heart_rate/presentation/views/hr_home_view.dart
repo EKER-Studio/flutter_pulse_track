@@ -90,7 +90,7 @@ class HrHomeView extends ConsumerWidget {
                           ),
                           const SizedBox(height: 12),
                           SizedBox(
-                            height: 44,
+                            height: 48,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.symmetric(
@@ -99,43 +99,52 @@ class HrHomeView extends ConsumerWidget {
                               itemCount: savedProfiles.length,
                               itemBuilder: (context, index) {
                                 final profile = savedProfiles[index];
+                                final profileName = profile.name.isEmpty
+                                    ? l10n.unknownSensorLabel
+                                    : profile.name;
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 4.0,
                                   ),
-                                  child: ActionChip(
-                                    backgroundColor: AppColors.badgeBackground,
-                                    side: BorderSide.none,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    avatar: const Icon(
-                                      Icons.bluetooth_connected,
-                                      color: AppColors.accentGreen,
-                                      size: 14,
-                                    ),
-                                    label: Text(
-                                      profile.name.isEmpty
-                                          ? l10n.unknownSensorLabel
-                                          : profile.name,
-                                      style: const TextStyle(
-                                        color: AppColors.textPrimary,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13,
+                                  child: Semantics(
+                                    button: true,
+                                    label: 'Connect to $profileName',
+                                    tooltip: 'Connect to $profileName',
+                                    child: ActionChip(
+                                      backgroundColor:
+                                          AppColors.badgeBackground,
+                                      side: BorderSide.none,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (_) => HrMonitorView(
-                                            deviceId: profile.macAddress,
-                                            deviceName: profile.name.isEmpty
-                                                ? l10n.savedSensorFallbackName
-                                                : profile.name,
-                                          ),
+                                      avatar: const ExcludeSemantics(
+                                        child: Icon(
+                                          Icons.bluetooth_connected,
+                                          color: AppColors.accentGreen,
+                                          size: 14,
                                         ),
-                                      );
-                                    },
+                                      ),
+                                      label: Text(
+                                        profileName,
+                                        style: const TextStyle(
+                                          color: AppColors.textPrimary,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) => HrMonitorView(
+                                              deviceId: profile.macAddress,
+                                              deviceName: profile.name.isEmpty
+                                                  ? l10n.savedSensorFallbackName
+                                                  : profile.name,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 );
                               },
@@ -150,7 +159,7 @@ class HrHomeView extends ConsumerWidget {
               // --- SCAN FOR NEW SENSOR CTA ---
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 16.0,
                     vertical: 24.0,
                   ),
@@ -159,33 +168,39 @@ class HrHomeView extends ConsumerWidget {
                     height: 52,
                     child: Consumer(
                       builder: (context, ref, _) {
-                        return ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.accentBlue,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          icon: const Icon(
-                            Icons.search,
-                            color: AppColors.textPrimary,
-                            size: 22,
-                          ),
-                          label: Text(
-                            l10n.scanForNewSensorButton,
-                            style: const TextStyle(
-                              color: AppColors.textPrimary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const HrScannerView(),
+                        return Semantics(
+                          button: true,
+                          label: l10n.scanForNewSensorButton,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.accentBlue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                            );
-                          },
+                            ),
+                            icon: const ExcludeSemantics(
+                              child: Icon(
+                                Icons.search,
+                                color: AppColors.textPrimary,
+                                size: 22,
+                              ),
+                            ),
+                            label: Text(
+                              l10n.scanForNewSensorButton,
+                              style: const TextStyle(
+                                color: AppColors.textPrimary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const HrScannerView(),
+                                ),
+                              );
+                            },
+                          ),
                         );
                       },
                     ),
@@ -234,51 +249,59 @@ class HrHomeView extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.borderSubtle, width: 1),
       ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap ?? () {},
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: AppColors.badgeBackground,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: AppColors.accentBlue, size: 24),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                      ),
+      child: Semantics(
+        button: true,
+        label: '$title, $description',
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onTap ?? () {},
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                ExcludeSemantics(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.badgeBackground,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      description,
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
+                    child: Icon(icon, color: AppColors.accentBlue, size: 24),
+                  ),
                 ),
-              ),
-              const Icon(
-                Icons.chevron_right,
-                color: AppColors.textSecondary,
-                size: 20,
-              ),
-            ],
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        description,
+                        style: const TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const ExcludeSemantics(
+                  child: Icon(
+                    Icons.chevron_right,
+                    color: AppColors.textSecondary,
+                    size: 20,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

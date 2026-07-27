@@ -42,6 +42,7 @@ class HrScannerView extends ConsumerWidget {
               /** Semantic label for the filter toggle button, used by screen readers. */
               label: AppLocalizations.of(context).toggle_filter_tooltip,
               button: true,
+              toggled: _isFilterActive(notifier),
               child: IconButton(
                 constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
                 icon: Icon(
@@ -132,7 +133,9 @@ class HrScannerView extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              icon: const Icon(Icons.search, color: AppColors.textPrimary),
+              icon: const ExcludeSemantics(
+                child: Icon(Icons.search, color: AppColors.textPrimary),
+              ),
               label: Text(
                 AppLocalizations.of(context).scan_button_label,
                 style: const TextStyle(
@@ -249,7 +252,9 @@ class HrScannerView extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                icon: const Icon(Icons.refresh, color: AppColors.textPrimary),
+                icon: const ExcludeSemantics(
+                  child: Icon(Icons.refresh, color: AppColors.textPrimary),
+                ),
                 label: Text(
                   AppLocalizations.of(context).retry_scan_label,
                   style: const TextStyle(
@@ -312,17 +317,22 @@ class HrScannerView extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accentRed,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              Semantics(
+                button: true,
+                label: AppLocalizations.of(context).scan_button_semantic_label,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accentRed,
+                    minimumSize: const Size(120, 48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                ),
-                onPressed: () => notifier.startScan(),
-                child: Text(
-                  AppLocalizations.of(context).scan_button_label,
-                  style: const TextStyle(color: AppColors.textPrimary),
+                  onPressed: () => notifier.startScan(),
+                  child: Text(
+                    AppLocalizations.of(context).scan_button_label,
+                    style: const TextStyle(color: AppColors.textPrimary),
+                  ),
                 ),
               ),
             ],
@@ -356,39 +366,38 @@ class HrScannerView extends ConsumerWidget {
                 const Divider(color: AppColors.borderSubtle, height: 1),
             itemBuilder: (context, index) {
               final device = devices[index];
+              final deviceName = device.name.isEmpty
+                  ? AppLocalizations.of(context).unknown_device
+                  : device.name;
               return
               /// Semantics wrapper for each device list tile, combining device name and RSSI for accessibility.
               Semantics(
                 /** Semantic label for each device list tile, combining device name and RSSI for accessibility. */
                 label:
-                    '${device.name.isEmpty ? AppLocalizations.of(context).unknown_device : device.name}, RSSI ${device.rssi} dBm',
+                    '$deviceName, MAC address ${device.id}, signal strength ${device.rssi} dBm',
                 button: true,
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 8,
                   ),
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.badgeBackground,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      Icons.bluetooth,
-                      color: AppColors.textPrimary,
-                      size: 24,
-                      /** Semantic label for the Bluetooth device icon, indicating it's a device. */
-                      semanticLabel: AppLocalizations.of(
-                        context,
-                      ).bluetooth_device_label,
+                  leading: ExcludeSemantics(
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.badgeBackground,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.bluetooth,
+                        color: AppColors.textPrimary,
+                        size: 24,
+                      ),
                     ),
                   ),
                   title: Flexible(
                     child: Text(
-                      device.name.isEmpty
-                          ? AppLocalizations.of(context).unknown_device
-                          : device.name,
+                      deviceName,
                       style: const TextStyle(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w600,
@@ -408,28 +417,30 @@ class HrScannerView extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  trailing: SizedBox(
-                    width: 56,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          _getRssiIcon(device.rssi),
-                          color: _getRssiColor(device.rssi),
-                          size: 22,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${device.rssi} dBm',
-                          style: TextStyle(
+                  trailing: ExcludeSemantics(
+                    child: SizedBox(
+                      width: 56,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            _getRssiIcon(device.rssi),
                             color: _getRssiColor(device.rssi),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'monospace',
+                            size: 22,
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 2),
+                          Text(
+                            '${device.rssi} dBm',
+                            style: TextStyle(
+                              color: _getRssiColor(device.rssi),
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'monospace',
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   onTap: () {

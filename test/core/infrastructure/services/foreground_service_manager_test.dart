@@ -123,32 +123,26 @@ void main() {
 
     test('onRepeatEvent executes without error', () {
       final handler = MyTaskHandler();
-      expect(
-        () => handler.onRepeatEvent(DateTime.now()),
-        returnsNormally,
-      );
+      expect(() => handler.onRepeatEvent(DateTime.now()), returnsNormally);
     });
 
     test('onDestroy executes without error', () async {
       final handler = MyTaskHandler();
-      await expectLater(
-        handler.onDestroy(DateTime.now(), false),
-        completes,
-      );
-      await expectLater(
-        handler.onDestroy(DateTime.now(), true),
-        completes,
-      );
+      await expectLater(handler.onDestroy(DateTime.now(), false), completes);
+      await expectLater(handler.onDestroy(DateTime.now(), true), completes);
     });
   });
 
   group('foregroundServiceManagerProvider', () {
-    test('delivers ForegroundServiceManager instance via ProviderContainer', () {
-      final container = ProviderContainer();
-      addTearDown(container.dispose);
+    test(
+      'delivers ForegroundServiceManager instance via ProviderContainer',
+      () {
+        final container = ProviderContainer();
+        addTearDown(container.dispose);
 
-      final manager = container.read(foregroundServiceManagerProvider);
-      expect(manager, isA<ForegroundServiceManager>());
-    });
+        final manager = container.read(foregroundServiceManagerProvider);
+        expect(manager, isA<ForegroundServiceManager>());
+      },
+    );
   });
 }

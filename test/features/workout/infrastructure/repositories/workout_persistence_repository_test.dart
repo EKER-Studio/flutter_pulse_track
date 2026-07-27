@@ -467,16 +467,17 @@ void main() {
   });
 
   group('workoutPersistenceRepositoryProvider', () {
-    test('creates WorkoutPersistenceRepository instance from ProviderContainer', () {
-      final container = ProviderContainer(
-        overrides: [
-          isarProvider.overrideWithValue(isar),
-        ],
-      );
-      addTearDown(container.dispose);
+    test(
+      'creates WorkoutPersistenceRepository instance from ProviderContainer',
+      () {
+        final container = ProviderContainer(
+          overrides: [isarProvider.overrideWithValue(isar)],
+        );
+        addTearDown(container.dispose);
 
-      final repo = container.read(workoutPersistenceRepositoryProvider);
-      expect(repo, isA<WorkoutPersistenceRepository>());
-    });
+        final repo = container.read(workoutPersistenceRepositoryProvider);
+        expect(repo, isA<WorkoutPersistenceRepository>());
+      },
+    );
   });
 }
