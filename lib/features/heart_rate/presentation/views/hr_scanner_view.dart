@@ -34,17 +34,21 @@ class HrScannerView extends ConsumerWidget {
         actions: [
           // Filter toggle button only relevant when scanning or empty
           if (state is ScanningScannerState || state is EmptyScannerState)
-            IconButton(
-              icon: Icon(
-                _isFilterActive(notifier)
-                    ? Icons.filter_list
-                    : Icons.filter_list_off,
-                color: _isFilterActive(notifier)
-                    ? AppColors.accentBlue
-                    : AppColors.textSecondary,
+            Semantics(
+              label: AppLocalizations.of(context).toggle_filter_tooltip,
+              button: true,
+              child: IconButton(
+                icon: Icon(
+                  _isFilterActive(notifier)
+                      ? Icons.filter_list
+                      : Icons.filter_list_off,
+                  color: _isFilterActive(notifier)
+                      ? AppColors.accentBlue
+                      : AppColors.textSecondary,
+                ),
+                tooltip: AppLocalizations.of(context).toggle_filter_tooltip,
+                onPressed: () => notifier.toggleFilters(),
               ),
-              tooltip: AppLocalizations.of(context).toggle_filter_tooltip,
-              onPressed: () => notifier.toggleFilters(),
             ),
         ],
       ),
