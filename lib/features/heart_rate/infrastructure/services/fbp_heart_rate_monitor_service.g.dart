@@ -8,9 +8,12 @@ part of 'fbp_heart_rate_monitor_service.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
 
 @ProviderFor(heartRateMonitorService)
 final heartRateMonitorServiceProvider = HeartRateMonitorServiceProvider._();
+
+/// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
 
 final class HeartRateMonitorServiceProvider
     extends
@@ -20,6 +23,7 @@ final class HeartRateMonitorServiceProvider
           HeartRateMonitorService
         >
     with $Provider<HeartRateMonitorService> {
+  /// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
   HeartRateMonitorServiceProvider._()
     : super(
         from: null,

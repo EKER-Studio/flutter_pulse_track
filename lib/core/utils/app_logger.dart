@@ -2,6 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
+/// Top-level singleton logger for structured logging across the application.
+///
+/// Outputs formatted log messages to the console in debug mode and forwards
+/// errors to Firebase Crashlytics in production.
 final log = Logger(
   printer: PrettyPrinter(
     methodCount: 2,
@@ -15,6 +19,9 @@ final log = Logger(
   output: MultiOutput([ConsoleOutput(), FirebaseCrashlyticsOutput()]),
 );
 
+/// Custom log filter that suppresses detailed debug logs in release mode.
+///
+/// Allows all log events during development, but filters events below [Level.info] in release builds.
 class ProductionFilter extends LogFilter {
   @override
   bool shouldLog(LogEvent event) {
@@ -25,6 +32,7 @@ class ProductionFilter extends LogFilter {
   }
 }
 
+/// Custom log output that delivers log events to Firebase Crashlytics in release builds.
 class FirebaseCrashlyticsOutput extends LogOutput {
   @override
   void output(OutputEvent event) {

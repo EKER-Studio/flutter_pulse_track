@@ -19,15 +19,13 @@ class SaveWorkoutSessionUseCase {
 
   /// Persists a workout session snapshot to local storage.
   ///
-  /// The [startTime] and [endTime] delimit the session window. The [samples] list
-  /// contains chronologically ordered BPM readings captured during the session.
-  /// The [sensorLocationIndex], [macAddress], and [name] are captured from the
-  /// connected sensor at session start and stored alongside the samples to ensure
-  /// the record remains self-contained even if the device profile is later deleted.
+  /// Takes session boundaries [startTime] and [endTime], [samples] list of BPM values,
+  /// [sensorLocationIndex], device identifier [macAddress], device [name],
+  /// session metrics [avgBpm] and [maxBpm], and optional [existingId].
   ///
   /// Pass [existingId] (the id returned by the session's last checkpoint call,
-  /// if any) so this final write updates that same row instead of leaving it
-  /// behind as an orphaned duplicate.
+  /// if any) so this final write updates that same row instead of leaving an orphaned duplicate.
+  /// Returns a [Future] that completes when the session is successfully written.
   Future<void> call({
     required DateTime startTime,
     required DateTime endTime,
@@ -52,7 +50,7 @@ class SaveWorkoutSessionUseCase {
 }
 
 /// Riverpod provider that supplies a [SaveWorkoutSessionUseCase] wired to the
-/// concrete [WorkoutPersistenceRepository] implementation.
+/// concrete [WorkoutPersistenceRepository] implementation using [ref].
 @riverpod
 SaveWorkoutSessionUseCase saveWorkoutSessionUseCase(Ref ref) {
   return SaveWorkoutSessionUseCase(

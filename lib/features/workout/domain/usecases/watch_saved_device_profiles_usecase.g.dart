@@ -9,14 +9,14 @@ part of 'watch_saved_device_profiles_usecase.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Riverpod provider that supplies a [WatchSavedDeviceProfilesUseCase] wired
-/// to the concrete [WorkoutPersistenceRepository] implementation.
+/// to the concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 @ProviderFor(watchSavedDeviceProfilesUseCase)
 final watchSavedDeviceProfilesUseCaseProvider =
     WatchSavedDeviceProfilesUseCaseProvider._();
 
 /// Riverpod provider that supplies a [WatchSavedDeviceProfilesUseCase] wired
-/// to the concrete [WorkoutPersistenceRepository] implementation.
+/// to the concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 final class WatchSavedDeviceProfilesUseCaseProvider
     extends
@@ -27,7 +27,7 @@ final class WatchSavedDeviceProfilesUseCaseProvider
         >
     with $Provider<WatchSavedDeviceProfilesUseCase> {
   /// Riverpod provider that supplies a [WatchSavedDeviceProfilesUseCase] wired
-  /// to the concrete [WorkoutPersistenceRepository] implementation.
+  /// to the concrete [WorkoutPersistenceRepository] implementation using [ref].
   WatchSavedDeviceProfilesUseCaseProvider._()
     : super(
         from: null,
@@ -68,14 +68,14 @@ String _$watchSavedDeviceProfilesUseCaseHash() =>
     r'fefd0be05810beb9bccdd13437cd6897b3e31be1';
 
 /// Reactive stream of saved device profiles for direct use in
-/// `ref.watch(watchSavedDeviceProfilesProvider)` from views.
+/// `ref.watch(watchSavedDeviceProfilesStreamProvider)` from views using [ref].
 
 @ProviderFor(watchSavedDeviceProfilesStream)
 final watchSavedDeviceProfilesStreamProvider =
     WatchSavedDeviceProfilesStreamProvider._();
 
 /// Reactive stream of saved device profiles for direct use in
-/// `ref.watch(watchSavedDeviceProfilesProvider)` from views.
+/// `ref.watch(watchSavedDeviceProfilesStreamProvider)` from views using [ref].
 
 final class WatchSavedDeviceProfilesStreamProvider
     extends
@@ -88,7 +88,7 @@ final class WatchSavedDeviceProfilesStreamProvider
         $FutureModifier<List<DeviceProfile>>,
         $StreamProvider<List<DeviceProfile>> {
   /// Reactive stream of saved device profiles for direct use in
-  /// `ref.watch(watchSavedDeviceProfilesProvider)` from views.
+  /// `ref.watch(watchSavedDeviceProfilesStreamProvider)` from views using [ref].
   WatchSavedDeviceProfilesStreamProvider._()
     : super(
         from: null,

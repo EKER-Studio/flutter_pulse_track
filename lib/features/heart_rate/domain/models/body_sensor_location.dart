@@ -1,4 +1,6 @@
 /// Represents the official Bluetooth SIG standard body locations for heart rate sensors.
+///
+/// Decoded from GATT Characteristic 0x2A38 (Body Sensor Location).
 enum BodySensorLocation {
   /// Generic or unspecified sensor placement.
   other,

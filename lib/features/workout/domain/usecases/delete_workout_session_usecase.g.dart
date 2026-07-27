@@ -9,14 +9,14 @@ part of 'delete_workout_session_usecase.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Riverpod provider that supplies a [DeleteWorkoutSessionUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation.
+/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 @ProviderFor(deleteWorkoutSessionUseCase)
 final deleteWorkoutSessionUseCaseProvider =
     DeleteWorkoutSessionUseCaseProvider._();
 
 /// Riverpod provider that supplies a [DeleteWorkoutSessionUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation.
+/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 final class DeleteWorkoutSessionUseCaseProvider
     extends
@@ -27,7 +27,7 @@ final class DeleteWorkoutSessionUseCaseProvider
         >
     with $Provider<DeleteWorkoutSessionUseCase> {
   /// Riverpod provider that supplies a [DeleteWorkoutSessionUseCase] wired to
-  /// the concrete [WorkoutPersistenceRepository] implementation.
+  /// the concrete [WorkoutPersistenceRepository] implementation using [ref].
   DeleteWorkoutSessionUseCaseProvider._()
     : super(
         from: null,

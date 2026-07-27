@@ -8,9 +8,12 @@ part of 'fbp_bluetooth_scanner_service.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Singleton Riverpod provider delivering the [BluetoothScannerService] using [ref].
 
 @ProviderFor(bluetoothScannerService)
 final bluetoothScannerServiceProvider = BluetoothScannerServiceProvider._();
+
+/// Singleton Riverpod provider delivering the [BluetoothScannerService] using [ref].
 
 final class BluetoothScannerServiceProvider
     extends
@@ -20,6 +23,7 @@ final class BluetoothScannerServiceProvider
           BluetoothScannerService
         >
     with $Provider<BluetoothScannerService> {
+  /// Singleton Riverpod provider delivering the [BluetoothScannerService] using [ref].
   BluetoothScannerServiceProvider._()
     : super(
         from: null,

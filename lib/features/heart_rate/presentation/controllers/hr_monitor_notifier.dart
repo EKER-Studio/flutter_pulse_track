@@ -64,6 +64,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   /// fields are reset (new connection, or after a completed save).
   int? _checkpointSessionId;
 
+  /// Initializes dependencies and lifecycle observer.
+  ///
+  /// Returns the initial [MonitorState.disconnected] state.
   @override
   MonitorState build() {
     _monitorService = ref.read(heartRateMonitorServiceProvider);
@@ -73,6 +76,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     return const MonitorState.disconnected();
   }
 
+  /// Initiates a BLE connection to peripheral [deviceId] with name [deviceName].
+  ///
+  /// Establishes link-layer connection, discovers GATT services, subscribes to heart rate
+  /// notifications (GATT 0x2A37), and starts periodic session checkpoints.
+  /// Returns a [Future] completing when connection setup finishes.
   Future<void> connect(String deviceId, String deviceName) async {
     _connectTimer?.cancel();
     _connectTimer = null;
@@ -382,6 +390,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _startCheckpointTimer();
   }
 
+  /// Tears down the active BLE connection, cancels subscriptions, and saves the workout session.
+  ///
+  /// Returns a [Future] completing when session save and connection teardown finish.
   Future<void> disconnect() async {
     log.i('[HrMonitorNotifier] disconnect() called.');
     _connectTimer?.cancel();
@@ -487,6 +498,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
+  /// Handles app lifecycle state changes for [state], forcing an immediate checkpoint on pause/detach.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
@@ -495,6 +507,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
+  /// Tears down current connection and re-attempts connecting to [deviceId] with [deviceName].
+  ///
+  /// Returns a [Future] completing when reconnection attempt finishes.
   Future<void> retry(String deviceId, String deviceName) async {
     log.i(
       '[HrMonitorNotifier] retry() — tearing down current session '

@@ -19,13 +19,14 @@ class WorkoutPersistenceRepository
     implements domain.WorkoutPersistenceRepository {
   final Isar _isar;
 
+  /// Creates a [WorkoutPersistenceRepository] instance backed by the given [_isar] database.
   const WorkoutPersistenceRepository(this._isar);
 
   /// Caches the BLE sensor profile to the database.
   ///
+  /// Takes [macAddress], [name], and [sensorLocationIndex].
   /// Uses an upsert-by-MAC semantic via the `replace: true` index in Isar.
-  /// This ensures we only keep the freshest profile (e.g. updated name or
-  /// battery location) for a given physical sensor.
+  /// Returns a [Future] completing when the device profile is written.
   @override
   Future<void> saveDeviceProfile({
     required String macAddress,
@@ -45,10 +46,10 @@ class WorkoutPersistenceRepository
 
   /// Persists an immutable workout session after the BLE connection is closed.
   ///
-  /// [avgBpm]/[maxBpm] are computed incrementally by the caller. Empty
-  /// sessions (0 samples) are silently discarded to avoid cluttering the
-  /// history view. If [existingId] is given, updates that row in place
-  /// instead of inserting a new one.
+  /// Takes [startTime], [endTime], [samples], [sensorLocationIndex], [macAddress], [name],
+  /// [avgBpm], [maxBpm], and optional [existingId].
+  /// Empty sessions (0 samples) are silently discarded to avoid cluttering history.
+  /// Returns a [Future] completing when the session is written.
   @override
   Future<void> saveWorkoutSession({
     required DateTime startTime,
@@ -81,14 +82,9 @@ class WorkoutPersistenceRepository
 
   /// Persists an in-progress workout session checkpoint.
   ///
-  /// The [endTime] is left as `null` so the record remains editable while the
-  /// workout is still active. [avgBpm]/[maxBpm] are computed incrementally by
-  /// the caller.
-  ///
-  /// If [existingId] is given, updates that row in place (returning the same
-  /// id back). Otherwise inserts a new row and returns its freshly-assigned
-  /// id — callers are responsible for passing that id into subsequent calls,
-  /// or every checkpoint will insert a new duplicate row.
+  /// Takes [startTime], [samples], [sensorLocationIndex], [macAddress], [name],
+  /// [avgBpm], [maxBpm], and optional [existingId].
+  /// Returns a [Future] completing with the integer database ID assigned or updated.
   @override
   Future<int> saveWorkoutCheckpoint({
     required DateTime startTime,
@@ -118,8 +114,8 @@ class WorkoutPersistenceRepository
     });
   }
 
-  /// Reactively streams every saved [DeviceProfileDto], mapped to the
-  /// domain-level [DeviceProfile], most-recently connected first.
+  /// Reactively streams every saved [DeviceProfileDto], mapped to domain [DeviceProfile],
+  /// most-recently connected first whenever database changes occur.
   @override
   Stream<List<DeviceProfile>> watchSavedDeviceProfiles() {
     return _isar.deviceProfileDtos
@@ -129,8 +125,8 @@ class WorkoutPersistenceRepository
         .map((dtos) => dtos.map(_deviceProfileFromDto).toList());
   }
 
-  /// Reactively streams every persisted [WorkoutSessionDto], mapped to the
-  /// domain-level [WorkoutSession], most recent first.
+  /// Reactively streams every persisted [WorkoutSessionDto], mapped to domain [WorkoutSession],
+  /// most recent first whenever database changes occur.
   @override
   Stream<List<WorkoutSession>> watchWorkoutHistory() {
     return _isar.workoutSessionDtos
@@ -141,6 +137,8 @@ class WorkoutPersistenceRepository
   }
 
   /// Permanently deletes the workout session identified by [sessionId].
+  ///
+  /// Returns a [Future] completing when the deletion transaction is committed.
   @override
   Future<void> deleteWorkoutSession(int sessionId) async {
     await _isar.writeTxn(() async {
@@ -170,6 +168,7 @@ class WorkoutPersistenceRepository
       );
 }
 
+/// Riverpod provider delivering the [WorkoutPersistenceRepository] instance using [ref].
 @riverpod
 WorkoutPersistenceRepository workoutPersistenceRepository(Ref ref) {
   final isar = ref.watch(isarProvider);

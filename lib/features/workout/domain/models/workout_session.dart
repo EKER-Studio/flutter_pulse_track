@@ -39,7 +39,9 @@ class WorkoutSession {
   /// Human-readable display name of the sensor device at connection time.
   final String deviceName;
 
-  /// Creates an immutable [WorkoutSession].
+  /// Creates an immutable [WorkoutSession] with [id], [startTime], [endTime],
+  /// [avgBpm], [maxBpm], [bpmSamples], [sensorLocationIndex], [deviceMacAddress],
+  /// and [deviceName].
   const WorkoutSession({
     required this.id,
     required this.startTime,

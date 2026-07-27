@@ -21,8 +21,9 @@ class SaveDeviceProfileUseCase {
   /// Persists or updates the device profile for the sensor identified by [macAddress].
   ///
   /// The [name] reflects the device's broadcast display name. The
-  /// [sensorLocationIndex] is the raw integer index of the [BodySensorLocation]
-  /// enum, read from GATT characteristic 0x2A38.
+  /// [sensorLocationIndex] is the raw integer index of the body sensor location enum,
+  /// read from GATT characteristic 0x2A38.
+  /// Returns a [Future] that completes when the profile is saved.
   Future<void> call({
     required String macAddress,
     required String name,
@@ -35,7 +36,7 @@ class SaveDeviceProfileUseCase {
 }
 
 /// Riverpod provider that supplies a [SaveDeviceProfileUseCase] wired to the
-/// concrete [WorkoutPersistenceRepository] implementation.
+/// concrete [WorkoutPersistenceRepository] implementation using [ref].
 @riverpod
 SaveDeviceProfileUseCase saveDeviceProfileUseCase(Ref ref) {
   return SaveDeviceProfileUseCase(

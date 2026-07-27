@@ -28,8 +28,12 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   List<ScanResult> _lastRawResults = [];
   bool _filtersEnabled = true;
 
+  /// Whether quality filtering (RSSI threshold and non-empty display name) is active.
   bool get filtersEnabled => _filtersEnabled;
 
+  /// Initializes scanner state and adapter listeners.
+  ///
+  /// Returns the initial [BleScannerState.idle] state.
   @override
   BleScannerState build() {
     _scannerService = ref.read(bluetoothScannerServiceProvider);
@@ -49,6 +53,9 @@ class BleScannerNotifier extends _$BleScannerNotifier {
     return const BleScannerState.idle();
   }
 
+  /// Initiates an active BLE hardware scan for heart rate sensors.
+  ///
+  /// Returns a [Future] completing when scan setup finishes or completes with failure state.
   Future<void> startScan() async {
     if (state is AdapterOffScannerState) {
       log.w(
@@ -104,6 +111,9 @@ class BleScannerNotifier extends _$BleScannerNotifier {
     }
   }
 
+  /// Halts the active hardware scan and returns the notifier to [BleScannerState.idle].
+  ///
+  /// Returns a [Future] completing when the scan is stopped.
   Future<void> stopScan() async {
     log.i('[BleScannerNotifier] Stopping scan...');
     _cancelEmptyStateTimer();
@@ -118,12 +128,16 @@ class BleScannerNotifier extends _$BleScannerNotifier {
     }
   }
 
+  /// Resets resources and restarts the hardware BLE scan.
+  ///
+  /// Returns a [Future] completing when the restart operation finishes.
   Future<void> retry() async {
     log.i('[BleScannerNotifier] retry() — resetting and restarting scan.');
     await stopScan();
     await startScan();
   }
 
+  /// Toggles filtering rules for discovered peripherals and updates current state.
   void toggleFilters() {
     _filtersEnabled = !_filtersEnabled;
     log.d(

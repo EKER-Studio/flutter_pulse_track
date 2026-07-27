@@ -9,13 +9,13 @@ part of 'save_device_profile_usecase.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Riverpod provider that supplies a [SaveDeviceProfileUseCase] wired to the
-/// concrete [WorkoutPersistenceRepository] implementation.
+/// concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 @ProviderFor(saveDeviceProfileUseCase)
 final saveDeviceProfileUseCaseProvider = SaveDeviceProfileUseCaseProvider._();
 
 /// Riverpod provider that supplies a [SaveDeviceProfileUseCase] wired to the
-/// concrete [WorkoutPersistenceRepository] implementation.
+/// concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 final class SaveDeviceProfileUseCaseProvider
     extends
@@ -26,7 +26,7 @@ final class SaveDeviceProfileUseCaseProvider
         >
     with $Provider<SaveDeviceProfileUseCase> {
   /// Riverpod provider that supplies a [SaveDeviceProfileUseCase] wired to the
-  /// concrete [WorkoutPersistenceRepository] implementation.
+  /// concrete [WorkoutPersistenceRepository] implementation using [ref].
   SaveDeviceProfileUseCaseProvider._()
     : super(
         from: null,

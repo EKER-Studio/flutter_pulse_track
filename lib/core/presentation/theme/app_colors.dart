@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Centralized color palette and visual design tokens for the application.
 abstract final class AppColors {
   AppColors._();
 

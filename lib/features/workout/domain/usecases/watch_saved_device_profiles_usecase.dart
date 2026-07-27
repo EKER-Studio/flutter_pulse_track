@@ -20,11 +20,13 @@ class WatchSavedDeviceProfilesUseCase {
   WatchSavedDeviceProfilesUseCase(this._repository);
 
   /// Streams every saved [DeviceProfile], most-recently connected first.
+  ///
+  /// Emits a list of device profiles whenever persistent storage updates.
   Stream<List<DeviceProfile>> call() => _repository.watchSavedDeviceProfiles();
 }
 
 /// Riverpod provider that supplies a [WatchSavedDeviceProfilesUseCase] wired
-/// to the concrete [WorkoutPersistenceRepository] implementation.
+/// to the concrete [WorkoutPersistenceRepository] implementation using [ref].
 @riverpod
 WatchSavedDeviceProfilesUseCase watchSavedDeviceProfilesUseCase(Ref ref) {
   return WatchSavedDeviceProfilesUseCase(
@@ -33,7 +35,7 @@ WatchSavedDeviceProfilesUseCase watchSavedDeviceProfilesUseCase(Ref ref) {
 }
 
 /// Reactive stream of saved device profiles for direct use in
-/// `ref.watch(watchSavedDeviceProfilesProvider)` from views.
+/// `ref.watch(watchSavedDeviceProfilesStreamProvider)` from views using [ref].
 @riverpod
 Stream<List<DeviceProfile>> watchSavedDeviceProfilesStream(Ref ref) {
   return ref.watch(watchSavedDeviceProfilesUseCaseProvider).call();

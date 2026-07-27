@@ -22,15 +22,22 @@ abstract class BluetoothScannerService {
   /// Whether the hardware radio is currently scanning.
   bool get isScanningNow;
 
-  /// Initiates a hardware BLE scan.
+  /// Initiates a hardware BLE scan filtering peripherals by [withServices] and optional [timeout].
+  ///
+  /// Returns a [Future] completing when scan initiation finishes.
   Future<void> startScan({required List<Guid> withServices, Duration? timeout});
 
   /// Halts the active hardware scan.
+  ///
+  /// Returns a [Future] completing when the scan is stopped.
   Future<void> stopScan();
 }
 
 /// Concrete [BluetoothScannerService] backed by [FlutterBluePlus].
 class FbpBluetoothScannerService implements BluetoothScannerService {
+  /// Creates a new [FbpBluetoothScannerService] instance.
+  FbpBluetoothScannerService();
+
   @override
   Stream<BluetoothAdapterState> get adapterState =>
       FlutterBluePlus.adapterState;
@@ -70,6 +77,7 @@ class FbpBluetoothScannerService implements BluetoothScannerService {
   }
 }
 
+/// Singleton Riverpod provider delivering the [BluetoothScannerService] using [ref].
 @Riverpod(keepAlive: true)
 BluetoothScannerService bluetoothScannerService(Ref ref) =>
     FbpBluetoothScannerService();

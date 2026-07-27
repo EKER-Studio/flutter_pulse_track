@@ -8,24 +8,66 @@ part of 'isar_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Synchronous provider that returns the initialized Isar database instance.
+/// Provides the active Isar database instance globally.
 ///
-/// Throws [UnimplementedError] if accessed before [main] has completed
+/// This provider is declared synchronously to allow zero-latency, reactive DB
+/// reads in the UI layer. Because Isar initialization requires async disk access,
+/// this provider throws [UnimplementedError] by default.
+///
+/// **Startup Contract:**
+/// The application bootstrap in `main.dart` MUST await `Isar.open()` and
+/// override this provider in the root [ProviderScope].
+///
+/// **Safety:**
+/// The [keepAlive: true] flag ensures the Isar instance is never disposed by
+/// Riverpod's garbage collection, preventing accidental database closure while
+/// the app is running. Consumers should never attempt to close the instance.
+/// Synchronous provider that returns the initialized Isar database instance using [ref].
+///
+/// Throws [UnimplementedError] if accessed before `main()` has completed
 /// initialization and overridden the provider in [ProviderScope].
 
 @ProviderFor(isar)
 final isarProvider = IsarProvider._();
 
-/// Synchronous provider that returns the initialized Isar database instance.
+/// Provides the active Isar database instance globally.
 ///
-/// Throws [UnimplementedError] if accessed before [main] has completed
+/// This provider is declared synchronously to allow zero-latency, reactive DB
+/// reads in the UI layer. Because Isar initialization requires async disk access,
+/// this provider throws [UnimplementedError] by default.
+///
+/// **Startup Contract:**
+/// The application bootstrap in `main.dart` MUST await `Isar.open()` and
+/// override this provider in the root [ProviderScope].
+///
+/// **Safety:**
+/// The [keepAlive: true] flag ensures the Isar instance is never disposed by
+/// Riverpod's garbage collection, preventing accidental database closure while
+/// the app is running. Consumers should never attempt to close the instance.
+/// Synchronous provider that returns the initialized Isar database instance using [ref].
+///
+/// Throws [UnimplementedError] if accessed before `main()` has completed
 /// initialization and overridden the provider in [ProviderScope].
 
 final class IsarProvider extends $FunctionalProvider<Isar, Isar, Isar>
     with $Provider<Isar> {
-  /// Synchronous provider that returns the initialized Isar database instance.
+  /// Provides the active Isar database instance globally.
   ///
-  /// Throws [UnimplementedError] if accessed before [main] has completed
+  /// This provider is declared synchronously to allow zero-latency, reactive DB
+  /// reads in the UI layer. Because Isar initialization requires async disk access,
+  /// this provider throws [UnimplementedError] by default.
+  ///
+  /// **Startup Contract:**
+  /// The application bootstrap in `main.dart` MUST await `Isar.open()` and
+  /// override this provider in the root [ProviderScope].
+  ///
+  /// **Safety:**
+  /// The [keepAlive: true] flag ensures the Isar instance is never disposed by
+  /// Riverpod's garbage collection, preventing accidental database closure while
+  /// the app is running. Consumers should never attempt to close the instance.
+  /// Synchronous provider that returns the initialized Isar database instance using [ref].
+  ///
+  /// Throws [UnimplementedError] if accessed before `main()` has completed
   /// initialization and overridden the provider in [ProviderScope].
   IsarProvider._()
     : super(

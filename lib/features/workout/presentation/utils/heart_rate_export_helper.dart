@@ -16,7 +16,7 @@ import 'package:pulse_track/features/workout/domain/models/workout_session.dart'
 class HeartRateExportHelper {
   HeartRateExportHelper._();
 
-  /// Exports [session] as a CSV file and opens the native share sheet.
+  /// Exports [session] as a CSV file and opens the native share sheet using UI [context].
   ///
   /// The CSV contains three columns: `Timestamp`, `BPM`, and `Elapsed_Seconds`.
   /// Timestamps are computed by adding the elapsed duration of each sample
@@ -25,9 +25,7 @@ class HeartRateExportHelper {
   /// session start time.
   ///
   /// Shows a snackbar on [context] with a success or error message.
-  /// [context] must remain valid for the duration of the snackbar display;
-  /// the method checks [NavigatorState.canPop] after each [await] to avoid
-  /// accessing a disposed context.
+  /// Returns a [Future] completing when the export and share operation finishes.
   static Future<void> shareWorkoutAsCsv(
     BuildContext context,
     WorkoutSession session,
@@ -78,6 +76,8 @@ class HeartRateExportHelper {
   }
 
   /// Generates an RFC 4180 compliant CSV string from [session].
+  ///
+  /// Returns a formatted multi-line CSV string.
   @visibleForTesting
   static String generateCsv(WorkoutSession session) {
     const header = 'Timestamp,BPM,Elapsed_Seconds';
@@ -117,6 +117,8 @@ class HeartRateExportHelper {
   }
 
   /// Formats [date] as `yyyy-MM-dd HH:mm:ss`.
+  ///
+  /// Returns a formatted date string.
   @visibleForTesting
   static String formatTimestamp(DateTime date) {
     final year = date.year.toString();

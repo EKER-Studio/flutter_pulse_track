@@ -26,6 +26,9 @@ class HrMeasurement {
   /// Whether skin contact is detected, null if [sensorContactSupported] is false.
   final bool? sensorContactActive;
 
+  /// Creates an immutable [HrMeasurement] instance with [bpm], [rrIntervals],
+  /// and [timestamp], along with optional metadata like [sensorLocation],
+  /// [batteryLevel], [sensorContactSupported], and [sensorContactActive].
   const HrMeasurement({
     required this.bpm,
     required this.rrIntervals,
@@ -36,7 +39,10 @@ class HrMeasurement {
     this.sensorContactActive,
   });
 
-  /// Creates a copy of this measurement but with the given fields replaced with the new values.
+  /// Creates a copy of this measurement with the given fields replaced with new values.
+  ///
+  /// Takes optional parameters [bpm], [rrIntervals], [timestamp], [sensorLocation],
+  /// [batteryLevel], [sensorContactSupported], and [sensorContactActive].
   HrMeasurement copyWith({
     int? bpm,
     List<double>? rrIntervals,

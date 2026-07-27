@@ -17,6 +17,7 @@ import 'package:pulse_track/features/heart_rate/presentation/views/workout_histo
 class HrHomeView extends ConsumerWidget {
   const HrHomeView({super.key});
 
+  /// Builds the home dashboard hub layout using [context] and [ref].
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final savedProfilesAsync = ref.watch(

@@ -17,6 +17,7 @@ class HrMonitorView extends ConsumerStatefulWidget {
   /// Human-readable display name of the target heart rate sensor.
   final String deviceName;
 
+  /// Creates an [HrMonitorView] instance targeting [deviceId] with display name [deviceName].
   const HrMonitorView({
     super.key,
     required this.deviceId,
@@ -41,6 +42,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     });
   }
 
+  /// Builds the telemetry dashboard view using [context].
   @override
   Widget build(BuildContext context) {
     // Watches [hrMonitorProvider] for reactive updates from the BLE heart rate stream.

@@ -17,11 +17,11 @@ part 'isar_provider.g.dart';
 /// The [keepAlive: true] flag ensures the Isar instance is never disposed by
 /// Riverpod's garbage collection, preventing accidental database closure while
 /// the app is running. Consumers should never attempt to close the instance.
-@Riverpod(keepAlive: true)
-/// Synchronous provider that returns the initialized Isar database instance.
+/// Synchronous provider that returns the initialized Isar database instance using [ref].
 ///
-/// Throws [UnimplementedError] if accessed before [main] has completed
+/// Throws [UnimplementedError] if accessed before `main()` has completed
 /// initialization and overridden the provider in [ProviderScope].
+@Riverpod(keepAlive: true)
 Isar isar(Ref ref) {
   throw UnimplementedError(
     'isarProvider must be overridden in ProviderScope with an initialized Isar instance.',

@@ -20,11 +20,13 @@ class WatchWorkoutHistoryUseCase {
   WatchWorkoutHistoryUseCase(this._repository);
 
   /// Streams every persisted [WorkoutSession], most recent first.
+  ///
+  /// Emits a new list of workout sessions whenever records are inserted or removed.
   Stream<List<WorkoutSession>> call() => _repository.watchWorkoutHistory();
 }
 
 /// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation.
+/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
 @riverpod
 WatchWorkoutHistoryUseCase watchWorkoutHistoryUseCase(Ref ref) {
   return WatchWorkoutHistoryUseCase(
@@ -33,7 +35,7 @@ WatchWorkoutHistoryUseCase watchWorkoutHistoryUseCase(Ref ref) {
 }
 
 /// Reactive stream of workout history for direct use in
-/// `ref.watch(watchWorkoutHistoryProvider)` from views.
+/// `ref.watch(watchWorkoutHistoryStreamProvider)` from views using [ref].
 @riverpod
 Stream<List<WorkoutSession>> watchWorkoutHistoryStream(Ref ref) {
   return ref.watch(watchWorkoutHistoryUseCaseProvider).call();

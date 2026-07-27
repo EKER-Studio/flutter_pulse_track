@@ -8,6 +8,9 @@ import 'package:pulse_track/features/workout/domain/models/workout_session.dart'
 /// implementation living in the infrastructure layer.
 abstract class WorkoutPersistenceRepository {
   /// Caches or updates the BLE sensor profile.
+  ///
+  /// Takes [macAddress], [name], and [sensorLocationIndex].
+  /// Returns a [Future] that completes when the device profile is saved.
   Future<void> saveDeviceProfile({
     required String macAddress,
     required String name,
@@ -16,10 +19,13 @@ abstract class WorkoutPersistenceRepository {
 
   /// Persists an immutable workout session after the BLE connection is closed.
   ///
+  /// Expects session parameters [startTime], [endTime], [samples], [sensorLocationIndex],
+  /// [macAddress], [name], [avgBpm], and [maxBpm].
+  ///
   /// If [existingId] is provided (typically the id returned by the last
-  /// [saveWorkoutCheckpoint] call for this session), the existing row is
-  /// updated in place instead of inserting a new one — otherwise the final
-  /// save would leave every prior checkpoint row orphaned in the database.
+  /// checkpoint call for this session), the existing record is updated in place
+  /// instead of inserting a new row.
+  /// Returns a [Future] that completes when the session is written to persistent storage.
   Future<void> saveWorkoutSession({
     required DateTime startTime,
     required DateTime endTime,
@@ -32,26 +38,26 @@ abstract class WorkoutPersistenceRepository {
     int? existingId,
   });
 
-  /// Reactively streams every saved sensor [DeviceProfile], most-recently
-  /// connected first.
+  /// Reactively streams saved sensor [DeviceProfile] items.
+  ///
+  /// Emits a list of device profiles ordered by most-recently connected first
+  /// whenever local storage changes.
   Stream<List<DeviceProfile>> watchSavedDeviceProfiles();
 
-  /// Reactively streams every persisted [WorkoutSession], most recent first.
+  /// Reactively streams persisted [WorkoutSession] items.
+  ///
+  /// Emits a list of workout sessions ordered by most recent first whenever
+  /// session records are inserted, modified, or deleted.
   Stream<List<WorkoutSession>> watchWorkoutHistory();
 
   /// Persists an in-progress workout session checkpoint.
   ///
-  /// Unlike [saveWorkoutSession], the [endTime] is left as `null` so the
-  /// record remains editable while the workout is still active. The [samples]
-  /// list should contain all samples collected up to the moment this checkpoint
-  /// is written.
+  /// Requires session metrics [startTime], [samples], [sensorLocationIndex],
+  /// [macAddress], [name], [avgBpm], and [maxBpm].
   ///
-  /// If [existingId] is provided (the id returned by a previous checkpoint
-  /// call for this same session), the existing row is updated in place.
-  /// Otherwise a new row is inserted and its id is returned — callers MUST
-  /// pass that id back into subsequent checkpoint calls (and into the final
-  /// [saveWorkoutSession] call) or every checkpoint will insert a brand new
-  /// duplicate row instead of updating one.
+  /// If [existingId] is provided, updates that existing row in place.
+  /// Returns a [Future] completing with the integer database ID assigned or updated
+  /// for this session.
   Future<int> saveWorkoutCheckpoint({
     required DateTime startTime,
     required List<int> samples,
@@ -64,5 +70,7 @@ abstract class WorkoutPersistenceRepository {
   });
 
   /// Permanently deletes the workout session identified by [sessionId].
+  ///
+  /// Returns a [Future] that completes once the record is deleted.
   Future<void> deleteWorkoutSession(int sessionId);
 }

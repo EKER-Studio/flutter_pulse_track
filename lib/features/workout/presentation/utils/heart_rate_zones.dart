@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 /// Heart rate zone definitions and utilities based on a configurable max heart rate.
 class HeartRateZone {
+  /// Creates a [HeartRateZone] instance with [label], [minPercent], [maxPercent], and [color].
   const HeartRateZone({
     required this.label,
     required this.minPercent,
@@ -35,6 +36,7 @@ const List<Color> kZoneColors = [
 /// Default assumed maximum heart rate used when none is provided.
 const int kDefaultMaxHr = 190;
 
+/// Standard list of 5 target heart rate intensity zones.
 const List<HeartRateZone> kHeartRateZones = [
   HeartRateZone(
     label: 'Z1',
@@ -68,7 +70,7 @@ const List<HeartRateZone> kHeartRateZones = [
   ),
 ];
 
-/// Returns the zone index (1-5) for a given bpm value.
+/// Returns the zone index (1-5) for a given [bpm] value and optional [maxHr].
 int getZoneIndex(int bpm, {int maxHr = kDefaultMaxHr}) {
   final percentage = (bpm / maxHr * 100).clamp(0.0, 100.0);
   for (var i = 0; i < kHeartRateZones.length; i++) {
@@ -82,7 +84,7 @@ int getZoneIndex(int bpm, {int maxHr = kDefaultMaxHr}) {
   return 1;
 }
 
-/// Returns the color for a given bpm value.
+/// Returns the zone [Color] for a given [bpm] value and optional [maxHr].
 Color getZoneColor(int bpm, {int maxHr = kDefaultMaxHr}) {
   final index = getZoneIndex(bpm, maxHr: maxHr);
   return kZoneColors[index - 1];

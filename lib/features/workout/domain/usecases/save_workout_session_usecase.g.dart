@@ -9,13 +9,13 @@ part of 'save_workout_session_usecase.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Riverpod provider that supplies a [SaveWorkoutSessionUseCase] wired to the
-/// concrete [WorkoutPersistenceRepository] implementation.
+/// concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 @ProviderFor(saveWorkoutSessionUseCase)
 final saveWorkoutSessionUseCaseProvider = SaveWorkoutSessionUseCaseProvider._();
 
 /// Riverpod provider that supplies a [SaveWorkoutSessionUseCase] wired to the
-/// concrete [WorkoutPersistenceRepository] implementation.
+/// concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 final class SaveWorkoutSessionUseCaseProvider
     extends
@@ -26,7 +26,7 @@ final class SaveWorkoutSessionUseCaseProvider
         >
     with $Provider<SaveWorkoutSessionUseCase> {
   /// Riverpod provider that supplies a [SaveWorkoutSessionUseCase] wired to the
-  /// concrete [WorkoutPersistenceRepository] implementation.
+  /// concrete [WorkoutPersistenceRepository] implementation using [ref].
   SaveWorkoutSessionUseCaseProvider._()
     : super(
         from: null,

@@ -9,14 +9,14 @@ part of 'watch_workout_history_usecase.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation.
+/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 @ProviderFor(watchWorkoutHistoryUseCase)
 final watchWorkoutHistoryUseCaseProvider =
     WatchWorkoutHistoryUseCaseProvider._();
 
 /// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation.
+/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 final class WatchWorkoutHistoryUseCaseProvider
     extends
@@ -27,7 +27,7 @@ final class WatchWorkoutHistoryUseCaseProvider
         >
     with $Provider<WatchWorkoutHistoryUseCase> {
   /// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-  /// the concrete [WorkoutPersistenceRepository] implementation.
+  /// the concrete [WorkoutPersistenceRepository] implementation using [ref].
   WatchWorkoutHistoryUseCaseProvider._()
     : super(
         from: null,
@@ -66,13 +66,13 @@ String _$watchWorkoutHistoryUseCaseHash() =>
     r'b38929bec70b69ddb5706b5f5745925bfc6054e1';
 
 /// Reactive stream of workout history for direct use in
-/// `ref.watch(watchWorkoutHistoryProvider)` from views.
+/// `ref.watch(watchWorkoutHistoryStreamProvider)` from views using [ref].
 
 @ProviderFor(watchWorkoutHistoryStream)
 final watchWorkoutHistoryStreamProvider = WatchWorkoutHistoryStreamProvider._();
 
 /// Reactive stream of workout history for direct use in
-/// `ref.watch(watchWorkoutHistoryProvider)` from views.
+/// `ref.watch(watchWorkoutHistoryStreamProvider)` from views using [ref].
 
 final class WatchWorkoutHistoryStreamProvider
     extends
@@ -85,7 +85,7 @@ final class WatchWorkoutHistoryStreamProvider
         $FutureModifier<List<WorkoutSession>>,
         $StreamProvider<List<WorkoutSession>> {
   /// Reactive stream of workout history for direct use in
-  /// `ref.watch(watchWorkoutHistoryProvider)` from views.
+  /// `ref.watch(watchWorkoutHistoryStreamProvider)` from views using [ref].
   WatchWorkoutHistoryStreamProvider._()
     : super(
         from: null,

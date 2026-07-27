@@ -12,9 +12,10 @@ import 'package:intl/intl.dart' as intl;
 /// [WorkoutSession], sorted by start time descending, via
 /// [watchWorkoutHistoryStreamProvider].
 class WorkoutHistoryView extends ConsumerWidget {
+  /// Creates a [WorkoutHistoryView] instance.
   const WorkoutHistoryView({super.key});
 
-  /// Builds the workout history list from [watchWorkoutHistoryStreamProvider].
+  /// Builds the workout history list view using [context] and [ref].
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final historyAsync = ref.watch(watchWorkoutHistoryStreamProvider);

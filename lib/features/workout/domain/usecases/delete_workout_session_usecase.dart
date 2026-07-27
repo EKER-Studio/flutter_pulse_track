@@ -18,12 +18,14 @@ class DeleteWorkoutSessionUseCase {
   DeleteWorkoutSessionUseCase(this._repository);
 
   /// Permanently deletes the workout session identified by [sessionId].
+  ///
+  /// Returns a [Future] that completes when the deletion is finished.
   Future<void> call(int sessionId) =>
       _repository.deleteWorkoutSession(sessionId);
 }
 
 /// Riverpod provider that supplies a [DeleteWorkoutSessionUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation.
+/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
 @riverpod
 DeleteWorkoutSessionUseCase deleteWorkoutSessionUseCase(Ref ref) {
   return DeleteWorkoutSessionUseCase(

@@ -15,19 +15,27 @@ abstract class HeartRateMonitorService {
   /// Creates a [BluetoothDevice] handle for [deviceId] without connecting.
   BluetoothDevice fromId(String deviceId);
 
-  /// Opens the physical BLE link-layer connection.
+  /// Opens the physical BLE link-layer connection to [device] with optional [autoConnect].
+  ///
+  /// Returns a [Future] completing when the connection is established.
   Future<void> connect(BluetoothDevice device, {bool autoConnect});
 
-  /// Tears down the physical BLE link-layer connection.
+  /// Tears down the physical BLE link-layer connection to [device].
+  ///
+  /// Returns a [Future] completing when the connection is closed.
   Future<void> disconnect(BluetoothDevice device);
 
   /// Broadcast stream of connection-state changes for [device].
   Stream<BluetoothConnectionState> connectionState(BluetoothDevice device);
 
   /// Enumerates all GATT services and characteristics exposed by [device].
+  ///
+  /// Returns a [Future] with the list of discovered [BluetoothService] objects.
   Future<List<BluetoothService>> discoverServices(BluetoothDevice device);
 
-  /// Enables or disables GATT notifications on [characteristic].
+  /// Enables or disables GATT notifications on [characteristic] based on [value].
+  ///
+  /// Returns a [Future] completing when notification subscription status updates.
   Future<void> setNotifyValue(
     BluetoothCharacteristic characteristic,
     bool value,
@@ -38,11 +46,16 @@ abstract class HeartRateMonitorService {
   Stream<List<int>> onValueReceived(BluetoothCharacteristic characteristic);
 
   /// Reads the current value of [characteristic] on demand.
+  ///
+  /// Returns a [Future] completing with raw byte values.
   Future<List<int>> read(BluetoothCharacteristic characteristic);
 }
 
 /// Concrete [HeartRateMonitorService] backed by [FlutterBluePlus].
 class FbpHeartRateMonitorService implements HeartRateMonitorService {
+  /// Creates a new [FbpHeartRateMonitorService] instance.
+  FbpHeartRateMonitorService();
+
   @override
   BluetoothDevice fromId(String deviceId) => BluetoothDevice.fromId(deviceId);
 
@@ -113,6 +126,7 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
   }
 }
 
+/// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
 @Riverpod(keepAlive: true)
 HeartRateMonitorService heartRateMonitorService(Ref ref) =>
     FbpHeartRateMonitorService();

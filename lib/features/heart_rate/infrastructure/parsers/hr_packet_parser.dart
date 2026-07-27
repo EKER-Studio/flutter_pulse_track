@@ -2,12 +2,14 @@ import 'dart:typed_data';
 
 import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
 
-/// Low-level binary parser responsible for decoding raw Bluetooth GATT Heart Rate Measurement packets (0x2A37).
+/// Low-level binary parser responsible for decoding raw Bluetooth GATT Heart Rate Measurement packets (0x2A38 / 0x2A37).
 class HrPacketParser {
-  /// Parses raw byte data from a BLE heart rate characteristic into a domain [HrMeasurement].
+  /// Parses [rawData] bytes from a BLE heart rate characteristic into a domain [HrMeasurement].
   ///
   /// Conforms strictly to the Bluetooth SIG Heart Rate Profile specification,
-  /// handling both 8-bit and 16-bit BPM representations and extracting R-R intervals (scaled to seconds).
+  /// handling both 8-bit and 16-bit BPM representations, energy expended fields, and
+  /// extracting R-R intervals (scaled to seconds).
+  /// Returns `null` if [rawData] is empty or truncated.
   static HrMeasurement? parseRawBytes(List<int> rawData) {
     if (rawData.isEmpty) return null;
 

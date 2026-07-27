@@ -22,16 +22,13 @@ class SavePartialWorkoutSessionUseCase {
 
   /// Persists a partial workout session snapshot to local storage.
   ///
-  /// The [startTime] marks the session start and [endTime] is `null` to keep the
-  /// record active. The [samples] list contains the accumulated BPM readings
-  /// captured to date. The [sensorLocationIndex], [macAddress], and [name] are
-  /// captured from the connected sensor at session start.
+  /// Expects session metrics [startTime], [samples], [sensorLocationIndex],
+  /// [macAddress], [name], [avgBpm], and [maxBpm].
   ///
   /// Pass [existingId] (the id returned by a previous call to this use case
   /// for the same session) so this checkpoint updates that row in place.
-  /// Returns the row's id — callers MUST store it and pass it back into the
-  /// next checkpoint call (and into [SaveWorkoutSessionUseCase] at the end of
-  /// the session), or every checkpoint will insert a new duplicate row.
+  /// Returns a [Future] completing with the row's database ID — callers MUST store it
+  /// and pass it back into subsequent calls.
   Future<int> call({
     required DateTime startTime,
     required List<int> samples,
@@ -54,7 +51,7 @@ class SavePartialWorkoutSessionUseCase {
 }
 
 /// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation.
+/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
 @riverpod
 SavePartialWorkoutSessionUseCase savePartialWorkoutSessionUseCase(Ref ref) {
   return SavePartialWorkoutSessionUseCase(

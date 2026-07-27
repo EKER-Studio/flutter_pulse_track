@@ -9,14 +9,14 @@ part of 'save_partial_workout_session_usecase.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation.
+/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 @ProviderFor(savePartialWorkoutSessionUseCase)
 final savePartialWorkoutSessionUseCaseProvider =
     SavePartialWorkoutSessionUseCaseProvider._();
 
 /// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation.
+/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
 
 final class SavePartialWorkoutSessionUseCaseProvider
     extends
@@ -27,7 +27,7 @@ final class SavePartialWorkoutSessionUseCaseProvider
         >
     with $Provider<SavePartialWorkoutSessionUseCase> {
   /// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-  /// the concrete [WorkoutPersistenceRepository] implementation.
+  /// the concrete [WorkoutPersistenceRepository] implementation using [ref].
   SavePartialWorkoutSessionUseCaseProvider._()
     : super(
         from: null,

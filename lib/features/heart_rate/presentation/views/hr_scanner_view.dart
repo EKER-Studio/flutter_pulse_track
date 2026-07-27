@@ -13,8 +13,10 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 /// Implements an exhaustive state machine UI reacting to [BleScannerState]
 /// emitted by the [bleScannerNotifierProvider].
 class HrScannerView extends ConsumerWidget {
+  /// Creates an [HrScannerView] instance.
   const HrScannerView({super.key});
 
+  /// Builds the BLE scanner view using [context] and [ref].
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(bleScannerProvider);

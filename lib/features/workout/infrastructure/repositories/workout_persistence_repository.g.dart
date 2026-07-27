@@ -8,10 +8,13 @@ part of 'workout_persistence_repository.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Riverpod provider delivering the [WorkoutPersistenceRepository] instance using [ref].
 
 @ProviderFor(workoutPersistenceRepository)
 final workoutPersistenceRepositoryProvider =
     WorkoutPersistenceRepositoryProvider._();
+
+/// Riverpod provider delivering the [WorkoutPersistenceRepository] instance using [ref].
 
 final class WorkoutPersistenceRepositoryProvider
     extends
@@ -21,6 +24,7 @@ final class WorkoutPersistenceRepositoryProvider
           WorkoutPersistenceRepository
         >
     with $Provider<WorkoutPersistenceRepository> {
+  /// Riverpod provider delivering the [WorkoutPersistenceRepository] instance using [ref].
   WorkoutPersistenceRepositoryProvider._()
     : super(
         from: null,

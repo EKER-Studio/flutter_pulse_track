@@ -13,7 +13,7 @@ import 'package:intl/intl.dart' as intl;
 ///
 /// Navigated to from the workout history list via the workout feature route.
 class WorkoutDetailsView extends StatelessWidget {
-  /// Creates a [WorkoutDetailsView] for the given [session].
+  /// Creates a [WorkoutDetailsView] instance for the given [session].
   const WorkoutDetailsView({required this.session, super.key});
 
   static const Color _kCardBackgroundColor = AppColors.surfaceBackground;
@@ -33,7 +33,7 @@ class WorkoutDetailsView extends StatelessWidget {
   /// The workout session whose details are displayed.
   final WorkoutSession session;
 
-  /// Builds the workout details screen with header, summary grid, and BPM chart.
+  /// Builds the workout details screen with header, summary grid, and BPM chart using [context].
   @override
   Widget build(BuildContext context) {
     // Format once so the duration string is shared between the header badge
@@ -419,7 +419,7 @@ class _HrZoneLegend extends StatelessWidget {
 ///   which would otherwise produce `NaN` / `Infinity` offsets and crash
 ///   the canvas paint pass.
 class BpmChart extends CustomPainter {
-  /// Creates a [BpmChart] painter for the given BPM [samples].
+  /// Creates a [BpmChart] painter for the given BPM [samples], [startTime], and [endTime].
   BpmChart({
     required this.samples,
     required this.startTime,
