@@ -135,6 +135,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View past heart rate sessions and analytics.'**
   String get workoutHistoryDescription;
+
+  /// Title shown in the AppBar of the BLE scanner screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanner'**
+  String get scanner_title;
+
+  /// Tooltip for the filter toggle button in the scanner view.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle Names & Nearby Filter'**
+  String get toggle_filter_tooltip;
+
+  /// Header text displayed when the scanner is idle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to scan'**
+  String get ready_to_scan;
+
+  /// Helper text shown under the ready‑to‑scan header.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Scan to begin searching for sensors.'**
+  String get start_scan_description;
+
+  /// Label for the primary scan button.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get scan_button_label;
+
+  /// Header when Bluetooth is turned off.
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth Required'**
+  String get bluetooth_required;
+
+  /// Explanation shown when Bluetooth is off.
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth adapter is powered off or unauthorized. Please enable Bluetooth and grant local infrastructure permissions to scan for sensors.'**
+  String get bluetooth_off_description;
+
+  /// Title shown when no devices are found after a scan.
+  ///
+  /// In en, this message translates to:
+  /// **'CAN\'T SEE YOUR DEVICE?'**
+  String get empty_state_title;
+
+  /// Bullet list displayed in the empty‑state view.
+  ///
+  /// In en, this message translates to:
+  /// **'• Ensure the sensor is powered on.\n• Check the sensor battery.\n• Move closer to the device.\n• Try disabling the scan filters.'**
+  String get empty_state_bullets;
+
+  /// Button label to retry scanning from the empty‑state view.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry Scan'**
+  String get retry_scan_label;
+
+  /// Title shown when a scan cannot be started.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Failed'**
+  String get scan_failed_title;
+
+  /// Button label to retry after a failure.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry_button_label;
+
+  /// Message displayed while the scanner is actively searching.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching for active sensors...'**
+  String get searching_sensors;
+
+  /// Placeholder name for a device that reports an empty name.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Device'**
+  String get unknown_device;
 }
 
 class _AppLocalizationsDelegate

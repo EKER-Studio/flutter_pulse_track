@@ -6,7 +6,7 @@ import 'package:pulse_track/features/heart_rate/domain/models/ble_device.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/ble_scanner_state.dart';
 import 'package:pulse_track/features/heart_rate/presentation/controllers/ble_scanner_notifier.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 /// Main entry point for discovering BLE heart rate sensors.
 ///
 /// Implements an exhaustive state machine UI reacting to [BleScannerState]
@@ -24,9 +24,9 @@ class HrScannerView extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: AppColors.surfaceBackground,
         elevation: 0,
-        title: const Text(
-          'Scanner',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          AppLocalizations.of(context).scanner_title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
           // Filter toggle button only relevant when scanning or empty
@@ -40,7 +40,7 @@ class HrScannerView extends ConsumerWidget {
                     ? AppColors.accentBlue
                     : AppColors.textSecondary,
               ),
-              tooltip: 'Toggle Names & Nearby Filter',
+              tooltip: AppLocalizations.of(context).toggle_filter_tooltip,
               onPressed: () => notifier.toggleFilters(),
             ),
         ],
@@ -80,18 +80,18 @@ class HrScannerView extends ConsumerWidget {
             color: AppColors.textSecondary,
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Ready to scan',
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+            Text(
+              AppLocalizations.of(context).ready_to_scan,
+              style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
           const SizedBox(height: 8),
-          const Text(
-            'Tap Scan to begin searching for sensors.',
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+          Text(
+            AppLocalizations.of(context).start_scan_description,
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 16),
           ),
           const SizedBox(height: 32),
           ElevatedButton.icon(
@@ -103,9 +103,9 @@ class HrScannerView extends ConsumerWidget {
               ),
             ),
             icon: const Icon(Icons.search, color: AppColors.textPrimary),
-            label: const Text(
-              'Scan',
-              style: TextStyle(
+            label: Text(
+              AppLocalizations.of(context).scan_button_label,
+              style: const TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -135,7 +135,7 @@ class HrScannerView extends ConsumerWidget {
             ),
             SizedBox(height: 24),
             Text(
-              'Bluetooth Required',
+              AppLocalizations.of(context).bluetooth_required,
               style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 24,
@@ -144,7 +144,7 @@ class HrScannerView extends ConsumerWidget {
             ),
             SizedBox(height: 16),
             Text(
-              'Bluetooth adapter is powered off or unauthorized. Please enable Bluetooth and grant local infrastructure permissions to scan for sensors.',
+              AppLocalizations.of(context).bluetooth_off_description,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.textSecondary,
@@ -172,9 +172,9 @@ class HrScannerView extends ConsumerWidget {
               color: AppColors.accentOrange,
             ),
             const SizedBox(height: 24),
-            const Text(
-              "CAN'T SEE YOUR DEVICE?",
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context).empty_state_title,
+              style: const TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -206,9 +206,9 @@ class HrScannerView extends ConsumerWidget {
                 ),
               ),
               icon: const Icon(Icons.refresh, color: AppColors.textPrimary),
-              label: const Text(
-                'Retry Scan',
-                style: TextStyle(
+              label: Text(
+                AppLocalizations.of(context).retry_scan_label,
+                style: const TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -245,9 +245,9 @@ class HrScannerView extends ConsumerWidget {
                 color: AppColors.accentRed,
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Scan Failed',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context).scan_failed_title,
+                style: const TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -271,9 +271,9 @@ class HrScannerView extends ConsumerWidget {
                   ),
                 ),
                 onPressed: () => notifier.startScan(),
-                child: const Text(
-                  'Retry',
-                  style: TextStyle(color: AppColors.textPrimary),
+                child: Text(
+                  AppLocalizations.of(context).scan_button_label,
+                  style: const TextStyle(color: AppColors.textPrimary),
                 ),
               ),
             ],
@@ -286,7 +286,7 @@ class HrScannerView extends ConsumerWidget {
   /// Builds the scanning state UI with an animated indicator and the list of discovered devices.
   ///
   /// Returned directly as `Scaffold.body` — must NOT be wrapped in `Expanded`,
-  /// since `Expanded` requires a `Flex` (Row/Column) ancestor, which
+  /// Placeholderes a `Flex` (Row/Column) ancestor, which
   /// `Scaffold.body` is not. `Center`/`ListView` already fill the available
   /// space on their own here.
   Widget _buildScanningState(
@@ -295,10 +295,10 @@ class HrScannerView extends ConsumerWidget {
     List<BleDevice> devices,
   ) {
     return devices.isEmpty
-        ? const Center(
+        ? Center(
             child: Text(
-              'Searching for active sensors...',
-              style: TextStyle(color: AppColors.textSecondary),
+              AppLocalizations.of(context).searching_sensors,
+              style: const TextStyle(color: AppColors.textSecondary),
             ),
           )
         : ListView.separated(
@@ -326,7 +326,7 @@ class HrScannerView extends ConsumerWidget {
                 ),
                 title: Flexible(
                   child: Text(
-                    device.name.isEmpty ? 'Unknown Device' : device.name,
+                    device.name.isEmpty ? AppLocalizations.of(context).unknown_device : device.name,
                     style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
