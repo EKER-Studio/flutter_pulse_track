@@ -51,16 +51,28 @@ class WorkoutDetailsView extends StatelessWidget {
             context,
           ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.of(context).pop(),
+        leading: Semantics(
+          button: true,
+          label: 'Back to workout history',
+          child: IconButton(
+            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+            icon: const Icon(Icons.arrow_back_ios),
+            tooltip: 'Back to workout history',
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              HeartRateExportHelper.shareWorkoutAsCsv(context, session);
-            },
+          Semantics(
+            button: true,
+            label: 'Share workout as CSV',
+            child: IconButton(
+              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              icon: const Icon(Icons.share),
+              tooltip: 'Share workout as CSV',
+              onPressed: () {
+                HeartRateExportHelper.shareWorkoutAsCsv(context, session);
+              },
+            ),
           ),
         ],
       ),
@@ -73,65 +85,72 @@ class WorkoutDetailsView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header card
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: _kCardBackgroundColor,
-                      borderRadius: BorderRadius.circular(_kCardBorderRadius),
-                      border: Border.all(
-                        color: AppColors.borderSubtle,
-                        width: 1,
+                  Semantics(
+                    label:
+                        'Workout date: ${_formatDate(session.startTime)}, duration: $duration, sensor: ${session.deviceName.isEmpty ? 'Unknown Sensor' : session.deviceName}',
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: _kCardBackgroundColor,
+                        borderRadius: BorderRadius.circular(_kCardBorderRadius),
+                        border: Border.all(
+                          color: AppColors.borderSubtle,
+                          width: 1,
+                        ),
                       ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(_kDefaultPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Padding(
+                        padding: const EdgeInsets.all(_kDefaultPadding),
+                        child: ExcludeSemantics(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                _formatDate(session.startTime),
-                                style: const TextStyle(
-                                  color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
-                                ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _formatDate(session.startTime),
+                                    style: const TextStyle(
+                                      color: AppColors.textPrimary,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: _kBadgeBackgroundColor,
+                                      borderRadius: BorderRadius.circular(
+                                        _kBadgeBorderRadius,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      duration,
+                                      style: const TextStyle(
+                                        color: AppColors.accentBlue,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: _kBadgeBackgroundColor,
-                                  borderRadius: BorderRadius.circular(
-                                    _kBadgeBorderRadius,
-                                  ),
-                                ),
-                                child: Text(
-                                  duration,
-                                  style: const TextStyle(
-                                    color: AppColors.accentBlue,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                              const SizedBox(height: 4),
+                              Text(
+                                session.deviceName.isEmpty
+                                    ? 'Unknown Sensor'
+                                    : session.deviceName,
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 12,
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            session.deviceName.isEmpty
-                                ? 'Unknown Sensor'
-                                : session.deviceName,
-                            style: TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
@@ -206,69 +225,80 @@ class WorkoutDetailsView extends StatelessWidget {
                   const SizedBox(height: _kSubSectionSpacing),
                   if (session.bpmSamples.isEmpty ||
                       session.bpmSamples.any((s) => s <= 0))
-                    Container(
-                      width: double.infinity,
-                      height: _kChartHeight,
-                      decoration: BoxDecoration(
-                        color: _kCardBackgroundColor,
-                        borderRadius: BorderRadius.circular(_kCardBorderRadius),
-                        border: Border.all(
-                          color: AppColors.borderSubtle,
-                          width: 1,
+                    Semantics(
+                      label: 'Heart rate chart: No workout data captured',
+                      child: Container(
+                        width: double.infinity,
+                        height: _kChartHeight,
+                        decoration: BoxDecoration(
+                          color: _kCardBackgroundColor,
+                          borderRadius: BorderRadius.circular(
+                            _kCardBorderRadius,
+                          ),
+                          border: Border.all(
+                            color: AppColors.borderSubtle,
+                            width: 1,
+                          ),
                         ),
-                      ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.monitor_heart,
-                              size: 48,
-                              color: AppColors.textSecondary,
-                            ),
-                            const SizedBox(height: _kSubSectionSpacing),
-                            Text(
-                              'No workout data captured',
-                              style: TextStyle(
-                                color: AppColors.textMuted,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.monitor_heart,
+                                size: 48,
+                                color: AppColors.textSecondary,
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              _getEmptyDataReason(session),
-                              style: TextStyle(
-                                color: AppColors.textTertiary,
-                                fontSize: 13,
+                              const SizedBox(height: _kSubSectionSpacing),
+                              Text(
+                                'No workout data captured',
+                                style: TextStyle(
+                                  color: AppColors.textMuted,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 4),
+                              Text(
+                                _getEmptyDataReason(session),
+                                style: TextStyle(
+                                  color: AppColors.textTertiary,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     )
                   else
-                    Container(
-                      width: double.infinity,
-                      height: _kChartHeight,
-                      decoration: BoxDecoration(
-                        color: _kCardBackgroundColor,
-                        borderRadius: BorderRadius.circular(_kCardBorderRadius),
-                        border: Border.all(
-                          color: AppColors.borderSubtle,
-                          width: 1,
+                    Semantics(
+                      label:
+                          'Heart rate waveform chart showing ${session.bpmSamples.length} samples over time. Average heart rate ${session.avgBpm} BPM, Peak heart rate ${session.maxBpm} BPM.',
+                      child: Container(
+                        width: double.infinity,
+                        height: _kChartHeight,
+                        decoration: BoxDecoration(
+                          color: _kCardBackgroundColor,
+                          borderRadius: BorderRadius.circular(
+                            _kCardBorderRadius,
+                          ),
+                          border: Border.all(
+                            color: AppColors.borderSubtle,
+                            width: 1,
+                          ),
                         ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        child: CustomPaint(
-                          painter: BpmChart(
-                            samples: session.bpmSamples,
-                            startTime: session.startTime,
-                            endTime: session.endTime,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: CustomPaint(
+                            painter: BpmChart(
+                              samples: session.bpmSamples,
+                              startTime: session.startTime,
+                              endTime: session.endTime,
+                            ),
                           ),
                         ),
                       ),
@@ -298,31 +328,34 @@ class WorkoutDetailsView extends StatelessWidget {
     required IconData icon,
     required Color iconColor,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(_kDefaultPadding),
-      decoration: BoxDecoration(
-        color: _kCardBackgroundColor,
-        borderRadius: BorderRadius.circular(_kCardBorderRadius),
-        border: Border.all(color: AppColors.borderSubtle, width: 1),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: iconColor, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+    return Semantics(
+      label: '$label: $value',
+      child: Container(
+        padding: const EdgeInsets.all(_kDefaultPadding),
+        decoration: BoxDecoration(
+          color: _kCardBackgroundColor,
+          borderRadius: BorderRadius.circular(_kCardBorderRadius),
+          border: Border.all(color: AppColors.borderSubtle, width: 1),
+        ),
+        child: Column(
+          children: [
+            ExcludeSemantics(child: Icon(icon, color: iconColor, size: 24)),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -372,32 +405,38 @@ class _HrZoneLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 16,
-      runSpacing: 8,
-      children: List.generate(
-        kHeartRateZones.length,
-        (i) => Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 12,
-              height: 12,
-              decoration: BoxDecoration(
-                color: kHeartRateZones[i].color,
-                shape: BoxShape.circle,
+    return Semantics(
+      label:
+          'Heart rate training zones legend: ${kHeartRateZones.map((z) => '${z.label} ${(z.minPercent * 100).toInt()} to ${(z.maxPercent * 100).toInt()} percent').join(', ')}',
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 16,
+        runSpacing: 8,
+        children: List.generate(
+          kHeartRateZones.length,
+          (i) => Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ExcludeSemantics(
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: kHeartRateZones[i].color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              '${kHeartRateZones[i].label} ${(kHeartRateZones[i].minPercent * 100).toInt()}%-${(kHeartRateZones[i].maxPercent * 100).toInt()}%',
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 12,
+              const SizedBox(width: 4),
+              Text(
+                '${kHeartRateZones[i].label} ${(kHeartRateZones[i].minPercent * 100).toInt()}%-${(kHeartRateZones[i].maxPercent * 100).toInt()}%',
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

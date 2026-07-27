@@ -123,7 +123,13 @@ class WorkoutHistoryView extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.fitness_center, size: 80, color: AppColors.textTertiary),
+            const ExcludeSemantics(
+              child: Icon(
+                Icons.fitness_center,
+                size: 80,
+                color: AppColors.textTertiary,
+              ),
+            ),
             const SizedBox(height: 24),
             Text(
               'No workouts recorded yet',
@@ -153,81 +159,89 @@ class WorkoutHistoryView extends ConsumerWidget {
   Widget _buildWorkoutCard(BuildContext context, WorkoutSession session) {
     final duration = _formatDuration(session.startTime, session.endTime);
     final formattedDate = _formatDate(session.startTime);
+    final deviceName = session.deviceName.isEmpty
+        ? 'Unknown Sensor'
+        : session.deviceName;
 
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => WorkoutDetailsView(session: session),
+      child: Semantics(
+        button: true,
+        label:
+            'Workout on $formattedDate, duration $duration, sensor $deviceName. Average heart rate ${session.avgBpm} BPM, Peak heart rate ${session.maxBpm} BPM. Swipe left to delete.',
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => WorkoutDetailsView(session: session),
+              ),
+            );
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 16.0),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceBackground,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.borderSubtle, width: 1),
             ),
-          );
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          width: double.infinity,
-          margin: const EdgeInsets.symmetric(horizontal: 16.0),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceBackground,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.borderSubtle, width: 1),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ExcludeSemantics(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      formattedDate,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.badgeBackground,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        duration,
-                        style: const TextStyle(
-                          color: AppColors.accentBlue,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          formattedDate,
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
                         ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.badgeBackground,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            duration,
+                            style: const TextStyle(
+                              color: AppColors.accentBlue,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      deviceName,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
                       ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        _buildMetricColumn('Avg BPM', '${session.avgBpm}'),
+                        const SizedBox(width: 24),
+                        _buildMetricColumn('Max BPM', '${session.maxBpm}'),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  session.deviceName.isEmpty
-                      ? 'Unknown Sensor'
-                      : session.deviceName,
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 12,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    _buildMetricColumn('Avg BPM', '${session.avgBpm}'),
-                    const SizedBox(width: 24),
-                    _buildMetricColumn('Max BPM', '${session.maxBpm}'),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
         ),
