@@ -70,5 +70,32 @@ void main() {
       expect(dto.id, 5);
       expect(dto.avgBpm, 80);
     });
+
+    test('handles large bpmSamples trace (1000 items)', () {
+      final samples = List.generate(1000, (i) => 60 + (i % 100));
+      final dto = WorkoutSessionDto()..bpmSamples = samples;
+
+      expect(dto.bpmSamples.length, 1000);
+      expect(dto.bpmSamples.first, 60);
+      expect(dto.bpmSamples.last, 159);
+    });
+
+    test('handles empty strings for device Mac and Name', () {
+      final dto = WorkoutSessionDto()
+        ..deviceMacAddress = ''
+        ..deviceName = '';
+
+      expect(dto.deviceMacAddress, isEmpty);
+      expect(dto.deviceName, isEmpty);
+    });
+
+    test('handles boundary values for avgBpm and maxBpm', () {
+      final dto = WorkoutSessionDto()
+        ..avgBpm = 0
+        ..maxBpm = 255;
+
+      expect(dto.avgBpm, 0);
+      expect(dto.maxBpm, 255);
+    });
   });
 }

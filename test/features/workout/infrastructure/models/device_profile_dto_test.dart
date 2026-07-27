@@ -88,4 +88,48 @@ void main() {
       expect(dto.id, 42);
     });
   });
+
+  group('DeviceProfileDto edge cases', () {
+    test('handles empty strings for macAddress and name', () {
+      final dto = DeviceProfileDto()
+        ..macAddress = ''
+        ..name = '';
+      expect(dto.macAddress, isEmpty);
+      expect(dto.name, isEmpty);
+    });
+
+    test('maps all BodySensorLocation indices correctly', () {
+      final dto = DeviceProfileDto();
+
+      final Map<int, BodySensorLocation> expectedMappings = {
+        0: BodySensorLocation.other,
+        1: BodySensorLocation.chest,
+        2: BodySensorLocation.wrist,
+        3: BodySensorLocation.finger,
+        4: BodySensorLocation.hand,
+        5: BodySensorLocation.earLobe,
+        6: BodySensorLocation.foot,
+        7: BodySensorLocation.unknown,
+      };
+
+      expectedMappings.forEach((index, expectedLocation) {
+        dto.lastSensorLocationIndex = index;
+        expect(
+          BodySensorLocation.values[dto.lastSensorLocationIndex],
+          expectedLocation,
+        );
+      });
+    });
+
+    test('handles boundary date values for lastConnectedAt', () {
+      final epoch = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+      final farFuture = DateTime(2099, 12, 31, 23, 59, 59);
+
+      final dto = DeviceProfileDto()..lastConnectedAt = epoch;
+      expect(dto.lastConnectedAt, epoch);
+
+      dto.lastConnectedAt = farFuture;
+      expect(dto.lastConnectedAt, farFuture);
+    });
+  });
 }

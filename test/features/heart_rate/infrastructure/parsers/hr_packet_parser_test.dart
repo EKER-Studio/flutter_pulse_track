@@ -406,5 +406,71 @@ void main() {
         expect(result.sensorContactActive, isNull);
       });
     });
+
+    group('Complex flag combinations (all fields active)', () {
+      test(
+        'flags = 0x1F: 16-bit BPM + contact active + energy expended + R-R',
+        () {
+          // flags = 0x1F (0x01 16bit | 0x02 contact active | 0x04 contact supported | 0x08 energy | 0x10 RR)
+          // bpm = 160 => [0xA0, 0x00]
+          // energy expended = 300 => [0x2C, 0x01]
+          // R-R = 819 (0.8s) => [0x33, 0x03], R-R = 1228 (1.2s) => [0xCC, 0x04]
+          final rawData = Uint8List.fromList([
+            0x1F,
+            0xA0, 0x00, // bpm 160
+            0x2C, 0x01, // energy 300
+            0x33, 0x03, // R-R 819 (0.8s)
+            0xCC, 0x04, // R-R 1228 (1.2s)
+          ]);
+          final result = HrPacketParser.parseRawBytes(rawData);
+
+          expect(result, isNotNull);
+          expect(result!.bpm, 160);
+          expect(result.sensorContactSupported, true);
+          expect(result.sensorContactActive, true);
+          expect(result.rrIntervals, hasLength(2));
+          expect(result.rrIntervals[0], closeTo(819 / 1024.0, 1e-3));
+          expect(result.rrIntervals[1], closeTo(1228 / 1024.0, 1e-3));
+        },
+      );
+
+      test(
+        'flags = 0x1D: 16-bit BPM + contact inactive + energy expended + R-R',
+        () {
+          // flags = 0x1D (0x01 16bit | 0x04 contact supported | 0x08 energy | 0x10 RR)
+          final rawData = Uint8List.fromList([
+            0x1D,
+            0xA0, 0x00, // bpm 160
+            0x2C, 0x01, // energy 300
+            0x00, 0x04, // R-R 1024 (1.0s)
+          ]);
+          final result = HrPacketParser.parseRawBytes(rawData);
+
+          expect(result, isNotNull);
+          expect(result!.bpm, 160);
+          expect(result.sensorContactSupported, true);
+          expect(result.sensorContactActive, false);
+          expect(result.rrIntervals, hasLength(1));
+          expect(result.rrIntervals[0], closeTo(1.0, 1e-6));
+        },
+      );
+
+      test('flags = 0x14: 8-bit BPM + contact inactive + R-R (no energy)', () {
+        // flags = 0x14 (0x04 contact supported | 0x10 RR)
+        final rawData = Uint8List.fromList([
+          0x14,
+          70, // bpm 70
+          0x00, 0x04, // R-R 1.0s
+        ]);
+        final result = HrPacketParser.parseRawBytes(rawData);
+
+        expect(result, isNotNull);
+        expect(result!.bpm, 70);
+        expect(result.sensorContactSupported, true);
+        expect(result.sensorContactActive, false);
+        expect(result.rrIntervals, hasLength(1));
+        expect(result.rrIntervals[0], closeTo(1.0, 1e-6));
+      });
+    });
   });
 }
