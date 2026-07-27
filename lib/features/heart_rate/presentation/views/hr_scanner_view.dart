@@ -38,6 +38,7 @@ class HrScannerView extends ConsumerWidget {
               label: AppLocalizations.of(context).toggle_filter_tooltip,
               button: true,
               child: IconButton(
+                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
                 icon: Icon(
                   _isFilterActive(notifier)
                       ? Icons.filter_list
