@@ -34,6 +34,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scanner_title => 'Scanner';
 
   @override
+  String get bluetooth_searching_label => 'Bluetooth scanning';
+
+  @override
+  String get bluetooth_disabled_label => 'Bluetooth disabled';
+
+  @override
+  String get device_unknown_label => 'Unknown device';
+
+  @override
+  String get bluetooth_device_label => 'Bluetooth device';
+
+  @override
   String get toggle_filter_tooltip => 'Toggle Names & Nearby Filter';
 
   @override

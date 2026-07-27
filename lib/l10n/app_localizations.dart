@@ -142,6 +142,30 @@ abstract class AppLocalizations {
   /// **'Scanner'**
   String get scanner_title;
 
+  /// Semantic label for the Bluetooth searching icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth scanning'**
+  String get bluetooth_searching_label;
+
+  /// Semantic label for the Bluetooth disabled icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth disabled'**
+  String get bluetooth_disabled_label;
+
+  /// Semantic label for the unknown device icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown device'**
+  String get device_unknown_label;
+
+  /// Semantic label for the Bluetooth device icon in the device list.
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth device'**
+  String get bluetooth_device_label;
+
   /// Tooltip for the filter toggle button in the scanner view.
   ///
   /// In en, this message translates to:

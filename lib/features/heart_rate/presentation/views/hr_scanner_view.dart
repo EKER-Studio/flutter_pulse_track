@@ -6,7 +6,7 @@ import 'package:pulse_track/features/heart_rate/domain/models/ble_device.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/ble_scanner_state.dart';
 import 'package:pulse_track/features/heart_rate/presentation/controllers/ble_scanner_notifier.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:pulse_track/l10n/app_localizations.dart';
 /// Main entry point for discovering BLE heart rate sensors.
 ///
 /// Implements an exhaustive state machine UI reacting to [BleScannerState]
@@ -47,15 +47,16 @@ class HrScannerView extends ConsumerWidget {
       ),
       // Exhaustive switch expression enforcing UI coverage for all sealed states
       body: switch (state) {
-        IdleScannerState() => _buildIdleState(notifier),
-        AdapterOffScannerState() => _buildAdapterOffState(),
-        EmptyScannerState() => _buildEmptyState(notifier),
+        IdleScannerState() => _buildIdleState(context, notifier),
+        AdapterOffScannerState() => _buildAdapterOffState(context),
+        EmptyScannerState() => _buildEmptyState(context, notifier),
         ScanningScannerState(:final devices) => _buildScanningState(
           context,
           notifier,
           devices,
         ),
         FailureScannerState(:final message) => _buildFailureState(
+          context,
           message,
           notifier,
         ),
@@ -69,15 +70,16 @@ class HrScannerView extends ConsumerWidget {
   }
 
   /// Builds the idle state UI displayed when no scan is active and no devices have been found.
-  Widget _buildIdleState(BleScannerNotifier notifier) {
+  Widget _buildIdleState(BuildContext context, BleScannerNotifier notifier) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             Icons.bluetooth_searching,
             size: 80,
             color: AppColors.textSecondary,
+            semanticLabel: AppLocalizations.of(context).bluetooth_searching_label,
           ),
           const SizedBox(height: 24),
             Text(
@@ -119,12 +121,12 @@ class HrScannerView extends ConsumerWidget {
   }
 
   /// Builds the UI displayed when the Bluetooth adapter is off.
-  Widget _buildAdapterOffState() {
+  Widget _buildAdapterOffState(BuildContext context) {
     return Container(
       width: double.infinity,
       color: AppColors.accentRed.withValues(alpha: 0.05),
-      child: const Padding(
-        padding: EdgeInsets.all(32.0),
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -132,21 +134,22 @@ class HrScannerView extends ConsumerWidget {
               Icons.bluetooth_disabled,
               size: 80,
               color: AppColors.accentRed,
+              semanticLabel: AppLocalizations.of(context).bluetooth_disabled_label,
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             Text(
               AppLocalizations.of(context).bluetooth_required,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context).bluetooth_off_description,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 16,
                 height: 1.4,
@@ -159,17 +162,18 @@ class HrScannerView extends ConsumerWidget {
   }
 
   /// Builds the empty state UI displayed when scanning has completed but no devices were found.
-  Widget _buildEmptyState(BleScannerNotifier notifier) {
+  Widget _buildEmptyState(BuildContext context, BleScannerNotifier notifier) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.device_unknown,
               size: 80,
               color: AppColors.accentOrange,
+              semanticLabel: AppLocalizations.of(context).device_unknown_label,
             ),
             const SizedBox(height: 24),
             Text(
@@ -223,7 +227,7 @@ class HrScannerView extends ConsumerWidget {
   }
 
   /// Builds the failure state UI displayed when the scan could not be started.
-  Widget _buildFailureState(String message, BleScannerNotifier notifier) {
+  Widget _buildFailureState(BuildContext context, String message, BleScannerNotifier notifier) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -318,10 +322,11 @@ class HrScannerView extends ConsumerWidget {
                     color: AppColors.badgeBackground,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.bluetooth,
                     color: AppColors.textPrimary,
                     size: 24,
+                    semanticLabel: AppLocalizations.of(context).bluetooth_device_label,
                   ),
                 ),
                 title: Flexible(
