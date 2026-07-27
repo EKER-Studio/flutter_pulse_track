@@ -1,3 +1,5 @@
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pulse_track/core/infrastructure/services/foreground_service_manager.dart';
 import 'package:pulse_track/core/infrastructure/services/foreground_task_platform.dart';
@@ -107,6 +109,46 @@ void main() {
     test('uses FlutterForegroundTaskPlatform when platform is omitted', () {
       final defaultManager = ForegroundServiceManager();
       expect(defaultManager, isNotNull);
+    });
+  });
+
+  group('MyTaskHandler', () {
+    test('onStart executes without error', () async {
+      final handler = MyTaskHandler();
+      await expectLater(
+        handler.onStart(DateTime.now(), TaskStarter.developer),
+        completes,
+      );
+    });
+
+    test('onRepeatEvent executes without error', () {
+      final handler = MyTaskHandler();
+      expect(
+        () => handler.onRepeatEvent(DateTime.now()),
+        returnsNormally,
+      );
+    });
+
+    test('onDestroy executes without error', () async {
+      final handler = MyTaskHandler();
+      await expectLater(
+        handler.onDestroy(DateTime.now(), false),
+        completes,
+      );
+      await expectLater(
+        handler.onDestroy(DateTime.now(), true),
+        completes,
+      );
+    });
+  });
+
+  group('foregroundServiceManagerProvider', () {
+    test('delivers ForegroundServiceManager instance via ProviderContainer', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final manager = container.read(foregroundServiceManagerProvider);
+      expect(manager, isA<ForegroundServiceManager>());
     });
   });
 }

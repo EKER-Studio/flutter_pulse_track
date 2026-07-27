@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar_community/isar.dart';
+import 'package:pulse_track/core/infrastructure/storage/isar_provider.dart';
 import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/infrastructure/models/device_profile_dto.dart';
@@ -461,6 +463,20 @@ void main() {
 
       final sessions = await isar.workoutSessionDtos.where().findAll();
       expect(sessions, hasLength(1));
+    });
+  });
+
+  group('workoutPersistenceRepositoryProvider', () {
+    test('creates WorkoutPersistenceRepository instance from ProviderContainer', () {
+      final container = ProviderContainer(
+        overrides: [
+          isarProvider.overrideWithValue(isar),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final repo = container.read(workoutPersistenceRepositoryProvider);
+      expect(repo, isA<WorkoutPersistenceRepository>());
     });
   });
 }
