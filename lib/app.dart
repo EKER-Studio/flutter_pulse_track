@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/presentation/theme/app_colors.dart';
 import 'features/heart_rate/presentation/views/hr_home_view.dart';
 import 'l10n/app_localizations.dart';
 
@@ -18,14 +19,14 @@ class App extends ConsumerWidget {
   /// Builds the material app with dark theme and [HrHomeView] as the home screen.
   ///
   /// Theme configuration uses Material 3 with a dark color scheme derived from
-  /// [Colors.redAccent].
+  /// [AppColors.accentRed].
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'PulseTrack',
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.redAccent,
+          seedColor: AppColors.accentRed,
           brightness: Brightness.dark,
         ),
         useMaterial3: true,

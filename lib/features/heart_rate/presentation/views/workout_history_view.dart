@@ -74,7 +74,7 @@ class WorkoutHistoryView extends ConsumerWidget {
                   color: AppColors.errorRed,
                   child: const Icon(
                     Icons.delete,
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                     size: 24,
                   ),
                 ),
