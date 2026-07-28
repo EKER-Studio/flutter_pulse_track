@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
-import 'package:pulse_track/features/workout/presentation/utils/heart_rate_export_helper.dart';
+import 'package:pulse_track/features/workout/domain/services/workout_export_service.dart';
 import 'package:pulse_track/features/workout/presentation/utils/heart_rate_zones.dart';
 
 /// Full-screen details view for a single completed or in-progress workout session.
@@ -14,7 +15,7 @@ import 'package:pulse_track/features/workout/presentation/utils/heart_rate_zones
 /// painted BPM waveform chart colored by heart-rate zones.
 ///
 /// Navigated to from the workout history list via the workout feature route.
-class WorkoutDetailsView extends StatelessWidget {
+class WorkoutDetailsView extends ConsumerWidget {
   /// Creates a [WorkoutDetailsView] instance for the given [session].
   const WorkoutDetailsView({required this.session, super.key});
 
@@ -35,9 +36,9 @@ class WorkoutDetailsView extends StatelessWidget {
   /// The workout session whose details are displayed.
   final WorkoutSession session;
 
-  /// Builds the workout details screen with header, summary grid, and BPM chart using [context].
+  /// Builds the workout details screen with header, summary grid, and BPM chart using [context] and [ref].
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Format once so the duration string is shared between the header badge
     // and the summary grid tile.
     final duration = _formatDuration(session.startTime, session.endTime);
@@ -66,13 +67,25 @@ class WorkoutDetailsView extends StatelessWidget {
         actions: [
           Semantics(
             button: true,
-            label: 'Share workout as CSV',
+            label: 'Export workout data to CSV',
             child: IconButton(
               constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
               icon: const Icon(Icons.share),
-              tooltip: 'Share workout as CSV',
-              onPressed: () {
-                HeartRateExportHelper.shareWorkoutAsCsv(context, session);
+              tooltip: 'Export workout data to CSV',
+              onPressed: () async {
+                try {
+                  await ref
+                      .read(workoutExportServiceProvider)
+                      .exportAndShareSession(session);
+                } catch (e) {
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to export workout session: $e'),
+                      backgroundColor: AppColors.errorRed,
+                    ),
+                  );
+                }
               },
             ),
           ),
