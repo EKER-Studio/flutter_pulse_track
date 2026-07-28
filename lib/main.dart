@@ -8,6 +8,7 @@ import 'core/infrastructure/storage/isar_provider.dart';
 import 'core/presentation/theme/app_colors.dart';
 import 'features/workout/infrastructure/models/device_profile_dto.dart';
 import 'features/workout/infrastructure/models/workout_session_dto.dart';
+import 'features/workout/infrastructure/repositories/workout_persistence_repository.dart';
 
 /// Application entry point.
 ///
@@ -15,7 +16,8 @@ import 'features/workout/infrastructure/models/workout_session_dto.dart';
 /// 1. Ensures Flutter widget bindings are initialized.
 /// 2. Resolves the platform-specific application documents directory.
 /// 3. Opens the Isar database with [DeviceProfileDto] and [WorkoutSessionDto] schemas.
-/// 4. Overrides [isarProvider] in the root [ProviderScope] so the rest of the app
+/// 4. Sanitizes crashed / unclosed sessions from previous unexpected terminations.
+/// 5. Overrides [isarProvider] in the root [ProviderScope] so the rest of the app
 ///    can access the database synchronously without awaiting disk I/O.
 ///
 /// If the database fails to open (corrupted file, broken migration), a minimal
@@ -30,6 +32,9 @@ Future<void> main() async {
       DeviceProfileDtoSchema,
       WorkoutSessionDtoSchema,
     ], directory: dir.path);
+
+    final repo = WorkoutPersistenceRepository(isar);
+    await repo.sanitizeCrashedSessions();
 
     runApp(
       ProviderScope(

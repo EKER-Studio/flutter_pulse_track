@@ -466,6 +466,55 @@ void main() {
     });
   });
 
+  group('sanitizeCrashedSessions', () {
+    test('deletes empty crashed sessions (0 samples, null endTime)', () async {
+      final dto = WorkoutSessionDto()
+        ..startTime = DateTime(2025, 6, 1, 10, 0, 0).toUtc()
+        ..endTime = null
+        ..bpmSamples = []
+        ..avgBpm = 0
+        ..maxBpm = 0
+        ..sensorLocationIndex = 1
+        ..deviceMacAddress = 'AA:BB:CC:DD:EE:01'
+        ..deviceName = 'Sensor';
+
+      await isar.writeTxn(() => isar.workoutSessionDtos.put(dto));
+
+      await repository.sanitizeCrashedSessions();
+
+      final remaining = await isar.workoutSessionDtos.where().findAll();
+      expect(remaining, isEmpty);
+    });
+
+    test(
+      'finalizes non-empty crashed sessions with estimated endTime',
+      () async {
+        final startTime = DateTime(2025, 6, 1, 10, 0, 0).toUtc();
+        final dto = WorkoutSessionDto()
+          ..startTime = startTime
+          ..endTime = null
+          ..bpmSamples = [120, 125, 130]
+          ..avgBpm = 125
+          ..maxBpm = 130
+          ..sensorLocationIndex = 1
+          ..deviceMacAddress = 'AA:BB:CC:DD:EE:01'
+          ..deviceName = 'Sensor';
+
+        await isar.writeTxn(() => isar.workoutSessionDtos.put(dto));
+
+        await repository.sanitizeCrashedSessions();
+
+        final updated = await isar.workoutSessionDtos.where().findAll();
+        expect(updated, hasLength(1));
+        expect(updated.first.endTime, isNotNull);
+        expect(
+          updated.first.endTime?.toUtc(),
+          startTime.add(const Duration(seconds: 3)),
+        );
+      },
+    );
+  });
+
   group('workoutPersistenceRepositoryProvider', () {
     test(
       'creates WorkoutPersistenceRepository instance from ProviderContainer',

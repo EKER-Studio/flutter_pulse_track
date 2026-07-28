@@ -72,9 +72,20 @@ class ForegroundServiceManager {
   }
 
   /// Stops the foreground service and removes the notification.
+  ///
+  /// Safe against exceptions and guarantees service teardown.
   Future<void> stopService() async {
-    if (await _platform.isRunningService()) {
-      await _platform.stopService();
+    try {
+      if (await _platform.isRunningService()) {
+        await _platform.stopService();
+        log.i('[ForegroundServiceManager] Foreground service stopped cleanly.');
+      }
+    } catch (e, st) {
+      log.e(
+        '[ForegroundServiceManager] Error while stopping foreground service',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 }

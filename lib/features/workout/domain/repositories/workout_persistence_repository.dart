@@ -73,4 +73,10 @@ abstract class WorkoutPersistenceRepository {
   ///
   /// Returns a [Future] that completes once the record is deleted.
   Future<void> deleteWorkoutSession(int sessionId);
+
+  /// Scans persistent storage for crashed/unclosed workout sessions (where `endTime` is null).
+  ///
+  /// Finalizes incomplete records by assigning an estimated `endTime` derived from
+  /// recorded heart rate samples or deletes empty orphaned records.
+  Future<void> sanitizeCrashedSessions();
 }
