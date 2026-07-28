@@ -1,5 +1,6 @@
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/core/utils/app_logger.dart';
+import 'package:pulse_track/l10n/app_localizations.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/domain/usecases/delete_workout_session_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
@@ -19,6 +20,7 @@ class WorkoutHistoryView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final historyAsync = ref.watch(watchWorkoutHistoryStreamProvider);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
@@ -26,7 +28,7 @@ class WorkoutHistoryView extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         title: Text(
-          'Workout History',
+          l10n.workoutHistoryAppBarTitle,
           style: Theme.of(
             context,
           ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -46,7 +48,7 @@ class WorkoutHistoryView extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.all(32.0),
               child: Text(
-                'Unable to load workout history. Please try again later.',
+                l10n.unableToLoadHistory,
                 style: TextStyle(color: AppColors.textMuted),
                 textAlign: TextAlign.center,
               ),
@@ -55,7 +57,7 @@ class WorkoutHistoryView extends ConsumerWidget {
         },
         data: (sessions) {
           if (sessions.isEmpty) {
-            return _buildEmptyState();
+            return _buildEmptyState(l10n);
           }
 
           return ListView.separated(
@@ -70,7 +72,8 @@ class WorkoutHistoryView extends ConsumerWidget {
                 direction: DismissDirection.endToStart,
                 background: Semantics(
                   button: true,
-                  label: 'Delete session',
+                  label: l10n.deleteSessionLabel,
+                  hint: l10n.deleteSessionHint,
                   child: Container(
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 16.0),
@@ -98,11 +101,7 @@ class WorkoutHistoryView extends ConsumerWidget {
                       );
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Unable to delete session. Please try again.',
-                            ),
-                          ),
+                          SnackBar(content: Text(l10n.unableToDeleteSession)),
                         );
                       }
                       return false;
@@ -111,7 +110,7 @@ class WorkoutHistoryView extends ConsumerWidget {
                   return true;
                 },
                 onDismissed: (_) {},
-                child: _buildWorkoutCard(context, session),
+                child: _buildWorkoutCard(context, l10n, session),
               );
             },
           );
@@ -121,7 +120,7 @@ class WorkoutHistoryView extends ConsumerWidget {
   }
 
   /// Renders a centered empty-state message when no workout sessions exist.
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -137,7 +136,7 @@ class WorkoutHistoryView extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'No workouts recorded yet',
+              l10n.noWorkoutsTitle,
               style: TextStyle(
                 color: AppColors.textMuted,
                 fontSize: 20,
@@ -147,7 +146,7 @@ class WorkoutHistoryView extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Complete a heart rate monitoring session to see your workout history here.',
+              l10n.noWorkoutsDescription,
               style: TextStyle(color: AppColors.textTertiary, fontSize: 14),
               textAlign: TextAlign.center,
             ),
@@ -161,19 +160,28 @@ class WorkoutHistoryView extends ConsumerWidget {
   ///
   /// Tapping navigates to [WorkoutDetailsView]. Swiping right dismisses
   /// and deletes the session from Isar.
-  Widget _buildWorkoutCard(BuildContext context, WorkoutSession session) {
+  Widget _buildWorkoutCard(
+    BuildContext context,
+    AppLocalizations l10n,
+    WorkoutSession session,
+  ) {
     final duration = _formatDuration(session.startTime, session.endTime);
-    final formattedDate = _formatDate(session.startTime);
+    final formattedDate = _formatDate(l10n, session.startTime);
     final deviceName = session.deviceName.isEmpty
-        ? 'Unknown Sensor'
+        ? l10n.unknownSensorName
         : session.deviceName;
 
     return Material(
       color: Colors.transparent,
       child: Semantics(
         button: true,
-        label:
-            'Workout on $formattedDate, duration $duration, sensor $deviceName. Average heart rate ${session.avgBpm} BPM, Peak heart rate ${session.maxBpm} BPM. Swipe left to delete.',
+        label: l10n.workoutCardLabel(formattedDate),
+        hint: l10n.workoutCardHint(
+          duration,
+          deviceName,
+          session.avgBpm,
+          session.maxBpm,
+        ),
         child: InkWell(
           onTap: () {
             Navigator.of(context).push(
@@ -240,9 +248,15 @@ class WorkoutHistoryView extends ConsumerWidget {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        _buildMetricColumn('Avg BPM', '${session.avgBpm}'),
+                        _buildMetricColumn(
+                          l10n.avgBpmMetric,
+                          '${session.avgBpm}',
+                        ),
                         const SizedBox(width: 24),
-                        _buildMetricColumn('Max BPM', '${session.maxBpm}'),
+                        _buildMetricColumn(
+                          l10n.maxBpmMetric,
+                          '${session.maxBpm}',
+                        ),
                       ],
                     ),
                   ],
@@ -277,16 +291,16 @@ class WorkoutHistoryView extends ConsumerWidget {
   }
 
   /// Returns a relative date string ("Today, HH:mm", "Yesterday…", or "Mon, MMM DD, HH:mm").
-  String _formatDate(DateTime date) {
+  String _formatDate(AppLocalizations l10n, DateTime date) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final workoutDay = DateTime(date.year, date.month, date.day);
     final difference = today.difference(workoutDay).inDays;
 
     if (difference == 0) {
-      return 'Today, ${intl.DateFormat.Hm().format(date)}';
+      return l10n.todayPrefix(intl.DateFormat.Hm().format(date));
     } else if (difference == 1) {
-      return 'Yesterday, ${intl.DateFormat.Hm().format(date)}';
+      return l10n.yesterdayPrefix(intl.DateFormat.Hm().format(date));
     } else {
       return '${intl.DateFormat.EEEE().format(date)}, ${intl.DateFormat.Md().format(date)} at ${intl.DateFormat.Hm().format(date)}';
     }

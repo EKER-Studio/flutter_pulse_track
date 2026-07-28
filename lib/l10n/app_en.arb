@@ -67,5 +67,118 @@
    "scan_button_semantic_label": "Start scanning for heart rate sensors",
    "@scan_button_semantic_label": {"description": "Semantic label for the Scan button."},
    "retry_scan_semantic_label": "Retry scanning for sensors",
-   "@retry_scan_semantic_label": {"description": "Semantic label for the Retry Scan button in empty state."}
+   "@retry_scan_semantic_label": {"description": "Semantic label for the Retry Scan button in empty state."},
+
+   "connectToSensor": "Connect to {sensorName}",
+   "@connectToSensor": {
+      "description": "Semantic label for saved sensor chips on the home screen.",
+      "placeholders": { "sensorName": { "type": "String" } }
+   },
+   "deviceListTileHint": "MAC address {id}, signal strength {rssi} dBm. Double-tap to connect.",
+   "@deviceListTileHint": {
+      "description": "Semantics hint for each device row in the scanner list.",
+      "placeholders": {
+         "id": { "type": "String" },
+         "rssi": { "type": "int" }
+      }
+   },
+
+   "disconnectButton": "Disconnect",
+   "@disconnectButton": {"description": "Label for the disconnect button in the monitor view AppBar."},
+   "disconnectHint": "Disconnects from {deviceName}",
+   "@disconnectHint": {
+      "description": "Semantics hint for the disconnect button.",
+      "placeholders": { "deviceName": { "type": "String" } }
+   },
+   "disconnectedStatus": "Disconnected",
+   "@disconnectedStatus": {"description": "Status text shown when the sensor is disconnected."},
+   "returnToScannerButton": "Return to Scanner",
+   "@returnToScannerButton": {"description": "Button label to navigate back to the scanner screen."},
+   "returnToScannerHint": "Navigates back to the device scanner screen",
+   "@returnToScannerHint": {"description": "Semantics hint for the Return to Scanner button."},
+   "connectingMessage": "Connecting to device...\nLink-layer handshake in progress",
+   "@connectingMessage": {"description": "Progress message shown during BLE link-layer connection."},
+   "discoveringServicesMessage": "Discovering Services... Please wait...",
+   "@discoveringServicesMessage": {"description": "Progress message shown during GATT service discovery."},
+   "heartRateLabel": "Heart rate",
+   "@heartRateLabel": {"description": "Header label above the live BPM reading."},
+   "heartRateLiveLabel": "Heart rate: {bpm} beats per minute",
+   "@heartRateLiveLabel": {
+      "description": "Accessibility live region label for the current heart rate.",
+      "placeholders": { "bpm": { "type": "int" } }
+   },
+   "bpmUnit": "BPM",
+   "@bpmUnit": {"description": "Abbreviation for beats per minute."},
+   "bodySensorLocationTitle": "Body sensor location",
+   "@bodySensorLocationTitle": {"description": "Title for the sensor location info card."},
+   "bodySensorLocationLabel": "Body sensor location: {location}",
+   "@bodySensorLocationLabel": {
+      "description": "Accessibility label for the sensor location card.",
+      "placeholders": { "location": { "type": "String" } }
+   },
+   "sensorBatteryTitle": "Sensor battery",
+   "@sensorBatteryTitle": {"description": "Title for the battery level info card."},
+   "sensorBatteryLabel": "Sensor battery level: {level}",
+   "@sensorBatteryLabel": {
+      "description": "Accessibility label for the battery card.",
+      "placeholders": { "level": { "type": "String" } }
+   },
+   "batteryNotAvailable": "N/A",
+   "@batteryNotAvailable": {"description": "Displayed when battery level is unavailable."},
+   "connectionFailedTitle": "Connection Failed",
+   "@connectionFailedTitle": {"description": "Title of the failure state card in the monitor view."},
+   "retryConnectionButton": "Retry Connection",
+   "@retryConnectionButton": {"description": "Button label to retry connecting to a device."},
+   "retryConnectionHint": "Attempts to reconnect to the heart rate sensor",
+   "@retryConnectionHint": {"description": "Semantics hint for the retry connection button."},
+   "goBackButton": "Go Back",
+   "@goBackButton": {"description": "Button label to navigate back from the failure state."},
+   "goBackHint": "Returns to the previous screen",
+   "@goBackHint": {"description": "Semantics hint for the go back button."},
+
+   "workoutHistoryAppBarTitle": "Workout History",
+   "@workoutHistoryAppBarTitle": {"description": "AppBar title for the workout history screen."},
+   "deleteSessionLabel": "Delete",
+   "@deleteSessionLabel": {"description": "Semantic label for the dismiss-to-delete gesture background."},
+   "deleteSessionHint": "Deletes this workout session",
+   "@deleteSessionHint": {"description": "Semantics hint for the delete session action."},
+   "unableToLoadHistory": "Unable to load workout history. Please try again later.",
+   "@unableToLoadHistory": {"description": "Error message when workout history fails to load."},
+   "unknownSensorName": "Unknown Sensor",
+   "@unknownSensorName": {"description": "Fallback device name shown on workout cards when the original is empty."},
+   "noWorkoutsTitle": "No workouts recorded yet",
+   "@noWorkoutsTitle": {"description": "Title in the empty state of workout history."},
+   "noWorkoutsDescription": "Complete a heart rate monitoring session to see your workout history here.",
+   "@noWorkoutsDescription": {"description": "Description in the empty state of workout history."},
+   "workoutCardLabel": "Workout on {date}",
+   "@workoutCardLabel": {
+      "description": "Semantic label for a workout history card.",
+      "placeholders": { "date": { "type": "String" } }
+   },
+   "workoutCardHint": "Duration {duration}, sensor {device}. Average heart rate {avg} BPM, Peak heart rate {max} BPM. Swipe left to delete.",
+   "@workoutCardHint": {
+      "description": "Semantics hint for a workout history card.",
+      "placeholders": {
+         "duration": { "type": "String" },
+         "device": { "type": "String" },
+         "avg": { "type": "int" },
+         "max": { "type": "int" }
+      }
+   },
+   "unableToDeleteSession": "Unable to delete session. Please try again.",
+   "@unableToDeleteSession": {"description": "SnackBar message when session deletion fails."},
+   "avgBpmMetric": "Avg BPM",
+   "@avgBpmMetric": {"description": "Label for the average BPM metric on workout cards."},
+   "maxBpmMetric": "Max BPM",
+   "@maxBpmMetric": {"description": "Label for the max BPM metric on workout cards."},
+   "todayPrefix": "Today, {time}",
+   "@todayPrefix": {
+      "description": "Date prefix for workouts that occurred today.",
+      "placeholders": { "time": { "type": "String" } }
+   },
+   "yesterdayPrefix": "Yesterday, {time}",
+   "@yesterdayPrefix": {
+      "description": "Date prefix for workouts that occurred yesterday.",
+      "placeholders": { "time": { "type": "String" } }
+   }
 }

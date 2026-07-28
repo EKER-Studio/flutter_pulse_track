@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:pulse_track/l10n/app_localizations.dart';
+
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
@@ -50,6 +52,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     // state machine UI clean and exhaustive.
     final state = ref.watch(hrMonitorProvider);
     final notifier = ref.read(hrMonitorProvider.notifier);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
@@ -69,8 +72,8 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
               state is DiscoveringServicesMonitorState)
             Semantics(
               button: true,
-              label: 'Disconnect from ${widget.deviceName}',
-              tooltip: 'Disconnect from ${widget.deviceName}',
+              label: l10n.disconnectButton,
+              hint: l10n.disconnectHint(widget.deviceName),
               child: TextButton.icon(
                 style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
                 icon: const ExcludeSemantics(
@@ -80,9 +83,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                     size: 18,
                   ),
                 ),
-                label: const Text(
-                  'Disconnect',
-                  style: TextStyle(
+                label: Text(
+                  l10n.disconnectButton,
+                  style: const TextStyle(
                     color: AppColors.accentRed,
                     fontWeight: FontWeight.bold,
                   ),
@@ -98,18 +101,18 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
         ],
       ),
       body: switch (state) {
-        DisconnectedMonitorState() => _buildDisconnectedState(context),
-        ConnectingMonitorState() => _buildLoadingState(
-          'Connecting to device...\nLink-layer handshake in progress',
-        ),
+        DisconnectedMonitorState() => _buildDisconnectedState(context, l10n),
+        ConnectingMonitorState() => _buildLoadingState(l10n.connectingMessage),
         DiscoveringServicesMonitorState() => _buildLoadingState(
-          'Discovering Services... Please wait...',
+          l10n.discoveringServicesMessage,
         ),
         ConnectedMonitorState(:final measurement) => _buildConnectedState(
+          l10n,
           measurement,
         ),
         FailureMonitorState(:final message) => _buildFailureState(
           context,
+          l10n,
           message,
           notifier,
         ),
@@ -118,7 +121,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
   }
 
   /// Renders the UI for a hard-disconnected state with a button to return to the scanner.
-  Widget _buildDisconnectedState(BuildContext context) {
+  Widget _buildDisconnectedState(BuildContext context, AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -131,9 +134,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Disconnected',
-            style: TextStyle(
+          Text(
+            l10n.disconnectedStatus,
+            style: const TextStyle(
               color: AppColors.textPrimary,
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -142,16 +145,17 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           const SizedBox(height: 32),
           Semantics(
             button: true,
-            label: 'Return to device scanner',
+            label: l10n.returnToScannerButton,
+            hint: l10n.returnToScannerHint,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.accentBlue,
                 minimumSize: const Size(180, 48),
               ),
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
-                'Return to Scanner',
-                style: TextStyle(color: AppColors.textPrimary),
+              child: Text(
+                l10n.returnToScannerButton,
+                style: const TextStyle(color: AppColors.textPrimary),
               ),
             ),
           ),
@@ -193,16 +197,16 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
   }
 
   /// Renders the live telemetry dashboard showing BPM, R-R intervals, sensor location, and battery.
-  Widget _buildConnectedState(HrMeasurement metric) {
+  Widget _buildConnectedState(AppLocalizations l10n, HrMeasurement metric) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
-            'Heart rate',
-            style: TextStyle(
+          Text(
+            l10n.heartRateLabel,
+            style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 18,
               fontWeight: FontWeight.w500,
@@ -212,7 +216,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           const SizedBox(height: 16),
           Semantics(
             liveRegion: true,
-            label: 'Heart rate: ${metric.bpm} beats per minute',
+            label: l10n.heartRateLiveLabel(metric.bpm),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -235,9 +239,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Text(
-                  'BPM',
-                  style: TextStyle(
+                Text(
+                  l10n.bpmUnit,
+                  style: const TextStyle(
                     fontSize: 24,
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
@@ -264,7 +268,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           ],
           const SizedBox(height: 48),
           Semantics(
-            label: 'Body sensor location: ${metric.sensorLocation.displayName}',
+            label: l10n.bodySensorLocationLabel(
+              metric.sensorLocation.displayName,
+            ),
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -283,9 +289,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Body sensor location',
-                        style: TextStyle(
+                      Text(
+                        l10n.bodySensorLocationTitle,
+                        style: const TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 12,
                         ),
@@ -306,8 +312,11 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           ),
           const SizedBox(height: 16),
           Semantics(
-            label:
-                'Sensor battery level: ${metric.batteryLevel != null ? '${metric.batteryLevel} percent' : 'Not available'}',
+            label: l10n.sensorBatteryLabel(
+              metric.batteryLevel != null
+                  ? '${metric.batteryLevel}%'
+                  : l10n.batteryNotAvailable,
+            ),
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -332,9 +341,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Sensor battery',
-                        style: TextStyle(
+                      Text(
+                        l10n.sensorBatteryTitle,
+                        style: const TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 12,
                         ),
@@ -342,7 +351,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                       Text(
                         metric.batteryLevel != null
                             ? '${metric.batteryLevel}%'
-                            : 'N/A',
+                            : l10n.batteryNotAvailable,
                         style: const TextStyle(
                           color: AppColors.textPrimary,
                           fontSize: 16,
@@ -363,6 +372,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
   /// Renders an error card with the failure message and options to retry or go back.
   Widget _buildFailureState(
     BuildContext context,
+    AppLocalizations l10n,
     String message,
     HrMonitorNotifier notifier,
   ) {
@@ -389,9 +399,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Connection Failed',
-                style: TextStyle(
+              Text(
+                l10n.connectionFailedTitle,
+                style: const TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -411,7 +421,8 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                 width: double.infinity,
                 child: Semantics(
                   button: true,
-                  label: 'Retry connection to device',
+                  label: l10n.retryConnectionButton,
+                  hint: l10n.retryConnectionHint,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.accentBlue,
@@ -424,9 +435,9 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                     icon: const ExcludeSemantics(
                       child: Icon(Icons.refresh, color: AppColors.textPrimary),
                     ),
-                    label: const Text(
-                      'Retry Connection',
-                      style: TextStyle(
+                    label: Text(
+                      l10n.retryConnectionButton,
+                      style: const TextStyle(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.bold,
                       ),
@@ -441,16 +452,17 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                 width: double.infinity,
                 child: Semantics(
                   button: true,
-                  label: 'Go back to previous screen',
+                  label: l10n.goBackButton,
+                  hint: l10n.goBackHint,
                   child: TextButton(
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       minimumSize: const Size(48, 48),
                     ),
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text(
-                      'Go Back',
-                      style: TextStyle(color: AppColors.textSecondary),
+                    child: Text(
+                      l10n.goBackButton,
+                      style: const TextStyle(color: AppColors.textSecondary),
                     ),
                   ),
                 ),

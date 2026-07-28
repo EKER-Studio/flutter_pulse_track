@@ -255,6 +255,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry scanning for sensors'**
   String get retry_scan_semantic_label;
+
+  /// Semantic label for saved sensor chips on the home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to {sensorName}'**
+  String connectToSensor(String sensorName);
+
+  /// Semantics hint for each device row in the scanner list.
+  ///
+  /// In en, this message translates to:
+  /// **'MAC address {id}, signal strength {rssi} dBm. Double-tap to connect.'**
+  String deviceListTileHint(String id, int rssi);
+
+  /// Label for the disconnect button in the monitor view AppBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get disconnectButton;
+
+  /// Semantics hint for the disconnect button.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnects from {deviceName}'**
+  String disconnectHint(String deviceName);
+
+  /// Status text shown when the sensor is disconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get disconnectedStatus;
+
+  /// Button label to navigate back to the scanner screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Return to Scanner'**
+  String get returnToScannerButton;
+
+  /// Semantics hint for the Return to Scanner button.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigates back to the device scanner screen'**
+  String get returnToScannerHint;
+
+  /// Progress message shown during BLE link-layer connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to device...\nLink-layer handshake in progress'**
+  String get connectingMessage;
+
+  /// Progress message shown during GATT service discovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Discovering Services... Please wait...'**
+  String get discoveringServicesMessage;
+
+  /// Header label above the live BPM reading.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart rate'**
+  String get heartRateLabel;
+
+  /// Accessibility live region label for the current heart rate.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart rate: {bpm} beats per minute'**
+  String heartRateLiveLabel(int bpm);
+
+  /// Abbreviation for beats per minute.
+  ///
+  /// In en, this message translates to:
+  /// **'BPM'**
+  String get bpmUnit;
+
+  /// Title for the sensor location info card.
+  ///
+  /// In en, this message translates to:
+  /// **'Body sensor location'**
+  String get bodySensorLocationTitle;
+
+  /// Accessibility label for the sensor location card.
+  ///
+  /// In en, this message translates to:
+  /// **'Body sensor location: {location}'**
+  String bodySensorLocationLabel(String location);
+
+  /// Title for the battery level info card.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor battery'**
+  String get sensorBatteryTitle;
+
+  /// Accessibility label for the battery card.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor battery level: {level}'**
+  String sensorBatteryLabel(String level);
+
+  /// Displayed when battery level is unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get batteryNotAvailable;
+
+  /// Title of the failure state card in the monitor view.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection Failed'**
+  String get connectionFailedTitle;
+
+  /// Button label to retry connecting to a device.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry Connection'**
+  String get retryConnectionButton;
+
+  /// Semantics hint for the retry connection button.
+  ///
+  /// In en, this message translates to:
+  /// **'Attempts to reconnect to the heart rate sensor'**
+  String get retryConnectionHint;
+
+  /// Button label to navigate back from the failure state.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Back'**
+  String get goBackButton;
+
+  /// Semantics hint for the go back button.
+  ///
+  /// In en, this message translates to:
+  /// **'Returns to the previous screen'**
+  String get goBackHint;
+
+  /// AppBar title for the workout history screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout History'**
+  String get workoutHistoryAppBarTitle;
+
+  /// Semantic label for the dismiss-to-delete gesture background.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteSessionLabel;
+
+  /// Semantics hint for the delete session action.
+  ///
+  /// In en, this message translates to:
+  /// **'Deletes this workout session'**
+  String get deleteSessionHint;
+
+  /// Error message when workout history fails to load.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load workout history. Please try again later.'**
+  String get unableToLoadHistory;
+
+  /// Fallback device name shown on workout cards when the original is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Sensor'**
+  String get unknownSensorName;
+
+  /// Title in the empty state of workout history.
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts recorded yet'**
+  String get noWorkoutsTitle;
+
+  /// Description in the empty state of workout history.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a heart rate monitoring session to see your workout history here.'**
+  String get noWorkoutsDescription;
+
+  /// Semantic label for a workout history card.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout on {date}'**
+  String workoutCardLabel(String date);
+
+  /// Semantics hint for a workout history card.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration {duration}, sensor {device}. Average heart rate {avg} BPM, Peak heart rate {max} BPM. Swipe left to delete.'**
+  String workoutCardHint(String duration, String device, int avg, int max);
+
+  /// SnackBar message when session deletion fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to delete session. Please try again.'**
+  String get unableToDeleteSession;
+
+  /// Label for the average BPM metric on workout cards.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg BPM'**
+  String get avgBpmMetric;
+
+  /// Label for the max BPM metric on workout cards.
+  ///
+  /// In en, this message translates to:
+  /// **'Max BPM'**
+  String get maxBpmMetric;
+
+  /// Date prefix for workouts that occurred today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today, {time}'**
+  String todayPrefix(String time);
+
+  /// Date prefix for workouts that occurred yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday, {time}'**
+  String yesterdayPrefix(String time);
 }
 
 class _AppLocalizationsDelegate

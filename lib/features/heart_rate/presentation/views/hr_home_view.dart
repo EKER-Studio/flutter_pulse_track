@@ -108,8 +108,7 @@ class HrHomeView extends ConsumerWidget {
                                   ),
                                   child: Semantics(
                                     button: true,
-                                    label: 'Connect to $profileName',
-                                    tooltip: 'Connect to $profileName',
+                                    label: l10n.connectToSensor(profileName),
                                     child: Container(
                                       constraints: const BoxConstraints(
                                         minWidth: 48,

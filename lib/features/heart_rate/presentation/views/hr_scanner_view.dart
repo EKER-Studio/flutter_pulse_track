@@ -223,12 +223,9 @@ class HrScannerView extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              '• Ensure the sensor is powered on.\n'
-              '• Check the sensor battery.\n'
-              '• Move closer to the device.\n'
-              '• Try disabling the scan filters.',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context).empty_state_bullets,
+              style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 16,
                 height: 1.5,
@@ -374,9 +371,10 @@ class HrScannerView extends ConsumerWidget {
               return
               /// Semantics wrapper for each device list tile, combining device name and RSSI for accessibility.
               Semantics(
-                /** Semantic label for each device list tile, combining device name and RSSI for accessibility. */
-                label:
-                    '$deviceName, MAC address ${device.id}, signal strength ${device.rssi} dBm',
+                label: deviceName,
+                hint: AppLocalizations.of(
+                  context,
+                ).deviceListTileHint(device.id, device.rssi),
                 button: true,
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(
@@ -452,7 +450,7 @@ class HrScannerView extends ConsumerWidget {
                         builder: (_) => HrMonitorView(
                           deviceId: device.id,
                           deviceName: device.name.isEmpty
-                              ? 'Unknown Device'
+                              ? AppLocalizations.of(context).unknown_device
                               : device.name,
                         ),
                       ),

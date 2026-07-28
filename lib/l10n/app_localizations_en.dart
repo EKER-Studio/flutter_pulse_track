@@ -93,4 +93,139 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry_scan_semantic_label => 'Retry scanning for sensors';
+
+  @override
+  String connectToSensor(String sensorName) {
+    return 'Connect to $sensorName';
+  }
+
+  @override
+  String deviceListTileHint(String id, int rssi) {
+    return 'MAC address $id, signal strength $rssi dBm. Double-tap to connect.';
+  }
+
+  @override
+  String get disconnectButton => 'Disconnect';
+
+  @override
+  String disconnectHint(String deviceName) {
+    return 'Disconnects from $deviceName';
+  }
+
+  @override
+  String get disconnectedStatus => 'Disconnected';
+
+  @override
+  String get returnToScannerButton => 'Return to Scanner';
+
+  @override
+  String get returnToScannerHint =>
+      'Navigates back to the device scanner screen';
+
+  @override
+  String get connectingMessage =>
+      'Connecting to device...\nLink-layer handshake in progress';
+
+  @override
+  String get discoveringServicesMessage =>
+      'Discovering Services... Please wait...';
+
+  @override
+  String get heartRateLabel => 'Heart rate';
+
+  @override
+  String heartRateLiveLabel(int bpm) {
+    return 'Heart rate: $bpm beats per minute';
+  }
+
+  @override
+  String get bpmUnit => 'BPM';
+
+  @override
+  String get bodySensorLocationTitle => 'Body sensor location';
+
+  @override
+  String bodySensorLocationLabel(String location) {
+    return 'Body sensor location: $location';
+  }
+
+  @override
+  String get sensorBatteryTitle => 'Sensor battery';
+
+  @override
+  String sensorBatteryLabel(String level) {
+    return 'Sensor battery level: $level';
+  }
+
+  @override
+  String get batteryNotAvailable => 'N/A';
+
+  @override
+  String get connectionFailedTitle => 'Connection Failed';
+
+  @override
+  String get retryConnectionButton => 'Retry Connection';
+
+  @override
+  String get retryConnectionHint =>
+      'Attempts to reconnect to the heart rate sensor';
+
+  @override
+  String get goBackButton => 'Go Back';
+
+  @override
+  String get goBackHint => 'Returns to the previous screen';
+
+  @override
+  String get workoutHistoryAppBarTitle => 'Workout History';
+
+  @override
+  String get deleteSessionLabel => 'Delete';
+
+  @override
+  String get deleteSessionHint => 'Deletes this workout session';
+
+  @override
+  String get unableToLoadHistory =>
+      'Unable to load workout history. Please try again later.';
+
+  @override
+  String get unknownSensorName => 'Unknown Sensor';
+
+  @override
+  String get noWorkoutsTitle => 'No workouts recorded yet';
+
+  @override
+  String get noWorkoutsDescription =>
+      'Complete a heart rate monitoring session to see your workout history here.';
+
+  @override
+  String workoutCardLabel(String date) {
+    return 'Workout on $date';
+  }
+
+  @override
+  String workoutCardHint(String duration, String device, int avg, int max) {
+    return 'Duration $duration, sensor $device. Average heart rate $avg BPM, Peak heart rate $max BPM. Swipe left to delete.';
+  }
+
+  @override
+  String get unableToDeleteSession =>
+      'Unable to delete session. Please try again.';
+
+  @override
+  String get avgBpmMetric => 'Avg BPM';
+
+  @override
+  String get maxBpmMetric => 'Max BPM';
+
+  @override
+  String todayPrefix(String time) {
+    return 'Today, $time';
+  }
+
+  @override
+  String yesterdayPrefix(String time) {
+    return 'Yesterday, $time';
+  }
 }
