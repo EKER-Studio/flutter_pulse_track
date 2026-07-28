@@ -881,4 +881,115 @@ void main() {
       expect(state, isA<ConnectedMonitorState>());
     });
   });
+
+  group('defensive race-condition guards', () {
+    test(
+      '_saveSessionToDisk blocks duplicate save calls when _saveInProgress is true',
+      () async {
+        final m = buildMocks();
+        container = m.container;
+        notifier = container.read(hrMonitorProvider.notifier);
+        keepAlive();
+
+        final saveCompleter = Completer<void>();
+        when(
+          () => m.saveWorkoutSessionUseCase.call(
+            startTime: any(named: 'startTime'),
+            endTime: any(named: 'endTime'),
+            samples: any(named: 'samples'),
+            sensorLocationIndex: any(named: 'sensorLocationIndex'),
+            macAddress: any(named: 'macAddress'),
+            name: any(named: 'name'),
+            avgBpm: any(named: 'avgBpm'),
+            maxBpm: any(named: 'maxBpm'),
+            existingId: any(named: 'existingId'),
+          ),
+        ).thenAnswer((_) => saveCompleter.future);
+
+        await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+        m.hrValueController.add([0x00, 140]);
+        await Future.delayed(Duration.zero);
+
+        // Trigger explicit disconnect (starts _saveSessionToDisk, awaiting saveCompleter)
+        final disconnectFuture = notifier.disconnect();
+
+        // Simulate unexpected disconnection event on stream while disconnect() is awaiting saveCompleter
+        m.connectionStateController.add(BluetoothConnectionState.disconnected);
+        await Future.delayed(Duration.zero);
+
+        // Complete the first save
+        saveCompleter.complete();
+        await disconnectFuture;
+
+        // Verify saveWorkoutSessionUseCase was only called ONCE despite duplicate trigger
+        verify(
+          () => m.saveWorkoutSessionUseCase.call(
+            startTime: any(named: 'startTime'),
+            endTime: any(named: 'endTime'),
+            samples: any(named: 'samples'),
+            sensorLocationIndex: any(named: 'sensorLocationIndex'),
+            macAddress: any(named: 'macAddress'),
+            name: any(named: 'name'),
+            avgBpm: any(named: 'avgBpm'),
+            maxBpm: any(named: 'maxBpm'),
+            existingId: any(named: 'existingId'),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      '_checkpoint blocks concurrent checkpoint calls when _checkpointInProgress is true',
+      () async {
+        final m = buildMocks();
+        container = m.container;
+        notifier = container.read(hrMonitorProvider.notifier);
+        keepAlive();
+
+        final checkpointCompleter = Completer<int>();
+        when(
+          () => m.savePartialWorkoutSessionUseCase.call(
+            startTime: any(named: 'startTime'),
+            samples: any(named: 'samples'),
+            sensorLocationIndex: any(named: 'sensorLocationIndex'),
+            macAddress: any(named: 'macAddress'),
+            name: any(named: 'name'),
+            avgBpm: any(named: 'avgBpm'),
+            maxBpm: any(named: 'maxBpm'),
+            existingId: any(named: 'existingId'),
+          ),
+        ).thenAnswer((_) => checkpointCompleter.future);
+
+        await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+        m.hrValueController.add([0x00, 140]);
+        await Future.delayed(Duration.zero);
+
+        // Fire first lifecycle change (paused) which calls _checkpoint() and awaits checkpointCompleter
+        notifier.didChangeAppLifecycleState(AppLifecycleState.paused);
+        await Future.delayed(Duration.zero);
+
+        // Fire second lifecycle change (detached) while first checkpoint is still in progress
+        notifier.didChangeAppLifecycleState(AppLifecycleState.detached);
+        await Future.delayed(Duration.zero);
+
+        // Resolve first checkpoint
+        checkpointCompleter.complete(42);
+        await Future.delayed(Duration.zero);
+
+        // Verify savePartialWorkoutSessionUseCase was called ONCE, not twice
+        verify(
+          () => m.savePartialWorkoutSessionUseCase.call(
+            startTime: any(named: 'startTime'),
+            samples: any(named: 'samples'),
+            sensorLocationIndex: any(named: 'sensorLocationIndex'),
+            macAddress: any(named: 'macAddress'),
+            name: any(named: 'name'),
+            avgBpm: any(named: 'avgBpm'),
+            maxBpm: any(named: 'maxBpm'),
+            existingId: any(named: 'existingId'),
+          ),
+        ).called(1);
+      },
+    );
+  });
 }
