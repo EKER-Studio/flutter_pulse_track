@@ -56,8 +56,15 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   bool _isDisconnecting = false;
   bool _checkpointInProgress = false;
   bool _saveInProgress = false;
+  int _reconnectAttempts = 0;
+  static const int _maxReconnectAttempts = 3;
   Timer? _connectTimer;
   Timer? _checkpointTimer;
+  Timer? _reconnectTimer;
+
+  /// Number of auto-reconnect attempts performed during current disconnection event.
+  @visibleForTesting
+  int get reconnectAttempts => _reconnectAttempts;
 
   /// Isar row id returned by the session's most recent checkpoint write, if
   /// any. Passed back into subsequent checkpoint calls — and into the final
@@ -86,6 +93,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   Future<void> connect(String deviceId, String deviceName) async {
     _connectTimer?.cancel();
     _connectTimer = null;
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    _reconnectAttempts = 0;
 
     if (state is ConnectingMonitorState ||
         state is DiscoveringServicesMonitorState) {
@@ -117,20 +127,31 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       state = const MonitorState.disconnected();
     }
 
-    await _cancelSubscriptions();
-    _collectedBpmSamples.clear();
-    _currentBpmSum = 0;
-    _currentMaxBpm = 0;
-    _sessionStartTime = DateTime.now();
-    _sessionDeviceId = deviceId;
-    _sessionDeviceName = deviceName;
-    _sessionSensorLocationIndex = null;
-    _currentBatteryLevel = null;
-    _checkpointSessionId = null;
+    await _performConnect(deviceId, deviceName, isReconnect: false);
+  }
 
-    _device = _monitorService.fromId(deviceId);
+  Future<void> _performConnect(
+    String deviceId,
+    String deviceName, {
+    required bool isReconnect,
+  }) async {
+    unawaited(_cancelSubscriptions());
 
-    log.i('[HrMonitorNotifier] Connecting to "$deviceName" ($deviceId)...');
+    if (!isReconnect) {
+      _collectedBpmSamples.clear();
+      _currentBpmSum = 0;
+      _currentMaxBpm = 0;
+      _sessionStartTime = DateTime.now();
+      _sessionDeviceId = deviceId;
+      _sessionDeviceName = deviceName;
+      _sessionSensorLocationIndex = null;
+      _currentBatteryLevel = null;
+      _checkpointSessionId = null;
+    }
+
+    log.i(
+      '[HrMonitorNotifier] ${isReconnect ? "Reconnecting to" : "Connecting to"} "$deviceName" ($deviceId)...',
+    );
 
     state = const MonitorState.connecting();
 
@@ -138,8 +159,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       await _foregroundServiceManager.startService();
     } catch (e) {
       log.w(
-        '[HrMonitorNotifier] Foreground service startup failed (continuing '
-        'BLE connection anyway)',
+        '[HrMonitorNotifier] Foreground service failed to start — proceeding without notification wrapper.',
         error: e,
       );
     }
@@ -158,24 +178,25 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       );
       _connectTimer?.cancel();
       _connectTimer = null;
-      _foregroundServiceManager.stopService();
       _safeDisconnectDevice();
-      state = const MonitorState.failure(
-        message:
+      _handleConnectFailure(
+        isReconnect: isReconnect,
+        failureMessage:
             'Connection timed out. Make sure the sensor is nearby and powered on.',
       );
     });
 
     try {
+      _device = _monitorService.fromId(deviceId);
       await _monitorService.connect(_device!, autoConnect: false);
     } catch (e, st) {
       log.e('[HrMonitorNotifier] connect() threw', error: e, stackTrace: st);
       _connectTimer?.cancel();
       _connectTimer = null;
-      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
-      state = MonitorState.failure(
-        message: 'Failed to connect: ${e.toString()}',
+      await _handleConnectFailure(
+        isReconnect: isReconnect,
+        failureMessage: 'Failed to connect: ${e.toString()}',
       );
       return;
     } finally {
@@ -183,9 +204,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       _connectTimer = null;
     }
 
-    if (!ref.mounted || _device == null) {
+    if (!ref.mounted || _device == null || _isDisconnecting) {
       log.w(
-        '[HrMonitorNotifier] connect() aborted — notifier disposed '
+        '[HrMonitorNotifier] connect() aborted — notifier disposed or disconnecting '
         'while awaiting physical link.',
       );
       return;
@@ -215,10 +236,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         '${_kDiscoverServicesTimeout.inSeconds}s deadline — '
         'executing mandatory link-layer disconnect.',
       );
-      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
-      state = const MonitorState.failure(
-        message:
+      await _handleConnectFailure(
+        isReconnect: isReconnect,
+        failureMessage:
             'Service discovery timed out. Please move closer to the sensor and retry.',
       );
       return;
@@ -228,17 +249,17 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         error: e,
         stackTrace: st,
       );
-      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
-      state = MonitorState.failure(
-        message: 'Service discovery failed: ${e.toString()}',
+      await _handleConnectFailure(
+        isReconnect: isReconnect,
+        failureMessage: 'Service discovery failed: ${e.toString()}',
       );
       return;
     }
 
-    if (!ref.mounted || _device == null) {
+    if (!ref.mounted || _device == null || _isDisconnecting) {
       log.w(
-        '[HrMonitorNotifier] connect() aborted — notifier disposed '
+        '[HrMonitorNotifier] connect() aborted — notifier disposed or disconnecting '
         'while awaiting GATT discovery.',
       );
       return;
@@ -255,10 +276,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         '[HrMonitorNotifier] Heart Rate Service (0x180D) not found — '
         'this device is not a standard HR sensor.',
       );
-      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
-      state = const MonitorState.failure(
-        message:
+      await _handleConnectFailure(
+        isReconnect: isReconnect,
+        failureMessage:
             'Heart Rate Service (0x180D) not found. '
             'Ensure you are connecting to a heart rate sensor.',
       );
@@ -277,10 +298,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         '[HrMonitorNotifier] HR Measurement Characteristic (0x2A37) not found '
         'on the Heart Rate Service.',
       );
-      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
-      state = const MonitorState.failure(
-        message:
+      await _handleConnectFailure(
+        isReconnect: isReconnect,
+        failureMessage:
             'HR Measurement Characteristic (0x2A37) not found. '
             'This sensor may use a non-standard firmware profile.',
       );
@@ -319,17 +340,17 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         error: e,
         stackTrace: st,
       );
-      await _foregroundServiceManager.stopService();
       await _safeDisconnectDevice();
-      state = MonitorState.failure(
-        message: 'Failed to enable HR notifications: ${e.toString()}',
+      await _handleConnectFailure(
+        isReconnect: isReconnect,
+        failureMessage: 'Failed to enable HR notifications: ${e.toString()}',
       );
       return;
     }
 
-    if (!ref.mounted || _device == null) {
+    if (!ref.mounted || _device == null || _isDisconnecting) {
       log.w(
-        '[HrMonitorNotifier] connect() aborted — notifier disposed '
+        '[HrMonitorNotifier] connect() aborted — notifier disposed or disconnecting '
         'while awaiting GATT notification setup.',
       );
       return;
@@ -389,7 +410,45 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           cancelOnError: false,
         );
 
+    _reconnectAttempts = 0;
     _startCheckpointTimer();
+  }
+
+  Future<void> _handleConnectFailure({
+    required bool isReconnect,
+    required String failureMessage,
+  }) async {
+    if (!ref.mounted || _isDisconnecting) return;
+
+    if (isReconnect &&
+        _reconnectAttempts < _maxReconnectAttempts &&
+        _sessionDeviceId != null &&
+        _sessionDeviceName != null) {
+      _reconnectAttempts++;
+      state = const MonitorState.connecting();
+      log.i(
+        '[HrMonitorNotifier] Auto-reconnect attempt $_reconnectAttempts/$_maxReconnectAttempts '
+        'scheduled in 2s for "$_sessionDeviceName" ($_sessionDeviceId).',
+      );
+
+      final deviceId = _sessionDeviceId!;
+      final deviceName = _sessionDeviceName!;
+
+      _reconnectTimer?.cancel();
+      _reconnectTimer = Timer(const Duration(seconds: 2), () async {
+        _reconnectTimer = null;
+        if (!ref.mounted || _isDisconnecting) return;
+        await _performConnect(deviceId, deviceName, isReconnect: true);
+      });
+      return;
+    }
+
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    _reconnectAttempts = 0;
+    await _saveSessionToDisk();
+    await _foregroundServiceManager.stopService();
+    state = MonitorState.failure(message: failureMessage);
   }
 
   /// Tears down the active BLE connection, cancels subscriptions, and saves the workout session.
@@ -397,18 +456,29 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   /// Returns a [Future] completing when session save and connection teardown finish.
   Future<void> disconnect() async {
     log.i('[HrMonitorNotifier] disconnect() called.');
+    _isDisconnecting = true;
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    _reconnectAttempts = 0;
     _connectTimer?.cancel();
     _connectTimer = null;
-    _stopCheckpointTimer();
-    _isDisconnecting = true;
+    _checkpointTimer?.cancel();
+    _checkpointTimer = null;
+
     try {
-      await _saveSessionToDisk();
-      await _cancelSubscriptions();
       await _safeDisconnectDevice();
+      await _saveSessionToDisk();
       await _foregroundServiceManager.stopService();
-      state = const MonitorState.disconnected();
+    } catch (e, st) {
+      log.e(
+        '[HrMonitorNotifier] Error during disconnect()',
+        error: e,
+        stackTrace: st,
+      );
     } finally {
+      state = const MonitorState.disconnected();
       _isDisconnecting = false;
+      log.i('[HrMonitorNotifier] Disconnection complete.');
     }
   }
 
@@ -703,16 +773,13 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           state is DiscoveringServicesMonitorState) {
         log.w(
           '[HrMonitorNotifier] Unexpected disconnection detected — '
-          'surfacing failure state.',
+          'attempting auto-reconnect if within limits.',
         );
-        _hrNotificationSubscription?.cancel();
-        _batteryNotificationSubscription?.cancel();
-        _hrNotificationSubscription = null;
-        _batteryNotificationSubscription = null;
-        await _saveSessionToDisk();
-        await _foregroundServiceManager.stopService();
-        state = const MonitorState.failure(
-          message:
+        unawaited(_cancelSubscriptions());
+
+        await _handleConnectFailure(
+          isReconnect: true,
+          failureMessage:
               'Connection lost. The sensor may be out of range or powered off.',
         );
       }
@@ -752,6 +819,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     );
     _connectTimer?.cancel();
     _connectTimer = null;
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    _reconnectAttempts = 0;
     _stopCheckpointTimer();
     _hrNotificationSubscription?.cancel();
     _batteryNotificationSubscription?.cancel();

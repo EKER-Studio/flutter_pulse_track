@@ -106,7 +106,7 @@ ProviderContainer createContainer({
   StreamController<BluetoothConnectionState> connectionStateController,
   StreamController<List<int>> hrValueController,
 })
-buildMocks() {
+buildMocks({Future<void> Function(Invocation)? onConnect}) {
   final monitorService = _MockHeartRateMonitorService();
   final foregroundServiceManager = _MockForegroundServiceManager();
   final saveDeviceProfileUseCase = _MockSaveDeviceProfileUseCase();
@@ -122,9 +122,11 @@ buildMocks() {
   when(
     () =>
         monitorService.connect(device, autoConnect: any(named: 'autoConnect')),
-  ).thenAnswer((_) async {});
+  ).thenAnswer(onConnect ?? (_) => Future.value());
 
-  when(() => monitorService.disconnect(device)).thenAnswer((_) async {});
+  when(
+    () => monitorService.disconnect(device),
+  ).thenAnswer((_) => Future.value());
 
   final connectionStateController =
       StreamController<BluetoothConnectionState>.broadcast();
@@ -143,26 +145,42 @@ buildMocks() {
 
   when(
     () => monitorService.discoverServices(device),
-  ).thenAnswer((_) async => [hrService]);
+  ).thenAnswer((_) => Future.value([hrService]));
 
   when(
     () => monitorService.setNotifyValue(hrCharacteristic, any()),
-  ).thenAnswer((_) async {});
+  ).thenAnswer((_) => Future.value());
 
   final hrValueController = StreamController<List<int>>.broadcast();
   when(
     () => monitorService.onValueReceived(hrCharacteristic),
   ).thenAnswer((_) => hrValueController.stream);
 
-  when(() => foregroundServiceManager.startService()).thenAnswer((_) async {});
-  when(() => foregroundServiceManager.stopService()).thenAnswer((_) async {});
+  when(
+    () => foregroundServiceManager.startService(),
+  ).thenAnswer((_) => Future.value());
+  when(
+    () => foregroundServiceManager.stopService(),
+  ).thenAnswer((_) => Future.value());
   when(
     () => saveDeviceProfileUseCase.call(
       macAddress: any(named: 'macAddress'),
       name: any(named: 'name'),
       sensorLocationIndex: any(named: 'sensorLocationIndex'),
     ),
-  ).thenAnswer((_) async {});
+  ).thenAnswer((_) => Future.value());
+  when(
+    () => saveWorkoutSessionUseCase.call(
+      startTime: any(named: 'startTime'),
+      endTime: any(named: 'endTime'),
+      samples: any(named: 'samples'),
+      avgBpm: any(named: 'avgBpm'),
+      maxBpm: any(named: 'maxBpm'),
+      sensorLocationIndex: any(named: 'sensorLocationIndex'),
+      macAddress: any(named: 'macAddress'),
+      name: any(named: 'name'),
+    ),
+  ).thenAnswer((_) => Future.value());
   when(
     () => savePartialWorkoutSessionUseCase.call(
       startTime: any(named: 'startTime'),
@@ -174,7 +192,7 @@ buildMocks() {
       maxBpm: any(named: 'maxBpm'),
       existingId: any(named: 'existingId'),
     ),
-  ).thenAnswer((_) async => 1);
+  ).thenAnswer((_) => Future.value(1));
 
   final container = createContainer(
     monitorService: monitorService,
@@ -729,21 +747,154 @@ void main() {
   });
 
   group('connection state change', () {
-    test('unexpected disconnect during ConnectedMonitorState fails', () async {
-      final m = buildMocks();
-      container = m.container;
-      notifier = container.read(hrMonitorProvider.notifier);
-      keepAlive();
+    void flushAll(FakeAsync async) {
+      for (var i = 0; i < 20; i++) {
+        async.flushMicrotasks();
+        async.elapse(const Duration(milliseconds: 1));
+      }
+    }
 
-      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+    test(
+      'unexpected disconnect triggers up to 3 reconnect attempts before failing',
+      () async {
+        FakeAsync().run((async) {
+          var connectCount = 0;
+          final m = buildMocks(
+            onConnect: (_) {
+              connectCount++;
+              if (connectCount > 1) {
+                return Future.error(
+                  PlatformException(code: 'RECONNECT_FAILED'),
+                );
+              }
+              return Future.value();
+            },
+          );
+          container = m.container;
+          notifier = container.read(hrMonitorProvider.notifier);
+          keepAlive();
 
-      // Simulate unexpected device disconnection
-      m.connectionStateController.add(BluetoothConnectionState.disconnected);
-      await Future.delayed(Duration.zero);
+          unawaited(notifier.connect(_kTestDeviceId, _kTestDeviceName));
+          flushAll(async);
+          m.hrValueController.add([0x00, 100]);
+          flushAll(async);
 
-      final state = container.read(hrMonitorProvider);
-      expect(state, isA<FailureMonitorState>());
-    });
+          expect(notifier.reconnectAttempts, 0);
+
+          // Simulate unexpected device disconnection
+          m.connectionStateController.add(
+            BluetoothConnectionState.disconnected,
+          );
+          flushAll(async);
+
+          // 1st unexpected disconnect schedules 1st reconnect attempt
+          expect(notifier.reconnectAttempts, 1);
+          expect(
+            container.read(hrMonitorProvider),
+            isA<ConnectingMonitorState>(),
+          );
+
+          // Elapse 2s for 1st reconnect attempt to run and fail -> schedules 2nd attempt
+          async.elapse(const Duration(seconds: 2));
+          flushAll(async);
+          expect(notifier.reconnectAttempts, 2);
+          expect(
+            container.read(hrMonitorProvider),
+            isA<ConnectingMonitorState>(),
+          );
+
+          // Elapse 2s for 2nd reconnect attempt to run and fail -> schedules 3rd attempt
+          async.elapse(const Duration(seconds: 2));
+          flushAll(async);
+          expect(notifier.reconnectAttempts, 3);
+          expect(
+            container.read(hrMonitorProvider),
+            isA<ConnectingMonitorState>(),
+          );
+
+          // Elapse 2s for 3rd reconnect attempt to run and fail -> limit reached, fails session
+          async.elapse(const Duration(seconds: 2));
+          flushAll(async);
+          expect(notifier.reconnectAttempts, 0);
+          expect(container.read(hrMonitorProvider), isA<FailureMonitorState>());
+        });
+      },
+    );
+
+    test(
+      'successful auto-reconnect resets reconnectAttempts counter to 0',
+      () async {
+        FakeAsync().run((async) {
+          final m = buildMocks();
+          container = m.container;
+          notifier = container.read(hrMonitorProvider.notifier);
+          keepAlive();
+
+          unawaited(notifier.connect(_kTestDeviceId, _kTestDeviceName));
+          flushAll(async);
+          m.hrValueController.add([0x00, 100]);
+          flushAll(async);
+
+          // Simulate unexpected device disconnection
+          m.connectionStateController.add(
+            BluetoothConnectionState.disconnected,
+          );
+          flushAll(async);
+          expect(notifier.reconnectAttempts, 1);
+
+          // Elapse 2s delay for reconnect attempt to execute and succeed
+          async.elapse(const Duration(seconds: 2));
+          flushAll(async);
+
+          // Successful reconnect resets counter to 0
+          expect(notifier.reconnectAttempts, 0);
+        });
+      },
+    );
+
+    test(
+      'intentional disconnect() cancels pending auto-reconnect loop',
+      () async {
+        FakeAsync().run((async) {
+          final m = buildMocks();
+          container = m.container;
+          notifier = container.read(hrMonitorProvider.notifier);
+          keepAlive();
+
+          unawaited(notifier.connect(_kTestDeviceId, _kTestDeviceName));
+          flushAll(async);
+          m.hrValueController.add([0x00, 100]);
+          flushAll(async);
+
+          // Simulate unexpected device disconnection
+          m.connectionStateController.add(
+            BluetoothConnectionState.disconnected,
+          );
+          flushAll(async);
+          expect(notifier.reconnectAttempts, 1);
+
+          // User calls disconnect() intentionally during pending reconnect timer
+          unawaited(notifier.disconnect());
+          flushAll(async);
+
+          // Reconnect counter reset and state is DisconnectedMonitorState
+          expect(notifier.reconnectAttempts, 0);
+          expect(
+            container.read(hrMonitorProvider),
+            isA<DisconnectedMonitorState>(),
+          );
+
+          // Advancing time does not trigger any further reconnect attempts
+          async.elapse(const Duration(seconds: 10));
+          flushAll(async);
+          expect(notifier.reconnectAttempts, 0);
+          expect(
+            container.read(hrMonitorProvider),
+            isA<DisconnectedMonitorState>(),
+          );
+        });
+      },
+    );
 
     test('disconnect during disconnecting is ignored', () async {
       final m = buildMocks();
