@@ -42,7 +42,7 @@ final class BleScannerNotifierProvider
 }
 
 String _$bleScannerNotifierHash() =>
-    r'3f40ede07fbcdf0cf7af54878f662511aed209ce';
+    r'7a90a9ca9b2d1d53ac391d1e51ab0b7986357684';
 
 abstract class _$BleScannerNotifier extends $Notifier<BleScannerState> {
   BleScannerState build();

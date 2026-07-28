@@ -81,7 +81,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _monitorService = ref.read(heartRateMonitorServiceProvider);
     _foregroundServiceManager = ref.read(foregroundServiceManagerProvider);
     WidgetsBinding.instance.addObserver(this);
-    ref.onDispose(() => _cleanup());
+    ref.onDispose(_cleanup);
     return const MonitorState.disconnected();
   }
 
@@ -813,39 +813,71 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
-  void _cleanup() {
+  Future<void> _cleanup() async {
     log.i(
       '[HrMonitorNotifier] Disposing — releasing all GATT and BLE resources.',
     );
+
+    // 1. Force-save any unsaved BPM samples before releasing resources.
     if (_collectedBpmSamples.isNotEmpty && !_saveInProgress) {
-      unawaited(_saveSessionToDisk());
+      try {
+        await _saveSessionToDisk();
+      } catch (e, st) {
+        log.e(
+          '[HrMonitorNotifier] _cleanup: Failed to force-save session to disk',
+          error: e,
+          stackTrace: st,
+        );
+      }
     }
+
+    // 2. Cancel all timers first (they may trigger state changes).
     _connectTimer?.cancel();
     _connectTimer = null;
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
     _reconnectAttempts = 0;
     _stopCheckpointTimer();
-    _hrNotificationSubscription?.cancel();
-    _batteryNotificationSubscription?.cancel();
-    _connectionStateSubscription?.cancel();
-    _hrNotificationSubscription = null;
-    _batteryNotificationSubscription = null;
-    _connectionStateSubscription = null;
+
+    // 3. Safely disconnect BLE device — await the future to ensure OS releases
+    //    hardware resources before we null out the reference.
     final deviceToDisconnect = _device;
-    _device = null;
     if (deviceToDisconnect != null) {
-      unawaited(
-        _monitorService.disconnect(deviceToDisconnect).catchError((Object e) {
-          log.w('[HrMonitorNotifier] _cleanup disconnect error', error: e);
-        }),
+      try {
+        await _monitorService.disconnect(deviceToDisconnect);
+        log.d(
+          '[HrMonitorNotifier] _cleanup: Successfully disconnected from device.',
+        );
+      } catch (e, st) {
+        log.w(
+          '[HrMonitorNotifier] _cleanup disconnect error',
+          error: e,
+          stackTrace: st,
+        );
+      }
+    }
+    _device = null;
+
+    // 4. Cancel subscriptions sequentially — each cancel must complete before
+    //    the next subscription is nulled to avoid race conditions.
+    await _hrNotificationSubscription?.cancel();
+    _hrNotificationSubscription = null;
+    await _batteryNotificationSubscription?.cancel();
+    _batteryNotificationSubscription = null;
+    await _connectionStateSubscription?.cancel();
+    _connectionStateSubscription = null;
+
+    // 5. Remove lifecycle observer and stop foreground service.
+    WidgetsBinding.instance.removeObserver(this);
+
+    try {
+      await _foregroundServiceManager.stopService();
+    } catch (e, st) {
+      log.w(
+        '[HrMonitorNotifier] _cleanup stopService error',
+        error: e,
+        stackTrace: st,
       );
     }
-    WidgetsBinding.instance.removeObserver(this);
-    unawaited(
-      _foregroundServiceManager.stopService().catchError((Object e) {
-        log.w('[HrMonitorNotifier] _cleanup stopService error', error: e);
-      }),
-    );
   }
 }

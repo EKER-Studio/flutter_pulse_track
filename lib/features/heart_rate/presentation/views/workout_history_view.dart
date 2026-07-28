@@ -48,10 +48,26 @@ class WorkoutHistoryView extends ConsumerWidget {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(32.0),
-              child: Text(
-                l10n.unableToLoadHistory,
-                style: TextStyle(color: AppColors.textMuted),
-                textAlign: TextAlign.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    l10n.unableToLoadHistory,
+                    style: const TextStyle(color: AppColors.textMuted),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () =>
+                        ref.invalidate(watchWorkoutHistoryStreamProvider),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Retry'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.accentBlue,
+                      foregroundColor: AppColors.textPrimary,
+                    ),
+                  ),
+                ],
               ),
             ),
           );

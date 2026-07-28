@@ -48,7 +48,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
       },
     );
 
-    ref.onDispose(() => _cleanup());
+    ref.onDispose(_cleanup);
 
     return const BleScannerState.idle();
   }
@@ -242,20 +242,25 @@ class BleScannerNotifier extends _$BleScannerNotifier {
     }
   }
 
-  void _cleanup() {
+  Future<void> _cleanup() async {
     log.i('[BleScannerNotifier] Disposing — releasing all BLE scan resources.');
     _cancelEmptyStateTimer();
-    _scanResultsSubscription?.cancel();
-    _adapterStateSubscription?.cancel();
-    _scanResultsSubscription = null;
-    _adapterStateSubscription = null;
 
     if (_scannerService.isScanningNow) {
-      unawaited(
-        _scannerService.stopScan().catchError((Object e) {
-          log.w('[BleScannerNotifier] _cleanup stopScan error', error: e);
-        }),
-      );
+      try {
+        await _scannerService.stopScan();
+      } catch (e, st) {
+        log.w(
+          '[BleScannerNotifier] _cleanup stopScan error',
+          error: e,
+          stackTrace: st,
+        );
+      }
     }
+
+    await _scanResultsSubscription?.cancel();
+    await _adapterStateSubscription?.cancel();
+    _scanResultsSubscription = null;
+    _adapterStateSubscription = null;
   }
 }
