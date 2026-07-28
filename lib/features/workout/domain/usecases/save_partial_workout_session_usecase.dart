@@ -1,8 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart';
-import 'package:pulse_track/features/workout/infrastructure/repositories/workout_persistence_repository.dart'
-    as impl;
 
 part 'save_partial_workout_session_usecase.g.dart';
 
@@ -51,10 +49,10 @@ class SavePartialWorkoutSessionUseCase {
 }
 
 /// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
+/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 @riverpod
 SavePartialWorkoutSessionUseCase savePartialWorkoutSessionUseCase(Ref ref) {
   return SavePartialWorkoutSessionUseCase(
-    ref.watch(impl.workoutPersistenceRepositoryProvider),
+    ref.watch(workoutPersistenceRepositoryProvider),
   );
 }

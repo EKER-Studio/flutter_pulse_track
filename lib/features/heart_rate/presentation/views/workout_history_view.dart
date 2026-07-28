@@ -185,8 +185,9 @@ class WorkoutHistoryView extends ConsumerWidget {
         ),
         child: InkWell(
           onTap: () {
-            context.push('/history/details', extra: session);
+            context.push('/history/details/${session.id}', extra: session);
           },
+
           borderRadius: BorderRadius.circular(12),
           child: Container(
             width: double.infinity,

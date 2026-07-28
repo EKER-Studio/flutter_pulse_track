@@ -6,6 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'app.dart';
 import 'core/infrastructure/storage/isar_provider.dart';
 import 'core/presentation/theme/app_colors.dart';
+import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart'
+    as domain;
 import 'features/workout/infrastructure/models/device_profile_dto.dart';
 import 'features/workout/infrastructure/models/workout_session_dto.dart';
 import 'features/workout/infrastructure/repositories/workout_persistence_repository.dart';
@@ -17,7 +19,7 @@ import 'features/workout/infrastructure/repositories/workout_persistence_reposit
 /// 2. Resolves the platform-specific application documents directory.
 /// 3. Opens the Isar database with [DeviceProfileDto] and [WorkoutSessionDto] schemas.
 /// 4. Sanitizes crashed / unclosed sessions from previous unexpected terminations.
-/// 5. Overrides [isarProvider] in the root [ProviderScope] so the rest of the app
+/// 5. Overrides [isarProvider] and [domain.workoutPersistenceRepositoryProvider] in the root [ProviderScope] so the rest of the app
 ///    can access the database synchronously without awaiting disk I/O.
 ///
 /// If the database fails to open (corrupted file, broken migration), a minimal
@@ -38,7 +40,10 @@ Future<void> main() async {
 
     runApp(
       ProviderScope(
-        overrides: [isarProvider.overrideWithValue(isar)],
+        overrides: [
+          isarProvider.overrideWithValue(isar),
+          domain.workoutPersistenceRepositoryProvider.overrideWithValue(repo),
+        ],
         child: const App(),
       ),
     );

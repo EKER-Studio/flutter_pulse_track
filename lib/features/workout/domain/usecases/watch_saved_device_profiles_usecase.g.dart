@@ -9,14 +9,14 @@ part of 'watch_saved_device_profiles_usecase.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Riverpod provider that supplies a [WatchSavedDeviceProfilesUseCase] wired
-/// to the concrete [WorkoutPersistenceRepository] implementation using [ref].
+/// to the abstract [WorkoutPersistenceRepository] contract using [ref].
 
 @ProviderFor(watchSavedDeviceProfilesUseCase)
 final watchSavedDeviceProfilesUseCaseProvider =
     WatchSavedDeviceProfilesUseCaseProvider._();
 
 /// Riverpod provider that supplies a [WatchSavedDeviceProfilesUseCase] wired
-/// to the concrete [WorkoutPersistenceRepository] implementation using [ref].
+/// to the abstract [WorkoutPersistenceRepository] contract using [ref].
 
 final class WatchSavedDeviceProfilesUseCaseProvider
     extends
@@ -27,7 +27,7 @@ final class WatchSavedDeviceProfilesUseCaseProvider
         >
     with $Provider<WatchSavedDeviceProfilesUseCase> {
   /// Riverpod provider that supplies a [WatchSavedDeviceProfilesUseCase] wired
-  /// to the concrete [WorkoutPersistenceRepository] implementation using [ref].
+  /// to the abstract [WorkoutPersistenceRepository] contract using [ref].
   WatchSavedDeviceProfilesUseCaseProvider._()
     : super(
         from: null,
@@ -65,7 +65,7 @@ final class WatchSavedDeviceProfilesUseCaseProvider
 }
 
 String _$watchSavedDeviceProfilesUseCaseHash() =>
-    r'fefd0be05810beb9bccdd13437cd6897b3e31be1';
+    r'4307426cd984fe38f594ca4e8fe8b10e9322fc78';
 
 /// Reactive stream of saved device profiles for direct use in
 /// `ref.watch(watchSavedDeviceProfilesStreamProvider)` from views using [ref].

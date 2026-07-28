@@ -9,14 +9,14 @@ part of 'watch_workout_history_usecase.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
+/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 
 @ProviderFor(watchWorkoutHistoryUseCase)
 final watchWorkoutHistoryUseCaseProvider =
     WatchWorkoutHistoryUseCaseProvider._();
 
 /// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
+/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 
 final class WatchWorkoutHistoryUseCaseProvider
     extends
@@ -27,7 +27,7 @@ final class WatchWorkoutHistoryUseCaseProvider
         >
     with $Provider<WatchWorkoutHistoryUseCase> {
   /// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-  /// the concrete [WorkoutPersistenceRepository] implementation using [ref].
+  /// the abstract [WorkoutPersistenceRepository] contract using [ref].
   WatchWorkoutHistoryUseCaseProvider._()
     : super(
         from: null,
@@ -63,7 +63,7 @@ final class WatchWorkoutHistoryUseCaseProvider
 }
 
 String _$watchWorkoutHistoryUseCaseHash() =>
-    r'b38929bec70b69ddb5706b5f5745925bfc6054e1';
+    r'fffc58f3571edd7f052b8ce916e05eb48720effa';
 
 /// Reactive stream of workout history for direct use in
 /// `ref.watch(watchWorkoutHistoryStreamProvider)` from views using [ref].

@@ -817,6 +817,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     log.i(
       '[HrMonitorNotifier] Disposing — releasing all GATT and BLE resources.',
     );
+    if (_collectedBpmSamples.isNotEmpty && !_saveInProgress) {
+      unawaited(_saveSessionToDisk());
+    }
     _connectTimer?.cancel();
     _connectTimer = null;
     _reconnectTimer?.cancel();
@@ -829,11 +832,20 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _hrNotificationSubscription = null;
     _batteryNotificationSubscription = null;
     _connectionStateSubscription = null;
-    if (_device != null) {
-      _monitorService.disconnect(_device!);
-      _device = null;
+    final deviceToDisconnect = _device;
+    _device = null;
+    if (deviceToDisconnect != null) {
+      unawaited(
+        _monitorService.disconnect(deviceToDisconnect).catchError((Object e) {
+          log.w('[HrMonitorNotifier] _cleanup disconnect error', error: e);
+        }),
+      );
     }
     WidgetsBinding.instance.removeObserver(this);
-    _foregroundServiceManager.stopService();
+    unawaited(
+      _foregroundServiceManager.stopService().catchError((Object e) {
+        log.w('[HrMonitorNotifier] _cleanup stopService error', error: e);
+      }),
+    );
   }
 }

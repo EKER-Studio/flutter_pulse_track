@@ -13,7 +13,7 @@ class RouteErrorView extends StatelessWidget {
   const RouteErrorView({super.key, this.error});
 
   /// Optional error or exception details triggering this fallback view.
-  final Exception? error;
+  final Object? error;
 
   @override
   Widget build(BuildContext context) {

@@ -251,7 +251,11 @@ class BleScannerNotifier extends _$BleScannerNotifier {
     _adapterStateSubscription = null;
 
     if (_scannerService.isScanningNow) {
-      _scannerService.stopScan();
+      unawaited(
+        _scannerService.stopScan().catchError((Object e) {
+          log.w('[BleScannerNotifier] _cleanup stopScan error', error: e);
+        }),
+      );
     }
   }
 }

@@ -443,8 +443,9 @@ class HrScannerView extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  onTap: () {
-                    notifier.stopScan();
+                  onTap: () async {
+                    await notifier.stopScan();
+                    if (!context.mounted) return;
                     final targetName = device.name.isEmpty
                         ? AppLocalizations.of(context).unknown_device
                         : device.name;

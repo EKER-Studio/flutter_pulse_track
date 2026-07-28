@@ -536,14 +536,29 @@ class BpmChart extends CustomPainter {
       labelPainter.paint(canvas, Offset(4, y - 6));
     }
 
-    // Precompute coordinates and build the fill path in a single pass.
-    // Guard: when samples.length == 1, divisor would be 0, producing NaN offsets.
-    final divisor = samples.length > 1 ? samples.length - 1 : 1;
+    // Performance downsampling: if the sample count exceeds screen resolution (e.g. 300-500 points),
+    // sample at a fixed stride step to guarantee smooth 60FPS rendering without frame drops.
+    final maxTargetPoints = (chartWidth * 1.5).clamp(100.0, 500.0).toInt();
+    final step = (samples.length / maxTargetPoints).ceil().clamp(
+      1,
+      samples.length,
+    );
 
-    // Idiomatically initialize a fixed-size list in Dart
-    final points = List<Offset>.generate(samples.length, (i) {
+    final displaySamples = <int>[];
+    for (int i = 0; i < samples.length; i += step) {
+      displaySamples.add(samples[i]);
+    }
+    if (displaySamples.isEmpty || displaySamples.last != samples.last) {
+      displaySamples.add(samples.last);
+    }
+
+    // Precompute coordinates and build the fill path in a single pass.
+    // Guard: when displaySamples.length == 1, divisor would be 0, producing NaN offsets.
+    final divisor = displaySamples.length > 1 ? displaySamples.length - 1 : 1;
+
+    final points = List<Offset>.generate(displaySamples.length, (i) {
       final x = (i / divisor) * chartWidth;
-      final yRatio = (samples[i] - rangeMin) / effectiveRange;
+      final yRatio = (displaySamples[i] - rangeMin) / effectiveRange;
       final y = chartHeight - (yRatio * chartHeight);
       return Offset(x, y);
     });
@@ -562,16 +577,6 @@ class BpmChart extends CustomPainter {
     fillPath.lineTo(0, chartHeight);
     fillPath.close();
 
-    // BPM waveform line with zone-colored segments
-    final linePaint = Paint()
-      ..strokeWidth = 2.0
-      ..strokeCap = StrokeCap.round;
-
-    for (int i = 0; i < samples.length - 1; i++) {
-      linePaint.color = getZoneColor(samples[i]);
-      canvas.drawLine(points[i], points[i + 1], linePaint);
-    }
-
     // Gradient fill under the line
     final fillPaint = Paint()
       ..shader = LinearGradient(
@@ -581,6 +586,16 @@ class BpmChart extends CustomPainter {
       ).createShader(Rect.fromLTWH(0, 0, chartWidth, chartHeight));
 
     canvas.drawPath(fillPath, fillPaint);
+
+    // BPM waveform line with zone-colored segments
+    final linePaint = Paint()
+      ..strokeWidth = 2.0
+      ..strokeCap = StrokeCap.round;
+
+    for (int i = 0; i < displaySamples.length - 1; i++) {
+      linePaint.color = getZoneColor(displaySamples[i]);
+      canvas.drawLine(points[i], points[i + 1], linePaint);
+    }
   }
 
   @override
@@ -603,10 +618,7 @@ class BpmChart extends CustomPainter {
     tp.layout();
     tp.paint(
       canvas,
-      Offset(
-        (size.width - (labelStyle.fontSize! * 5)) / 2,
-        size.height / 2 - 10,
-      ),
+      Offset((size.width - tp.width) / 2, (size.height - tp.height) / 2),
     );
   }
 }

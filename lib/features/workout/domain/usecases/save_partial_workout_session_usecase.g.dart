@@ -9,14 +9,14 @@ part of 'save_partial_workout_session_usecase.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
+/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 
 @ProviderFor(savePartialWorkoutSessionUseCase)
 final savePartialWorkoutSessionUseCaseProvider =
     SavePartialWorkoutSessionUseCaseProvider._();
 
 /// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
+/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 
 final class SavePartialWorkoutSessionUseCaseProvider
     extends
@@ -27,7 +27,7 @@ final class SavePartialWorkoutSessionUseCaseProvider
         >
     with $Provider<SavePartialWorkoutSessionUseCase> {
   /// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-  /// the concrete [WorkoutPersistenceRepository] implementation using [ref].
+  /// the abstract [WorkoutPersistenceRepository] contract using [ref].
   SavePartialWorkoutSessionUseCaseProvider._()
     : super(
         from: null,
@@ -65,4 +65,4 @@ final class SavePartialWorkoutSessionUseCaseProvider
 }
 
 String _$savePartialWorkoutSessionUseCaseHash() =>
-    r'8ac0ab1a072232a99e67a50218c2fb836734dc7a';
+    r'4f1b83048ef80eeb782a9ef7d9b0c7b65cfcc019';

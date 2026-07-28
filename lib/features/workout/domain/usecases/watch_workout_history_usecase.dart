@@ -2,8 +2,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart';
-import 'package:pulse_track/features/workout/infrastructure/repositories/workout_persistence_repository.dart'
-    as impl;
 
 part 'watch_workout_history_usecase.g.dart';
 
@@ -26,11 +24,11 @@ class WatchWorkoutHistoryUseCase {
 }
 
 /// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-/// the concrete [WorkoutPersistenceRepository] implementation using [ref].
+/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 @riverpod
 WatchWorkoutHistoryUseCase watchWorkoutHistoryUseCase(Ref ref) {
   return WatchWorkoutHistoryUseCase(
-    ref.watch(impl.workoutPersistenceRepositoryProvider),
+    ref.watch(workoutPersistenceRepositoryProvider),
   );
 }
 

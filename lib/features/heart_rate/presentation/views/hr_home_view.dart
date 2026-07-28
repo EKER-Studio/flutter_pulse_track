@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pulse_track/l10n/app_localizations.dart';
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
-import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 import 'package:pulse_track/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
+import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Central dashboard hub for the heart rate monitoring application.
 ///
@@ -37,126 +36,165 @@ class HrHomeView extends ConsumerWidget {
       ),
       body: Builder(
         builder: (context) {
-          final savedProfiles = savedProfilesAsync.maybeWhen(
-            data: (profiles) => profiles,
-            orElse: () => <DeviceProfile>[],
-          );
-
           return CustomScrollView(
             slivers: [
               // --- SAVED SENSORS SECTION ---
-              if (savedProfiles.isNotEmpty)
-                SliverToBoxAdapter(
-                  child: Container(
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: AppColors.surfaceBackground,
-                      border: Border(
-                        bottom: BorderSide(
-                          color: AppColors.borderSubtle,
-                          width: 1,
+              savedProfilesAsync.when(
+                data: (profiles) {
+                  if (profiles.isEmpty) {
+                    return const SliverToBoxAdapter(child: SizedBox.shrink());
+                  }
+                  return SliverToBoxAdapter(
+                    child: Container(
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: AppColors.surfaceBackground,
+                        border: Border(
+                          bottom: BorderSide(
+                            color: AppColors.borderSubtle,
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.bluetooth_connected,
+                                    color: AppColors.accentBlue,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    l10n.savedSensorsSectionTitle,
+                                    style: const TextStyle(
+                                      color: AppColors.textPrimary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              height: 48,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                ),
+                                itemCount: profiles.length,
+                                itemBuilder: (context, index) {
+                                  final profile = profiles[index];
+                                  final profileName = profile.name.isEmpty
+                                      ? l10n.unknownSensorLabel
+                                      : profile.name;
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0,
+                                    ),
+                                    child: Semantics(
+                                      button: true,
+                                      label: l10n.connectToSensor(profileName),
+                                      child: Container(
+                                        constraints: const BoxConstraints(
+                                          minWidth: 48,
+                                          minHeight: 48,
+                                        ),
+                                        child: ActionChip(
+                                          backgroundColor:
+                                              AppColors.badgeBackground,
+                                          side: BorderSide.none,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          avatar: const ExcludeSemantics(
+                                            child: Icon(
+                                              Icons.bluetooth_connected,
+                                              color: AppColors.accentGreen,
+                                              size: 14,
+                                            ),
+                                          ),
+                                          label: Text(
+                                            profileName,
+                                            style: const TextStyle(
+                                              color: AppColors.textPrimary,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            final nameToPass =
+                                                profile.name.isEmpty
+                                                ? l10n.savedSensorFallbackName
+                                                : profile.name;
+                                            context.push(
+                                              '/monitor?deviceId=${Uri.encodeComponent(profile.macAddress)}&deviceName=${Uri.encodeComponent(nameToPass)}',
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  );
+                },
+                error: (error, _) => SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.accentRed.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.bluetooth_connected,
-                                  color: AppColors.accentBlue,
-                                  size: 18,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  l10n.savedSensorsSectionTitle,
-                                  style: const TextStyle(
-                                    color: AppColors.textPrimary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
+                          const Icon(
+                            Icons.warning_amber,
+                            color: AppColors.accentRed,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'Failed to load saved sensors: $error',
+                              style: const TextStyle(
+                                color: AppColors.textPrimary,
+                                fontSize: 13,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            height: 48,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                              ),
-                              itemCount: savedProfiles.length,
-                              itemBuilder: (context, index) {
-                                final profile = savedProfiles[index];
-                                final profileName = profile.name.isEmpty
-                                    ? l10n.unknownSensorLabel
-                                    : profile.name;
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 4.0,
-                                  ),
-                                  child: Semantics(
-                                    button: true,
-                                    label: l10n.connectToSensor(profileName),
-                                    child: Container(
-                                      constraints: const BoxConstraints(
-                                        minWidth: 48,
-                                        minHeight: 48,
-                                      ),
-                                      child: ActionChip(
-                                        backgroundColor:
-                                            AppColors.badgeBackground,
-                                        side: BorderSide.none,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        avatar: const ExcludeSemantics(
-                                          child: Icon(
-                                            Icons.bluetooth_connected,
-                                            color: AppColors.accentGreen,
-                                            size: 14,
-                                          ),
-                                        ),
-                                        label: Text(
-                                          profileName,
-                                          style: const TextStyle(
-                                            color: AppColors.textPrimary,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          final nameToPass =
-                                              profile.name.isEmpty
-                                              ? l10n.savedSensorFallbackName
-                                              : profile.name;
-                                          context.push(
-                                            '/monitor?deviceId=${Uri.encodeComponent(profile.macAddress)}&deviceName=${Uri.encodeComponent(nameToPass)}',
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
+                          TextButton(
+                            onPressed: () => ref.invalidate(
+                              watchSavedDeviceProfilesStreamProvider,
                             ),
+                            child: const Text('Retry'),
                           ),
                         ],
                       ),
                     ),
                   ),
                 ),
+                loading: () =>
+                    const SliverToBoxAdapter(child: SizedBox.shrink()),
+              ),
 
               // --- SCAN FOR NEW SENSOR CTA ---
               SliverToBoxAdapter(

@@ -93,8 +93,11 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                 ),
                 onPressed: () async {
                   await notifier.disconnect();
-                  if (context.mounted) {
+                  if (!context.mounted) return;
+                  if (context.canPop()) {
                     context.pop();
+                  } else {
+                    context.go('/');
                   }
                 },
               ),
@@ -153,7 +156,8 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                 backgroundColor: AppColors.accentBlue,
                 minimumSize: const Size(180, 48),
               ),
-              onPressed: () => context.pop(),
+              onPressed: () =>
+                  context.canPop() ? context.pop() : context.go('/'),
               child: Text(
                 l10n.returnToScannerButton,
                 style: const TextStyle(color: AppColors.textPrimary),
@@ -460,7 +464,8 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       minimumSize: const Size(48, 48),
                     ),
-                    onPressed: () => context.pop(),
+                    onPressed: () =>
+                        context.canPop() ? context.pop() : context.go('/'),
                     child: Text(
                       l10n.goBackButton,
                       style: const TextStyle(color: AppColors.textSecondary),

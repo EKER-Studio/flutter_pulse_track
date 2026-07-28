@@ -52,5 +52,6 @@ class WorkoutSession {
     required this.sensorLocationIndex,
     required this.deviceMacAddress,
     required this.deviceName,
-  });
+  }) : assert(avgBpm >= 0, 'avgBpm cannot be negative'),
+       assert(maxBpm >= 0, 'maxBpm cannot be negative');
 }

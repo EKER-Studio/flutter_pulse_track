@@ -13,10 +13,12 @@ import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_vi
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_scanner_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/workout_history_view.dart';
 import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
+import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_device_profile_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_partial_workout_session_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_workout_session_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
+import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
 class _MockHeartRateMonitorService extends Mock
@@ -81,6 +83,9 @@ void main() {
       overrides: [
         watchSavedDeviceProfilesStreamProvider.overrideWithValue(
           const AsyncValue<List<DeviceProfile>>.data([]),
+        ),
+        watchWorkoutHistoryStreamProvider.overrideWithValue(
+          const AsyncValue<List<WorkoutSession>>.data([]),
         ),
         heartRateMonitorServiceProvider.overrideWithValue(mockMonitorService),
         foregroundServiceManagerProvider.overrideWithValue(
@@ -187,7 +192,7 @@ void main() {
     );
 
     testWidgets(
-      'route "/history/details" without extra payload triggers RouteErrorView fallback',
+      'route "/history/details" without sessionId parameter triggers RouteErrorView fallback',
       (tester) async {
         final container = createContainer();
         addTearDown(container.dispose);
