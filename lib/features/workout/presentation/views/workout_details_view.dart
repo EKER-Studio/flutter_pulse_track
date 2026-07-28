@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart' as intl;
+
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/presentation/utils/heart_rate_export_helper.dart';
 import 'package:pulse_track/features/workout/presentation/utils/heart_rate_zones.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' as intl;
 
 /// Full-screen details view for a single completed or in-progress workout session.
 ///
@@ -58,7 +60,7 @@ class WorkoutDetailsView extends StatelessWidget {
             constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
             icon: const Icon(Icons.arrow_back_ios),
             tooltip: 'Back to workout history',
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.pop(),
           ),
         ),
         actions: [

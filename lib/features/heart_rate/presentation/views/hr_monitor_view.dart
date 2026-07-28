@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:pulse_track/l10n/app_localizations.dart';
 
@@ -93,7 +94,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                 onPressed: () async {
                   await notifier.disconnect();
                   if (context.mounted) {
-                    Navigator.of(context).pop();
+                    context.pop();
                   }
                 },
               ),
@@ -152,7 +153,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                 backgroundColor: AppColors.accentBlue,
                 minimumSize: const Size(180, 48),
               ),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => context.pop(),
               child: Text(
                 l10n.returnToScannerButton,
                 style: const TextStyle(color: AppColors.textPrimary),
@@ -459,7 +460,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       minimumSize: const Size(48, 48),
                     ),
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => context.pop(),
                     child: Text(
                       l10n.goBackButton,
                       style: const TextStyle(color: AppColors.textSecondary),

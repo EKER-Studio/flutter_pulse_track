@@ -1,13 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart' as intl;
+
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/core/utils/app_logger.dart';
-import 'package:pulse_track/l10n/app_localizations.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/domain/usecases/delete_workout_session_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
-import 'package:pulse_track/features/workout/presentation/views/workout_details_view.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart' as intl;
+import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Reactive workout history screen that displays every persisted
 /// [WorkoutSession], sorted by start time descending, via
@@ -184,11 +185,7 @@ class WorkoutHistoryView extends ConsumerWidget {
         ),
         child: InkWell(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => WorkoutDetailsView(session: session),
-              ),
-            );
+            context.push('/history/details', extra: session);
           },
           borderRadius: BorderRadius.circular(12),
           child: Container(

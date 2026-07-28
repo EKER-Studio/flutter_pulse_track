@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 import 'package:pulse_track/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
-import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
-import 'package:pulse_track/features/heart_rate/presentation/views/hr_scanner_view.dart';
-import 'package:pulse_track/features/heart_rate/presentation/views/workout_history_view.dart';
 
 /// Central dashboard hub for the heart rate monitoring application.
 ///
@@ -139,15 +137,12 @@ class HrHomeView extends ConsumerWidget {
                                           ),
                                         ),
                                         onPressed: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (_) => HrMonitorView(
-                                                deviceId: profile.macAddress,
-                                                deviceName: profile.name.isEmpty
-                                                    ? l10n.savedSensorFallbackName
-                                                    : profile.name,
-                                              ),
-                                            ),
+                                          final nameToPass =
+                                              profile.name.isEmpty
+                                              ? l10n.savedSensorFallbackName
+                                              : profile.name;
+                                          context.push(
+                                            '/monitor?deviceId=${Uri.encodeComponent(profile.macAddress)}&deviceName=${Uri.encodeComponent(nameToPass)}',
                                           );
                                         },
                                       ),
@@ -201,11 +196,7 @@ class HrHomeView extends ConsumerWidget {
                               ),
                             ),
                             onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const HrScannerView(),
-                                ),
-                              );
+                              context.push('/scanner');
                             },
                           ),
                         );
@@ -223,11 +214,7 @@ class HrHomeView extends ConsumerWidget {
                   icon: Icons.fitness_center,
                   description: l10n.workoutHistoryDescription,
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const WorkoutHistoryView(),
-                      ),
-                    );
+                    context.push('/history');
                   },
                 ),
               ),
