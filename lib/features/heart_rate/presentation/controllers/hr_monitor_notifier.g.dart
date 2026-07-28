@@ -41,7 +41,7 @@ final class HrMonitorNotifierProvider
   }
 }
 
-String _$hrMonitorNotifierHash() => r'ea5f949d0ae94d3b6bdcfc4b744d8b49c4c91867';
+String _$hrMonitorNotifierHash() => r'e39bf724eef88642545db935c6a8ca58202ce844';
 
 abstract class _$HrMonitorNotifier extends $Notifier<MonitorState> {
   MonitorState build();

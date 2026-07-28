@@ -54,6 +54,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   int _currentBpmSum = 0;
   int _currentMaxBpm = 0;
   bool _isDisconnecting = false;
+  bool _checkpointInProgress = false;
+  bool _saveInProgress = false;
   Timer? _connectTimer;
   Timer? _checkpointTimer;
 
@@ -411,6 +413,14 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   }
 
   Future<void> _saveSessionToDisk() async {
+    if (_saveInProgress) {
+      log.d(
+        '[HrMonitorNotifier] _saveSessionToDisk() skipped — '
+        'a save is already in progress.',
+      );
+      return;
+    }
+    _saveInProgress = true;
     try {
       if (_collectedBpmSamples.isNotEmpty &&
           _sessionStartTime != null &&
@@ -450,6 +460,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       _sessionDeviceName = null;
       _sessionSensorLocationIndex = null;
       _checkpointSessionId = null;
+      _saveInProgress = false;
     }
   }
 
@@ -466,6 +477,13 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   }
 
   Future<void> _checkpoint() async {
+    if (_checkpointInProgress) {
+      log.d(
+        '[HrMonitorNotifier] _checkpoint() skipped — '
+        'a checkpoint write is already in progress.',
+      );
+      return;
+    }
     if (state is! ConnectedMonitorState ||
         _collectedBpmSamples.isEmpty ||
         _sessionStartTime == null ||
@@ -474,6 +492,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       return;
     }
 
+    _checkpointInProgress = true;
     try {
       final savePartial = ref.read(savePartialWorkoutSessionUseCaseProvider);
       final avgBpm = (_currentBpmSum / _collectedBpmSamples.length).round();
@@ -495,6 +514,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       );
     } catch (e) {
       log.e('[HrMonitorNotifier] Checkpoint failed', error: e);
+    } finally {
+      _checkpointInProgress = false;
     }
   }
 
