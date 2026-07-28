@@ -68,8 +68,10 @@ class WorkoutExportService {
   /// Returns a [Future] completing when the file is written and passed to [Share].
   Future<void> exportAndShareSession(WorkoutSession session) async {
     try {
-      final csvContent = await generateCsv(session);
       final tempDir = await getTemporaryDirectory();
+      await _cleanupOldExportFiles(tempDir);
+
+      final csvContent = await generateCsv(session);
       final filePath = '${tempDir.path}/pulsetrack_workout_${session.id}.csv';
       final file = File(filePath);
 
@@ -88,6 +90,35 @@ class WorkoutExportService {
         stackTrace: st,
       );
       rethrow;
+    }
+  }
+
+  Future<void> _cleanupOldExportFiles(Directory tempDir) async {
+    try {
+      if (!await tempDir.exists()) return;
+      final entities = tempDir.listSync();
+      for (final entity in entities) {
+        if (entity is File &&
+            entity.path.contains('pulsetrack_workout_') &&
+            entity.path.endsWith('.csv')) {
+          try {
+            await entity.delete();
+            log.d(
+              '[WorkoutExportService] Cleaned up old temp export: ${entity.path}',
+            );
+          } catch (e) {
+            log.w(
+              '[WorkoutExportService] Failed to delete temp file ${entity.path}',
+              error: e,
+            );
+          }
+        }
+      }
+    } catch (e) {
+      log.w(
+        '[WorkoutExportService] Error scanning temp dir for old exports',
+        error: e,
+      );
     }
   }
 }

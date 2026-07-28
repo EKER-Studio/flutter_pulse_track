@@ -43,16 +43,15 @@ class FirebaseCrashlyticsOutput extends LogOutput {
       // If not initialized, this will safely fail here and skip remote log delivery
       final _ = FirebaseCrashlytics.instance;
 
-      for (final line in event.lines) {
-        if (event.level.index >= Level.error.index) {
-          FirebaseCrashlytics.instance.recordError(
-            event.origin.error ?? line,
-            event.origin.stackTrace,
-            reason: event.origin.message,
-          );
-        } else if (event.level.index >= Level.info.index) {
-          FirebaseCrashlytics.instance.log(line);
-        }
+      final fullMessage = event.lines.join('\n');
+      if (event.level.index >= Level.error.index) {
+        FirebaseCrashlytics.instance.recordError(
+          event.origin.error ?? fullMessage,
+          event.origin.stackTrace,
+          reason: event.origin.message,
+        );
+      } else if (event.level.index >= Level.info.index) {
+        FirebaseCrashlytics.instance.log(fullMessage);
       }
     } catch (e) {
       // Firebase infrastructure is not ready yet. Fallback silently to prevent [core/no-app] crashes.
