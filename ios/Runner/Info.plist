@@ -77,5 +77,18 @@
     <array>
         <string>bluetooth-central</string>
     </array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.example.pulseTrack</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>pulsetrack</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

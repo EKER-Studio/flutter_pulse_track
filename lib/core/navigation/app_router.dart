@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:pulse_track/core/presentation/views/route_error_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_home_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_scanner_view.dart';
@@ -19,6 +20,8 @@ part 'app_router.g.dart';
 GoRouter appRouter(Ref ref) {
   return GoRouter(
     initialLocation: '/',
+    errorBuilder: (BuildContext context, GoRouterState state) =>
+        RouteErrorView(error: state.error),
     routes: <RouteBase>[
       GoRoute(
         path: '/',
@@ -55,8 +58,12 @@ GoRouter appRouter(Ref ref) {
             path: 'details',
             name: 'workoutDetails',
             builder: (BuildContext context, GoRouterState state) {
-              final session = state.extra! as WorkoutSession;
-              return WorkoutDetailsView(session: session);
+              final extra = state.extra;
+              if (extra is WorkoutSession) {
+                return WorkoutDetailsView(session: extra);
+              }
+              // If deep-linked directly without session extra payload, fallback to error view
+              return const RouteErrorView();
             },
           ),
         ],
