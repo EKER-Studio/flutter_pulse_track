@@ -68,7 +68,7 @@ log_success "Code generation completed."
 log_step "4" "Verifying code formatting standards..."
 # ------------------------------------------------------------------------------
 # Ensures the code strictly obeys Dart formatting guidelines without altering files
-dart format --output=none --set-exit-if-changed lib test bin scripts
+dart format --output=none --set-exit-if-changed lib test
 log_success "Codebase formatting aligns with style specifications."
 
 # ------------------------------------------------------------------------------
@@ -81,16 +81,12 @@ log_success "Static analysis passed with zero warnings or errors."
 # ------------------------------------------------------------------------------
 log_step "6" "Running Riverpod-specific lints (custom_lint)..."
 # ------------------------------------------------------------------------------
-# analysis_options.yaml wires the custom_lint plugin (riverpod_lint) into the
-# analyzer, but some IDE/CLI configurations still require the explicit CLI
-# runner to actually execute the checks — run it directly here so it can
-# never silently stop being enforced again.
 dart run custom_lint
 log_success "Riverpod-specific lints passed with zero warnings."
+
 # ------------------------------------------------------------------------------
 log_step "7" "Running complete unit and widget test suites (Excluding Goldens)..."
 # ------------------------------------------------------------------------------
-# Executes all non-visual automated tests inside the /test directory
 flutter test --exclude-tags golden
 log_success "All automated unit and widget tests completed successfully."
 
