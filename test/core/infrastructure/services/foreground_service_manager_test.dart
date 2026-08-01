@@ -12,9 +12,13 @@ class _FakeForegroundTaskPlatform implements ForegroundTaskPlatform {
   bool initCalled = false;
   bool stopCalled = false;
   void Function()? capturedCallback;
+  Object? failure;
 
   @override
   Future<void> init() async {
+    if (failure != null) {
+      throw failure!;
+    }
     initCalled = true;
     initialized = true;
   }
@@ -24,6 +28,9 @@ class _FakeForegroundTaskPlatform implements ForegroundTaskPlatform {
 
   @override
   Future<void> startService({required void Function() callback}) async {
+    if (failure != null) {
+      throw failure!;
+    }
     capturedCallback = callback;
     running = true;
   }
@@ -81,6 +88,16 @@ void main() {
 
       expect(platform.capturedCallback, isNull);
     });
+
+    test(
+      'surfaces platform startup failures without leaving a zombie service',
+      () async {
+        platform.failure = Exception('Platform initialization failed');
+
+        await expectLater(manager.startService(), throwsException);
+        expect(platform.running, isFalse);
+      },
+    );
 
     test('passes startCallback as the callback', () async {
       await manager.startService();

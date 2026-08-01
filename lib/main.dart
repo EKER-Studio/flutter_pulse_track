@@ -4,6 +4,7 @@ import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'app.dart';
+import 'core/utils/app_logger.dart';
 import 'core/infrastructure/storage/isar_provider.dart';
 import 'core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart'
@@ -47,8 +48,13 @@ Future<void> main() async {
         child: const App(),
       ),
     );
-  } catch (e) {
-    runApp(_DatabaseErrorApp(error: e));
+  } catch (e, st) {
+    log.e(
+      'Failed to initialize Isar database on startup',
+      error: e,
+      stackTrace: st,
+    );
+    runApp(const _DatabaseErrorApp());
   }
 }
 
@@ -57,9 +63,7 @@ Future<void> main() async {
 /// This prevents a hard native crash on startup due to corrupted storage or
 /// a broken migration, and instead shows a recoverable user-facing message.
 class _DatabaseErrorApp extends StatelessWidget {
-  const _DatabaseErrorApp({required this.error});
-
-  final Object error;
+  const _DatabaseErrorApp();
 
   @override
   Widget build(BuildContext context) {
@@ -84,10 +88,10 @@ class _DatabaseErrorApp extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Text(
-                  'Failed to open the local database:\n$error',
+                const Text(
+                  'Wystąpił krytyczny błąd bazy danych. Spróbuj zrestartować aplikację lub wyczyścić jej pamięć podręczną.',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 14,
                   ),
