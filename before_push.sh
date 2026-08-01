@@ -67,8 +67,12 @@ log_success "Code generation completed."
 # ------------------------------------------------------------------------------
 log_step "4" "Verifying code formatting standards..."
 # ------------------------------------------------------------------------------
-# Ensures the code strictly obeys Dart formatting guidelines without altering files
-dart format --output=none --set-exit-if-changed lib test
+# Ensures the code strictly obeys Dart formatting guidelines without altering files.
+# Generated build artifacts are removed first so the root-level format check does
+# not reformat vendored package sources under build/ or cached tool outputs.
+rm -rf build .dart_tool
+
+dart format --output=none --set-exit-if-changed .
 log_success "Codebase formatting aligns with style specifications."
 
 # ------------------------------------------------------------------------------
