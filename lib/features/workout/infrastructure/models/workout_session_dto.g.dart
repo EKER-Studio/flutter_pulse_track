@@ -70,6 +70,19 @@ const WorkoutSessionDtoSchema = CollectionSchema(
         ),
       ],
     ),
+    r'endTime': IndexSchema(
+      id: 6854976694250177488,
+      name: r'endTime',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'endTime',
+          type: IndexType.value,
+          caseSensitive: false,
+        ),
+      ],
+    ),
   },
   links: {},
   embeddedSchemas: {},
@@ -186,6 +199,14 @@ extension WorkoutSessionDtoQueryWhereSort
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'startTime'),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutSessionDto, WorkoutSessionDto, QAfterWhere> anyEndTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'endTime'),
       );
     });
   }
@@ -354,6 +375,129 @@ extension WorkoutSessionDtoQueryWhere
           lower: [lowerStartTime],
           includeLower: includeLower,
           upper: [upperStartTime],
+          includeUpper: includeUpper,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutSessionDto, WorkoutSessionDto, QAfterWhereClause>
+  endTimeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(indexName: r'endTime', value: [null]),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutSessionDto, WorkoutSessionDto, QAfterWhereClause>
+  endTimeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'endTime',
+          lower: [null],
+          includeLower: false,
+          upper: [],
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutSessionDto, WorkoutSessionDto, QAfterWhereClause>
+  endTimeEqualTo(DateTime? endTime) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(indexName: r'endTime', value: [endTime]),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutSessionDto, WorkoutSessionDto, QAfterWhereClause>
+  endTimeNotEqualTo(DateTime? endTime) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'endTime',
+                lower: [],
+                upper: [endTime],
+                includeUpper: false,
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'endTime',
+                lower: [endTime],
+                includeLower: false,
+                upper: [],
+              ),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'endTime',
+                lower: [endTime],
+                includeLower: false,
+                upper: [],
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'endTime',
+                lower: [],
+                upper: [endTime],
+                includeUpper: false,
+              ),
+            );
+      }
+    });
+  }
+
+  QueryBuilder<WorkoutSessionDto, WorkoutSessionDto, QAfterWhereClause>
+  endTimeGreaterThan(DateTime? endTime, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'endTime',
+          lower: [endTime],
+          includeLower: include,
+          upper: [],
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutSessionDto, WorkoutSessionDto, QAfterWhereClause>
+  endTimeLessThan(DateTime? endTime, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'endTime',
+          lower: [],
+          upper: [endTime],
+          includeUpper: include,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WorkoutSessionDto, WorkoutSessionDto, QAfterWhereClause>
+  endTimeBetween(
+    DateTime? lowerEndTime,
+    DateTime? upperEndTime, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'endTime',
+          lower: [lowerEndTime],
+          includeLower: includeLower,
+          upper: [upperEndTime],
           includeUpper: includeUpper,
         ),
       );

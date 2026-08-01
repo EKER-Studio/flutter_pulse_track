@@ -38,6 +38,7 @@ class WorkoutSessionDto {
   ///
   /// Null if the session was interrupted before a clean close (e.g., app crash,
   /// Bluetooth drop). The UI should treat a null value as an incomplete session.
+  @Index(type: IndexType.value)
   DateTime? endTime;
 
   /// Session-level average heart rate in beats per minute, computed at close
