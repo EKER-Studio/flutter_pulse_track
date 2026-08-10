@@ -70,6 +70,8 @@ For every public class/method, add a doc comment following the language's standa
 | `flutter pub get` | Install dependencies |
 | `flutter gen-l10n` | Generate localization scaffolding (see Localization note below) |
 | `dart run build_runner build --delete-conflicting-outputs` | Generate Riverpod + Isar code |
+| `dart run flutter_launcher_icons` | Generate app icons for all platforms |
+| `dart run flutter_native_splash:create` | Generate native splash screen |
 | `dart format --output=none --set-exit-if-changed .` | Check formatting |
 | `flutter analyze` | Static analysis |
 | `dart run custom_lint` | Riverpod-specific lints — **separate from `flutter analyze`, do not skip** |

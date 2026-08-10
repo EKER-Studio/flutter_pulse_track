@@ -29,6 +29,18 @@ This project follows a rygorystyczny clean architectural pattern:
 4. Ensure Bluetooth and Location permissions are granted on your physical Android/iOS device.
 5. Launch the application.
 
+## App Icons & Splash Screen
+
+After replacing the placeholder images in `assets/icon/`, regenerate the platform assets:
+
+```bash
+# Generate App Icons
+dart run flutter_launcher_icons
+
+# Generate Native Splash Screen
+dart run flutter_native_splash:create
+```
+
 ## License
 
 [MIT License](LICENSE)
