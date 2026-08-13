@@ -118,28 +118,28 @@ flutter_launcher_icons:
   ios: true
   remove_alpha_ios: true
 
-  # Standard Icon (Light Theme / Old iOS / Fallback)
+  # 1. Standard Icon (iOS Light Mode / Legacy iOS / Fallback)
   image_path: "assets/icon/app_icon.png"
 
-  # iOS 18+ Dark Mode
+  # 2. iOS 18+ Dark Mode
   image_path_ios_dark: "assets/icon/app_icon_dark.png"
 
-  # iOS 18+ Tinted Mode
+  # 3. iOS 18+ Tinted Mode
   image_path_ios_tinted: "assets/icon/app_icon_monochrome.png"
   
   # Android Adaptive Icons (API 26+)
   adaptive_icon_background: "#4f378a"
   adaptive_icon_foreground: "assets/icon/app_icon_foreground.png"
-  
-  # Android 13+ Dynamic Themed Icons
+
+  # Android 13+ Dynamic Themed Icons (Material You)
   adaptive_icon_monochrome: "assets/icon/app_icon_monochrome.png"
 
 flutter_native_splash:
   color: "#FDF7FF"
   color_dark: "#141218"
 
-  image: "assets/icon/app_icon_foreground.png"
-  image_dark: "assets/icon/app_icon_foreground.png"
+  image: "assets/icon/splash_light.png"
+  image_dark: "assets/icon/splash_dark.png"
 
   android_12:
     image: "assets/icon/app_icon_foreground.png"
