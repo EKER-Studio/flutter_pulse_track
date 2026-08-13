@@ -65,18 +65,18 @@ For every public class/method, add a doc comment following the language's standa
 *(Formerly `ble_heart_rate_monitor` — package renamed. Replace this whole section when starting a new project with a different stack.)*
 
 ### Build & Generation Commands
-| Command | Purpose |
-|---------|---------|
-| `flutter pub get` | Install dependencies |
-| `flutter gen-l10n` | Generate localization scaffolding (see Localization note below) |
+| Command                                                    | Purpose |
+|------------------------------------------------------------|---------|
+| `flutter pub get`                                          | Install dependencies |
+| `flutter gen-l10n`                                         | Generate localization scaffolding (see Localization note below) |
 | `dart run build_runner build --delete-conflicting-outputs` | Generate Riverpod + Isar code |
-| `dart run flutter_launcher_icons` | Generate app icons for all platforms |
-| `dart run flutter_native_splash:create` | Generate native splash screen |
-| `dart format --output=none --set-exit-if-changed .` | Check formatting |
-| `flutter analyze` | Static analysis |
-| `dart run custom_lint` | Riverpod-specific lints — **separate from `flutter analyze`, do not skip** |
-| `flutter test --exclude-tags golden` | Run non-golden tests |
-| `./before_push.sh` | Full pipeline: pub get → gen-l10n → build_runner → format → analyze → custom_lint → test |
+| `dart run flutter_launcher_icons`                          | Generate app icons for all platforms |
+| `dart run flutter_native_splash:create`                    | Generate native splash screen |
+| `dart format --output=none --set-exit-if-changed .`        | Check formatting |
+| `flutter analyze`                                          | Static analysis |
+| `dart run custom_lint`                                     | Riverpod-specific lints — **separate from `flutter analyze`, do not skip** |
+| `flutter test --exclude-tags golden`                       | Run non-golden tests |
+| `./scripts/before_push.sh`                                 | Full pipeline: pub get → gen-l10n → build_runner → format → analyze → custom_lint → test |
 
 ### Architecture & Layer Boundaries
 Feature-first Clean Architecture under `lib/features/<feature>/`. Two features currently exist: `heart_rate` and `workout`. Shared code lives in `lib/core/` (theme, logger, storage, foreground services).
