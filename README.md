@@ -25,7 +25,7 @@ This project follows a rygorystyczny clean architectural pattern:
 
 1. Clone the repository.
 2. Install dependencies: `flutter pub get`.
-3. Run code generation: `dart run build_runner build --delete-conflicting-outputs`.
+3. Run code generation: `dart run build_runner build`.
 4. Ensure Bluetooth and Location permissions are granted on your physical Android/iOS device.
 5. Launch the application.
 

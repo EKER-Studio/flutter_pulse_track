@@ -69,7 +69,7 @@ For every public class/method, add a doc comment following the language's standa
 |------------------------------------------------------------|---------|
 | `flutter pub get`                                          | Install dependencies |
 | `flutter gen-l10n`                                         | Generate localization scaffolding (see Localization note below) |
-| `dart run build_runner build --delete-conflicting-outputs` | Generate Riverpod + Isar code |
+| `dart run build_runner build` | Generate Riverpod + Isar code |
 | `dart run flutter_launcher_icons`                          | Generate app icons for all platforms |
 | `dart run flutter_native_splash:create`                    | Generate native splash screen |
 | `dart format --output=none --set-exit-if-changed .`        | Check formatting |
@@ -131,7 +131,7 @@ Before considering any feature involving streams, timers, animations, or BLE con
 
 ### Mandatory Verification Pipeline
 After any modification within the `lib/**` directory, you MUST execute the following pipeline in strict order (matches `before_push.sh`):
-1. `dart run build_runner build --delete-conflicting-outputs`
+1. `dart run build_runner build`
 2. `dart format --output=none --set-exit-if-changed .`
 3. `flutter analyze`
 4. `dart run custom_lint`
