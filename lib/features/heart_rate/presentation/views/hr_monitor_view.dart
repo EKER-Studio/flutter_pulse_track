@@ -53,7 +53,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     // state machine UI clean and exhaustive.
     final state = ref.watch(hrMonitorProvider);
     final notifier = ref.read(hrMonitorProvider.notifier);
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,

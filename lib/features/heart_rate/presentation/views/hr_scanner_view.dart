@@ -28,7 +28,7 @@ class HrScannerView extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         title: Text(
-          AppLocalizations.of(context).scanner_title,
+          AppLocalizations.of(context)!.scanner_title,
           style: Theme.of(
             context,
           ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -40,7 +40,7 @@ class HrScannerView extends ConsumerWidget {
           if (state is ScanningScannerState || state is EmptyScannerState)
             Semantics(
               /** Semantic label for the filter toggle button, used by screen readers. */
-              label: AppLocalizations.of(context).toggle_filter_tooltip,
+              label: AppLocalizations.of(context)!.toggle_filter_tooltip,
               button: true,
               toggled: _isFilterActive(notifier),
               child: IconButton(
@@ -54,7 +54,7 @@ class HrScannerView extends ConsumerWidget {
                       : AppColors.textSecondary,
                 ),
                 /** Tooltip text for the filter toggle button, also read by accessibility services. */
-                tooltip: AppLocalizations.of(context).toggle_filter_tooltip,
+                tooltip: AppLocalizations.of(context)!.toggle_filter_tooltip,
                 onPressed: () => notifier.toggleFilters(),
               ),
             ),
@@ -98,11 +98,11 @@ class HrScannerView extends ConsumerWidget {
             /** Semantic label for the Bluetooth searching icon, describing its purpose. */
             semanticLabel: AppLocalizations.of(
               context,
-            ).bluetooth_searching_label,
+            )!.bluetooth_searching_label,
           ),
           const SizedBox(height: 24),
           Text(
-            AppLocalizations.of(context).ready_to_scan,
+            AppLocalizations.of(context)!.ready_to_scan,
             style: const TextStyle(
               color: AppColors.textPrimary,
               fontSize: 24,
@@ -111,7 +111,7 @@ class HrScannerView extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            AppLocalizations.of(context).start_scan_description,
+            AppLocalizations.of(context)!.start_scan_description,
             style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 16,
@@ -120,7 +120,7 @@ class HrScannerView extends ConsumerWidget {
           const SizedBox(height: 32),
           Semantics(
             /** Semantic label for the Scan button, announcing its action to screen readers. */
-            label: AppLocalizations.of(context).scan_button_semantic_label,
+            label: AppLocalizations.of(context)!.scan_button_semantic_label,
             button: true,
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
@@ -138,7 +138,7 @@ class HrScannerView extends ConsumerWidget {
                 child: Icon(Icons.search, color: AppColors.textPrimary),
               ),
               label: Text(
-                AppLocalizations.of(context).scan_button_label,
+                AppLocalizations.of(context)!.scan_button_label,
                 style: const TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 16,
@@ -171,11 +171,11 @@ class HrScannerView extends ConsumerWidget {
               /** Semantic label for the Bluetooth disabled icon, indicating Bluetooth is off. */
               semanticLabel: AppLocalizations.of(
                 context,
-              ).bluetooth_disabled_label,
+              )!.bluetooth_disabled_label,
             ),
             const SizedBox(height: 24),
             Text(
-              AppLocalizations.of(context).bluetooth_required,
+              AppLocalizations.of(context)!.bluetooth_required,
               style: const TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 24,
@@ -184,7 +184,7 @@ class HrScannerView extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              AppLocalizations.of(context).bluetooth_off_description,
+              AppLocalizations.of(context)!.bluetooth_off_description,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: AppColors.textSecondary,
@@ -211,11 +211,11 @@ class HrScannerView extends ConsumerWidget {
               size: 80,
               color: AppColors.accentOrange,
               /** Semantic label for the unknown device icon, indicating the device is not recognized. */
-              semanticLabel: AppLocalizations.of(context).device_unknown_label,
+              semanticLabel: AppLocalizations.of(context)!.device_unknown_label,
             ),
             const SizedBox(height: 24),
             Text(
-              AppLocalizations.of(context).empty_state_title,
+              AppLocalizations.of(context)!.empty_state_title,
               style: const TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 20,
@@ -224,7 +224,7 @@ class HrScannerView extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              AppLocalizations.of(context).empty_state_bullets,
+              AppLocalizations.of(context)!.empty_state_bullets,
               style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 16,
@@ -237,7 +237,7 @@ class HrScannerView extends ConsumerWidget {
             /// Semantics wrapper for the retry scan button, providing an accessibility label.
             Semantics(
               /** Semantic label for the Retry Scan button, used by assistive technologies. */
-              label: AppLocalizations.of(context).retry_scan_semantic_label,
+              label: AppLocalizations.of(context)!.retry_scan_semantic_label,
               button: true,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
@@ -255,7 +255,7 @@ class HrScannerView extends ConsumerWidget {
                   child: Icon(Icons.refresh, color: AppColors.textPrimary),
                 ),
                 label: Text(
-                  AppLocalizations.of(context).retry_scan_label,
+                  AppLocalizations.of(context)!.retry_scan_label,
                   style: const TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 16,
@@ -299,7 +299,7 @@ class HrScannerView extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                AppLocalizations.of(context).scan_failed_title,
+                AppLocalizations.of(context)!.scan_failed_title,
                 style: const TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 20,
@@ -318,7 +318,7 @@ class HrScannerView extends ConsumerWidget {
               const SizedBox(height: 24),
               Semantics(
                 button: true,
-                label: AppLocalizations.of(context).scan_button_semantic_label,
+                label: AppLocalizations.of(context)!.scan_button_semantic_label,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accentRed,
@@ -329,7 +329,7 @@ class HrScannerView extends ConsumerWidget {
                   ),
                   onPressed: () => notifier.startScan(),
                   child: Text(
-                    AppLocalizations.of(context).scan_button_label,
+                    AppLocalizations.of(context)!.scan_button_label,
                     style: const TextStyle(color: AppColors.textPrimary),
                   ),
                 ),
@@ -355,7 +355,7 @@ class HrScannerView extends ConsumerWidget {
     return devices.isEmpty
         ? Center(
             child: Text(
-              AppLocalizations.of(context).searching_sensors,
+              AppLocalizations.of(context)!.searching_sensors,
               style: const TextStyle(color: AppColors.textSecondary),
             ),
           )
@@ -366,7 +366,7 @@ class HrScannerView extends ConsumerWidget {
             itemBuilder: (context, index) {
               final device = devices[index];
               final deviceName = device.name.isEmpty
-                  ? AppLocalizations.of(context).unknown_device
+                  ? AppLocalizations.of(context)!.unknown_device
                   : device.name;
               return
               /// Semantics wrapper for each device list tile, combining device name and RSSI for accessibility.
@@ -374,7 +374,7 @@ class HrScannerView extends ConsumerWidget {
                 label: deviceName,
                 hint: AppLocalizations.of(
                   context,
-                ).deviceListTileHint(device.id, device.rssi),
+                )!.deviceListTileHint(device.id, device.rssi),
                 button: true,
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(
@@ -447,7 +447,7 @@ class HrScannerView extends ConsumerWidget {
                     await notifier.stopScan();
                     if (!context.mounted) return;
                     final targetName = device.name.isEmpty
-                        ? AppLocalizations.of(context).unknown_device
+                        ? AppLocalizations.of(context)!.unknown_device
                         : device.name;
                     context.push(
                       '/monitor?deviceId=${Uri.encodeComponent(device.id)}&deviceName=${Uri.encodeComponent(targetName)}',

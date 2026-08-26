@@ -20,7 +20,7 @@ class HrHomeView extends ConsumerWidget {
     final savedProfilesAsync = ref.watch(
       watchSavedDeviceProfilesStreamProvider,
     );
-    var l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
