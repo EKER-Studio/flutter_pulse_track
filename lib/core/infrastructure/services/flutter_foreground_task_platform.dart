@@ -2,6 +2,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 import 'foreground_task_platform.dart';
 
+/// Foreground service implementation backed by flutter_foreground_task.
 class FlutterForegroundTaskPlatform implements ForegroundTaskPlatform {
   @override
   Future<void> init() async {

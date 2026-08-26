@@ -33,6 +33,7 @@ final Guid _kBatteryLevelCharacteristicUuid = Guid('2a19');
 
 const Duration _kCheckpointInterval = Duration(seconds: 30);
 
+/// Manages heart rate monitor connection, GATT discovery, and live telemetry.
 @riverpod
 class HrMonitorNotifier extends _$HrMonitorNotifier
     with WidgetsBindingObserver {

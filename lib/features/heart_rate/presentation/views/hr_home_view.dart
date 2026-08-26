@@ -12,6 +12,7 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 /// alongside navigation placeholders for future features (Workout History,
 /// Build in Public Guide).
 class HrHomeView extends ConsumerWidget {
+  /// Creates an [HrHomeView] instance.
   const HrHomeView({super.key});
 
   /// Builds the home dashboard hub layout using [context] and [ref].

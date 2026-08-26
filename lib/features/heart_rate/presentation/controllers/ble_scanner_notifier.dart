@@ -18,6 +18,7 @@ const int _kRssiThreshold = -65;
 
 final Guid _kHeartRateServiceUuid = Guid('180d');
 
+/// Manages BLE scanning lifecycle and filters discovered devices.
 @Riverpod(keepAlive: true)
 class BleScannerNotifier extends _$BleScannerNotifier {
   late final BluetoothScannerService _scannerService;

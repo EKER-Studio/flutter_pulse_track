@@ -6,7 +6,9 @@ import 'package:custom_lint_core/custom_lint_core.dart';
 const _presentationSegment = '/presentation/';
 const _forbiddenPackagePatterns = ['package:isar_community'];
 
+/// Prevents presentation layer from importing infrastructure internals.
 class AvoidInfrastructureImportsInPresentation extends DartLintRule {
+  /// Creates an [AvoidInfrastructureImportsInPresentation] rule.
   const AvoidInfrastructureImportsInPresentation() : super(code: _code);
 
   static const _code = LintCode(
