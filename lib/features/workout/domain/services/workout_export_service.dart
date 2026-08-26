@@ -30,7 +30,7 @@ class WorkoutExportService {
 
     final sampleCount = session.bpmSamples.length;
     if (sampleCount == 0) {
-      return const ListToCsvConverter().convert(rows);
+      return Csv().encode(rows);
     }
 
     final totalDuration = session.endTime != null
@@ -59,7 +59,7 @@ class WorkoutExportService {
       ]);
     }
 
-    return const ListToCsvConverter().convert(rows);
+    return Csv().encode(rows);
   }
 
   /// Exports [session] to a CSV file in the temporary directory and opens the system share sheet.
