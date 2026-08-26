@@ -65,7 +65,7 @@ class WorkoutExportService {
   /// Exports [session] to a CSV file in the temporary directory and opens the system share sheet.
   ///
   /// Takes the target [session] to export.
-  /// Returns a [Future] completing when the file is written and passed to [Share].
+  /// Returns a [Future] completing when the file is written and passed to [SharePlus].
   Future<void> exportAndShareSession(WorkoutSession session) async {
     try {
       final tempDir = await getTemporaryDirectory();
@@ -80,9 +80,12 @@ class WorkoutExportService {
         '[WorkoutExportService] CSV generated at $filePath (${csvContent.length} bytes)',
       );
 
-      await Share.shareXFiles([
-        XFile(file.path),
-      ], text: 'PulseTrack Workout Export #${session.id}');
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: 'PulseTrack Workout Export #${session.id}',
+        ),
+      );
     } catch (e, st) {
       log.e(
         '[WorkoutExportService] Failed to export workout session #${session.id}',

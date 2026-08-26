@@ -8,12 +8,15 @@ part of 'hr_monitor_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Manages heart rate monitor connection, GATT discovery, and live telemetry.
 
 @ProviderFor(HrMonitorNotifier)
 final hrMonitorProvider = HrMonitorNotifierProvider._();
 
+/// Manages heart rate monitor connection, GATT discovery, and live telemetry.
 final class HrMonitorNotifierProvider
     extends $NotifierProvider<HrMonitorNotifier, MonitorState> {
+  /// Manages heart rate monitor connection, GATT discovery, and live telemetry.
   HrMonitorNotifierProvider._()
     : super(
         from: null,
@@ -42,6 +45,8 @@ final class HrMonitorNotifierProvider
 }
 
 String _$hrMonitorNotifierHash() => r'70613c735d125f018a345d3834c01b40208752f2';
+
+/// Manages heart rate monitor connection, GATT discovery, and live telemetry.
 
 abstract class _$HrMonitorNotifier extends $Notifier<MonitorState> {
   MonitorState build();

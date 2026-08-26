@@ -8,12 +8,15 @@ part of 'ble_scanner_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Manages BLE scanning lifecycle and filters discovered devices.
 
 @ProviderFor(BleScannerNotifier)
 final bleScannerProvider = BleScannerNotifierProvider._();
 
+/// Manages BLE scanning lifecycle and filters discovered devices.
 final class BleScannerNotifierProvider
     extends $NotifierProvider<BleScannerNotifier, BleScannerState> {
+  /// Manages BLE scanning lifecycle and filters discovered devices.
   BleScannerNotifierProvider._()
     : super(
         from: null,
@@ -43,6 +46,8 @@ final class BleScannerNotifierProvider
 
 String _$bleScannerNotifierHash() =>
     r'7a90a9ca9b2d1d53ac391d1e51ab0b7986357684';
+
+/// Manages BLE scanning lifecycle and filters discovered devices.
 
 abstract class _$BleScannerNotifier extends $Notifier<BleScannerState> {
   BleScannerState build();

@@ -77,6 +77,10 @@ void main() {
   late BluetoothCharacteristic characteristic;
   late BluetoothService hrService;
 
+  setUpAll(() {
+    registerFallbackValue(License.nonprofit);
+  });
+
   setUp(() {
     service = const FbpHeartRateMonitorService();
     device = _makeDevice();
