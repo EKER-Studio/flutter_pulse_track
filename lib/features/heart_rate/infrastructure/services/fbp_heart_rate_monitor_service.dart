@@ -54,7 +54,7 @@ abstract class HeartRateMonitorService {
 /// Concrete [HeartRateMonitorService] backed by [FlutterBluePlus].
 class FbpHeartRateMonitorService implements HeartRateMonitorService {
   /// Creates a new [FbpHeartRateMonitorService] instance.
-  FbpHeartRateMonitorService();
+  const FbpHeartRateMonitorService();
 
   @override
   BluetoothDevice fromId(String deviceId) => BluetoothDevice.fromId(deviceId);
@@ -65,7 +65,10 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
     bool autoConnect = false,
   }) async {
     try {
-      await device.connect(autoConnect: autoConnect);
+      await device.connect(
+        license: License.nonprofit,
+        autoConnect: autoConnect,
+      );
     } catch (e) {
       log.e('[FbpHeartRateMonitorService] connect failed', error: e);
       rethrow;

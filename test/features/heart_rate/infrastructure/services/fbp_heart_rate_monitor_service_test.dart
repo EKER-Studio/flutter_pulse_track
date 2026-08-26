@@ -78,7 +78,7 @@ void main() {
   late BluetoothService hrService;
 
   setUp(() {
-    service = FbpHeartRateMonitorService();
+    service = const FbpHeartRateMonitorService();
     device = _makeDevice();
     characteristic = _makeCharacteristic();
     hrService = _makeService();
@@ -110,28 +110,41 @@ void main() {
   group('connect', () {
     test('delegates to device.connect with default autoConnect', () async {
       when(
-        () => device.connect(autoConnect: any(named: 'autoConnect')),
+        () => device.connect(
+          license: any(named: 'license'),
+          autoConnect: any(named: 'autoConnect'),
+        ),
       ).thenAnswer((_) async {});
 
       await service.connect(device);
 
-      verify(() => device.connect(autoConnect: false)).called(1);
+      verify(
+        () => device.connect(license: License.nonprofit, autoConnect: false),
+      ).called(1);
     });
 
     test('delegates to device.connect with autoConnect = true', () async {
       when(
-        () => device.connect(autoConnect: any(named: 'autoConnect')),
+        () => device.connect(
+          license: any(named: 'license'),
+          autoConnect: any(named: 'autoConnect'),
+        ),
       ).thenAnswer((_) async {});
 
       await service.connect(device, autoConnect: true);
 
-      verify(() => device.connect(autoConnect: true)).called(1);
+      verify(
+        () => device.connect(license: License.nonprofit, autoConnect: true),
+      ).called(1);
     });
 
     test('rethrows on connection failure', () async {
       final error = Exception('BLE connect failed');
       when(
-        () => device.connect(autoConnect: any(named: 'autoConnect')),
+        () => device.connect(
+          license: any(named: 'license'),
+          autoConnect: any(named: 'autoConnect'),
+        ),
       ).thenThrow(error);
 
       expect(() => service.connect(device), throwsA(same(error)));
@@ -345,7 +358,10 @@ void main() {
   group('error propagation', () {
     test('connect error is not swallowed', () async {
       when(
-        () => device.connect(autoConnect: any(named: 'autoConnect')),
+        () => device.connect(
+          license: any(named: 'license'),
+          autoConnect: any(named: 'autoConnect'),
+        ),
       ).thenThrow(FormatException('device not found'));
 
       await expectLater(
