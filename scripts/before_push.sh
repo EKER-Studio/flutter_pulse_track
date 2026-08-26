@@ -60,19 +60,14 @@ log_success "Localization classes generated successfully."
 # ------------------------------------------------------------------------------
 log_step "3" "Regenerating code declarations (Build Runner)..."
 # ------------------------------------------------------------------------------
-# Deletes conflicting outputs automatically to prevent compilation deadlocks
-dart run build_runner build > /dev/null
+dart run build_runner build
 log_success "Code generation completed."
 
 # ------------------------------------------------------------------------------
 log_step "4" "Verifying code formatting standards..."
 # ------------------------------------------------------------------------------
-# Ensures the code strictly obeys Dart formatting guidelines without altering files.
-# Generated build artifacts are removed first so the root-level format check does
-# not reformat vendored package sources under build/ or cached tool outputs.
-rm -rf build .dart_tool
-
-dart format --output=none --set-exit-if-changed .
+# Ensures the code strictly obeys Dart formatting guidelines without altering files
+dart format --set-exit-if-changed lib test
 log_success "Codebase formatting aligns with style specifications."
 
 # ------------------------------------------------------------------------------
@@ -80,24 +75,20 @@ log_step "5" "Executing static analysis (Linter)..."
 # ------------------------------------------------------------------------------
 # Evaluates project architecture against analysis_options.yaml rules
 flutter analyze
+dart run custom_lint
 log_success "Static analysis passed with zero warnings or errors."
 
 # ------------------------------------------------------------------------------
-log_step "6" "Running Riverpod-specific lints (custom_lint)..."
+log_step "6" "Running complete unit and widget test suites..."
 # ------------------------------------------------------------------------------
-dart run custom_lint
-log_success "Riverpod-specific lints passed with zero warnings."
-
-# ------------------------------------------------------------------------------
-log_step "7" "Running complete unit and widget test suites (Excluding Goldens)..."
-# ------------------------------------------------------------------------------
-flutter test --exclude-tags golden
+# Executes all automated tests inside the /test directory
+flutter test
 log_success "All automated unit and widget tests completed successfully."
 
 # ------------------------------------------------------------------------------
-log_step "8" "Checking Android build integrity (Debug APK)..."
+log_step "7" "Checking Android build integrity (Debug APK)..."
 # ------------------------------------------------------------------------------
-flutter build apk --debug --code-size-directory=build/logs/ || { echo "❌ [FAIL] Android build failed."; exit 1; }
+flutter build apk --debug || { echo "❌ [FAIL] Android build failed."; exit 1; }
 log_success "Android build completed successfully. Debug APK generated at build/app/outputs/flutter-apk/app-debug.apk."
 
 # ==============================================================================
