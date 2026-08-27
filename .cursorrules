@@ -1,25 +1,12 @@
-# Flutter Riverpod + Isar Boilerplate Rules
+# Cursor Rules
 
-## Tech Stack
-- Flutter & Dart (Production-Ready, Modern syntax)
-- State Management: Riverpod (with riverpod_generator code generation)
-- Local Database: isar_community (with isar_generator)
+The project instructions and universal standards are defined in:
 
-## Architecture Style
-- Feature-First layered structure inside `lib/features/[feature_name]/`
-- Layers inside each feature MUST be strictly separated:
-  - `domain/` (entities, abstract repositories) - Pure Dart, NO external frameworks.
-  - `infrastructure/` (models, mappers, repository implementations, Isar collections).
-  - `presentation/` (screens, widgets, riverpod providers/notifiers).
+@AGENTS.md
+@agents_project.md
 
-## Coding Standards & Patterns
-- ALWAYS use Riverpod code generation (`@riverpod` or `@Riverpod(keepAlive: true)`).
-- NO manual state mutation (`state = ...`) inside CRUD methods if state is stream-driven.
-- Database streams must use reactive binding. State updates automatically from the database observer.
-- ALWAYS cancel stream subscriptions using `ref.onDispose(subscription.cancel)`.
-- Isar instances initialization must prevent dual-open errors: use `Isar.getInstance() ?? await Isar.open(...)`.
-- Prefer immutable data types for Domain Entities.
+`AGENTS.md` (and the optional `agents_project.md` if present in the repository root) define the single
+source of truth for architecture, coding conventions, development workflow, resource disposal, verification
+pipeline, and testing rules. Follow them before making any changes.
 
-## Code Generation Command
-- Before asking to run the project, ensure code generation is executed via:
-  `dart run build_runner build`
+Do not introduce Cursor-specific overrides unless explicitly required.
