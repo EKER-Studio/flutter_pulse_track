@@ -1,0 +1,250 @@
+name: Release
+
+on:
+  push:
+    branches: [release]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version-file: .flutter-version
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Restore Firebase configuration or generate CI stub
+        env:
+          FIREBASE_GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.FIREBASE_GOOGLE_SERVICES_JSON_BASE64 }}
+          FIREBASE_GOOGLE_SERVICE_INFO_PLIST_BASE64: ${{ secrets.FIREBASE_GOOGLE_SERVICE_INFO_PLIST_BASE64 }}
+          FIREBASE_OPTIONS_DART_BASE64: ${{ secrets.FIREBASE_OPTIONS_DART_BASE64 }}
+        run: |
+          if [ -n "$FIREBASE_GOOGLE_SERVICES_JSON_BASE64" ]; then
+            echo "$FIREBASE_GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > android/app/google-services.json
+          elif [ ! -f "android/app/google-services.json" ]; then
+            mkdir -p android/app
+            echo '{"project_info":{"project_number":"1234567890","project_id":"dummy-ci-project","storage_bucket":"dummy-ci-project.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:1234567890:android:dummyappid","android_client_info":{"package_name":"com.ekerstudio.pulsetrack"}},"oauth_client":[],"api_key":[{"current_key":"dummy_api_key"}],"services":{}},{"client_info":{"mobilesdk_app_id":"1:1234567890:android:dummyappid_debug","android_client_info":{"package_name":"com.ekerstudio.pulsetrack.debug"}},"oauth_client":[],"api_key":[{"current_key":"dummy_api_key"}],"services":{}}],"configuration_version":"1"}' > android/app/google-services.json
+          fi
+
+          # Ensure google-services.json always contains the debug package client for debug builds
+          if [ -f "android/app/google-services.json" ] && ! grep -q "com.ekerstudio.pulsetrack.debug" android/app/google-services.json; then
+            python3 -c "
+import json, copy
+with open('android/app/google-services.json', 'r+') as f:
+    data = json.load(f)
+    if 'client' in data and len(data['client']) > 0:
+        debug_client = copy.deepcopy(data['client'][0])
+        debug_client['client_info']['android_client_info']['package_name'] = 'com.ekerstudio.pulsetrack.debug'
+        data['client'].append(debug_client)
+        f.seek(0)
+        json.dump(data, f, indent=2)
+        f.truncate()
+"
+          fi
+
+          if [ -n "$FIREBASE_GOOGLE_SERVICE_INFO_PLIST_BASE64" ]; then
+            echo "$FIREBASE_GOOGLE_SERVICE_INFO_PLIST_BASE64" | base64 --decode > ios/Runner/GoogleService-Info.plist
+          elif [ ! -f "ios/Runner/GoogleService-Info.plist" ]; then
+            mkdir -p ios/Runner
+            echo '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict><key>API_KEY</key><string>dummy_api_key</string><key>GCM_SENDER_ID</key><string>1234567890</string><key>PLIST_VERSION</key><string>1</string><key>BUNDLE_ID</key><string>com.ekerstudio.pulsetrack</string><key>PROJECT_ID</key><string>dummy-ci-project</string><key>STORAGE_BUCKET</key><string>dummy-ci-project.appspot.com</string><key>GOOGLE_APP_ID</key><string>1:1234567890:ios:dummyappid</string></dict></plist>' > ios/Runner/GoogleService-Info.plist
+          fi
+
+          if [ -n "$FIREBASE_OPTIONS_DART_BASE64" ]; then
+            echo "$FIREBASE_OPTIONS_DART_BASE64" | base64 --decode > lib/firebase_options.dart
+          elif [ ! -f "lib/firebase_options.dart" ]; then
+            echo "aW1wb3J0ICdwYWNrYWdlOmZpcmViYXNlX2NvcmUvZmlyZWJhc2VfY29yZS5kYXJ0JyBzaG93IEZpcmViYXNlT3B0aW9uczsKaW1wb3J0ICdwYWNrYWdlOmZsdXR0ZXIvZm91bmRhdGlvbi5kYXJ0JyBzaG93IGRlZmF1bHRUYXJnZXRQbGF0Zm9ybSwgVGFyZ2V0UGxhdGZvcm07CgpjbGFzcyBEZWZhdWx0RmlyZWJhc2VPcHRpb25zIHsKICBzdGF0aWMgRmlyZWJhc2VPcHRpb25zIGdldCBjdXJyZW50UGxhdGZvcm0gewogICAgcmV0dXJuIGNvbnN0IEZpcmViYXNlT3B0aW9ucygKICAgICAgYXBpS2V5OiAnZHVtbXlfYXBpX2tleScsCiAgICAgIGFwcElkOiAnZHVtbXlfYXBwX2lkJywKICAgICAgbWVzc2FnaW5nU2VuZGVySWQ6ICdkdW1teV9zZW5kZXJfaWQnLAogICAgICBwcm9qZWN0SWQ6ICdkdW1teV9wcm9qZWN0X2lkJywKICAgICk7CiAgfQp9Cg==" | base64 --decode > lib/firebase_options.dart
+          fi
+
+      - name: Cache Isar core binary
+        id: cache-isar
+        uses: actions/cache@v4
+        with:
+          path: libisar.so
+          key: ${{ runner.os }}-isar-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: Fetch Isar core binary for native tests
+        if: steps.cache-isar.outputs.cache-hit != 'true'
+        run: |
+          ISAR_VERSION=$(awk '/isar_community:/{flag=1; next} flag && /version:/{print $2; exit}' pubspec.lock | tr -d '"')
+          echo "Using Isar version: $ISAR_VERSION"
+          curl -fsSL "https://binaries.isar-community.dev/${ISAR_VERSION}/libisar_linux_x64.so" -o libisar.so
+
+      - name: Generate localization files (i18n)
+        run: flutter gen-l10n
+
+      - name: Run code generation (Build Runner)
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Check formatting
+        run: dart format --set-exit-if-changed lib test integration_test test_driver
+
+      - name: Static analysis
+        run: flutter analyze
+
+      - name: Run unit and widget tests
+        run: flutter test --coverage --exclude-tags "golden,screenshot"
+
+      - name: Restore signing keystore (if configured)
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "No keystore configured — building unsigned APK"
+            exit 0
+          fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+          echo "storeFile=release.keystore" >> android/key.properties
+          echo "storePassword=$KEYSTORE_PASSWORD" >> android/key.properties
+          echo "keyAlias=$KEY_ALIAS" >> android/key.properties
+          echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
+
+      - name: Build APK (release)
+        run: |
+          flutter build apk --release \
+            --obfuscate \
+            --split-debug-info=build/symbols \
+            --dart-define=ENVIRONMENT=prod
+
+      - name: Build App Bundle (AAB release)
+        run: |
+          flutter build appbundle --release \
+            --obfuscate \
+            --split-debug-info=build/symbols \
+            --dart-define=ENVIRONMENT=prod
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk-${{ github.sha }}
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab-${{ github.sha }}
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 30
+
+      - name: Upload debug symbols
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-symbols-${{ github.sha }}
+          path: build/symbols/
+          retention-days: 30
+
+      - name: Create GitHub Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
+          generate_release_notes: true
+
+  build-ios:
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version-file: .flutter-version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Restore Firebase configuration or generate CI stub
+        env:
+          FIREBASE_GOOGLE_SERVICE_INFO_PLIST_BASE64: ${{ secrets.FIREBASE_GOOGLE_SERVICE_INFO_PLIST_BASE64 }}
+          FIREBASE_OPTIONS_DART_BASE64: ${{ secrets.FIREBASE_OPTIONS_DART_BASE64 }}
+        run: |
+          if [ -n "$FIREBASE_GOOGLE_SERVICE_INFO_PLIST_BASE64" ]; then
+            echo "$FIREBASE_GOOGLE_SERVICE_INFO_PLIST_BASE64" | base64 --decode > ios/Runner/GoogleService-Info.plist
+          elif [ ! -f "ios/Runner/GoogleService-Info.plist" ]; then
+            mkdir -p ios/Runner
+            echo '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict><key>API_KEY</key><string>dummy_api_key</string><key>GCM_SENDER_ID</key><string>1234567890</string><key>PLIST_VERSION</key><string>1</string><key>BUNDLE_ID</key><string>com.ekerstudio.pulsetrack</string><key>PROJECT_ID</key><string>dummy-ci-project</string><key>STORAGE_BUCKET</key><string>dummy-ci-project.appspot.com</string><key>GOOGLE_APP_ID</key><string>1:1234567890:ios:dummyappid</string></dict></plist>' > ios/Runner/GoogleService-Info.plist
+          fi
+
+          if [ -n "$FIREBASE_OPTIONS_DART_BASE64" ]; then
+            echo "$FIREBASE_OPTIONS_DART_BASE64" | base64 --decode > lib/firebase_options.dart
+          elif [ ! -f "lib/firebase_options.dart" ]; then
+            echo "aW1wb3J0ICdwYWNrYWdlOmZpcmViYXNlX2NvcmUvZmlyZWJhc2VfY29yZS5kYXJ0JyBzaG93IEZpcmViYXNlT3B0aW9uczsKaW1wb3J0ICdwYWNrYWdlOmZsdXR0ZXIvZm91bmRhdGlvbi5kYXJ0JyBzaG93IGRlZmF1bHRUYXJnZXRQbGF0Zm9ybSwgVGFyZ2V0UGxhdGZvcm07CgpjbGFzcyBEZWZhdWx0RmlyZWJhc2VPcHRpb25zIHsKICBzdGF0aWMgRmlyZWJhc2VPcHRpb25zIGdldCBjdXJyZW50UGxhdGZvcm0gewogICAgcmV0dXJuIGNvbnN0IEZpcmViYXNlT3B0aW9ucygKICAgICAgYXBpS2V5OiAnZHVtbXlfYXBpX2tleScsCiAgICAgIGFwcElkOiAnZHVtbXlfYXBwX2lkJywKICAgICAgbWVzc2FnaW5nU2VuZGVySWQ6ICdkdW1teV9zZW5kZXJfaWQnLAogICAgICBwcm9qZWN0SWQ6ICdkdW1teV9wcm9qZWN0X2lkJywKICAgICk7CiAgfQp9Cg==" | base64 --decode > lib/firebase_options.dart
+          fi
+
+      - name: Generate localization files (i18n)
+        run: flutter gen-l10n
+
+      - name: Run code generation (Build Runner)
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build IPA (release)
+        run: |
+          flutter build ipa --release \
+            --obfuscate \
+            --split-debug-info=build/symbols \
+            --dart-define=ENVIRONMENT=prod \
+            --export-options-plist=ios/Runner/ExportOptions.plist
+        continue-on-error: true
+
+      - name: Fallback — Build IPA without export options (unsigned)
+        if: failure()
+        run: |
+          flutter build ipa --release \
+            --obfuscate \
+            --split-debug-info=build/symbols \
+            --dart-define=ENVIRONMENT=prod --no-codesign
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-ipa-${{ github.sha }}
+          path: build/ios/ipa/*.ipa
+          if-no-files-found: warn
+          retention-days: 30
