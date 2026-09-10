@@ -16,7 +16,10 @@ final log = Logger(
     dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
   ),
   filter: ProductionFilter(),
-  output: MultiOutput([ConsoleOutput(), FirebaseCrashlyticsOutput()]),
+  output: MultiOutput([
+    ConsoleOutput(),
+    FirebaseCrashlyticsOutput(enableInDebug: true),
+  ]),
 );
 
 /// Custom log filter that suppresses detailed debug logs in release mode.
@@ -32,15 +35,23 @@ class ProductionFilter extends LogFilter {
   }
 }
 
-/// Custom log output that delivers log events to Firebase Crashlytics in release builds.
+/// Custom log output that delivers log events to Firebase Crashlytics.
 ///
 /// Only `error` and above are forwarded to Crashlytics to avoid leaking
 /// personally identifiable data (BLE MAC, device names) that may appear in
 /// `info`/`debug` logs (see C-2).
 class FirebaseCrashlyticsOutput extends LogOutput {
+  /// Whether errors should be forwarded to Crashlytics during debug runs.
+  final bool enableInDebug;
+
+  /// Creates a [FirebaseCrashlyticsOutput] instance.
+  ///
+  /// @param enableInDebug If true, forwards errors in debug mode. Defaults to false.
+  FirebaseCrashlyticsOutput({this.enableInDebug = false});
+
   @override
   void output(OutputEvent event) {
-    if (kDebugMode) return;
+    if (kDebugMode && !enableInDebug) return;
 
     try {
       // Structural guard: Verify if Firebase has been bootstrapped in main.dart
@@ -59,7 +70,7 @@ class FirebaseCrashlyticsOutput extends LogOutput {
       // Firebase infrastructure is not ready yet. Fallback silently to prevent [core/no-app] crashes.
       // We use a raw print here as an emergency diagnostic override.
       debugPrint(
-        '--- Firebase Crashlytics not initialized. Operational log skipped in release. ---',
+        '--- Firebase Crashlytics not initialized. Operational log skipped. ---',
       );
     }
   }
