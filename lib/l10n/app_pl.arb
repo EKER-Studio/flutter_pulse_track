@@ -1,17 +1,16 @@
 {
-   "@@locale":"pl",
-   "homeTitle":"PulseTrack",
-   "savedSensorsSectionTitle":"Zapisane czujniki (Połączenie bezpośrednie)",
-   "unknownSensorLabel":"Nieznany czujnik",
-   "savedSensorFallbackName":"Zapisany czujnik",
-   "scanForNewSensorButton":"Skanuj nowe urządzenie",
-   "workoutHistoryTitle":"Historia treningów",
-   "workoutHistoryDescription":"Przeglądaj przeszłe sesje tętna i analitykę.",
+   "@@locale": "pl",
+   "homeTitle": "PulseTrack",
+   "savedSensorsSectionTitle": "Zapisane czujniki (Połączenie bezpośrednie)",
+   "unknownSensorLabel": "Nieznany czujnik",
+   "savedSensorFallbackName": "Zapisany czujnik",
+   "scanForNewSensorButton": "Skanuj nowe urządzenie",
+   "workoutHistoryTitle": "Historia treningów",
+   "workoutHistoryDescription": "Przeglądaj przeszłe sesje tętna i analitykę.",
    "scanner_title": "Skaner",
    "bluetooth_searching_label": "Skanowanie Bluetooth",
    "bluetooth_disabled_label": "Bluetooth wyłączony",
    "device_unknown_label": "Nieznane urządzenie",
-   "bluetooth_device_label": "Urządzenie Bluetooth",
    "toggle_filter_tooltip": "Przełącz filtr nazw i pobliskich urządzeń",
    "ready_to_scan": "Gotowy do skanowania",
    "start_scan_description": "Stuknij Skanuj, aby rozpocząć wyszukiwanie czujników.",
@@ -27,10 +26,8 @@
    "unknown_device": "Nieznane urządzenie",
    "scan_button_semantic_label": "Rozpocznij skanowanie w poszukiwaniu czujników tętna",
    "retry_scan_semantic_label": "Ponów skanowanie w poszukiwaniu czujników",
-
    "connectToSensor": "Połącz z {sensorName}",
    "deviceListTileHint": "Adres MAC {id}, moc sygnału {rssi} dBm. Stuknij dwukrotnie, aby połączyć.",
-
    "disconnectButton": "Rozłącz",
    "disconnectHint": "Rozłącza z urządzeniem {deviceName}",
    "disconnectedStatus": "Rozłączono",
@@ -51,7 +48,6 @@
    "retryConnectionHint": "Próbuje ponownie połączyć się z czujnikiem tętna",
    "goBackButton": "Wstecz",
    "goBackHint": "Powraca do poprzedniego ekranu",
-
    "workoutHistoryAppBarTitle": "Historia treningów",
    "deleteSessionLabel": "Usuń",
    "deleteSessionHint": "Usuwa tę sesję treningową",
@@ -64,38 +60,143 @@
    "unableToDeleteSession": "Nie można usunąć sesji. Spróbuj ponownie.",
    "avgBpmMetric": "Śr. BPM",
    "maxBpmMetric": "Maks. BPM",
-    "todayPrefix": "Dzisiaj, {time}",
+   "todayPrefix": "Dzisiaj, {time}",
    "yesterdayPrefix": "Wczoraj, {time}",
-
-    "failedToLoadSavedSensors": "Nie można wczytać zapisanych czujników: {error}",
-    "routeErrorTitle": "Błąd nawigacji",
-    "routeErrorNotFound": "Nie znaleziono żądanej strony",
-    "routeErrorInvalidLink": "Nieprawidłowy adres lub uszkodzony link głęboki.",
-    "routeErrorBackHome": "Powrót do strony głównej",
-    "databaseErrorTitle": "Błąd bazy danych",
-    "databaseErrorDescription": "Wystąpił krytyczny błąd bazy danych. Spróbuj zrestartować aplikację lub wyczyścić jej pamięć podręczną.",
-    "workoutDetailsTitle": "Szczegóły treningu",
-    "workoutDetailsBackHint": "Powrót do historii treningów",
-    "workoutDetailsExportHint": "Eksportuj dane treningu do CSV",
-    "workoutDetailsExportFailed": "Nie udało się wyeksportować sesji: {error}",
-    "workoutDetailsSummary": "Podsumowanie",
-    "workoutDetailsHeartRateOverTime": "Tętno w czasie",
-    "workoutDetailsNoData": "Brak zarejestrowanych danych",
-    "workoutDetailsNotCompleted": "Trening nie został ukończony",
-    "workoutDetailsSensorDisconnected": "Czujnik mógł zostać rozłączony przed zapisem danych",
-    "workoutDetailsNoValidData": "Nie zarejestrowano prawidłowych danych tętna",
-    "workoutDetailsAvgBpm": "Śr. BPM",
-    "workoutDetailsPeakBpm": "Maks. BPM",
-    "workoutDetailsDuration": "Czas trwania",
-    "workoutDetailsSamples": "Próbki",
-    "inProgress": "W trakcie",
-    "unknownSensor": "Nieznany czujnik",
-    "bodySensorLocationOther": "Inne",
-    "bodySensorLocationChest": "Klatka piersiowa",
-    "bodySensorLocationWrist": "Nadgarstek",
-    "bodySensorLocationFinger": "Palec",
-    "bodySensorLocationHand": "Dłoń",
-    "bodySensorLocationEarLobe": "Płatek ucha",
-    "bodySensorLocationFoot": "Stopa",
-    "bodySensorLocationUnknown": "Nieznane"
+   "failedToLoadSavedSensors": "Nie można wczytać zapisanych czujników: {error}",
+   "routeErrorTitle": "Błąd nawigacji",
+   "routeErrorNotFound": "Nie znaleziono żądanej strony",
+   "routeErrorInvalidLink": "Nieprawidłowy adres lub uszkodzony link głęboki.",
+   "routeErrorBackHome": "Powrót do strony głównej",
+   "workoutDetailsTitle": "Szczegóły treningu",
+   "workoutDetailsBackHint": "Powrót do historii treningów",
+   "workoutDetailsExportHint": "Eksportuj dane treningu do CSV",
+   "workoutDetailsExportFailed": "Nie udało się wyeksportować sesji: {error}",
+   "workoutDetailsSummary": "Podsumowanie",
+   "workoutDetailsHeartRateOverTime": "Tętno w czasie",
+   "workoutDetailsNoData": "Brak zarejestrowanych danych",
+   "workoutDetailsNotCompleted": "Trening nie został ukończony",
+   "workoutDetailsSensorDisconnected": "Czujnik mógł zostać rozłączony przed zapisem danych",
+   "workoutDetailsNoValidData": "Nie zarejestrowano prawidłowych danych tętna",
+   "workoutDetailsAvgBpm": "Śr. BPM",
+   "workoutDetailsPeakBpm": "Maks. BPM",
+   "workoutDetailsDuration": "Czas trwania",
+   "workoutDetailsSamples": "Próbki",
+   "inProgress": "W trakcie",
+   "unknownSensor": "Nieznany czujnik",
+   "bodySensorLocationOther": "Inne",
+   "bodySensorLocationChest": "Klatka piersiowa",
+   "bodySensorLocationWrist": "Nadgarstek",
+   "bodySensorLocationFinger": "Palec",
+   "bodySensorLocationHand": "Dłoń",
+   "bodySensorLocationEarLobe": "Płatek ucha",
+   "bodySensorLocationFoot": "Stopa",
+   "bodySensorLocationUnknown": "Nieznane",
+   "@failedToLoadSavedSensors": {
+      "description": "Error shown when saved sensors fail to load.",
+      "placeholders": {
+         "error": {
+            "type": "String"
+         }
+      }
+   },
+   "@workoutCardHint": {
+      "description": "Semantics hint for a workout history card.",
+      "placeholders": {
+         "duration": {
+            "type": "String"
+         },
+         "device": {
+            "type": "String"
+         },
+         "avg": {
+            "type": "int"
+         },
+         "max": {
+            "type": "int"
+         }
+      }
+   },
+   "@workoutCardLabel": {
+      "description": "Semantic label for a workout history card.",
+      "placeholders": {
+         "date": {
+            "type": "String"
+         }
+      }
+   },
+   "@yesterdayPrefix": {
+      "description": "Date prefix for workouts that occurred yesterday.",
+      "placeholders": {
+         "time": {
+            "type": "String"
+         }
+      }
+   },
+   "@sensorBatteryLabel": {
+      "description": "Accessibility label for the battery card.",
+      "placeholders": {
+         "level": {
+            "type": "String"
+         }
+      }
+   },
+   "@bodySensorLocationLabel": {
+      "description": "Accessibility label for the sensor location card.",
+      "placeholders": {
+         "location": {
+            "type": "String"
+         }
+      }
+   },
+   "@connectToSensor": {
+      "description": "Semantic label for saved sensor chips on the home screen.",
+      "placeholders": {
+         "sensorName": {
+            "type": "String"
+         }
+      }
+   },
+   "@todayPrefix": {
+      "description": "Date prefix for workouts that occurred today.",
+      "placeholders": {
+         "time": {
+            "type": "String"
+         }
+      }
+   },
+   "@workoutDetailsExportFailed": {
+      "description": "Snackbar when export fails.",
+      "placeholders": {
+         "error": {
+            "type": "String"
+         }
+      }
+   },
+   "@deviceListTileHint": {
+      "description": "Semantics hint for each device row in the scanner list.",
+      "placeholders": {
+         "id": {
+            "type": "String"
+         },
+         "rssi": {
+            "type": "int"
+         }
+      }
+   },
+   "@heartRateLiveLabel": {
+      "description": "Accessibility live region label for the current heart rate.",
+      "placeholders": {
+         "bpm": {
+            "type": "int"
+         }
+      }
+   },
+   "@disconnectHint": {
+      "description": "Semantics hint for the disconnect button.",
+      "placeholders": {
+         "deviceName": {
+            "type": "String"
+         }
+      }
+   }
 }

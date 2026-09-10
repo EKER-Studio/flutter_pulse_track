@@ -164,12 +164,6 @@ abstract class AppLocalizations {
   /// **'Unknown device'**
   String get device_unknown_label;
 
-  /// Semantic label for the Bluetooth device icon in the device list.
-  ///
-  /// In en, this message translates to:
-  /// **'Bluetooth device'**
-  String get bluetooth_device_label;
-
   /// Tooltip for the filter toggle button in the scanner view.
   ///
   /// In en, this message translates to:
@@ -505,18 +499,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back to home'**
   String get routeErrorBackHome;
-
-  /// Title for database error screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Database Error'**
-  String get databaseErrorTitle;
-
-  /// Description for database error screen.
-  ///
-  /// In en, this message translates to:
-  /// **'A critical database error occurred. Try restarting the app or clearing its cache.'**
-  String get databaseErrorDescription;
 
   /// AppBar title for workout details.
   ///

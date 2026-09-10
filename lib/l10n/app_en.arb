@@ -1,246 +1,439 @@
 {
-   "@@locale":"en",
-   "homeTitle":"PulseTrack",
-   "@homeTitle":{
-      "description":"Title shown in the app bar of the home dashboard screen."
+   "@@locale": "en",
+   "homeTitle": "PulseTrack",
+   "@homeTitle": {
+      "description": "Title shown in the app bar of the home dashboard screen."
    },
-   "savedSensorsSectionTitle":"Saved Sensors (Direct Connect)",
-   "@savedSensorsSectionTitle":{
-      "description":"Header above the horizontal list of previously-connected BLE sensors."
+   "savedSensorsSectionTitle": "Saved Sensors (Direct Connect)",
+   "@savedSensorsSectionTitle": {
+      "description": "Header above the horizontal list of previously-connected BLE sensors."
    },
-   "unknownSensorLabel":"Unknown Sensor",
-   "@unknownSensorLabel":{
-      "description":"Fallback label shown when a saved device profile has an empty name."
+   "unknownSensorLabel": "Unknown Sensor",
+   "@unknownSensorLabel": {
+      "description": "Fallback label shown when a saved device profile has an empty name."
    },
-   "savedSensorFallbackName":"Saved Sensor",
-   "@savedSensorFallbackName":{
-      "description":"Fallback device name passed to the monitor screen when a saved profile has an empty name."
+   "savedSensorFallbackName": "Saved Sensor",
+   "@savedSensorFallbackName": {
+      "description": "Fallback device name passed to the monitor screen when a saved profile has an empty name."
    },
-   "scanForNewSensorButton":"Scan for New Sensor",
-   "@scanForNewSensorButton":{
-      "description":"Label for the primary call-to-action button that opens the BLE scanner screen."
+   "scanForNewSensorButton": "Scan for New Sensor",
+   "@scanForNewSensorButton": {
+      "description": "Label for the primary call-to-action button that opens the BLE scanner screen."
    },
-   "workoutHistoryTitle":"Workout History",
-   "@workoutHistoryTitle":{
-      "description":"Title of the workout history placeholder card and its screen."
+   "workoutHistoryTitle": "Workout History",
+   "@workoutHistoryTitle": {
+      "description": "Title of the workout history placeholder card and its screen."
    },
-   "workoutHistoryDescription":"View past heart rate sessions and analytics.",
-   "@workoutHistoryDescription":{
-      "description":"Subtitle text under the workout history placeholder card on the home screen."
+   "workoutHistoryDescription": "View past heart rate sessions and analytics.",
+   "@workoutHistoryDescription": {
+      "description": "Subtitle text under the workout history placeholder card on the home screen."
    },
    "scanner_title": "Scanner",
-   "@scanner_title": {"description": "Title shown in the AppBar of the BLE scanner screen."},
+   "@scanner_title": {
+      "description": "Title shown in the AppBar of the BLE scanner screen."
+   },
    "bluetooth_searching_label": "Bluetooth scanning",
-   "@bluetooth_searching_label": {"description": "Semantic label for the Bluetooth searching icon."},
+   "@bluetooth_searching_label": {
+      "description": "Semantic label for the Bluetooth searching icon."
+   },
    "bluetooth_disabled_label": "Bluetooth disabled",
-   "@bluetooth_disabled_label": {"description": "Semantic label for the Bluetooth disabled icon."},
+   "@bluetooth_disabled_label": {
+      "description": "Semantic label for the Bluetooth disabled icon."
+   },
    "device_unknown_label": "Unknown device",
-   "@device_unknown_label": {"description": "Semantic label for the unknown device icon."},
-   "bluetooth_device_label": "Bluetooth device",
-   "@bluetooth_device_label": {"description": "Semantic label for the Bluetooth device icon in the device list."},
+   "@device_unknown_label": {
+      "description": "Semantic label for the unknown device icon."
+   },
    "toggle_filter_tooltip": "Toggle Names & Nearby Filter",
-   "@toggle_filter_tooltip": {"description": "Tooltip for the filter toggle button in the scanner view."},
+   "@toggle_filter_tooltip": {
+      "description": "Tooltip for the filter toggle button in the scanner view."
+   },
    "ready_to_scan": "Ready to scan",
-   "@ready_to_scan": {"description": "Header text displayed when the scanner is idle."},
+   "@ready_to_scan": {
+      "description": "Header text displayed when the scanner is idle."
+   },
    "start_scan_description": "Tap Scan to begin searching for sensors.",
-   "@start_scan_description": {"description": "Helper text shown under the ready‑to‑scan header."},
+   "@start_scan_description": {
+      "description": "Helper text shown under the ready‑to‑scan header."
+   },
    "scan_button_label": "Scan",
-   "@scan_button_label": {"description": "Label for the primary scan button."},
+   "@scan_button_label": {
+      "description": "Label for the primary scan button."
+   },
    "bluetooth_required": "Bluetooth Required",
-   "@bluetooth_required": {"description": "Header when Bluetooth is turned off."},
+   "@bluetooth_required": {
+      "description": "Header when Bluetooth is turned off."
+   },
    "bluetooth_off_description": "Bluetooth adapter is powered off or unauthorized. Please enable Bluetooth and grant local infrastructure permissions to scan for sensors.",
-   "@bluetooth_off_description": {"description": "Explanation shown when Bluetooth is off."},
+   "@bluetooth_off_description": {
+      "description": "Explanation shown when Bluetooth is off."
+   },
    "empty_state_title": "CAN'T SEE YOUR DEVICE?",
-   "@empty_state_title": {"description": "Title shown when no devices are found after a scan."},
+   "@empty_state_title": {
+      "description": "Title shown when no devices are found after a scan."
+   },
    "empty_state_bullets": "• Ensure the sensor is powered on.\n• Check the sensor battery.\n• Move closer to the device.\n• Try disabling the scan filters.",
-   "@empty_state_bullets": {"description": "Bullet list displayed in the empty‑state view."},
+   "@empty_state_bullets": {
+      "description": "Bullet list displayed in the empty‑state view."
+   },
    "retry_scan_label": "Retry Scan",
-   "@retry_scan_label": {"description": "Button label to retry scanning from the empty‑state view."},
+   "@retry_scan_label": {
+      "description": "Button label to retry scanning from the empty‑state view."
+   },
    "scan_failed_title": "Scan Failed",
-   "@scan_failed_title": {"description": "Title shown when a scan cannot be started."},
+   "@scan_failed_title": {
+      "description": "Title shown when a scan cannot be started."
+   },
    "retry_button_label": "Retry",
-   "@retry_button_label": {"description": "Button label to retry after a failure."},
+   "@retry_button_label": {
+      "description": "Button label to retry after a failure."
+   },
    "searching_sensors": "Searching for active sensors...",
-   "@searching_sensors": {"description": "Message displayed while the scanner is actively searching."},
+   "@searching_sensors": {
+      "description": "Message displayed while the scanner is actively searching."
+   },
    "unknown_device": "Unknown Device",
-   "@unknown_device": {"description": "Placeholder name for a device that reports an empty name."},
+   "@unknown_device": {
+      "description": "Placeholder name for a device that reports an empty name."
+   },
    "scan_button_semantic_label": "Start scanning for heart rate sensors",
-   "@scan_button_semantic_label": {"description": "Semantic label for the Scan button."},
+   "@scan_button_semantic_label": {
+      "description": "Semantic label for the Scan button."
+   },
    "retry_scan_semantic_label": "Retry scanning for sensors",
-   "@retry_scan_semantic_label": {"description": "Semantic label for the Retry Scan button in empty state."},
-
+   "@retry_scan_semantic_label": {
+      "description": "Semantic label for the Retry Scan button in empty state."
+   },
    "connectToSensor": "Connect to {sensorName}",
    "@connectToSensor": {
       "description": "Semantic label for saved sensor chips on the home screen.",
-      "placeholders": { "sensorName": { "type": "String" } }
+      "placeholders": {
+         "sensorName": {
+            "type": "String"
+         }
+      }
    },
    "deviceListTileHint": "MAC address {id}, signal strength {rssi} dBm. Double-tap to connect.",
    "@deviceListTileHint": {
       "description": "Semantics hint for each device row in the scanner list.",
       "placeholders": {
-         "id": { "type": "String" },
-         "rssi": { "type": "int" }
+         "id": {
+            "type": "String"
+         },
+         "rssi": {
+            "type": "int"
+         }
       }
    },
-
    "disconnectButton": "Disconnect",
-   "@disconnectButton": {"description": "Label for the disconnect button in the monitor view AppBar."},
+   "@disconnectButton": {
+      "description": "Label for the disconnect button in the monitor view AppBar."
+   },
    "disconnectHint": "Disconnects from {deviceName}",
    "@disconnectHint": {
       "description": "Semantics hint for the disconnect button.",
-      "placeholders": { "deviceName": { "type": "String" } }
+      "placeholders": {
+         "deviceName": {
+            "type": "String"
+         }
+      }
    },
    "disconnectedStatus": "Disconnected",
-   "@disconnectedStatus": {"description": "Status text shown when the sensor is disconnected."},
+   "@disconnectedStatus": {
+      "description": "Status text shown when the sensor is disconnected."
+   },
    "returnToScannerButton": "Return to Scanner",
-   "@returnToScannerButton": {"description": "Button label to navigate back to the scanner screen."},
+   "@returnToScannerButton": {
+      "description": "Button label to navigate back to the scanner screen."
+   },
    "returnToScannerHint": "Navigates back to the device scanner screen",
-   "@returnToScannerHint": {"description": "Semantics hint for the Return to Scanner button."},
+   "@returnToScannerHint": {
+      "description": "Semantics hint for the Return to Scanner button."
+   },
    "connectingMessage": "Connecting to device...\nLink-layer handshake in progress",
-   "@connectingMessage": {"description": "Progress message shown during BLE link-layer connection."},
+   "@connectingMessage": {
+      "description": "Progress message shown during BLE link-layer connection."
+   },
    "discoveringServicesMessage": "Discovering Services... Please wait...",
-   "@discoveringServicesMessage": {"description": "Progress message shown during GATT service discovery."},
+   "@discoveringServicesMessage": {
+      "description": "Progress message shown during GATT service discovery."
+   },
    "heartRateLabel": "Heart rate",
-   "@heartRateLabel": {"description": "Header label above the live BPM reading."},
+   "@heartRateLabel": {
+      "description": "Header label above the live BPM reading."
+   },
    "heartRateLiveLabel": "Heart rate: {bpm} beats per minute",
    "@heartRateLiveLabel": {
       "description": "Accessibility live region label for the current heart rate.",
-      "placeholders": { "bpm": { "type": "int" } }
+      "placeholders": {
+         "bpm": {
+            "type": "int"
+         }
+      }
    },
    "bpmUnit": "BPM",
-   "@bpmUnit": {"description": "Abbreviation for beats per minute."},
+   "@bpmUnit": {
+      "description": "Abbreviation for beats per minute."
+   },
    "bodySensorLocationTitle": "Body sensor location",
-   "@bodySensorLocationTitle": {"description": "Title for the sensor location info card."},
+   "@bodySensorLocationTitle": {
+      "description": "Title for the sensor location info card."
+   },
    "bodySensorLocationLabel": "Body sensor location: {location}",
    "@bodySensorLocationLabel": {
       "description": "Accessibility label for the sensor location card.",
-      "placeholders": { "location": { "type": "String" } }
+      "placeholders": {
+         "location": {
+            "type": "String"
+         }
+      }
    },
    "sensorBatteryTitle": "Sensor battery",
-   "@sensorBatteryTitle": {"description": "Title for the battery level info card."},
+   "@sensorBatteryTitle": {
+      "description": "Title for the battery level info card."
+   },
    "sensorBatteryLabel": "Sensor battery level: {level}",
    "@sensorBatteryLabel": {
       "description": "Accessibility label for the battery card.",
-      "placeholders": { "level": { "type": "String" } }
+      "placeholders": {
+         "level": {
+            "type": "String"
+         }
+      }
    },
    "batteryNotAvailable": "N/A",
-   "@batteryNotAvailable": {"description": "Displayed when battery level is unavailable."},
+   "@batteryNotAvailable": {
+      "description": "Displayed when battery level is unavailable."
+   },
    "connectionFailedTitle": "Connection Failed",
-   "@connectionFailedTitle": {"description": "Title of the failure state card in the monitor view."},
+   "@connectionFailedTitle": {
+      "description": "Title of the failure state card in the monitor view."
+   },
    "retryConnectionButton": "Retry Connection",
-   "@retryConnectionButton": {"description": "Button label to retry connecting to a device."},
+   "@retryConnectionButton": {
+      "description": "Button label to retry connecting to a device."
+   },
    "retryConnectionHint": "Attempts to reconnect to the heart rate sensor",
-   "@retryConnectionHint": {"description": "Semantics hint for the retry connection button."},
+   "@retryConnectionHint": {
+      "description": "Semantics hint for the retry connection button."
+   },
    "goBackButton": "Go Back",
-   "@goBackButton": {"description": "Button label to navigate back from the failure state."},
+   "@goBackButton": {
+      "description": "Button label to navigate back from the failure state."
+   },
    "goBackHint": "Returns to the previous screen",
-   "@goBackHint": {"description": "Semantics hint for the go back button."},
-
+   "@goBackHint": {
+      "description": "Semantics hint for the go back button."
+   },
    "workoutHistoryAppBarTitle": "Workout History",
-   "@workoutHistoryAppBarTitle": {"description": "AppBar title for the workout history screen."},
+   "@workoutHistoryAppBarTitle": {
+      "description": "AppBar title for the workout history screen."
+   },
    "deleteSessionLabel": "Delete",
-   "@deleteSessionLabel": {"description": "Semantic label for the dismiss-to-delete gesture background."},
+   "@deleteSessionLabel": {
+      "description": "Semantic label for the dismiss-to-delete gesture background."
+   },
    "deleteSessionHint": "Deletes this workout session",
-   "@deleteSessionHint": {"description": "Semantics hint for the delete session action."},
+   "@deleteSessionHint": {
+      "description": "Semantics hint for the delete session action."
+   },
    "unableToLoadHistory": "Unable to load workout history. Please try again later.",
-   "@unableToLoadHistory": {"description": "Error message when workout history fails to load."},
+   "@unableToLoadHistory": {
+      "description": "Error message when workout history fails to load."
+   },
    "unknownSensorName": "Unknown Sensor",
-   "@unknownSensorName": {"description": "Fallback device name shown on workout cards when the original is empty."},
+   "@unknownSensorName": {
+      "description": "Fallback device name shown on workout cards when the original is empty."
+   },
    "noWorkoutsTitle": "No workouts recorded yet",
-   "@noWorkoutsTitle": {"description": "Title in the empty state of workout history."},
+   "@noWorkoutsTitle": {
+      "description": "Title in the empty state of workout history."
+   },
    "noWorkoutsDescription": "Complete a heart rate monitoring session to see your workout history here.",
-   "@noWorkoutsDescription": {"description": "Description in the empty state of workout history."},
+   "@noWorkoutsDescription": {
+      "description": "Description in the empty state of workout history."
+   },
    "workoutCardLabel": "Workout on {date}",
    "@workoutCardLabel": {
       "description": "Semantic label for a workout history card.",
-      "placeholders": { "date": { "type": "String" } }
+      "placeholders": {
+         "date": {
+            "type": "String"
+         }
+      }
    },
    "workoutCardHint": "Duration {duration}, sensor {device}. Average heart rate {avg} BPM, Peak heart rate {max} BPM. Swipe left to delete.",
    "@workoutCardHint": {
       "description": "Semantics hint for a workout history card.",
       "placeholders": {
-         "duration": { "type": "String" },
-         "device": { "type": "String" },
-         "avg": { "type": "int" },
-         "max": { "type": "int" }
+         "duration": {
+            "type": "String"
+         },
+         "device": {
+            "type": "String"
+         },
+         "avg": {
+            "type": "int"
+         },
+         "max": {
+            "type": "int"
+         }
       }
    },
    "unableToDeleteSession": "Unable to delete session. Please try again.",
-   "@unableToDeleteSession": {"description": "SnackBar message when session deletion fails."},
+   "@unableToDeleteSession": {
+      "description": "SnackBar message when session deletion fails."
+   },
    "avgBpmMetric": "Avg BPM",
-   "@avgBpmMetric": {"description": "Label for the average BPM metric on workout cards."},
+   "@avgBpmMetric": {
+      "description": "Label for the average BPM metric on workout cards."
+   },
    "maxBpmMetric": "Max BPM",
-   "@maxBpmMetric": {"description": "Label for the max BPM metric on workout cards."},
+   "@maxBpmMetric": {
+      "description": "Label for the max BPM metric on workout cards."
+   },
    "todayPrefix": "Today, {time}",
    "@todayPrefix": {
       "description": "Date prefix for workouts that occurred today.",
-      "placeholders": { "time": { "type": "String" } }
+      "placeholders": {
+         "time": {
+            "type": "String"
+         }
+      }
    },
-    "yesterdayPrefix": "Yesterday, {time}",
+   "yesterdayPrefix": "Yesterday, {time}",
    "@yesterdayPrefix": {
-       "description": "Date prefix for workouts that occurred yesterday.",
-       "placeholders": { "time": { "type": "String" } }
-    },
-    "failedToLoadSavedSensors": "Failed to load saved sensors: {error}",
-   "@failedToLoadSavedSensors": {"description": "Error shown when saved sensors fail to load.", "placeholders": {"error": {"type": "String"}}},
-    "routeErrorTitle": "Navigation Error",
-   "@routeErrorTitle": {"description": "AppBar title for the route error view."},
-    "routeErrorNotFound": "Page not found",
-   "@routeErrorNotFound": {"description": "Headline for unknown route."},
-    "routeErrorInvalidLink": "Invalid address or broken deep link.",
-   "@routeErrorInvalidLink": {"description": "Details for invalid route."},
-    "routeErrorBackHome": "Back to home",
-   "@routeErrorBackHome": {"description": "Button to return to home from route error."},
-    "databaseErrorTitle": "Database Error",
-   "@databaseErrorTitle": {"description": "Title for database error screen."},
-    "databaseErrorDescription": "A critical database error occurred. Try restarting the app or clearing its cache.",
-   "@databaseErrorDescription": {"description": "Description for database error screen."},
-    "workoutDetailsTitle": "Workout Details",
-   "@workoutDetailsTitle": {"description": "AppBar title for workout details."},
-    "workoutDetailsBackHint": "Back to workout history",
-   "@workoutDetailsBackHint": {"description": "Semantics/back tooltip for workout details."},
-    "workoutDetailsExportHint": "Export workout data to CSV",
-   "@workoutDetailsExportHint": {"description": "Tooltip/semantics for export button."},
-    "workoutDetailsExportFailed": "Failed to export workout session: {error}",
-   "@workoutDetailsExportFailed": {"description": "Snackbar when export fails.", "placeholders": {"error": {"type": "String"}}},
-    "workoutDetailsSummary": "Summary",
-   "@workoutDetailsSummary": {"description": "Header for summary grid."},
-    "workoutDetailsHeartRateOverTime": "Heart Rate Over Time",
-   "@workoutDetailsHeartRateOverTime": {"description": "Header for BPM chart."},
-    "workoutDetailsNoData": "No workout data captured",
-   "@workoutDetailsNoData": {"description": "Placeholder when no BPM samples."},
-    "workoutDetailsNotCompleted": "The workout was not completed",
-   "@workoutDetailsNotCompleted": {"description": "Reason when endTime is null."},
-    "workoutDetailsSensorDisconnected": "The sensor may have disconnected before data was captured",
-   "@workoutDetailsSensorDisconnected": {"description": "Reason when samples empty."},
-    "workoutDetailsNoValidData": "No valid heart rate data was recorded",
-   "@workoutDetailsNoValidData": {"description": "Generic no-data reason."},
-    "workoutDetailsAvgBpm": "Average BPM",
-   "@workoutDetailsAvgBpm": {"description": "Tile label average BPM."},
-    "workoutDetailsPeakBpm": "Peak BPM",
-   "@workoutDetailsPeakBpm": {"description": "Tile label peak BPM."},
-    "workoutDetailsDuration": "Duration",
-   "@workoutDetailsDuration": {"description": "Tile label duration."},
-    "workoutDetailsSamples": "Samples",
-   "@workoutDetailsSamples": {"description": "Tile label samples."},
-    "inProgress": "In Progress",
-   "@inProgress": {"description": "Badge when endTime is null."},
-    "unknownSensor": "Unknown Sensor",
-   "@unknownSensor": {"description": "Fallback sensor name."},
-    "bodySensorLocationOther": "Other",
-   "@bodySensorLocationOther": {"description": "Body sensor location other."},
-    "bodySensorLocationChest": "Chest",
-   "@bodySensorLocationChest": {"description": "Body sensor location chest."},
-    "bodySensorLocationWrist": "Wrist",
-   "@bodySensorLocationWrist": {"description": "Body sensor location wrist."},
-    "bodySensorLocationFinger": "Finger",
-   "@bodySensorLocationFinger": {"description": "Body sensor location finger."},
-    "bodySensorLocationHand": "Hand",
-   "@bodySensorLocationHand": {"description": "Body sensor location hand."},
-    "bodySensorLocationEarLobe": "Ear Lobe",
-   "@bodySensorLocationEarLobe": {"description": "Body sensor location earLobe."},
-    "bodySensorLocationFoot": "Foot",
-   "@bodySensorLocationFoot": {"description": "Body sensor location foot."},
-    "bodySensorLocationUnknown": "Unknown",
-   "@bodySensorLocationUnknown": {"description": "Body sensor location unknown."}
+      "description": "Date prefix for workouts that occurred yesterday.",
+      "placeholders": {
+         "time": {
+            "type": "String"
+         }
+      }
+   },
+   "failedToLoadSavedSensors": "Failed to load saved sensors: {error}",
+   "@failedToLoadSavedSensors": {
+      "description": "Error shown when saved sensors fail to load.",
+      "placeholders": {
+         "error": {
+            "type": "String"
+         }
+      }
+   },
+   "routeErrorTitle": "Navigation Error",
+   "@routeErrorTitle": {
+      "description": "AppBar title for the route error view."
+   },
+   "routeErrorNotFound": "Page not found",
+   "@routeErrorNotFound": {
+      "description": "Headline for unknown route."
+   },
+   "routeErrorInvalidLink": "Invalid address or broken deep link.",
+   "@routeErrorInvalidLink": {
+      "description": "Details for invalid route."
+   },
+   "routeErrorBackHome": "Back to home",
+   "@routeErrorBackHome": {
+      "description": "Button to return to home from route error."
+   },
+   "workoutDetailsTitle": "Workout Details",
+   "@workoutDetailsTitle": {
+      "description": "AppBar title for workout details."
+   },
+   "workoutDetailsBackHint": "Back to workout history",
+   "@workoutDetailsBackHint": {
+      "description": "Semantics/back tooltip for workout details."
+   },
+   "workoutDetailsExportHint": "Export workout data to CSV",
+   "@workoutDetailsExportHint": {
+      "description": "Tooltip/semantics for export button."
+   },
+   "workoutDetailsExportFailed": "Failed to export workout session: {error}",
+   "@workoutDetailsExportFailed": {
+      "description": "Snackbar when export fails.",
+      "placeholders": {
+         "error": {
+            "type": "String"
+         }
+      }
+   },
+   "workoutDetailsSummary": "Summary",
+   "@workoutDetailsSummary": {
+      "description": "Header for summary grid."
+   },
+   "workoutDetailsHeartRateOverTime": "Heart Rate Over Time",
+   "@workoutDetailsHeartRateOverTime": {
+      "description": "Header for BPM chart."
+   },
+   "workoutDetailsNoData": "No workout data captured",
+   "@workoutDetailsNoData": {
+      "description": "Placeholder when no BPM samples."
+   },
+   "workoutDetailsNotCompleted": "The workout was not completed",
+   "@workoutDetailsNotCompleted": {
+      "description": "Reason when endTime is null."
+   },
+   "workoutDetailsSensorDisconnected": "The sensor may have disconnected before data was captured",
+   "@workoutDetailsSensorDisconnected": {
+      "description": "Reason when samples empty."
+   },
+   "workoutDetailsNoValidData": "No valid heart rate data was recorded",
+   "@workoutDetailsNoValidData": {
+      "description": "Generic no-data reason."
+   },
+   "workoutDetailsAvgBpm": "Average BPM",
+   "@workoutDetailsAvgBpm": {
+      "description": "Tile label average BPM."
+   },
+   "workoutDetailsPeakBpm": "Peak BPM",
+   "@workoutDetailsPeakBpm": {
+      "description": "Tile label peak BPM."
+   },
+   "workoutDetailsDuration": "Duration",
+   "@workoutDetailsDuration": {
+      "description": "Tile label duration."
+   },
+   "workoutDetailsSamples": "Samples",
+   "@workoutDetailsSamples": {
+      "description": "Tile label samples."
+   },
+   "inProgress": "In Progress",
+   "@inProgress": {
+      "description": "Badge when endTime is null."
+   },
+   "unknownSensor": "Unknown Sensor",
+   "@unknownSensor": {
+      "description": "Fallback sensor name."
+   },
+   "bodySensorLocationOther": "Other",
+   "@bodySensorLocationOther": {
+      "description": "Body sensor location other."
+   },
+   "bodySensorLocationChest": "Chest",
+   "@bodySensorLocationChest": {
+      "description": "Body sensor location chest."
+   },
+   "bodySensorLocationWrist": "Wrist",
+   "@bodySensorLocationWrist": {
+      "description": "Body sensor location wrist."
+   },
+   "bodySensorLocationFinger": "Finger",
+   "@bodySensorLocationFinger": {
+      "description": "Body sensor location finger."
+   },
+   "bodySensorLocationHand": "Hand",
+   "@bodySensorLocationHand": {
+      "description": "Body sensor location hand."
+   },
+   "bodySensorLocationEarLobe": "Ear Lobe",
+   "@bodySensorLocationEarLobe": {
+      "description": "Body sensor location earLobe."
+   },
+   "bodySensorLocationFoot": "Foot",
+   "@bodySensorLocationFoot": {
+      "description": "Body sensor location foot."
+   },
+   "bodySensorLocationUnknown": "Unknown",
+   "@bodySensorLocationUnknown": {
+      "description": "Body sensor location unknown."
+   }
 }

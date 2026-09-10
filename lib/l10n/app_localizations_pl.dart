@@ -45,9 +45,6 @@ class AppLocalizationsPl extends AppLocalizations {
   String get device_unknown_label => 'Nieznane urządzenie';
 
   @override
-  String get bluetooth_device_label => 'Urządzenie Bluetooth';
-
-  @override
   String get toggle_filter_tooltip =>
       'Przełącz filtr nazw i pobliskich urządzeń';
 
@@ -249,13 +246,6 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get routeErrorBackHome => 'Powrót do strony głównej';
-
-  @override
-  String get databaseErrorTitle => 'Błąd bazy danych';
-
-  @override
-  String get databaseErrorDescription =>
-      'Wystąpił krytyczny błąd bazy danych. Spróbuj zrestartować aplikację lub wyczyścić jej pamięć podręczną.';
 
   @override
   String get workoutDetailsTitle => 'Szczegóły treningu';

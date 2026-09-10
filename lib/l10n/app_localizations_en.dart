@@ -44,9 +44,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get device_unknown_label => 'Unknown device';
 
   @override
-  String get bluetooth_device_label => 'Bluetooth device';
-
-  @override
   String get toggle_filter_tooltip => 'Toggle Names & Nearby Filter';
 
   @override
@@ -246,13 +243,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routeErrorBackHome => 'Back to home';
-
-  @override
-  String get databaseErrorTitle => 'Database Error';
-
-  @override
-  String get databaseErrorDescription =>
-      'A critical database error occurred. Try restarting the app or clearing its cache.';
 
   @override
   String get workoutDetailsTitle => 'Workout Details';

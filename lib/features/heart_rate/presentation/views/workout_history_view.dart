@@ -59,7 +59,7 @@ class WorkoutHistoryView extends ConsumerWidget {
                     onPressed: () =>
                         ref.invalidate(watchWorkoutHistoryStreamProvider),
                     icon: const Icon(Icons.refresh),
-                    label: const Text('Retry'),
+                    label: Text(l10n.retry_button_label),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.accentBlue,
                       foregroundColor: AppColors.textPrimary,
