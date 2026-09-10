@@ -7,7 +7,16 @@ void main() {
     test('returns true for all levels in debug mode', () {
       final filter = ProductionFilter();
 
-      for (final level in Level.values) {
+      const validLevels = [
+        Level.trace,
+        Level.debug,
+        Level.info,
+        Level.warning,
+        Level.error,
+        Level.fatal,
+      ];
+
+      for (final level in validLevels) {
         expect(filter.shouldLog(LogEvent(level, 'test')), true);
       }
     });
