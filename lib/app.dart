@@ -8,7 +8,6 @@ import 'l10n/app_localizations.dart';
 
 /// Root widget that configures the MaterialApp with a dark theme and GoRouter navigation.
 class App extends ConsumerWidget {
-  /// Creates the root [App] widget.
   const App({super.key});
 
   @override
