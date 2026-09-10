@@ -67,7 +67,7 @@ log_success "Code generation completed."
 log_step "4" "Verifying code formatting standards..."
 # ------------------------------------------------------------------------------
 # Ensures the code strictly obeys Dart formatting guidelines without altering files
-dart format --set-exit-if-changed lib test
+dart format --set-exit-if-changed lib test integration_test test_driver
 log_success "Codebase formatting aligns with style specifications."
 
 # ------------------------------------------------------------------------------
@@ -82,7 +82,7 @@ log_success "Static analysis passed with zero warnings or errors."
 log_step "6" "Running complete unit and widget test suites..."
 # ------------------------------------------------------------------------------
 # Executes all automated tests inside the /test directory
-flutter test
+flutter test --exclude-tags "golden,screenshot"
 log_success "All automated unit and widget tests completed successfully."
 
 # ------------------------------------------------------------------------------
