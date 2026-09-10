@@ -377,27 +377,23 @@ class HrScannerView extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  title: Flexible(
-                    child: Text(
-                      deviceName,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                  title: Text(
+                    deviceName,
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  subtitle: Flexible(
-                    child: Text(
-                      device.id,
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 12,
-                        fontFamily: 'monospace',
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                  subtitle: Text(
+                    device.id,
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                      fontFamily: 'monospace',
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                   trailing: ExcludeSemantics(
                     child: SizedBox(
