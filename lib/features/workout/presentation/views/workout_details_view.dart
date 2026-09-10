@@ -17,7 +17,6 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 ///
 /// Navigated to from the workout history list via the workout feature route.
 class WorkoutDetailsView extends ConsumerWidget {
-  /// Creates a [WorkoutDetailsView] instance for the given [session].
   const WorkoutDetailsView({required this.session, super.key});
 
   static const Color _kCardBackgroundColor = AppColors.surfaceBackground;
