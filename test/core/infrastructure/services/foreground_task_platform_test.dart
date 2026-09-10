@@ -42,9 +42,8 @@ void main() {
 
     test('startService accepts callback', () async {
       void callback() {}
-      when(
-        () => platform.startService(callback: any(named: 'callback')),
-      ).thenAnswer((_) async {});
+      when(() => platform.startService(callback: any(named: 'callback')))
+          .thenAnswer((_) async {});
 
       await platform.startService(callback: callback);
 

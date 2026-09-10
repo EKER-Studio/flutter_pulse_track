@@ -82,9 +82,9 @@ void main() {
     });
 
     test('failure provides message', () {
-      final state =
-          BleScannerState.failure(message: 'Bluetooth crashed')
-              as FailureScannerState;
+      final state = BleScannerState.failure(
+        message: 'Bluetooth crashed',
+      ) as FailureScannerState;
 
       expect(state.message, 'Bluetooth crashed');
     });

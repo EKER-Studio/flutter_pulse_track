@@ -47,22 +47,17 @@ void main() {
     mockSavePartialWorkoutSessionUseCase =
         _MockSavePartialWorkoutSessionUseCase();
 
-    when(
-      () => mockDevice.remoteId,
-    ).thenReturn(const DeviceIdentifier('test-id'));
+    when(() => mockDevice.remoteId)
+        .thenReturn(const DeviceIdentifier('test-id'));
     when(() => mockMonitorService.fromId('test-id')).thenReturn(mockDevice);
-    when(
-      () => mockMonitorService.connect(mockDevice, autoConnect: false),
-    ).thenAnswer((_) async {});
-    when(
-      () => mockMonitorService.discoverServices(mockDevice),
-    ).thenAnswer((_) async => []);
-    when(
-      () => mockMonitorService.connectionState(mockDevice),
-    ).thenAnswer((_) => const Stream.empty());
-    when(
-      () => mockMonitorService.disconnect(mockDevice),
-    ).thenAnswer((_) async {});
+    when(() => mockMonitorService.connect(mockDevice, autoConnect: false))
+        .thenAnswer((_) async {});
+    when(() => mockMonitorService.discoverServices(mockDevice))
+        .thenAnswer((_) async => []);
+    when(() => mockMonitorService.connectionState(mockDevice))
+        .thenAnswer((_) => const Stream.empty());
+    when(() => mockMonitorService.disconnect(mockDevice))
+        .thenAnswer((_) async {});
     when(() => mockForegroundManager.startService()).thenAnswer((_) async {});
     when(() => mockForegroundManager.stopService()).thenAnswer((_) async {});
   });

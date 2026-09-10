@@ -5,28 +5,25 @@ import 'package:pulse_track/core/infrastructure/storage/isar_provider.dart';
 
 void main() {
   group('isarProvider', () {
-    test(
-      'throws ProviderException wrapping UnimplementedError when read before override',
-      () {
-        final container = ProviderContainer();
-        addTearDown(() => container.dispose());
+    test('throws ProviderException wrapping UnimplementedError when read before override', () {
+      final container = ProviderContainer();
+      addTearDown(() => container.dispose());
 
-        expect(
-          () => container.read(isarProvider),
-          throwsA(
-            isA<ProviderException>().having(
-              (e) => e.exception,
-              'exception',
-              isA<UnimplementedError>().having(
-                (e) => e.message ?? '',
-                'message',
-                contains('must be overridden'),
-              ),
+      expect(
+        () => container.read(isarProvider),
+        throwsA(
+          isA<ProviderException>().having(
+            (e) => e.exception,
+            'exception',
+            isA<UnimplementedError>().having(
+              (e) => e.message ?? '',
+              'message',
+              contains('must be overridden'),
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
 
     test('ProviderException mentions isarProvider', () {
       final container = ProviderContainer();

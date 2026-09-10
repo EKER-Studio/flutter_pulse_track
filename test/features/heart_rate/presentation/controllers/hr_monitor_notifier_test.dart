@@ -124,15 +124,13 @@ buildMocks({Future<void> Function(Invocation)? onConnect}) {
         monitorService.connect(device, autoConnect: any(named: 'autoConnect')),
   ).thenAnswer(onConnect ?? (_) => Future.value());
 
-  when(
-    () => monitorService.disconnect(device),
-  ).thenAnswer((_) => Future.value());
+  when(() => monitorService.disconnect(device))
+      .thenAnswer((_) => Future.value());
 
   final connectionStateController =
       StreamController<BluetoothConnectionState>.broadcast();
-  when(
-    () => monitorService.connectionState(device),
-  ).thenAnswer((_) => connectionStateController.stream);
+  when(() => monitorService.connectionState(device))
+      .thenAnswer((_) => connectionStateController.stream);
 
   final hrCharacteristic = _MockBluetoothCharacteristic();
   when(() => hrCharacteristic.characteristicUuid).thenReturn(_kHrCharGuid);
@@ -143,25 +141,20 @@ buildMocks({Future<void> Function(Invocation)? onConnect}) {
   when(() => hrService.uuid).thenReturn(_kHrServiceGuid);
   when(() => hrService.characteristics).thenReturn([hrCharacteristic]);
 
-  when(
-    () => monitorService.discoverServices(device),
-  ).thenAnswer((_) => Future.value([hrService]));
+  when(() => monitorService.discoverServices(device))
+      .thenAnswer((_) => Future.value([hrService]));
 
-  when(
-    () => monitorService.setNotifyValue(hrCharacteristic, any()),
-  ).thenAnswer((_) => Future.value());
+  when(() => monitorService.setNotifyValue(hrCharacteristic, any()))
+      .thenAnswer((_) => Future.value());
 
   final hrValueController = StreamController<List<int>>.broadcast();
-  when(
-    () => monitorService.onValueReceived(hrCharacteristic),
-  ).thenAnswer((_) => hrValueController.stream);
+  when(() => monitorService.onValueReceived(hrCharacteristic))
+      .thenAnswer((_) => hrValueController.stream);
 
-  when(
-    () => foregroundServiceManager.startService(),
-  ).thenAnswer((_) => Future.value());
-  when(
-    () => foregroundServiceManager.stopService(),
-  ).thenAnswer((_) => Future.value());
+  when(() => foregroundServiceManager.startService())
+      .thenAnswer((_) => Future.value());
+  when(() => foregroundServiceManager.stopService())
+      .thenAnswer((_) => Future.value());
   when(
     () => saveDeviceProfileUseCase.call(
       macAddress: any(named: 'macAddress'),
@@ -393,9 +386,8 @@ void main() {
         notifier = container.read(hrMonitorProvider.notifier);
         keepAlive();
 
-        when(
-          () => m.monitorService.discoverServices(any()),
-        ).thenThrow(PlatformException(code: 'DISCOVER_FAILED'));
+        when(() => m.monitorService.discoverServices(any()))
+            .thenThrow(PlatformException(code: 'DISCOVER_FAILED'));
 
         await notifier.connect(_kTestDeviceId, _kTestDeviceName);
 
@@ -416,9 +408,8 @@ void main() {
         final otherService = _MockBluetoothService();
         when(() => otherService.serviceUuid).thenReturn(Guid('180f'));
         when(() => otherService.uuid).thenReturn(Guid('180f'));
-        when(
-          () => m.monitorService.discoverServices(any()),
-        ).thenAnswer((_) async => [otherService]);
+        when(() => m.monitorService.discoverServices(any()))
+            .thenAnswer((_) async => [otherService]);
 
         await notifier.connect(_kTestDeviceId, _kTestDeviceName);
 
@@ -441,9 +432,8 @@ void main() {
         when(() => badService.serviceUuid).thenReturn(_kHrServiceGuid);
         when(() => badService.uuid).thenReturn(_kHrServiceGuid);
         when(() => badService.characteristics).thenReturn([]);
-        when(
-          () => m.monitorService.discoverServices(any()),
-        ).thenAnswer((_) async => [badService]);
+        when(() => m.monitorService.discoverServices(any()))
+            .thenAnswer((_) async => [badService]);
 
         await notifier.connect(_kTestDeviceId, _kTestDeviceName);
 
@@ -459,9 +449,8 @@ void main() {
       notifier = container.read(hrMonitorProvider.notifier);
       keepAlive();
 
-      when(
-        () => m.monitorService.setNotifyValue(any(), any()),
-      ).thenThrow(PlatformException(code: 'NOTIFY_FAILED'));
+      when(() => m.monitorService.setNotifyValue(any(), any()))
+          .thenThrow(PlatformException(code: 'NOTIFY_FAILED'));
 
       await notifier.connect(_kTestDeviceId, _kTestDeviceName);
 
@@ -514,16 +503,14 @@ void main() {
 
       // Add sensor location characteristic to HR service
       final locationChar = _MockBluetoothCharacteristic();
-      when(
-        () => locationChar.characteristicUuid,
-      ).thenReturn(_kSensorLocationGuid);
+      when(() => locationChar.characteristicUuid)
+          .thenReturn(_kSensorLocationGuid);
       when(() => locationChar.uuid).thenReturn(_kSensorLocationGuid);
       when(() => m.monitorService.read(locationChar)).thenAnswer(
         (_) async => [1], // chest
       );
-      when(
-        () => m.hrService.characteristics,
-      ).thenReturn([m.hrCharacteristic, locationChar]);
+      when(() => m.hrService.characteristics)
+          .thenReturn([m.hrCharacteristic, locationChar]);
 
       await notifier.connect(_kTestDeviceId, _kTestDeviceName);
 
@@ -564,13 +551,11 @@ void main() {
       when(() => batteryService.uuid).thenReturn(_kBatteryServiceGuid);
       when(() => batteryService.characteristics).thenReturn([batteryChar]);
 
-      when(
-        () => m.monitorService.discoverServices(any()),
-      ).thenAnswer((_) async => [m.hrService, batteryService]);
+      when(() => m.monitorService.discoverServices(any()))
+          .thenAnswer((_) async => [m.hrService, batteryService]);
 
-      when(
-        () => m.monitorService.read(batteryChar),
-      ).thenAnswer((_) async => [75]);
+      when(() => m.monitorService.read(batteryChar))
+          .thenAnswer((_) async => [75]);
 
       await notifier.connect(_kTestDeviceId, _kTestDeviceName);
 
@@ -593,29 +578,24 @@ void main() {
       final batteryChar = _MockBluetoothCharacteristic();
       when(() => batteryChar.characteristicUuid).thenReturn(_kBatteryCharGuid);
       when(() => batteryChar.uuid).thenReturn(_kBatteryCharGuid);
-      when(
-        () => batteryChar.properties,
-      ).thenReturn(const CharacteristicProperties(notify: true));
+      when(() => batteryChar.properties)
+          .thenReturn(const CharacteristicProperties(notify: true));
 
       final batteryService = _MockBluetoothService();
       when(() => batteryService.serviceUuid).thenReturn(_kBatteryServiceGuid);
       when(() => batteryService.uuid).thenReturn(_kBatteryServiceGuid);
       when(() => batteryService.characteristics).thenReturn([batteryChar]);
 
-      when(
-        () => m.monitorService.discoverServices(any()),
-      ).thenAnswer((_) async => [m.hrService, batteryService]);
-      when(
-        () => m.monitorService.read(batteryChar),
-      ).thenAnswer((_) async => [50]);
-      when(
-        () => m.monitorService.setNotifyValue(batteryChar, any()),
-      ).thenAnswer((_) async {});
+      when(() => m.monitorService.discoverServices(any()))
+          .thenAnswer((_) async => [m.hrService, batteryService]);
+      when(() => m.monitorService.read(batteryChar))
+          .thenAnswer((_) async => [50]);
+      when(() => m.monitorService.setNotifyValue(batteryChar, any()))
+          .thenAnswer((_) async {});
 
       final batteryValueController = StreamController<List<int>>.broadcast();
-      when(
-        () => m.monitorService.onValueReceived(batteryChar),
-      ).thenAnswer((_) => batteryValueController.stream);
+      when(() => m.monitorService.onValueReceived(batteryChar))
+          .thenAnswer((_) => batteryValueController.stream);
 
       await notifier.connect(_kTestDeviceId, _kTestDeviceName);
 
@@ -754,72 +734,65 @@ void main() {
       }
     }
 
-    test(
-      'unexpected disconnect triggers up to 3 reconnect attempts before failing',
-      () async {
-        FakeAsync().run((async) {
-          var connectCount = 0;
-          final m = buildMocks(
-            onConnect: (_) {
-              connectCount++;
-              if (connectCount > 1) {
-                return Future.error(
-                  PlatformException(code: 'RECONNECT_FAILED'),
-                );
-              }
-              return Future.value();
-            },
-          );
-          container = m.container;
-          notifier = container.read(hrMonitorProvider.notifier);
-          keepAlive();
+    test('unexpected disconnect triggers up to 3 reconnect attempts before failing', () async {
+      FakeAsync().run((async) {
+        var connectCount = 0;
+        final m = buildMocks(
+          onConnect: (_) {
+            connectCount++;
+            if (connectCount > 1) {
+              return Future.error(PlatformException(code: 'RECONNECT_FAILED'));
+            }
+            return Future.value();
+          },
+        );
+        container = m.container;
+        notifier = container.read(hrMonitorProvider.notifier);
+        keepAlive();
 
-          unawaited(notifier.connect(_kTestDeviceId, _kTestDeviceName));
-          flushAll(async);
-          m.hrValueController.add([0x00, 100]);
-          flushAll(async);
+        unawaited(notifier.connect(_kTestDeviceId, _kTestDeviceName));
+        flushAll(async);
+        m.hrValueController.add([0x00, 100]);
+        flushAll(async);
 
-          expect(notifier.reconnectAttempts, 0);
+        expect(notifier.reconnectAttempts, 0);
 
-          // Simulate unexpected device disconnection
-          m.connectionStateController.add(
-            BluetoothConnectionState.disconnected,
-          );
-          flushAll(async);
+        // Simulate unexpected device disconnection
+        m.connectionStateController.add(BluetoothConnectionState.disconnected);
+        flushAll(async);
 
-          // 1st unexpected disconnect schedules 1st reconnect attempt
-          expect(notifier.reconnectAttempts, 1);
-          expect(
-            container.read(hrMonitorProvider),
-            isA<ConnectingMonitorState>(),
-          );
+        // 1st unexpected disconnect schedules 1st reconnect attempt
+        expect(notifier.reconnectAttempts, 1);
+        expect(
+          container.read(hrMonitorProvider),
+          isA<ConnectingMonitorState>(),
+        );
 
-          // Elapse 2s for 1st reconnect attempt to run and fail -> schedules 2nd attempt
-          async.elapse(const Duration(seconds: 2));
-          flushAll(async);
-          expect(notifier.reconnectAttempts, 2);
-          expect(
-            container.read(hrMonitorProvider),
-            isA<ConnectingMonitorState>(),
-          );
+        // Elapse 2s for 1st reconnect attempt to run and fail -> schedules 2nd attempt
+        async.elapse(const Duration(seconds: 2));
+        flushAll(async);
+        expect(notifier.reconnectAttempts, 2);
+        expect(
+          container.read(hrMonitorProvider),
+          isA<ConnectingMonitorState>(),
+        );
 
-          // Elapse 2s for 2nd reconnect attempt to run and fail -> schedules 3rd attempt
-          async.elapse(const Duration(seconds: 2));
-          flushAll(async);
-          expect(notifier.reconnectAttempts, 3);
-          expect(
-            container.read(hrMonitorProvider),
-            isA<ConnectingMonitorState>(),
-          );
+        // Elapse 2s for 2nd reconnect attempt to run and fail -> schedules 3rd attempt
+        async.elapse(const Duration(seconds: 2));
+        flushAll(async);
+        expect(notifier.reconnectAttempts, 3);
+        expect(
+          container.read(hrMonitorProvider),
+          isA<ConnectingMonitorState>(),
+        );
 
-          // Elapse 2s for 3rd reconnect attempt to run and fail -> limit reached, fails session
-          async.elapse(const Duration(seconds: 2));
-          flushAll(async);
-          expect(notifier.reconnectAttempts, 0);
-          expect(container.read(hrMonitorProvider), isA<FailureMonitorState>());
-        });
-      },
-    );
+        // Elapse 2s for 3rd reconnect attempt to run and fail -> limit reached, fails session
+        async.elapse(const Duration(seconds: 2));
+        flushAll(async);
+        expect(notifier.reconnectAttempts, 0);
+        expect(container.read(hrMonitorProvider), isA<FailureMonitorState>());
+      });
+    });
 
     test(
       'successful auto-reconnect resets reconnectAttempts counter to 0',
@@ -852,49 +825,44 @@ void main() {
       },
     );
 
-    test(
-      'intentional disconnect() cancels pending auto-reconnect loop',
-      () async {
-        FakeAsync().run((async) {
-          final m = buildMocks();
-          container = m.container;
-          notifier = container.read(hrMonitorProvider.notifier);
-          keepAlive();
+    test('intentional disconnect() cancels pending auto-reconnect loop', () async {
+      FakeAsync().run((async) {
+        final m = buildMocks();
+        container = m.container;
+        notifier = container.read(hrMonitorProvider.notifier);
+        keepAlive();
 
-          unawaited(notifier.connect(_kTestDeviceId, _kTestDeviceName));
-          flushAll(async);
-          m.hrValueController.add([0x00, 100]);
-          flushAll(async);
+        unawaited(notifier.connect(_kTestDeviceId, _kTestDeviceName));
+        flushAll(async);
+        m.hrValueController.add([0x00, 100]);
+        flushAll(async);
 
-          // Simulate unexpected device disconnection
-          m.connectionStateController.add(
-            BluetoothConnectionState.disconnected,
-          );
-          flushAll(async);
-          expect(notifier.reconnectAttempts, 1);
+        // Simulate unexpected device disconnection
+        m.connectionStateController.add(BluetoothConnectionState.disconnected);
+        flushAll(async);
+        expect(notifier.reconnectAttempts, 1);
 
-          // User calls disconnect() intentionally during pending reconnect timer
-          unawaited(notifier.disconnect());
-          flushAll(async);
+        // User calls disconnect() intentionally during pending reconnect timer
+        unawaited(notifier.disconnect());
+        flushAll(async);
 
-          // Reconnect counter reset and state is DisconnectedMonitorState
-          expect(notifier.reconnectAttempts, 0);
-          expect(
-            container.read(hrMonitorProvider),
-            isA<DisconnectedMonitorState>(),
-          );
+        // Reconnect counter reset and state is DisconnectedMonitorState
+        expect(notifier.reconnectAttempts, 0);
+        expect(
+          container.read(hrMonitorProvider),
+          isA<DisconnectedMonitorState>(),
+        );
 
-          // Advancing time does not trigger any further reconnect attempts
-          async.elapse(const Duration(seconds: 10));
-          flushAll(async);
-          expect(notifier.reconnectAttempts, 0);
-          expect(
-            container.read(hrMonitorProvider),
-            isA<DisconnectedMonitorState>(),
-          );
-        });
-      },
-    );
+        // Advancing time does not trigger any further reconnect attempts
+        async.elapse(const Duration(seconds: 10));
+        flushAll(async);
+        expect(notifier.reconnectAttempts, 0);
+        expect(
+          container.read(hrMonitorProvider),
+          isA<DisconnectedMonitorState>(),
+        );
+      });
+    });
 
     test('disconnect during disconnecting is ignored', () async {
       final m = buildMocks();
@@ -1034,113 +1002,107 @@ void main() {
   });
 
   group('defensive race-condition guards', () {
-    test(
-      '_saveSessionToDisk blocks duplicate save calls when _saveInProgress is true',
-      () async {
-        final m = buildMocks();
-        container = m.container;
-        notifier = container.read(hrMonitorProvider.notifier);
-        keepAlive();
+    test('_saveSessionToDisk blocks duplicate save calls when _saveInProgress is true', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
 
-        final saveCompleter = Completer<void>();
-        when(
-          () => m.saveWorkoutSessionUseCase.call(
-            startTime: any(named: 'startTime'),
-            endTime: any(named: 'endTime'),
-            samples: any(named: 'samples'),
-            sensorLocationIndex: any(named: 'sensorLocationIndex'),
-            macAddress: any(named: 'macAddress'),
-            name: any(named: 'name'),
-            avgBpm: any(named: 'avgBpm'),
-            maxBpm: any(named: 'maxBpm'),
-            existingId: any(named: 'existingId'),
-          ),
-        ).thenAnswer((_) => saveCompleter.future);
+      final saveCompleter = Completer<void>();
+      when(
+        () => m.saveWorkoutSessionUseCase.call(
+          startTime: any(named: 'startTime'),
+          endTime: any(named: 'endTime'),
+          samples: any(named: 'samples'),
+          sensorLocationIndex: any(named: 'sensorLocationIndex'),
+          macAddress: any(named: 'macAddress'),
+          name: any(named: 'name'),
+          avgBpm: any(named: 'avgBpm'),
+          maxBpm: any(named: 'maxBpm'),
+          existingId: any(named: 'existingId'),
+        ),
+      ).thenAnswer((_) => saveCompleter.future);
 
-        await notifier.connect(_kTestDeviceId, _kTestDeviceName);
-        m.hrValueController.add([0x00, 140]);
-        await Future.delayed(Duration.zero);
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+      m.hrValueController.add([0x00, 140]);
+      await Future.delayed(Duration.zero);
 
-        // Trigger explicit disconnect (starts _saveSessionToDisk, awaiting saveCompleter)
-        final disconnectFuture = notifier.disconnect();
+      // Trigger explicit disconnect (starts _saveSessionToDisk, awaiting saveCompleter)
+      final disconnectFuture = notifier.disconnect();
 
-        // Simulate unexpected disconnection event on stream while disconnect() is awaiting saveCompleter
-        m.connectionStateController.add(BluetoothConnectionState.disconnected);
-        await Future.delayed(Duration.zero);
+      // Simulate unexpected disconnection event on stream while disconnect() is awaiting saveCompleter
+      m.connectionStateController.add(BluetoothConnectionState.disconnected);
+      await Future.delayed(Duration.zero);
 
-        // Complete the first save
-        saveCompleter.complete();
-        await disconnectFuture;
+      // Complete the first save
+      saveCompleter.complete();
+      await disconnectFuture;
 
-        // Verify saveWorkoutSessionUseCase was only called ONCE despite duplicate trigger
-        verify(
-          () => m.saveWorkoutSessionUseCase.call(
-            startTime: any(named: 'startTime'),
-            endTime: any(named: 'endTime'),
-            samples: any(named: 'samples'),
-            sensorLocationIndex: any(named: 'sensorLocationIndex'),
-            macAddress: any(named: 'macAddress'),
-            name: any(named: 'name'),
-            avgBpm: any(named: 'avgBpm'),
-            maxBpm: any(named: 'maxBpm'),
-            existingId: any(named: 'existingId'),
-          ),
-        ).called(1);
-      },
-    );
+      // Verify saveWorkoutSessionUseCase was only called ONCE despite duplicate trigger
+      verify(
+        () => m.saveWorkoutSessionUseCase.call(
+          startTime: any(named: 'startTime'),
+          endTime: any(named: 'endTime'),
+          samples: any(named: 'samples'),
+          sensorLocationIndex: any(named: 'sensorLocationIndex'),
+          macAddress: any(named: 'macAddress'),
+          name: any(named: 'name'),
+          avgBpm: any(named: 'avgBpm'),
+          maxBpm: any(named: 'maxBpm'),
+          existingId: any(named: 'existingId'),
+        ),
+      ).called(1);
+    });
 
-    test(
-      '_checkpoint blocks concurrent checkpoint calls when _checkpointInProgress is true',
-      () async {
-        final m = buildMocks();
-        container = m.container;
-        notifier = container.read(hrMonitorProvider.notifier);
-        keepAlive();
+    test('_checkpoint blocks concurrent checkpoint calls when _checkpointInProgress is true', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
 
-        final checkpointCompleter = Completer<int>();
-        when(
-          () => m.savePartialWorkoutSessionUseCase.call(
-            startTime: any(named: 'startTime'),
-            samples: any(named: 'samples'),
-            sensorLocationIndex: any(named: 'sensorLocationIndex'),
-            macAddress: any(named: 'macAddress'),
-            name: any(named: 'name'),
-            avgBpm: any(named: 'avgBpm'),
-            maxBpm: any(named: 'maxBpm'),
-            existingId: any(named: 'existingId'),
-          ),
-        ).thenAnswer((_) => checkpointCompleter.future);
+      final checkpointCompleter = Completer<int>();
+      when(
+        () => m.savePartialWorkoutSessionUseCase.call(
+          startTime: any(named: 'startTime'),
+          samples: any(named: 'samples'),
+          sensorLocationIndex: any(named: 'sensorLocationIndex'),
+          macAddress: any(named: 'macAddress'),
+          name: any(named: 'name'),
+          avgBpm: any(named: 'avgBpm'),
+          maxBpm: any(named: 'maxBpm'),
+          existingId: any(named: 'existingId'),
+        ),
+      ).thenAnswer((_) => checkpointCompleter.future);
 
-        await notifier.connect(_kTestDeviceId, _kTestDeviceName);
-        m.hrValueController.add([0x00, 140]);
-        await Future.delayed(Duration.zero);
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+      m.hrValueController.add([0x00, 140]);
+      await Future.delayed(Duration.zero);
 
-        // Fire first lifecycle change (paused) which calls _checkpoint() and awaits checkpointCompleter
-        notifier.didChangeAppLifecycleState(AppLifecycleState.paused);
-        await Future.delayed(Duration.zero);
+      // Fire first lifecycle change (paused) which calls _checkpoint() and awaits checkpointCompleter
+      notifier.didChangeAppLifecycleState(AppLifecycleState.paused);
+      await Future.delayed(Duration.zero);
 
-        // Fire second lifecycle change (detached) while first checkpoint is still in progress
-        notifier.didChangeAppLifecycleState(AppLifecycleState.detached);
-        await Future.delayed(Duration.zero);
+      // Fire second lifecycle change (detached) while first checkpoint is still in progress
+      notifier.didChangeAppLifecycleState(AppLifecycleState.detached);
+      await Future.delayed(Duration.zero);
 
-        // Resolve first checkpoint
-        checkpointCompleter.complete(42);
-        await Future.delayed(Duration.zero);
+      // Resolve first checkpoint
+      checkpointCompleter.complete(42);
+      await Future.delayed(Duration.zero);
 
-        // Verify savePartialWorkoutSessionUseCase was called ONCE, not twice
-        verify(
-          () => m.savePartialWorkoutSessionUseCase.call(
-            startTime: any(named: 'startTime'),
-            samples: any(named: 'samples'),
-            sensorLocationIndex: any(named: 'sensorLocationIndex'),
-            macAddress: any(named: 'macAddress'),
-            name: any(named: 'name'),
-            avgBpm: any(named: 'avgBpm'),
-            maxBpm: any(named: 'maxBpm'),
-            existingId: any(named: 'existingId'),
-          ),
-        ).called(1);
-      },
-    );
+      // Verify savePartialWorkoutSessionUseCase was called ONCE, not twice
+      verify(
+        () => m.savePartialWorkoutSessionUseCase.call(
+          startTime: any(named: 'startTime'),
+          samples: any(named: 'samples'),
+          sensorLocationIndex: any(named: 'sensorLocationIndex'),
+          macAddress: any(named: 'macAddress'),
+          name: any(named: 'name'),
+          avgBpm: any(named: 'avgBpm'),
+          maxBpm: any(named: 'maxBpm'),
+          existingId: any(named: 'existingId'),
+        ),
+      ).called(1);
+    });
   });
 }

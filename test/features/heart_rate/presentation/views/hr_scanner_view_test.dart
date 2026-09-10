@@ -16,12 +16,10 @@ void main() {
 
   setUp(() {
     mockScannerService = _MockBluetoothScannerService();
-    when(
-      () => mockScannerService.adapterState,
-    ).thenAnswer((_) => Stream.value(BluetoothAdapterState.on));
-    when(
-      () => mockScannerService.scanResults,
-    ).thenAnswer((_) => Stream.value([]));
+    when(() => mockScannerService.adapterState)
+        .thenAnswer((_) => Stream.value(BluetoothAdapterState.on));
+    when(() => mockScannerService.scanResults)
+        .thenAnswer((_) => Stream.value([]));
     when(() => mockScannerService.isScanningNow).thenReturn(false);
     when(
       () => mockScannerService.startScan(

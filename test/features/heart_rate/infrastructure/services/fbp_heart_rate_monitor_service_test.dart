@@ -63,9 +63,8 @@ StreamController<List<int>> _makeOnValueReceivedStream({
   required BluetoothCharacteristic characteristic,
 }) {
   final controller = StreamController<List<int>>.broadcast();
-  when(
-    () => characteristic.onValueReceived,
-  ).thenAnswer((_) => controller.stream);
+  when(() => characteristic.onValueReceived)
+      .thenAnswer((_) => controller.stream);
   return controller;
 }
 
@@ -207,9 +206,8 @@ void main() {
 
   group('discoverServices', () {
     test('returns list of BluetoothService from device', () async {
-      when(
-        () => device.discoverServices(),
-      ).thenAnswer((_) async => [hrService]);
+      when(() => device.discoverServices())
+          .thenAnswer((_) async => [hrService]);
 
       final result = await service.discoverServices(device);
 
@@ -238,9 +236,8 @@ void main() {
 
   group('setNotifyValue', () {
     test('delegates to characteristic.setNotifyValue(true)', () async {
-      when(
-        () => characteristic.setNotifyValue(any()),
-      ).thenAnswer((_) async => true);
+      when(() => characteristic.setNotifyValue(any()))
+          .thenAnswer((_) async => true);
 
       await service.setNotifyValue(characteristic, true);
 
@@ -248,9 +245,8 @@ void main() {
     });
 
     test('delegates to characteristic.setNotifyValue(false)', () async {
-      when(
-        () => characteristic.setNotifyValue(any()),
-      ).thenAnswer((_) async => true);
+      when(() => characteristic.setNotifyValue(any()))
+          .thenAnswer((_) async => true);
 
       await service.setNotifyValue(characteristic, false);
 
@@ -345,9 +341,8 @@ void main() {
         characteristics: [batteryChar],
       );
 
-      when(
-        () => device.discoverServices(),
-      ).thenAnswer((_) async => [hrService, batteryService]);
+      when(() => device.discoverServices())
+          .thenAnswer((_) async => [hrService, batteryService]);
 
       final result = await service.discoverServices(device);
 
@@ -375,9 +370,8 @@ void main() {
     });
 
     test('disconnect error is not swallowed', () async {
-      when(
-        () => device.disconnect(),
-      ).thenThrow(StateError('already disconnected'));
+      when(() => device.disconnect())
+          .thenThrow(StateError('already disconnected'));
 
       await expectLater(
         () => service.disconnect(device),
@@ -397,9 +391,8 @@ void main() {
     });
 
     test('setNotifyValue error is not swallowed', () async {
-      when(
-        () => characteristic.setNotifyValue(any()),
-      ).thenThrow(PlatformException(code: 'FAILED'));
+      when(() => characteristic.setNotifyValue(any()))
+          .thenThrow(PlatformException(code: 'FAILED'));
 
       await expectLater(
         () => service.setNotifyValue(characteristic, true),
@@ -408,9 +401,8 @@ void main() {
     });
 
     test('read error is not swallowed', () async {
-      when(
-        () => characteristic.read(),
-      ).thenThrow(PlatformException(code: 'READ_FAILED'));
+      when(() => characteristic.read())
+          .thenThrow(PlatformException(code: 'READ_FAILED'));
 
       await expectLater(
         () => service.read(characteristic),

@@ -128,9 +128,8 @@ void main() {
     });
 
     test('watchSavedDeviceProfiles returns Stream<List<DeviceProfile>>', () {
-      when(
-        () => repository.watchSavedDeviceProfiles(),
-      ).thenAnswer((_) => const Stream.empty());
+      when(() => repository.watchSavedDeviceProfiles())
+          .thenAnswer((_) => const Stream.empty());
 
       final result = repository.watchSavedDeviceProfiles();
 
@@ -138,9 +137,8 @@ void main() {
     });
 
     test('watchWorkoutHistory returns Stream<List<WorkoutSession>>', () {
-      when(
-        () => repository.watchWorkoutHistory(),
-      ).thenAnswer((_) => const Stream.empty());
+      when(() => repository.watchWorkoutHistory())
+          .thenAnswer((_) => const Stream.empty());
 
       final result = repository.watchWorkoutHistory();
 
@@ -206,9 +204,8 @@ void main() {
     });
 
     test('deleteWorkoutSession accepts sessionId', () async {
-      when(
-        () => repository.deleteWorkoutSession(any()),
-      ).thenAnswer((_) async {});
+      when(() => repository.deleteWorkoutSession(any()))
+          .thenAnswer((_) async {});
 
       await repository.deleteWorkoutSession(42);
 

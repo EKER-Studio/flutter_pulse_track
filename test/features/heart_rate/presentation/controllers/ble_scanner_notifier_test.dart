@@ -65,12 +65,10 @@ buildMockService({bool isScanningNow = false}) {
   final adapterStateController =
       StreamController<BluetoothAdapterState>.broadcast();
   final scanResultsController = StreamController<List<ScanResult>>.broadcast();
-  when(
-    () => service.adapterState,
-  ).thenAnswer((_) => adapterStateController.stream);
-  when(
-    () => service.scanResults,
-  ).thenAnswer((_) => scanResultsController.stream);
+  when(() => service.adapterState)
+      .thenAnswer((_) => adapterStateController.stream);
+  when(() => service.scanResults)
+      .thenAnswer((_) => scanResultsController.stream);
   when(() => service.isScanningNow).thenReturn(isScanningNow);
   when(
     () => service.startScan(

@@ -51,9 +51,8 @@ void main() {
     });
 
     test('propagates repository exceptions', () async {
-      when(
-        () => repository.deleteWorkoutSession(any()),
-      ).thenThrow(Exception('Delete failed'));
+      when(() => repository.deleteWorkoutSession(any()))
+          .thenThrow(Exception('Delete failed'));
 
       expect(
         () => useCase(1),
