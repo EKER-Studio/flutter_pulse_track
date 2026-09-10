@@ -4,7 +4,12 @@ import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_core/custom_lint_core.dart';
 
 const _presentationSegment = '/presentation/';
-const _forbiddenPackagePatterns = ['package:isar_community'];
+const _forbiddenPackagePatterns = [
+  'package:isar_community',
+  'package:pulse_track/features/workout/infrastructure/',
+  'package:pulse_track/features/heart_rate/infrastructure/',
+  'package:pulse_track/core/infrastructure/',
+];
 
 /// Prevents presentation layer from importing infrastructure internals.
 class AvoidInfrastructureImportsInPresentation extends DartLintRule {
