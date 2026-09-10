@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,7 +21,8 @@ final Guid _kHeartRateServiceUuid = Guid('180d');
 
 /// Manages BLE scanning lifecycle and filters discovered devices.
 @Riverpod(keepAlive: true)
-class BleScannerNotifier extends _$BleScannerNotifier {
+class BleScannerNotifier extends _$BleScannerNotifier
+    with WidgetsBindingObserver {
   late final BluetoothScannerService _scannerService;
 
   StreamSubscription<BluetoothAdapterState>? _adapterStateSubscription;
@@ -49,9 +51,24 @@ class BleScannerNotifier extends _$BleScannerNotifier {
       },
     );
 
+    WidgetsBinding.instance.addObserver(this);
     ref.onDispose(_cleanup);
 
     return const BleScannerState.idle();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      if (_scannerService.isScanningNow) {
+        log.i('[BleScannerNotifier] App paused — stopping scan.');
+        // Fire-and-forget is intentional; lifecycle callback is synchronous.
+        // Errors are logged inside stopScan/_cleanup.
+        // ignore: discarded_futures
+        stopScan();
+      }
+    }
   }
 
   /// Initiates an active BLE hardware scan for heart rate sensors.
@@ -244,6 +261,7 @@ class BleScannerNotifier extends _$BleScannerNotifier {
   }
 
   Future<void> _cleanup() async {
+    WidgetsBinding.instance.removeObserver(this);
     log.i('[BleScannerNotifier] Disposing — releasing all BLE scan resources.');
     _cancelEmptyStateTimer();
 
