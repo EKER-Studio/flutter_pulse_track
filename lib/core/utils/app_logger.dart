@@ -16,10 +16,7 @@ final log = Logger(
     dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
   ),
   filter: ProductionFilter(),
-  output: MultiOutput([
-    ConsoleOutput(),
-    FirebaseCrashlyticsOutput(enableInDebug: true),
-  ]),
+  output: MultiOutput([ConsoleOutput(), FirebaseCrashlyticsOutput()]),
 );
 
 /// Custom log filter that suppresses detailed debug logs in release mode.

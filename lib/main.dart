@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar_community/isar.dart';
@@ -54,9 +55,16 @@ Future<void> main() async {
       return true;
     };
 
-    // Explicitly enable Crashlytics and Analytics collection for both Release and Debug
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+    // Enable Crashlytics and Analytics collection only in Release builds.
+    // In Debug builds, collection is disabled to prevent developmental exceptions
+    // and hot-restarts from distorting production metrics.
+    if (kReleaseMode) {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+    } else {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+      await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
+    }
   } catch (e, st) {
     log.w(
       'Firebase initialization skipped or failed: $e',
