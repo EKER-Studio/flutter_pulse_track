@@ -5,18 +5,18 @@
 !.env.example
 
 # Firebase configuration files (injected via CI secrets)
+# NOTE: lib/firebase_options.dart contains Firebase client API keys which are
+# safe to commit per https://firebase.google.com/docs/projects/api-keys
+# (restricted via Firebase Security Rules + App Check). Keys are tracked in VCS.
 android/app/google-services.json
 android/app/src/*/google-services.json
 ios/Runner/GoogleService-Info*.plist
 ios/config/**/*.plist
-lib/firebase_options.dart
-
-# Local planning & temporary notes
-PLAN_*.md
 
 # Miscellaneous
 *.class
 *.log
+log.txt
 *.pyc
 *.swp
 .DS_Store
@@ -60,6 +60,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/build/
 
 # Flutter generated platform files
 **/Flutter/ephemeral/
@@ -83,11 +84,26 @@ app.*.map.json
 *.bak
 default.isar
 
-# Aider configs
-.aider*
-
 # Security & diagnostic artifacts
 *.key
+*.keystore
+*.jks
+android/key.properties
+android/app/release.keystore
 crash_log.txt
-/.i18n_audit/
-/.test_audit/
+
+# Agent artifacts
+.ai*
+LOG_*.md
+.audit-*/
+
+# Generated screenshot output (not curated README assets)
+# Note: .github/assets/ contains curated README screenshots and IS tracked
+/screenshots/
+.screenshots/
+
+# Fastlane local reports & test artifacts
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
