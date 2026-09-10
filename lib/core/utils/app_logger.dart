@@ -1,6 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:logger/logger.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
+import 'package:logger/logger.dart' hide ProductionFilter;
 
 /// Top-level singleton logger for structured logging across the application.
 ///
@@ -51,9 +52,7 @@ class FirebaseCrashlyticsOutput extends LogOutput {
     if (kDebugMode && !enableInDebug) return;
 
     try {
-      // Structural guard: Verify if Firebase has been bootstrapped in main.dart
-      // If not initialized, this will safely fail here and skip remote log delivery
-      final _ = FirebaseCrashlytics.instance;
+      if (Firebase.apps.isEmpty) return;
 
       final fullMessage = event.lines.join('\n');
       if (event.level.index >= Level.error.index) {
@@ -63,12 +62,8 @@ class FirebaseCrashlyticsOutput extends LogOutput {
           reason: event.origin.message,
         );
       }
-    } catch (e) {
-      // Firebase infrastructure is not ready yet. Fallback silently to prevent [core/no-app] crashes.
-      // We use a raw print here as an emergency diagnostic override.
-      debugPrint(
-        '--- Firebase Crashlytics not initialized. Operational log skipped. ---',
-      );
+    } catch (_) {
+      // Safe fallback when Crashlytics is unreachable.
     }
   }
 }
