@@ -67,11 +67,11 @@
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
 		<key>NSBluetoothAlwaysUsageDescription</key>
-		<string>PulseTrack wymaga stałego dostępu do Bluetooth, aby odbierać i analizować dane biometryczne z pasa tętna w czasie rzeczywistym, również przy zablokowanym ekranie.</string>
+		<string>PulseTrack requires continuous Bluetooth access to stream and analyze real-time heart rate telemetry from connected sensors, including when running in the background.</string>
 		<key>NSBluetoothPeripheralUsageDescription</key>
-		<string>Aplikacja wymaga uprawnień Bluetooth do nawiązania stabilnego połączenia z sensorami tętna.</string>
+		<string>PulseTrack requires Bluetooth access to discover and connect to heart rate monitors and chest straps.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>Lokalizacja jest wymagana przez system do poprawnego skanowania i identyfikacji urządzeń Bluetooth Low Energy w Twoim otoczeniu.</string>
+		<string>Location access is required by the system to scan for and identify nearby Bluetooth Low Energy fitness sensors.</string>
 		<key>UIBackgroundModes</key>
 		<array>
 			<string>bluetooth-central</string>
@@ -82,7 +82,7 @@
 				<key>CFBundleTypeRole</key>
 				<string>Editor</string>
 				<key>CFBundleURLName</key>
-				<string>com.example.pulseTrack</string>
+				<string>com.ekerstudio.pulsetrack</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
 					<string>pulsetrack</string>

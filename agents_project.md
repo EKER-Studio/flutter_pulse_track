@@ -11,7 +11,7 @@ Formerly `ble_heart_rate_monitor` — package renamed.*
 | `dart run build_runner build` | Generate Riverpod + Isar code |
 | `dart run flutter_launcher_icons` | Generate app icons for all platforms |
 | `dart run flutter_native_splash:create` | Generate native splash screen |
-| `dart format lib test` | Format code |
+| `dart format lib test integration_test test_driver` | Format code |
 | `flutter analyze` | Static analysis |
 | `dart run custom_lint` | Riverpod-specific lints — separate from `flutter analyze`, do not skip |
 | `flutter test --exclude-tags golden` | Run non-golden tests |
@@ -51,9 +51,9 @@ Available methods: `log.t`, `log.d`, `log.i`, `log.w`, `log.e`, `log.f`. In rele
 through; `error`+ is sent to Firebase Crashlytics.
 
 ### Localization (l10n)
-Infrastructure is wired (`l10n.yaml`, `flutter gen-l10n`, `flutter_localizations` + `intl`), but
-`lib/l10n/app_en.arb` is currently **empty** — no localized strings yet. Use plain English strings in views
-until real translations are added. Do NOT fabricate `.arb` entries to fill this gap.
+Full localization infrastructure is active (`l10n.yaml`, `flutter gen-l10n`, `flutter_localizations` + `intl`).
+English (`lib/l10n/app_en.arb`) serves as the base template, with Polish (`lib/l10n/app_pl.arb`) as the primary translation.
+Always keep key sets synchronized between `app_en.arb` and `app_pl.arb`.
 
 ### HR Packet Parser Quirks
 `HrPacketParser.parseRawBytes` reads BLE `0x2A37` characteristic data — these rules are load-bearing for
@@ -83,13 +83,13 @@ correctness, handle with care:
 - Run with `flutter test` (or `flutter test --exclude-tags golden` to skip golden tests).
 
 ### CI
-`.github/workflows/ci.yml` runs on push/PR to `main`. Caches `~/.pub-cache` and `.dart_tool/`, keyed on the
+`.github/workflows/ci.yml` runs on push/PR to `develop`. Caches `~/.pub-cache` and `.dart_tool/`, keyed on the
 `pubspec.lock` hash.
 
 ### Mandatory Verification Pipeline (concrete commands)
 Matches `./scripts/before_push.sh`:
 1. `dart run build_runner build`
-2. `dart format lib test`
+2. `dart format lib test integration_test test_driver`
 3. `flutter analyze`
 4. `dart run custom_lint`
 5. `flutter test --exclude-tags golden`

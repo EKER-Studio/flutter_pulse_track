@@ -15,7 +15,7 @@ state management and Isar for high-speed local data persistence.
 
 ## Architecture
 
-This project follows a rygorystyczny clean architectural pattern:
+This project follows a strict clean architectural pattern:
 
 * **Domain**: Pure business entities, model contracts, and immutable state definitions.
 * **Infrastructure**: Low-level hardware abstractions (`flutter_blue_plus`) and high-speed local persistence engines (`isar`).
