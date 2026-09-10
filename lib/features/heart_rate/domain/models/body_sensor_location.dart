@@ -27,6 +27,9 @@ enum BodySensorLocation {
   unknown;
 
   /// Returns a user-friendly display name for the UI layer.
+  ///
+  /// For localized UI, use `BodySensorLocationX.localizedName(l10n)` in
+  /// `lib/features/heart_rate/presentation/utils/body_sensor_location_l10n.dart`.
   String get displayName => switch (this) {
     BodySensorLocation.other => 'Other',
     BodySensorLocation.chest => 'Chest',

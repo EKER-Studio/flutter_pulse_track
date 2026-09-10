@@ -7,6 +7,7 @@ import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/domain/services/workout_export_service.dart';
 import 'package:pulse_track/features/workout/presentation/utils/heart_rate_zones.dart';
+import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Full-screen details view for a single completed or in-progress workout session.
 ///
@@ -39,9 +40,14 @@ class WorkoutDetailsView extends ConsumerWidget {
   /// Builds the workout details screen with header, summary grid, and BPM chart using [context] and [ref].
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     // Format once so the duration string is shared between the header badge
     // and the summary grid tile.
-    final duration = _formatDuration(session.startTime, session.endTime);
+    final duration = _formatDuration(
+      context,
+      session.startTime,
+      session.endTime,
+    );
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -49,29 +55,28 @@ class WorkoutDetailsView extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         title: Text(
-          'Workout Details',
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+          l10n.workoutDetailsTitle,
+          style: Theme.of(context).textTheme.titleLarge
+              ?.copyWith(fontWeight: FontWeight.w600),
         ),
         leading: Semantics(
           button: true,
-          label: 'Back to workout history',
+          label: l10n.workoutDetailsBackHint,
           child: IconButton(
             constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
             icon: const Icon(Icons.arrow_back_ios),
-            tooltip: 'Back to workout history',
+            tooltip: l10n.workoutDetailsBackHint,
             onPressed: () => context.pop(),
           ),
         ),
         actions: [
           Semantics(
             button: true,
-            label: 'Export workout data to CSV',
+            label: l10n.workoutDetailsExportHint,
             child: IconButton(
               constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
               icon: const Icon(Icons.share),
-              tooltip: 'Export workout data to CSV',
+              tooltip: l10n.workoutDetailsExportHint,
               onPressed: () async {
                 try {
                   await ref
@@ -81,7 +86,9 @@ class WorkoutDetailsView extends ConsumerWidget {
                   if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Failed to export workout session: $e'),
+                      content: Text(
+                        l10n.workoutDetailsExportFailed(e.toString()),
+                      ),
                       backgroundColor: AppColors.errorRed,
                     ),
                   );
@@ -102,7 +109,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                   // Header card
                   Semantics(
                     label:
-                        'Workout date: ${_formatDate(session.startTime)}, duration: $duration, sensor: ${session.deviceName.isEmpty ? 'Unknown Sensor' : session.deviceName}',
+                        'Workout date: ${_formatDate(session.startTime)}, duration: $duration, sensor: ${session.deviceName.isEmpty ? l10n.unknownSensor : session.deviceName}',
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -156,7 +163,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                               const SizedBox(height: 4),
                               Text(
                                 session.deviceName.isEmpty
-                                    ? 'Unknown Sensor'
+                                    ? l10n.unknownSensor
                                     : session.deviceName,
                                 style: TextStyle(
                                   color: AppColors.textSecondary,
@@ -173,9 +180,9 @@ class WorkoutDetailsView extends ConsumerWidget {
                   const SizedBox(height: _kSectionSpacing),
 
                   // Summary grid
-                  const Text(
-                    'Summary',
-                    style: TextStyle(
+                  Text(
+                    l10n.workoutDetailsSummary,
+                    style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
@@ -186,7 +193,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: _summaryTile(
-                          label: 'Average BPM',
+                          label: l10n.workoutDetailsAvgBpm,
                           value: '${session.avgBpm}',
                           icon: Icons.favorite,
                           iconColor: _kAvgBpmIconColor,
@@ -195,7 +202,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                       const SizedBox(width: _kTileSpacing),
                       Expanded(
                         child: _summaryTile(
-                          label: 'Peak BPM',
+                          label: l10n.workoutDetailsPeakBpm,
                           value: '${session.maxBpm}',
                           icon: Icons.favorite_border,
                           iconColor: _kPeakBpmIconColor,
@@ -208,7 +215,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: _summaryTile(
-                          label: 'Duration',
+                          label: l10n.workoutDetailsDuration,
                           value: duration,
                           icon: Icons.timer,
                           iconColor: _kDurationIconColor,
@@ -217,7 +224,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                       const SizedBox(width: _kTileSpacing),
                       Expanded(
                         child: _summaryTile(
-                          label: 'Samples',
+                          label: l10n.workoutDetailsSamples,
                           value: '${session.bpmSamples.length}',
                           icon: Icons.show_chart,
                           iconColor: _kSamplesIconColor,
@@ -229,9 +236,9 @@ class WorkoutDetailsView extends ConsumerWidget {
                   const SizedBox(height: _kSectionSpacing),
 
                   // BPM chart
-                  const Text(
-                    'Heart Rate Over Time',
-                    style: TextStyle(
+                  Text(
+                    l10n.workoutDetailsHeartRateOverTime,
+                    style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
@@ -266,7 +273,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                               ),
                               const SizedBox(height: _kSubSectionSpacing),
                               Text(
-                                'No workout data captured',
+                                l10n.workoutDetailsNoData,
                                 style: TextStyle(
                                   color: AppColors.textMuted,
                                   fontSize: 16,
@@ -275,7 +282,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                _getEmptyDataReason(session),
+                                _getEmptyDataReason(context, session),
                                 style: TextStyle(
                                   color: AppColors.textTertiary,
                                   fontSize: 13,
@@ -381,9 +388,9 @@ class WorkoutDetailsView extends ConsumerWidget {
 
   /// Returns a human-readable duration string from [start] to [end].
   ///
-  /// If [end] is `null`, returns "In Progress" to indicate an active session.
-  String _formatDuration(DateTime start, DateTime? end) {
-    if (end == null) return 'In Progress';
+  /// If [end] is `null`, returns localized "In Progress" to indicate an active session.
+  String _formatDuration(BuildContext context, DateTime start, DateTime? end) {
+    if (end == null) return AppLocalizations.of(context).inProgress;
     final duration = end.difference(start);
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
@@ -400,14 +407,15 @@ class WorkoutDetailsView extends ConsumerWidget {
   ///
   /// Distinguishes between an incomplete session, a sensor disconnect, and
   /// a session that ran but recorded no valid heart-rate samples.
-  String _getEmptyDataReason(WorkoutSession session) {
+  String _getEmptyDataReason(BuildContext context, WorkoutSession session) {
+    final l = AppLocalizations.of(context);
     if (session.endTime == null) {
-      return 'The workout was not completed';
+      return l.workoutDetailsNotCompleted;
     }
     if (session.bpmSamples.isEmpty) {
-      return 'The sensor may have disconnected before data was captured';
+      return l.workoutDetailsSensorDisconnected;
     }
-    return 'No valid heart rate data was recorded';
+    return l.workoutDetailsNoValidData;
   }
 }
 

@@ -56,24 +56,18 @@ void main() {
     mockSavePartialWorkoutSessionUseCase =
         _MockSavePartialWorkoutSessionUseCase();
 
-    when(
-      () => mockDevice.remoteId,
-    ).thenReturn(const DeviceIdentifier('AA:BB:CC:DD:EE:FF'));
-    when(
-      () => mockMonitorService.fromId('AA:BB:CC:DD:EE:FF'),
-    ).thenReturn(mockDevice);
-    when(
-      () => mockMonitorService.connect(mockDevice, autoConnect: false),
-    ).thenAnswer((_) async {});
-    when(
-      () => mockMonitorService.discoverServices(mockDevice),
-    ).thenAnswer((_) async => []);
-    when(
-      () => mockMonitorService.connectionState(mockDevice),
-    ).thenAnswer((_) => const Stream.empty());
-    when(
-      () => mockMonitorService.disconnect(mockDevice),
-    ).thenAnswer((_) async {});
+    when(() => mockDevice.remoteId)
+        .thenReturn(const DeviceIdentifier('AA:BB:CC:DD:EE:FF'));
+    when(() => mockMonitorService.fromId('AA:BB:CC:DD:EE:FF'))
+        .thenReturn(mockDevice);
+    when(() => mockMonitorService.connect(mockDevice, autoConnect: false))
+        .thenAnswer((_) async {});
+    when(() => mockMonitorService.discoverServices(mockDevice))
+        .thenAnswer((_) async => []);
+    when(() => mockMonitorService.connectionState(mockDevice))
+        .thenAnswer((_) => const Stream.empty());
+    when(() => mockMonitorService.disconnect(mockDevice))
+        .thenAnswer((_) async {});
     when(() => mockForegroundManager.startService()).thenAnswer((_) async {});
     when(() => mockForegroundManager.stopService()).thenAnswer((_) async {});
   });
@@ -186,8 +180,8 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(RouteErrorView), findsOneWidget);
-        expect(find.text('Błąd Nawigacji'), findsOneWidget);
-        expect(find.text('Powrót do strony głównej'), findsOneWidget);
+        expect(find.text('Navigation Error'), findsOneWidget);
+        expect(find.text('Back to home'), findsOneWidget);
       },
     );
 

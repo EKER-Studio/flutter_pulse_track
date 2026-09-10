@@ -53,7 +53,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     // state machine UI clean and exhaustive.
     final state = ref.watch(hrMonitorProvider);
     final notifier = ref.read(hrMonitorProvider.notifier);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
@@ -62,9 +62,8 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
         elevation: 0,
         title: Text(
           widget.deviceName,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.titleLarge
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
         actions: [
           // Show explicit disconnect button only when actively streaming or connecting

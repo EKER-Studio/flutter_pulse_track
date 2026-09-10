@@ -21,7 +21,7 @@ class WorkoutHistoryView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final historyAsync = ref.watch(watchWorkoutHistoryStreamProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
@@ -30,9 +30,8 @@ class WorkoutHistoryView extends ConsumerWidget {
         elevation: 0,
         title: Text(
           l10n.workoutHistoryAppBarTitle,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.titleLarge
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
       body: historyAsync.when(

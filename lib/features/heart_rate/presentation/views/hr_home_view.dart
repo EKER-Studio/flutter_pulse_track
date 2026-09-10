@@ -21,7 +21,7 @@ class HrHomeView extends ConsumerWidget {
     final savedProfilesAsync = ref.watch(
       watchSavedDeviceProfilesStreamProvider,
     );
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
@@ -30,9 +30,8 @@ class HrHomeView extends ConsumerWidget {
         elevation: 0,
         title: Text(
           l10n.homeTitle,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.titleLarge
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
       body: Builder(
@@ -175,7 +174,7 @@ class HrHomeView extends ConsumerWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'Failed to load saved sensors: $error',
+                              l10n.failedToLoadSavedSensors(error.toString()),
                               style: const TextStyle(
                                 color: AppColors.textPrimary,
                                 fontSize: 13,
@@ -186,7 +185,7 @@ class HrHomeView extends ConsumerWidget {
                             onPressed: () => ref.invalidate(
                               watchSavedDeviceProfilesStreamProvider,
                             ),
-                            child: const Text('Retry'),
+                            child: Text(l10n.retry_button_label),
                           ),
                         ],
                       ),
@@ -207,39 +206,35 @@ class HrHomeView extends ConsumerWidget {
                   child: SizedBox(
                     width: double.infinity,
                     height: 52,
-                    child: Consumer(
-                      builder: (context, ref, _) {
-                        return Semantics(
-                          button: true,
-                          label: l10n.scanForNewSensorButton,
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.accentBlue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            icon: const ExcludeSemantics(
-                              child: Icon(
-                                Icons.search,
-                                color: AppColors.textPrimary,
-                                size: 22,
-                              ),
-                            ),
-                            label: Text(
-                              l10n.scanForNewSensorButton,
-                              style: const TextStyle(
-                                color: AppColors.textPrimary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            onPressed: () {
-                              context.push('/scanner');
-                            },
+                    child: Semantics(
+                      button: true,
+                      label: l10n.scanForNewSensorButton,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.accentBlue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        );
-                      },
+                        ),
+                        icon: const ExcludeSemantics(
+                          child: Icon(
+                            Icons.search,
+                            color: AppColors.textPrimary,
+                            size: 22,
+                          ),
+                        ),
+                        label: Text(
+                          l10n.scanForNewSensorButton,
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () {
+                          context.push('/scanner');
+                        },
+                      ),
                     ),
                   ),
                 ),

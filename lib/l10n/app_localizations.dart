@@ -67,8 +67,8 @@ abstract class AppLocalizations {
 
   final String localeName;
 
-  static AppLocalizations? of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
@@ -475,6 +475,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yesterday, {time}'**
   String yesterdayPrefix(String time);
+
+  /// Error shown when saved sensors fail to load.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load saved sensors: {error}'**
+  String failedToLoadSavedSensors(String error);
+
+  /// AppBar title for the route error view.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation Error'**
+  String get routeErrorTitle;
+
+  /// Headline for unknown route.
+  ///
+  /// In en, this message translates to:
+  /// **'Page not found'**
+  String get routeErrorNotFound;
+
+  /// Details for invalid route.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid address or broken deep link.'**
+  String get routeErrorInvalidLink;
+
+  /// Button to return to home from route error.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to home'**
+  String get routeErrorBackHome;
+
+  /// Title for database error screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Database Error'**
+  String get databaseErrorTitle;
+
+  /// Description for database error screen.
+  ///
+  /// In en, this message translates to:
+  /// **'A critical database error occurred. Try restarting the app or clearing its cache.'**
+  String get databaseErrorDescription;
+
+  /// AppBar title for workout details.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Details'**
+  String get workoutDetailsTitle;
+
+  /// Semantics/back tooltip for workout details.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to workout history'**
+  String get workoutDetailsBackHint;
+
+  /// Tooltip/semantics for export button.
+  ///
+  /// In en, this message translates to:
+  /// **'Export workout data to CSV'**
+  String get workoutDetailsExportHint;
+
+  /// Snackbar when export fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to export workout session: {error}'**
+  String workoutDetailsExportFailed(String error);
+
+  /// Header for summary grid.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get workoutDetailsSummary;
+
+  /// Header for BPM chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart Rate Over Time'**
+  String get workoutDetailsHeartRateOverTime;
+
+  /// Placeholder when no BPM samples.
+  ///
+  /// In en, this message translates to:
+  /// **'No workout data captured'**
+  String get workoutDetailsNoData;
+
+  /// Reason when endTime is null.
+  ///
+  /// In en, this message translates to:
+  /// **'The workout was not completed'**
+  String get workoutDetailsNotCompleted;
+
+  /// Reason when samples empty.
+  ///
+  /// In en, this message translates to:
+  /// **'The sensor may have disconnected before data was captured'**
+  String get workoutDetailsSensorDisconnected;
+
+  /// Generic no-data reason.
+  ///
+  /// In en, this message translates to:
+  /// **'No valid heart rate data was recorded'**
+  String get workoutDetailsNoValidData;
+
+  /// Tile label average BPM.
+  ///
+  /// In en, this message translates to:
+  /// **'Average BPM'**
+  String get workoutDetailsAvgBpm;
+
+  /// Tile label peak BPM.
+  ///
+  /// In en, this message translates to:
+  /// **'Peak BPM'**
+  String get workoutDetailsPeakBpm;
+
+  /// Tile label duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get workoutDetailsDuration;
+
+  /// Tile label samples.
+  ///
+  /// In en, this message translates to:
+  /// **'Samples'**
+  String get workoutDetailsSamples;
+
+  /// Badge when endTime is null.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get inProgress;
+
+  /// Fallback sensor name.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Sensor'**
+  String get unknownSensor;
+
+  /// Body sensor location other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get bodySensorLocationOther;
+
+  /// Body sensor location chest.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get bodySensorLocationChest;
+
+  /// Body sensor location wrist.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrist'**
+  String get bodySensorLocationWrist;
+
+  /// Body sensor location finger.
+  ///
+  /// In en, this message translates to:
+  /// **'Finger'**
+  String get bodySensorLocationFinger;
+
+  /// Body sensor location hand.
+  ///
+  /// In en, this message translates to:
+  /// **'Hand'**
+  String get bodySensorLocationHand;
+
+  /// Body sensor location earLobe.
+  ///
+  /// In en, this message translates to:
+  /// **'Ear Lobe'**
+  String get bodySensorLocationEarLobe;
+
+  /// Body sensor location foot.
+  ///
+  /// In en, this message translates to:
+  /// **'Foot'**
+  String get bodySensorLocationFoot;
+
+  /// Body sensor location unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get bodySensorLocationUnknown;
 }
 
 class _AppLocalizationsDelegate

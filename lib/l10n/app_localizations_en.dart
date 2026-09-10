@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -228,4 +229,104 @@ class AppLocalizationsEn extends AppLocalizations {
   String yesterdayPrefix(String time) {
     return 'Yesterday, $time';
   }
+
+  @override
+  String failedToLoadSavedSensors(String error) {
+    return 'Failed to load saved sensors: $error';
+  }
+
+  @override
+  String get routeErrorTitle => 'Navigation Error';
+
+  @override
+  String get routeErrorNotFound => 'Page not found';
+
+  @override
+  String get routeErrorInvalidLink => 'Invalid address or broken deep link.';
+
+  @override
+  String get routeErrorBackHome => 'Back to home';
+
+  @override
+  String get databaseErrorTitle => 'Database Error';
+
+  @override
+  String get databaseErrorDescription =>
+      'A critical database error occurred. Try restarting the app or clearing its cache.';
+
+  @override
+  String get workoutDetailsTitle => 'Workout Details';
+
+  @override
+  String get workoutDetailsBackHint => 'Back to workout history';
+
+  @override
+  String get workoutDetailsExportHint => 'Export workout data to CSV';
+
+  @override
+  String workoutDetailsExportFailed(String error) {
+    return 'Failed to export workout session: $error';
+  }
+
+  @override
+  String get workoutDetailsSummary => 'Summary';
+
+  @override
+  String get workoutDetailsHeartRateOverTime => 'Heart Rate Over Time';
+
+  @override
+  String get workoutDetailsNoData => 'No workout data captured';
+
+  @override
+  String get workoutDetailsNotCompleted => 'The workout was not completed';
+
+  @override
+  String get workoutDetailsSensorDisconnected =>
+      'The sensor may have disconnected before data was captured';
+
+  @override
+  String get workoutDetailsNoValidData =>
+      'No valid heart rate data was recorded';
+
+  @override
+  String get workoutDetailsAvgBpm => 'Average BPM';
+
+  @override
+  String get workoutDetailsPeakBpm => 'Peak BPM';
+
+  @override
+  String get workoutDetailsDuration => 'Duration';
+
+  @override
+  String get workoutDetailsSamples => 'Samples';
+
+  @override
+  String get inProgress => 'In Progress';
+
+  @override
+  String get unknownSensor => 'Unknown Sensor';
+
+  @override
+  String get bodySensorLocationOther => 'Other';
+
+  @override
+  String get bodySensorLocationChest => 'Chest';
+
+  @override
+  String get bodySensorLocationWrist => 'Wrist';
+
+  @override
+  String get bodySensorLocationFinger => 'Finger';
+
+  @override
+  String get bodySensorLocationHand => 'Hand';
+
+  @override
+  String get bodySensorLocationEarLobe => 'Ear Lobe';
+
+  @override
+  String get bodySensorLocationFoot => 'Foot';
+
+  @override
+  String get bodySensorLocationUnknown => 'Unknown';
 }

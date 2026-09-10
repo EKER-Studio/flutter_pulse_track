@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
+import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Fallback error screen displayed when a deep link or route fails to match.
 ///
@@ -17,10 +18,11 @@ class RouteErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       appBar: AppBar(
-        title: const Text('Błąd Nawigacji'),
+        title: Text(l10n.routeErrorTitle),
         backgroundColor: AppColors.surfaceBackground,
         elevation: 0,
       ),
@@ -36,9 +38,9 @@ class RouteErrorView extends StatelessWidget {
                 color: AppColors.errorRed,
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Nie znaleziono żądanej strony',
-                style: TextStyle(
+              Text(
+                l10n.routeErrorNotFound,
+                style: const TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -47,8 +49,7 @@ class RouteErrorView extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                error?.toString() ??
-                    'Nieprawidłowy adres lub uszkodzony link głęboki.',
+                error?.toString() ?? l10n.routeErrorInvalidLink,
                 style: const TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 14,
@@ -67,7 +68,7 @@ class RouteErrorView extends StatelessWidget {
                   ),
                 ),
                 icon: const Icon(Icons.home_rounded),
-                label: const Text('Powrót do strony głównej'),
+                label: Text(l10n.routeErrorBackHome),
               ),
             ],
           ),
