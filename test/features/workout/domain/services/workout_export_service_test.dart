@@ -97,25 +97,28 @@ void main() {
       expect(lines[2].contains('1000'), isTrue);
     });
 
-    test('generateCsv handles single sample without division by zero', () async {
-      final session = WorkoutSession(
-        id: 3,
-        startTime: DateTime.utc(2026, 7, 28, 10, 0, 0),
-        endTime: DateTime.utc(2026, 7, 28, 10, 5, 0),
-        avgBpm: 80,
-        maxBpm: 80,
-        bpmSamples: [80],
-        sensorLocationIndex: 3,
-        deviceMacAddress: 'AA:BB:CC:DD:EE:FF',
-        deviceName: 'Test',
-      );
+    test(
+      'generateCsv handles single sample without division by zero',
+      () async {
+        final session = WorkoutSession(
+          id: 3,
+          startTime: DateTime.utc(2026, 7, 28, 10, 0, 0),
+          endTime: DateTime.utc(2026, 7, 28, 10, 5, 0),
+          avgBpm: 80,
+          maxBpm: 80,
+          bpmSamples: [80],
+          sensorLocationIndex: 3,
+          deviceMacAddress: 'AA:BB:CC:DD:EE:FF',
+          deviceName: 'Test',
+        );
 
-      final csv = await exportService.generateCsv(session);
-      final lines = csv.trim().split('\r\n');
-      expect(lines.length, 2);
-      expect(lines[1].contains('80'), isTrue);
-      expect(lines[1].contains('750'), isTrue);
-    });
+        final csv = await exportService.generateCsv(session);
+        final lines = csv.trim().split('\r\n');
+        expect(lines.length, 2);
+        expect(lines[1].contains('80'), isTrue);
+        expect(lines[1].contains('750'), isTrue);
+      },
+    );
 
     test('generateCsv uses i*1000 fallback when endTime is null', () async {
       final start = DateTime.utc(2026, 7, 28, 10, 0, 0);
@@ -135,7 +138,12 @@ void main() {
       final lines = csv.trim().split('\r\n');
       expect(lines.length, 4);
       expect(lines[1].contains(start.toIso8601String()), isTrue);
-      expect(lines[2].contains(start.add(const Duration(seconds: 1)).toIso8601String()), isTrue);
+      expect(
+        lines[2].contains(
+          start.add(const Duration(seconds: 1)).toIso8601String(),
+        ),
+        isTrue,
+      );
     });
 
     test('generateCsv encodes sensorLocationIndex correctly', () async {

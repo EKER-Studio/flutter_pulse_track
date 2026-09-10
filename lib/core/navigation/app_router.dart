@@ -10,6 +10,7 @@ import 'package:pulse_track/features/heart_rate/presentation/views/hr_scanner_vi
 import 'package:pulse_track/features/heart_rate/presentation/views/workout_history_view.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
+import 'package:pulse_track/core/infrastructure/services/analytics_service.dart';
 import 'package:pulse_track/features/workout/presentation/views/workout_details_view.dart';
 
 part 'app_router.g.dart';
@@ -20,8 +21,11 @@ part 'app_router.g.dart';
 /// navigation graph is easy to audit and extend.
 @riverpod
 GoRouter appRouter(Ref ref) {
+  final analyticsObserver = ref.watch(analyticsObserverProvider);
+
   return GoRouter(
     initialLocation: '/',
+    observers: [?analyticsObserver],
     errorBuilder: (BuildContext context, GoRouterState state) =>
         RouteErrorView(error: state.error),
     routes: <RouteBase>[

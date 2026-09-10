@@ -1,0 +1,196 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:pulse_track/core/infrastructure/services/analytics_service.dart';
+
+class _MockFirebaseAnalytics extends Mock implements FirebaseAnalytics {}
+
+void main() {
+  late _MockFirebaseAnalytics mockAnalytics;
+  late AnalyticsService serviceWithMock;
+  late AnalyticsService serviceWithoutMock;
+
+  setUp(() {
+    mockAnalytics = _MockFirebaseAnalytics();
+    serviceWithMock = AnalyticsService(analytics: mockAnalytics);
+    serviceWithoutMock = AnalyticsService();
+  });
+
+  group('AnalyticsService without analytics instance (safe fallback)', () {
+    test('setCollectionEnabled completes normally without throwing', () async {
+      await expectLater(
+        serviceWithoutMock.setCollectionEnabled(true),
+        completes,
+      );
+    });
+
+    test('logWorkoutStarted completes normally without throwing', () async {
+      await expectLater(
+        serviceWithoutMock.logWorkoutStarted(
+          deviceId: 'AA:BB:CC:DD:EE:FF',
+          sport: 'running',
+        ),
+        completes,
+      );
+    });
+
+    test('logWorkoutCompleted completes normally without throwing', () async {
+      await expectLater(
+        serviceWithoutMock.logWorkoutCompleted(
+          durationSeconds: 1800,
+          avgBpm: 145,
+          maxBpm: 172,
+        ),
+        completes,
+      );
+    });
+
+    test('logDeviceConnected completes normally without throwing', () async {
+      await expectLater(
+        serviceWithoutMock.logDeviceConnected(
+          deviceId: 'AA:BB:CC:DD:EE:FF',
+          deviceName: 'Polar H10',
+        ),
+        completes,
+      );
+    });
+
+    test('logExportShared completes normally without throwing', () async {
+      await expectLater(
+        serviceWithoutMock.logExportShared(format: 'csv', sessionCount: 3),
+        completes,
+      );
+    });
+  });
+
+  group('AnalyticsService with mocked FirebaseAnalytics', () {
+    test('setCollectionEnabled forwards call to FirebaseAnalytics', () async {
+      when(() => mockAnalytics.setAnalyticsCollectionEnabled(any()))
+          .thenAnswer((_) async {});
+
+      await serviceWithMock.setCollectionEnabled(true);
+
+      verify(() => mockAnalytics.setAnalyticsCollectionEnabled(true)).called(1);
+    });
+
+    test(
+      'logWorkoutStarted logs workout_started event with parameters',
+      () async {
+        when(
+          () => mockAnalytics.logEvent(
+            name: any(named: 'name'),
+            parameters: any(named: 'parameters'),
+          ),
+        ).thenAnswer((_) async {});
+
+        await serviceWithMock.logWorkoutStarted(
+          deviceId: 'AA:BB:CC:DD:EE:FF',
+          sport: 'cycling',
+        );
+
+        verify(
+          () => mockAnalytics.logEvent(
+            name: 'workout_started',
+            parameters: {'device_id': 'AA:BB:CC:DD:EE:FF', 'sport': 'cycling'},
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      'logWorkoutCompleted logs workout_completed event with parameters',
+      () async {
+        when(
+          () => mockAnalytics.logEvent(
+            name: any(named: 'name'),
+            parameters: any(named: 'parameters'),
+          ),
+        ).thenAnswer((_) async {});
+
+        await serviceWithMock.logWorkoutCompleted(
+          durationSeconds: 3600,
+          avgBpm: 150,
+          maxBpm: 180,
+        );
+
+        verify(
+          () => mockAnalytics.logEvent(
+            name: 'workout_completed',
+            parameters: {
+              'duration_seconds': 3600,
+              'avg_bpm': 150,
+              'max_bpm': 180,
+            },
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      'logDeviceConnected logs device_connected event with parameters',
+      () async {
+        when(
+          () => mockAnalytics.logEvent(
+            name: any(named: 'name'),
+            parameters: any(named: 'parameters'),
+          ),
+        ).thenAnswer((_) async {});
+
+        await serviceWithMock.logDeviceConnected(
+          deviceId: 'AA:BB:CC:DD:EE:FF',
+          deviceName: 'Garmin HRM',
+        );
+
+        verify(
+          () => mockAnalytics.logEvent(
+            name: 'device_connected',
+            parameters: {
+              'device_id': 'AA:BB:CC:DD:EE:FF',
+              'device_name': 'Garmin HRM',
+            },
+          ),
+        ).called(1);
+      },
+    );
+
+    test('logExportShared logs export_shared event with parameters', () async {
+      when(
+        () => mockAnalytics.logEvent(
+          name: any(named: 'name'),
+          parameters: any(named: 'parameters'),
+        ),
+      ).thenAnswer((_) async {});
+
+      await serviceWithMock.logExportShared(format: 'csv', sessionCount: 5);
+
+      verify(
+        () => mockAnalytics.logEvent(
+          name: 'export_shared',
+          parameters: {'format': 'csv', 'session_count': 5},
+        ),
+      ).called(1);
+    });
+  });
+
+  group('Analytics Providers', () {
+    test(
+      'analyticsServiceProvider resolves safely when Firebase is uninitialized',
+      () {
+        final container = ProviderContainer();
+        addTearDown(container.dispose);
+
+        final service = container.read(analyticsServiceProvider);
+        expect(service, isA<AnalyticsService>());
+      },
+    );
+
+    test('analyticsObserverProvider resolves to null safely when Firebase is uninitialized', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final observer = container.read(analyticsObserverProvider);
+      expect(observer, isNull);
+    });
+  });
+}
