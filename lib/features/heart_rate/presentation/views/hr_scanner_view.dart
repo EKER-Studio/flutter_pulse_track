@@ -13,7 +13,6 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 /// Implements an exhaustive state machine UI reacting to [BleScannerState]
 /// emitted by the [bleScannerNotifierProvider].
 class HrScannerView extends ConsumerWidget {
-  /// Creates an [HrScannerView] instance.
   const HrScannerView({super.key});
 
   /// Builds the BLE scanner view using [context] and [ref].
@@ -33,12 +32,10 @@ class HrScannerView extends ConsumerWidget {
               ?.copyWith(fontWeight: FontWeight.bold),
         ),
 
-        /// AppBar actions containing the filter toggle button with explicit hit‑area and semantics.
         actions: [
           // Filter toggle button only relevant when scanning or empty
           if (state is ScanningScannerState || state is EmptyScannerState)
             Semantics(
-              /** Semantic label for the filter toggle button, used by screen readers. */
               label: AppLocalizations.of(context).toggle_filter_tooltip,
               button: true,
               toggled: _isFilterActive(notifier),
@@ -52,7 +49,6 @@ class HrScannerView extends ConsumerWidget {
                       ? AppColors.accentBlue
                       : AppColors.textSecondary,
                 ),
-                /** Tooltip text for the filter toggle button, also read by accessibility services. */
                 tooltip: AppLocalizations.of(context).toggle_filter_tooltip,
                 onPressed: () => notifier.toggleFilters(),
               ),
@@ -89,12 +85,10 @@ class HrScannerView extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          /// Icon indicating scanning state with semantic label for accessibility.
           Icon(
             Icons.bluetooth_searching,
             size: 80,
             color: AppColors.textSecondary,
-            /** Semantic label for the Bluetooth searching icon, describing its purpose. */
             semanticLabel: AppLocalizations.of(context)
                 .bluetooth_searching_label,
           ),
@@ -117,7 +111,6 @@ class HrScannerView extends ConsumerWidget {
           ),
           const SizedBox(height: 32),
           Semantics(
-            /** Semantic label for the Scan button, announcing its action to screen readers. */
             label: AppLocalizations.of(context).scan_button_semantic_label,
             button: true,
             child: ElevatedButton.icon(
@@ -161,12 +154,10 @@ class HrScannerView extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            /// Icon shown when Bluetooth is disabled, includes semantic label for screen readers.
             Icon(
               Icons.bluetooth_disabled,
               size: 80,
               color: AppColors.accentRed,
-              /** Semantic label for the Bluetooth disabled icon, indicating Bluetooth is off. */
               semanticLabel: AppLocalizations.of(context)
                   .bluetooth_disabled_label,
             ),
@@ -207,7 +198,6 @@ class HrScannerView extends ConsumerWidget {
               Icons.device_unknown,
               size: 80,
               color: AppColors.accentOrange,
-              /** Semantic label for the unknown device icon, indicating the device is not recognized. */
               semanticLabel: AppLocalizations.of(context).device_unknown_label,
             ),
             const SizedBox(height: 24),
@@ -231,9 +221,7 @@ class HrScannerView extends ConsumerWidget {
             ),
             const SizedBox(height: 32),
 
-            /// Semantics wrapper for the retry scan button, providing an accessibility label.
             Semantics(
-              /** Semantic label for the Retry Scan button, used by assistive technologies. */
               label: AppLocalizations.of(context).retry_scan_semantic_label,
               button: true,
               child: ElevatedButton.icon(
@@ -365,9 +353,7 @@ class HrScannerView extends ConsumerWidget {
               final deviceName = device.name.isEmpty
                   ? AppLocalizations.of(context).unknown_device
                   : device.name;
-              return
-              /// Semantics wrapper for each device list tile, combining device name and RSSI for accessibility.
-              Semantics(
+              return Semantics(
                 label: deviceName,
                 hint: AppLocalizations.of(context)
                     .deviceListTileHint(device.id, device.rssi),

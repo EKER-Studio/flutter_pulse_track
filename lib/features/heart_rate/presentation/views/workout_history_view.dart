@@ -14,7 +14,6 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 /// [WorkoutSession], sorted by start time descending, via
 /// [watchWorkoutHistoryStreamProvider].
 class WorkoutHistoryView extends ConsumerWidget {
-  /// Creates a [WorkoutHistoryView] instance.
   const WorkoutHistoryView({super.key});
 
   /// Builds the workout history list view using [context] and [ref].

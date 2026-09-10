@@ -20,7 +20,6 @@ class HrMonitorView extends ConsumerStatefulWidget {
   /// Human-readable display name of the target heart rate sensor.
   final String deviceName;
 
-  /// Creates an [HrMonitorView] instance targeting [deviceId] with display name [deviceName].
   const HrMonitorView({
     super.key,
     required this.deviceId,
