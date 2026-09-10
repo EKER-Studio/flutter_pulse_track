@@ -60,9 +60,9 @@ abstract class WorkoutPersistenceRepository {
   /// [macAddress], [name], [avgBpm], and [maxBpm].
   ///
   /// If [existingId] is provided, updates that existing row in place.
-  /// Returns a [Future] completing with the integer database ID assigned or updated
-  /// for this session.
-  Future<int> saveWorkoutCheckpoint({
+  /// Returns a [Future] completing with the integer database ID assigned or
+  /// updated, or `null` when `samples` is empty and no prior id exists.
+  Future<int?> saveWorkoutCheckpoint({
     required DateTime startTime,
     required List<int> samples,
     required int sensorLocationIndex,

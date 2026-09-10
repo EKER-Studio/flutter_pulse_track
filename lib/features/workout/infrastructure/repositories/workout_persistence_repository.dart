@@ -87,7 +87,7 @@ class WorkoutPersistenceRepository
   /// [avgBpm], [maxBpm], and optional [existingId].
   /// Returns a [Future] completing with the integer database ID assigned or updated.
   @override
-  Future<int> saveWorkoutCheckpoint({
+  Future<int?> saveWorkoutCheckpoint({
     required DateTime startTime,
     required List<int> samples,
     required int sensorLocationIndex,
@@ -97,7 +97,7 @@ class WorkoutPersistenceRepository
     required int maxBpm,
     int? existingId,
   }) async {
-    if (samples.isEmpty) return existingId ?? Isar.autoIncrement;
+    if (samples.isEmpty) return existingId;
 
     final session = WorkoutSessionDto()
       ..id = existingId ?? Isar.autoIncrement

@@ -25,9 +25,10 @@ class SavePartialWorkoutSessionUseCase {
   ///
   /// Pass [existingId] (the id returned by a previous call to this use case
   /// for the same session) so this checkpoint updates that row in place.
-  /// Returns a [Future] completing with the row's database ID — callers MUST store it
-  /// and pass it back into subsequent calls.
-  Future<int> call({
+  /// Returns a [Future] completing with the row's database ID — callers MUST
+  /// store it and pass it back into subsequent calls. Returns `null` when
+  /// `samples` is empty and no prior id exists (no row written).
+  Future<int?> call({
     required DateTime startTime,
     required List<int> samples,
     required int sensorLocationIndex,

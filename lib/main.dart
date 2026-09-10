@@ -7,8 +7,10 @@ import 'app.dart';
 import 'core/utils/app_logger.dart';
 import 'core/infrastructure/storage/isar_provider.dart';
 import 'core/presentation/theme/app_colors.dart';
+
 import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart'
     as domain;
+
 import 'features/workout/infrastructure/models/device_profile_dto.dart';
 import 'features/workout/infrastructure/models/workout_session_dto.dart';
 import 'features/workout/infrastructure/repositories/workout_persistence_repository.dart';
@@ -31,10 +33,18 @@ Future<void> main() async {
 
   try {
     final dir = await getApplicationDocumentsDirectory();
-    final isar = await Isar.open([
-      DeviceProfileDtoSchema,
-      WorkoutSessionDtoSchema,
-    ], directory: dir.path);
+    // SECURITY-DECISION: Isar stores health data (BPM samples, device names) in
+    // plaintext. Encryption-at-rest via Isar `encryptionKey` is intentionally
+    // deferred — data is device-local, not backed up, and `flutter_secure_storage`
+    // key management adds migration complexity. Re-evaluate before Play Store
+    // release handling sensitive health data. See C-1.
+    // Dual-open guard prevents "Isar already opened" on hot-restart.
+    final isar =
+        Isar.getInstance() ??
+        await Isar.open([
+          DeviceProfileDtoSchema,
+          WorkoutSessionDtoSchema,
+        ], directory: dir.path);
 
     final repo = WorkoutPersistenceRepository(isar);
     await repo.sanitizeCrashedSessions();
@@ -88,8 +98,10 @@ class _DatabaseErrorApp extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
+                // Keep English fallback here — _DatabaseErrorApp runs before
+                // localization delegates are initialized (no BuildContext l10n).
                 const Text(
-                  'Wystąpił krytyczny błąd bazy danych. Spróbuj zrestartować aplikację lub wyczyścić jej pamięć podręczną.',
+                  'A critical database error occurred. Try restarting the app or clearing its cache.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.textSecondary,

@@ -210,22 +210,19 @@ void main() {
       expect(id, 42);
     });
 
-    test(
-      'returns autoIncrement when samples are empty and no existingId',
-      () async {
-        final id = await repository.saveWorkoutCheckpoint(
-          startTime: startTime,
-          samples: [],
-          sensorLocationIndex: 1,
-          macAddress: 'AA:BB:CC:DD:EE:01',
-          name: 'Polar H10',
-          avgBpm: 0,
-          maxBpm: 0,
-        );
+    test('returns null when samples are empty and no existingId', () async {
+      final id = await repository.saveWorkoutCheckpoint(
+        startTime: startTime,
+        samples: [],
+        sensorLocationIndex: 1,
+        macAddress: 'AA:BB:CC:DD:EE:01',
+        name: 'Polar H10',
+        avgBpm: 0,
+        maxBpm: 0,
+      );
 
-        expect(id, Isar.autoIncrement);
-      },
-    );
+      expect(id, isNull);
+    });
 
     test('updates existing checkpoint when existingId is provided', () async {
       final id = await repository.saveWorkoutCheckpoint(
@@ -425,7 +422,7 @@ void main() {
         maxBpm: 75,
       );
 
-      await repository.deleteWorkoutSession(id);
+      await repository.deleteWorkoutSession(id!);
 
       final sessions = await isar.workoutSessionDtos.where().findAll();
       expect(sessions, isEmpty);
@@ -459,7 +456,7 @@ void main() {
         maxBpm: 85,
       );
 
-      await repository.deleteWorkoutSession(id2);
+      await repository.deleteWorkoutSession(id2!);
 
       final sessions = await isar.workoutSessionDtos.where().findAll();
       expect(sessions, hasLength(1));
