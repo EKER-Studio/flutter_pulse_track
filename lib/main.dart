@@ -1,3 +1,8 @@
+import 'dart:ui';
+
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar_community/isar.dart';
@@ -7,6 +12,7 @@ import 'app.dart';
 import 'core/utils/app_logger.dart';
 import 'core/infrastructure/storage/isar_provider.dart';
 import 'core/presentation/theme/app_colors.dart';
+import 'firebase_options.dart';
 
 import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart'
     as domain;
@@ -19,10 +25,11 @@ import 'features/workout/infrastructure/repositories/workout_persistence_reposit
 ///
 /// Execution sequence:
 /// 1. Ensures Flutter widget bindings are initialized.
-/// 2. Resolves the platform-specific application documents directory.
-/// 3. Opens the Isar database with [DeviceProfileDto] and [WorkoutSessionDto] schemas.
-/// 4. Sanitizes crashed / unclosed sessions from previous unexpected terminations.
-/// 5. Overrides [isarProvider] and [domain.workoutPersistenceRepositoryProvider] in the root [ProviderScope] so the rest of the app
+/// 2. Initializes Firebase infrastructure, Crashlytics error handlers, and Analytics.
+/// 3. Resolves the platform-specific application documents directory.
+/// 4. Opens the Isar database with [DeviceProfileDto] and [WorkoutSessionDto] schemas.
+/// 5. Sanitizes crashed / unclosed sessions from previous unexpected terminations.
+/// 6. Overrides [isarProvider] and [domain.workoutPersistenceRepositoryProvider] in the root [ProviderScope] so the rest of the app
 ///    can access the database synchronously without awaiting disk I/O.
 ///
 /// If the database fails to open (corrupted file, broken migration), a minimal
@@ -30,6 +37,33 @@ import 'features/workout/infrastructure/repositories/workout_persistence_reposit
 /// native stack trace.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    // Pass all uncaught "fatal" errors from the framework to Crashlytics
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+
+    // Pass all uncaught asynchronous errors that aren't handled by Flutter to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+
+    // Explicitly enable Crashlytics and Analytics collection for both Release and Debug
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+  } catch (e, st) {
+    log.w(
+      'Firebase initialization skipped or failed: $e',
+      error: e,
+      stackTrace: st,
+    );
+  }
 
   try {
     final dir = await getApplicationDocumentsDirectory();
