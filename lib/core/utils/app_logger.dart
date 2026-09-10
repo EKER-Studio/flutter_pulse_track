@@ -33,6 +33,10 @@ class ProductionFilter extends LogFilter {
 }
 
 /// Custom log output that delivers log events to Firebase Crashlytics in release builds.
+///
+/// Only `error` and above are forwarded to Crashlytics to avoid leaking
+/// personally identifiable data (BLE MAC, device names) that may appear in
+/// `info`/`debug` logs (see C-2).
 class FirebaseCrashlyticsOutput extends LogOutput {
   @override
   void output(OutputEvent event) {
@@ -50,8 +54,6 @@ class FirebaseCrashlyticsOutput extends LogOutput {
           event.origin.stackTrace,
           reason: event.origin.message,
         );
-      } else if (event.level.index >= Level.info.index) {
-        FirebaseCrashlytics.instance.log(fullMessage);
       }
     } catch (e) {
       // Firebase infrastructure is not ready yet. Fallback silently to prevent [core/no-app] crashes.

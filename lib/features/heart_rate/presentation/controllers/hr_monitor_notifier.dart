@@ -150,8 +150,12 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       _checkpointSessionId = null;
     }
 
+    // PII redaction: avoid logging full MAC/deviceId to Crashlytics (C-2).
+    final redactedId = deviceId.length > 4
+        ? '${deviceId.substring(0, 4)}…'
+        : '…';
     log.i(
-      '[HrMonitorNotifier] ${isReconnect ? "Reconnecting to" : "Connecting to"} "$deviceName" ($deviceId)...',
+      '[HrMonitorNotifier] ${isReconnect ? "Reconnecting to" : "Connecting to"} sensor $redactedId...',
     );
 
     state = const MonitorState.connecting();
@@ -182,8 +186,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       _safeDisconnectDevice();
       _handleConnectFailure(
         isReconnect: isReconnect,
-        failureMessage:
-            'Connection timed out. Make sure the sensor is nearby and powered on.',
+        failureMessage: 'Connection timed out. Make sure the sensor is nearby and powered on.',
       );
     });
 
@@ -213,7 +216,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       return;
     }
 
-    log.i('[HrMonitorNotifier] Physical link established for "$deviceName".');
+    log.i('[HrMonitorNotifier] Physical link established.');
 
     _connectionStateSubscription = _monitorService
         .connectionState(_device!)
@@ -240,8 +243,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       await _safeDisconnectDevice();
       await _handleConnectFailure(
         isReconnect: isReconnect,
-        failureMessage:
-            'Service discovery timed out. Please move closer to the sensor and retry.',
+        failureMessage: 'Service discovery timed out. Please move closer to the sensor and retry.',
       );
       return;
     } catch (e, st) {
@@ -429,7 +431,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       state = const MonitorState.connecting();
       log.i(
         '[HrMonitorNotifier] Auto-reconnect attempt $_reconnectAttempts/$_maxReconnectAttempts '
-        'scheduled in 2s for "$_sessionDeviceName" ($_sessionDeviceId).',
+        'scheduled in 2s.',
       );
 
       final deviceId = _sessionDeviceId!;
@@ -567,7 +569,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     try {
       final savePartial = ref.read(savePartialWorkoutSessionUseCaseProvider);
       final avgBpm = (_currentBpmSum / _collectedBpmSamples.length).round();
-      _checkpointSessionId = await savePartial.call(
+      final newId = await savePartial.call(
         startTime: _sessionStartTime!,
         samples: List<int>.of(_collectedBpmSamples),
         sensorLocationIndex:
@@ -578,6 +580,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         maxBpm: _currentMaxBpm,
         existingId: _checkpointSessionId,
       );
+      if (newId != null) _checkpointSessionId = newId;
       log.d(
         '[HrMonitorNotifier] Checkpoint saved at ${DateTime.now()} '
         'with ${_collectedBpmSamples.length} samples (row id: '
@@ -603,10 +606,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   ///
   /// Returns a [Future] completing when reconnection attempt finishes.
   Future<void> retry(String deviceId, String deviceName) async {
-    log.i(
-      '[HrMonitorNotifier] retry() — tearing down current session '
-      'then reconnecting to "$deviceName".',
-    );
+    log.i('[HrMonitorNotifier] retry() — tearing down current session.');
     await disconnect();
     await connect(deviceId, deviceName);
   }
@@ -800,10 +800,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     if (_device == null) return;
     try {
       await _monitorService.disconnect(_device!);
-      log.d(
-        '[HrMonitorNotifier] Link-layer disconnect completed for '
-        '${_device!.remoteId}.',
-      );
+      log.d('[HrMonitorNotifier] Link-layer disconnect completed.');
     } catch (e) {
       log.w(
         '[HrMonitorNotifier] _safeDisconnectDevice() error (logged, not re-thrown)',
