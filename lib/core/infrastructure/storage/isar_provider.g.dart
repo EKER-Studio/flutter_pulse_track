@@ -22,10 +22,6 @@ part of 'isar_provider.dart';
 /// The [keepAlive: true] flag ensures the Isar instance is never disposed by
 /// Riverpod's garbage collection, preventing accidental database closure while
 /// the app is running. Consumers should never attempt to close the instance.
-/// Synchronous provider that returns the initialized Isar database instance using [ref].
-///
-/// Throws [UnimplementedError] if accessed before `main()` has completed
-/// initialization and overridden the provider in [ProviderScope].
 
 @ProviderFor(isar)
 final isarProvider = IsarProvider._();
@@ -44,10 +40,6 @@ final isarProvider = IsarProvider._();
 /// The [keepAlive: true] flag ensures the Isar instance is never disposed by
 /// Riverpod's garbage collection, preventing accidental database closure while
 /// the app is running. Consumers should never attempt to close the instance.
-/// Synchronous provider that returns the initialized Isar database instance using [ref].
-///
-/// Throws [UnimplementedError] if accessed before `main()` has completed
-/// initialization and overridden the provider in [ProviderScope].
 
 final class IsarProvider extends $FunctionalProvider<Isar, Isar, Isar>
     with $Provider<Isar> {
@@ -65,10 +57,6 @@ final class IsarProvider extends $FunctionalProvider<Isar, Isar, Isar>
   /// The [keepAlive: true] flag ensures the Isar instance is never disposed by
   /// Riverpod's garbage collection, preventing accidental database closure while
   /// the app is running. Consumers should never attempt to close the instance.
-  /// Synchronous provider that returns the initialized Isar database instance using [ref].
-  ///
-  /// Throws [UnimplementedError] if accessed before `main()` has completed
-  /// initialization and overridden the provider in [ProviderScope].
   IsarProvider._()
     : super(
         from: null,
