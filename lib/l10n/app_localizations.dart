@@ -14,6 +14,7 @@ import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
 import 'app_localizations_nl.dart';
 import 'app_localizations_pl.dart';
+import 'app_localizations_pt.dart';
 
 // ignore_for_file: type=lint
 
@@ -110,6 +111,7 @@ abstract class AppLocalizations {
     Locale('ko'),
     Locale('nl'),
     Locale('pl'),
+    Locale('pt'),
   ];
 
   /// Title shown in the app bar of the home dashboard screen.
@@ -679,6 +681,7 @@ class _AppLocalizationsDelegate
     'ko',
     'nl',
     'pl',
+    'pt',
   ].contains(locale.languageCode);
 
   @override
@@ -706,6 +709,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsNl();
     case 'pl':
       return AppLocalizationsPl();
+    case 'pt':
+      return AppLocalizationsPt();
   }
 
   throw FlutterError(
