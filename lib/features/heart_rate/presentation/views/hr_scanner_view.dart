@@ -15,7 +15,6 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 class HrScannerView extends ConsumerWidget {
   const HrScannerView({super.key});
 
-  /// Builds the BLE scanner view using [context] and [ref].
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(bleScannerProvider);
@@ -329,9 +328,8 @@ class HrScannerView extends ConsumerWidget {
   /// Builds the scanning state UI with an animated indicator and the list of discovered devices.
   ///
   /// Returned directly as `Scaffold.body` — must NOT be wrapped in `Expanded`,
-  /// Placeholderes a `Flex` (Row/Column) ancestor, which
-  /// `Scaffold.body` is not. `Center`/`ListView` already fill the available
-  /// space on their own here.
+  /// which requires a `Flex` (Row/Column) ancestor. `Center`/`ListView` already fill
+  /// the available space on their own here.
   Widget _buildScanningState(
     BuildContext context,
     BleScannerNotifier notifier,

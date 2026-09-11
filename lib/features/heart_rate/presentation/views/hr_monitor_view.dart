@@ -45,7 +45,6 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     });
   }
 
-  /// Builds the telemetry dashboard view using [context].
   @override
   Widget build(BuildContext context) {
     // Watches [hrMonitorProvider] for reactive updates from the BLE heart rate stream.

@@ -9,12 +9,10 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 ///
 /// Displays a reactive list of saved sensor profiles (via
 /// [watchSavedDeviceProfilesStreamProvider]) for instant direct-connect,
-/// alongside navigation placeholders for future features (Workout History,
-/// Build in Public Guide).
+/// device scanning, and workout history navigation.
 class HrHomeView extends ConsumerWidget {
   const HrHomeView({super.key});
 
-  /// Builds the home dashboard hub layout using [context] and [ref].
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final savedProfilesAsync = ref.watch(
@@ -37,7 +35,6 @@ class HrHomeView extends ConsumerWidget {
         builder: (context) {
           return CustomScrollView(
             slivers: [
-              // --- SAVED SENSORS SECTION ---
               savedProfilesAsync.when(
                 data: (profiles) {
                   if (profiles.isEmpty) {
@@ -195,7 +192,6 @@ class HrHomeView extends ConsumerWidget {
                     const SliverToBoxAdapter(child: SizedBox.shrink()),
               ),
 
-              // --- SCAN FOR NEW SENSOR CTA ---
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -239,7 +235,6 @@ class HrHomeView extends ConsumerWidget {
                 ),
               ),
 
-              // --- WORKOUT HISTORY PLACEHOLDER ---
               SliverToBoxAdapter(
                 child: _buildPlaceholderSection(
                   context,

@@ -16,7 +16,6 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 class WorkoutHistoryView extends ConsumerWidget {
   const WorkoutHistoryView({super.key});
 
-  /// Builds the workout history list view using [context] and [ref].
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final historyAsync = ref.watch(watchWorkoutHistoryStreamProvider);
