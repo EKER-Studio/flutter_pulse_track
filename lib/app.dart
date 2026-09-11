@@ -11,10 +11,6 @@ class App extends ConsumerWidget {
   const App({super.key});
 
   @override
-  /// Builds the material app with dark theme and GoRouter configuration.
-  ///
-  /// Theme configuration uses Material 3 with a dark color scheme derived from
-  /// [AppColors.accentRed].
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
 
