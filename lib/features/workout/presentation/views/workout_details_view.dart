@@ -36,7 +36,6 @@ class WorkoutDetailsView extends ConsumerWidget {
   /// The workout session whose details are displayed.
   final WorkoutSession session;
 
-  /// Builds the workout details screen with header, summary grid, and BPM chart using [context] and [ref].
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
@@ -105,7 +104,6 @@ class WorkoutDetailsView extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header card
                   Semantics(
                     label: l10n.workoutDetailsHeaderSemantics(
                       _formatDate(session.startTime),
@@ -183,7 +181,6 @@ class WorkoutDetailsView extends ConsumerWidget {
 
                   const SizedBox(height: _kSectionSpacing),
 
-                  // Summary grid
                   Text(
                     l10n.workoutDetailsSummary,
                     style: const TextStyle(
@@ -239,7 +236,6 @@ class WorkoutDetailsView extends ConsumerWidget {
 
                   const SizedBox(height: _kSectionSpacing),
 
-                  // BPM chart
                   Text(
                     l10n.workoutDetailsHeartRateOverTime,
                     style: const TextStyle(
