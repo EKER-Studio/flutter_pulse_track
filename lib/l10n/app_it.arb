@@ -1,0 +1,202 @@
+{
+  "@@locale": "it",
+  "homeTitle": "PulseTrack",
+  "savedSensorsSectionTitle": "Sensori salvati (Connessione diretta)",
+  "unknownSensorLabel": "Sensore sconosciuto",
+  "savedSensorFallbackName": "Sensore salvato",
+  "scanForNewSensorButton": "Cerca nuovo sensore",
+  "workoutHistoryTitle": "Cronologia allenamenti",
+  "workoutHistoryDescription": "Visualizza le sessioni passate di frequenza cardiaca e le analisi.",
+  "scanner_title": "Scanner",
+  "bluetooth_searching_label": "Scansione Bluetooth in corso",
+  "bluetooth_disabled_label": "Bluetooth disattivato",
+  "device_unknown_label": "Dispositivo sconosciuto",
+  "toggle_filter_tooltip": "Attiva/disattiva filtro nomi e vicinanza",
+  "ready_to_scan": "Pronto per la scansione",
+  "start_scan_description": "Tocca Scansiona per cercare sensori.",
+  "scan_button_label": "Scansiona",
+  "bluetooth_required": "Bluetooth richiesto",
+  "bluetooth_off_description": "L'adattatore Bluetooth è disattivato o non autorizzato. Attiva il Bluetooth e concedi le autorizzazioni locali per eseguire la scansione.",
+  "empty_state_title": "NON VEDI IL TUO DISPOSITIVO?",
+  "empty_state_bullets": "• Assicurati che il sensore sia acceso.\n• Controlla la batteria del sensore.\n• Avvicinati al dispositivo.\n• Prova a disattivare i filtri di scansione.",
+  "retry_scan_label": "Riprova scansione",
+  "scan_failed_title": "Scansione non riuscita",
+  "retry_button_label": "Riprova",
+  "searching_sensors": "Ricerca sensori attivi in corso...",
+  "unknown_device": "Dispositivo sconosciuto",
+  "scan_button_semantic_label": "Avvia scansione dei sensori di frequenza cardiaca",
+  "retry_scan_semantic_label": "Riprova scansione dei sensori",
+  "connectToSensor": "Connetti a {sensorName}",
+  "@connectToSensor": {
+    "description": "Semantic label for saved sensor chips on the home screen.",
+    "placeholders": {
+      "sensorName": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceListTileHint": "Indirizzo MAC {id}, potenza segnale {rssi} dBm. Tocca due volte per connetterti.",
+  "@deviceListTileHint": {
+    "description": "Semantics hint for each device row in the scanner list.",
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "rssi": {
+        "type": "int"
+      }
+    }
+  },
+  "disconnectButton": "Disconnetti",
+  "disconnectHint": "Disconnette dal dispositivo {deviceName}",
+  "@disconnectHint": {
+    "description": "Semantics hint for the disconnect button.",
+    "placeholders": {
+      "deviceName": {
+        "type": "String"
+      }
+    }
+  },
+  "disconnectedStatus": "Disconnesso",
+  "returnToScannerButton": "Torna allo scanner",
+  "returnToScannerHint": "Torna alla schermata di scansione dispositivi",
+  "connectingMessage": "Connessione al dispositivo in corso...\nNegoziazione collegamento attiva",
+  "discoveringServicesMessage": "Ricerca servizi in corso... Attendere...",
+  "heartRateLabel": "Frequenza cardiaca",
+  "heartRateLiveLabel": "Frequenza cardiaca: {bpm} battiti al minuto",
+  "@heartRateLiveLabel": {
+    "description": "Accessibility live region label for the current heart rate.",
+    "placeholders": {
+      "bpm": {
+        "type": "int"
+      }
+    }
+  },
+  "bpmUnit": "BPM",
+  "bodySensorLocationTitle": "Posizione del sensore",
+  "bodySensorLocationLabel": "Posizione del sensore: {location}",
+  "@bodySensorLocationLabel": {
+    "description": "Accessibility label for the sensor location card.",
+    "placeholders": {
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "sensorBatteryTitle": "Batteria del sensore",
+  "sensorBatteryLabel": "Livello batteria sensore: {level}",
+  "@sensorBatteryLabel": {
+    "description": "Accessibility label for the battery card.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "batteryNotAvailable": "N/D",
+  "connectionFailedTitle": "Connessione non riuscita",
+  "retryConnectionButton": "Riprova connessione",
+  "retryConnectionHint": "Tenta di riconnettersi al sensore di frequenza cardiaca",
+  "goBackButton": "Indietro",
+  "goBackHint": "Torna alla schermata precedente",
+  "workoutHistoryAppBarTitle": "Cronologia allenamenti",
+  "deleteSessionLabel": "Elimina",
+  "deleteSessionHint": "Elimina questa sessione di allenamento",
+  "unableToLoadHistory": "Impossibile caricare la cronologia degli allenamenti. Riprova più tardi.",
+  "unknownSensorName": "Sensore sconosciuto",
+  "noWorkoutsTitle": "Nessun allenamento registrato",
+  "noWorkoutsDescription": "Completa una sessione di monitoraggio cardiaco per visualizzare la cronologia qui.",
+  "workoutCardLabel": "Allenamento del {date}",
+  "@workoutCardLabel": {
+    "description": "Semantic label for a workout history card.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutCardHint": "Durata {duration}, sensore {device}. Frequenza cardiaca media {avg} BPM, massima {max} BPM. Scorri a sinistra per eliminare.",
+  "@workoutCardHint": {
+    "description": "Semantics hint for a workout history card.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "device": {
+        "type": "String"
+      },
+      "avg": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "unableToDeleteSession": "Impossibile eliminare la sessione. Riprova.",
+  "avgBpmMetric": "Med. BPM",
+  "maxBpmMetric": "Max BPM",
+  "todayPrefix": "Oggi, {time}",
+  "@todayPrefix": {
+    "description": "Date prefix for workouts that occurred today.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "yesterdayPrefix": "Ieri, {time}",
+  "@yesterdayPrefix": {
+    "description": "Date prefix for workouts that occurred yesterday.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToLoadSavedSensors": "Impossibile caricare i sensori salvati: {error}",
+  "@failedToLoadSavedSensors": {
+    "description": "Error shown when saved sensors fail to load.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "routeErrorTitle": "Errore di navigazione",
+  "routeErrorNotFound": "Pagina non trovata",
+  "routeErrorInvalidLink": "Indirizzo non valido o deep link interrotto.",
+  "routeErrorBackHome": "Torna alla home",
+  "workoutDetailsTitle": "Dettagli allenamento",
+  "workoutDetailsBackHint": "Torna alla cronologia allenamenti",
+  "workoutDetailsExportHint": "Esporta dati allenamento in CSV",
+  "workoutDetailsExportFailed": "Esportazione sessione non riuscita: {error}",
+  "@workoutDetailsExportFailed": {
+    "description": "Snackbar when export fails.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutDetailsSummary": "Riepilogo",
+  "workoutDetailsHeartRateOverTime": "Frequenza cardiaca nel tempo",
+  "workoutDetailsNoData": "Nessun dato di allenamento acquisito",
+  "workoutDetailsNotCompleted": "L'allenamento non è stato completato",
+  "workoutDetailsSensorDisconnected": "Il sensore potrebbe essersi disconnesso prima dell'acquisizione dei dati",
+  "workoutDetailsNoValidData": "Nessun dato valido di frequenza cardiaca registrato",
+  "workoutDetailsAvgBpm": "BPM medio",
+  "workoutDetailsPeakBpm": "BPM massimo",
+  "workoutDetailsDuration": "Durata",
+  "workoutDetailsSamples": "Campioni",
+  "inProgress": "In corso",
+  "unknownSensor": "Sensore sconosciuto",
+  "bodySensorLocationOther": "Altro",
+  "bodySensorLocationChest": "Torace",
+  "bodySensorLocationWrist": "Polso",
+  "bodySensorLocationFinger": "Dito",
+  "bodySensorLocationHand": "Mano",
+  "bodySensorLocationEarLobe": "Lobo dell'orecchio",
+  "bodySensorLocationFoot": "Piede",
+  "bodySensorLocationUnknown": "Sconosciuto"
+}
