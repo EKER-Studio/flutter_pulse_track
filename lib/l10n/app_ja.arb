@@ -1,0 +1,202 @@
+{
+  "@@locale": "ja",
+  "homeTitle": "PulseTrack",
+  "savedSensorsSectionTitle": "保存されたセンサー（直接接続）",
+  "unknownSensorLabel": "不明なセンサー",
+  "savedSensorFallbackName": "保存されたセンサー",
+  "scanForNewSensorButton": "新しいセンサーをスキャン",
+  "workoutHistoryTitle": "ワークアウト履歴",
+  "workoutHistoryDescription": "過去の心拍セッションと分析を表示します。",
+  "scanner_title": "スキャナー",
+  "bluetooth_searching_label": "Bluetoothスキャン中",
+  "bluetooth_disabled_label": "Bluetoothが無効",
+  "device_unknown_label": "不明なデバイス",
+  "toggle_filter_tooltip": "名前と近接フィルターを切り替え",
+  "ready_to_scan": "スキャン準備完了",
+  "start_scan_description": "「スキャン」をタップしてセンサーの検索を開始します。",
+  "scan_button_label": "スキャン",
+  "bluetooth_required": "Bluetoothが必要です",
+  "bluetooth_off_description": "Bluetoothアダプターがオフになっているか、権限がありません。Bluetoothを有効にして権限を許可してください。",
+  "empty_state_title": "デバイスが表示されませんか？",
+  "empty_state_bullets": "• センサーの電源が入っていることを確認してください。\n• センサーのバッテリーを確認してください。\n• デバイスに近づいてください。\n• スキャンフィルターを無効にしてみてください。",
+  "retry_scan_label": "スキャンを再試行",
+  "scan_failed_title": "スキャンに失敗しました",
+  "retry_button_label": "再試行",
+  "searching_sensors": "アクティブなセンサーを検索中...",
+  "unknown_device": "不明なデバイス",
+  "scan_button_semantic_label": "心拍センサーのスキャンを開始",
+  "retry_scan_semantic_label": "センサーのスキャンを再試行",
+  "connectToSensor": "{sensorName} に接続",
+  "@connectToSensor": {
+    "description": "Semantic label for saved sensor chips on the home screen.",
+    "placeholders": {
+      "sensorName": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceListTileHint": "MACアドレス {id}、信号強度 {rssi} dBm。ダブルタップして接続。",
+  "@deviceListTileHint": {
+    "description": "Semantics hint for each device row in the scanner list.",
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "rssi": {
+        "type": "int"
+      }
+    }
+  },
+  "disconnectButton": "切断",
+  "disconnectHint": "{deviceName} から切断します",
+  "@disconnectHint": {
+    "description": "Semantics hint for the disconnect button.",
+    "placeholders": {
+      "deviceName": {
+        "type": "String"
+      }
+    }
+  },
+  "disconnectedStatus": "切断済み",
+  "returnToScannerButton": "スキャナーに戻る",
+  "returnToScannerHint": "デバイススキャナー画面に戻ります",
+  "connectingMessage": "デバイスに接続中...\n接続ハンドシェイクを実行しています",
+  "discoveringServicesMessage": "サービスを検出中... お待ちください...",
+  "heartRateLabel": "心拍数",
+  "heartRateLiveLabel": "心拍数：毎分 {bpm} 拍",
+  "@heartRateLiveLabel": {
+    "description": "Accessibility live region label for the current heart rate.",
+    "placeholders": {
+      "bpm": {
+        "type": "int"
+      }
+    }
+  },
+  "bpmUnit": "BPM",
+  "bodySensorLocationTitle": "センサー装着部位",
+  "bodySensorLocationLabel": "センサー装着部位：{location}",
+  "@bodySensorLocationLabel": {
+    "description": "Accessibility label for the sensor location card.",
+    "placeholders": {
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "sensorBatteryTitle": "センサーのバッテリー",
+  "sensorBatteryLabel": "センサーのバッテリー残量：{level}",
+  "@sensorBatteryLabel": {
+    "description": "Accessibility label for the battery card.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "batteryNotAvailable": "なし",
+  "connectionFailedTitle": "接続に失敗しました",
+  "retryConnectionButton": "接続を再試行",
+  "retryConnectionHint": "心拍センサーへの再接続を試みます",
+  "goBackButton": "戻る",
+  "goBackHint": "前の画面に戻ります",
+  "workoutHistoryAppBarTitle": "ワークアウト履歴",
+  "deleteSessionLabel": "削除",
+  "deleteSessionHint": "このワークアウトセッションを削除します",
+  "unableToLoadHistory": "ワークアウト履歴を読み込めませんでした。後でもう一度お試しください。",
+  "unknownSensorName": "不明なセンサー",
+  "noWorkoutsTitle": "ワークアウトがまだ記録されていません",
+  "noWorkoutsDescription": "心拍数モニタリングセッションを完了すると、履歴がここに表示されます。",
+  "workoutCardLabel": "{date} のワークアウト",
+  "@workoutCardLabel": {
+    "description": "Semantic label for a workout history card.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutCardHint": "時間 {duration}、センサー {device}。平均心拍数 {avg} BPM、最大心拍数 {max} BPM。左にスワイプして削除。",
+  "@workoutCardHint": {
+    "description": "Semantics hint for a workout history card.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "device": {
+        "type": "String"
+      },
+      "avg": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "unableToDeleteSession": "セッションを削除できませんでした。もう一度お試しください。",
+  "avgBpmMetric": "平均 BPM",
+  "maxBpmMetric": "最大 BPM",
+  "todayPrefix": "今日、{time}",
+  "@todayPrefix": {
+    "description": "Date prefix for workouts that occurred today.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "yesterdayPrefix": "昨日、{time}",
+  "@yesterdayPrefix": {
+    "description": "Date prefix for workouts that occurred yesterday.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToLoadSavedSensors": "保存されたセンサーの読み込みに失敗しました: {error}",
+  "@failedToLoadSavedSensors": {
+    "description": "Error shown when saved sensors fail to load.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "routeErrorTitle": "ナビゲーションエラー",
+  "routeErrorNotFound": "ページが見つかりません",
+  "routeErrorInvalidLink": "無効なアドレスまたは壊れたディープリンクです。",
+  "routeErrorBackHome": "ホームに戻る",
+  "workoutDetailsTitle": "ワークアウト詳細",
+  "workoutDetailsBackHint": "ワークアウト履歴に戻る",
+  "workoutDetailsExportHint": "ワークアウトデータをCSV形式でエクスポート",
+  "workoutDetailsExportFailed": "セッションのエクスポートに失敗しました: {error}",
+  "@workoutDetailsExportFailed": {
+    "description": "Snackbar when export fails.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutDetailsSummary": "概要",
+  "workoutDetailsHeartRateOverTime": "心拍数の推移",
+  "workoutDetailsNoData": "ワークアウトデータが記録されていません",
+  "workoutDetailsNotCompleted": "ワークアウトは完了しませんでした",
+  "workoutDetailsSensorDisconnected": "データ記録前にセンサーが切断された可能性があります",
+  "workoutDetailsNoValidData": "有効な心拍数データが記録されませんでした",
+  "workoutDetailsAvgBpm": "平均心拍数",
+  "workoutDetailsPeakBpm": "最大心拍数",
+  "workoutDetailsDuration": "所要時間",
+  "workoutDetailsSamples": "測定数",
+  "inProgress": "進行中",
+  "unknownSensor": "不明なセンサー",
+  "bodySensorLocationOther": "その他",
+  "bodySensorLocationChest": "胸部",
+  "bodySensorLocationWrist": "手首",
+  "bodySensorLocationFinger": "指",
+  "bodySensorLocationHand": "手",
+  "bodySensorLocationEarLobe": "耳たぶ",
+  "bodySensorLocationFoot": "足",
+  "bodySensorLocationUnknown": "不明"
+}
