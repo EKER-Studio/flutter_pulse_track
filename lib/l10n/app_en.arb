@@ -435,5 +435,77 @@
    "bodySensorLocationUnknown": "Unknown",
    "@bodySensorLocationUnknown": {
       "description": "Body sensor location unknown."
+   },
+   "chartNoData": "No data",
+   "@chartNoData": {
+      "description": "Placeholder text shown when a chart has no recorded data."
+   },
+   "workoutDetailsHeaderSemantics": "Workout date: {date}, duration: {duration}, sensor: {sensor}",
+   "@workoutDetailsHeaderSemantics": {
+      "description": "Accessibility label for workout details header summary card.",
+      "placeholders": {
+         "date": {
+            "type": "String"
+         },
+         "duration": {
+            "type": "String"
+         },
+         "sensor": {
+            "type": "String"
+         }
+      }
+   },
+   "workoutDetailsChartNoDataSemantics": "Heart rate chart: No workout data captured",
+   "@workoutDetailsChartNoDataSemantics": {
+      "description": "Accessibility label when heart rate chart contains no valid data."
+   },
+   "workoutDetailsChartWaveformSemantics": "Heart rate waveform chart showing {count} samples over time. Average heart rate {avgBpm} BPM, Peak heart rate {maxBpm} BPM.",
+   "@workoutDetailsChartWaveformSemantics": {
+      "description": "Accessibility label describing heart rate chart waveform with metrics.",
+      "placeholders": {
+         "count": {
+            "type": "int"
+         },
+         "avgBpm": {
+            "type": "int"
+         },
+         "maxBpm": {
+            "type": "int"
+         }
+      }
+   },
+   "workoutDetailsZonesLegendSemantics": "Heart rate training zones legend: {legend}",
+   "@workoutDetailsZonesLegendSemantics": {
+      "description": "Accessibility label for heart rate training zones legend.",
+      "placeholders": {
+         "legend": {
+            "type": "String"
+         }
+      }
+   },
+   "percentRange": "{min} to {max} percent",
+   "@percentRange": {
+      "description": "Spoken accessibility text for a percentage range.",
+      "placeholders": {
+         "min": {
+            "type": "int"
+         },
+         "max": {
+            "type": "int"
+         }
+      }
+   },
+   "hrMonitorRrIntervalsSemantics": "R-R intervals: {intervals}",
+   "@hrMonitorRrIntervalsSemantics": {
+      "description": "Accessibility label for real-time R-R intervals list.",
+      "placeholders": {
+         "intervals": {
+            "type": "String"
+         }
+      }
+   },
+   "millisecondsUnit": "milliseconds",
+   "@millisecondsUnit": {
+      "description": "Full word for the unit of time milliseconds for accessibility screen readers."
    }
 }

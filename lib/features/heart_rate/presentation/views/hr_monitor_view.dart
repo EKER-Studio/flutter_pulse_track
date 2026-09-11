@@ -8,6 +8,7 @@ import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
 import 'package:pulse_track/features/heart_rate/presentation/controllers/hr_monitor_notifier.dart';
+import 'package:pulse_track/features/heart_rate/presentation/utils/body_sensor_location_l10n.dart';
 
 /// Telemetry dashboard and BLE connection lifecycle view.
 ///
@@ -256,8 +257,14 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           if (metric.rrIntervals.isNotEmpty) ...[
             const SizedBox(height: 12),
             Semantics(
-              label:
-                  'R-R intervals: ${metric.rrIntervals.map((e) => '${(e * 1000).toStringAsFixed(0)} milliseconds').join(', ')}',
+              label: l10n.hrMonitorRrIntervalsSemantics(
+                metric.rrIntervals
+                    .map(
+                      (e) =>
+                          '${(e * 1000).toStringAsFixed(0)} ${l10n.millisecondsUnit}',
+                    )
+                    .join(', '),
+              ),
               child: Text(
                 'R-R: ${metric.rrIntervals.map((e) => '${(e * 1000).toStringAsFixed(0)}ms').join(', ')}',
                 style: const TextStyle(
@@ -272,7 +279,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
           const SizedBox(height: 48),
           Semantics(
             label: l10n.bodySensorLocationLabel(
-              metric.sensorLocation.displayName,
+              metric.sensorLocation.localizedName(l10n),
             ),
             child: Container(
               padding: const EdgeInsets.all(16),
@@ -300,7 +307,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                         ),
                       ),
                       Text(
-                        metric.sensorLocation.displayName,
+                        metric.sensorLocation.localizedName(l10n),
                         style: const TextStyle(
                           color: AppColors.textPrimary,
                           fontSize: 16,

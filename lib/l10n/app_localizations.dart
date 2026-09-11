@@ -659,6 +659,62 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unknown'**
   String get bodySensorLocationUnknown;
+
+  /// Placeholder text shown when a chart has no recorded data.
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get chartNoData;
+
+  /// Accessibility label for workout details header summary card.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout date: {date}, duration: {duration}, sensor: {sensor}'**
+  String workoutDetailsHeaderSemantics(
+    String date,
+    String duration,
+    String sensor,
+  );
+
+  /// Accessibility label when heart rate chart contains no valid data.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart rate chart: No workout data captured'**
+  String get workoutDetailsChartNoDataSemantics;
+
+  /// Accessibility label describing heart rate chart waveform with metrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart rate waveform chart showing {count} samples over time. Average heart rate {avgBpm} BPM, Peak heart rate {maxBpm} BPM.'**
+  String workoutDetailsChartWaveformSemantics(
+    int count,
+    int avgBpm,
+    int maxBpm,
+  );
+
+  /// Accessibility label for heart rate training zones legend.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart rate training zones legend: {legend}'**
+  String workoutDetailsZonesLegendSemantics(String legend);
+
+  /// Spoken accessibility text for a percentage range.
+  ///
+  /// In en, this message translates to:
+  /// **'{min} to {max} percent'**
+  String percentRange(int min, int max);
+
+  /// Accessibility label for real-time R-R intervals list.
+  ///
+  /// In en, this message translates to:
+  /// **'R-R intervals: {intervals}'**
+  String hrMonitorRrIntervalsSemantics(String intervals);
+
+  /// Full word for the unit of time milliseconds for accessibility screen readers.
+  ///
+  /// In en, this message translates to:
+  /// **'milliseconds'**
+  String get millisecondsUnit;
 }
 
 class _AppLocalizationsDelegate

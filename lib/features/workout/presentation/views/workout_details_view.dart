@@ -107,8 +107,13 @@ class WorkoutDetailsView extends ConsumerWidget {
                 children: [
                   // Header card
                   Semantics(
-                    label:
-                        'Workout date: ${_formatDate(session.startTime)}, duration: $duration, sensor: ${session.deviceName.isEmpty ? l10n.unknownSensor : session.deviceName}',
+                    label: l10n.workoutDetailsHeaderSemantics(
+                      _formatDate(session.startTime),
+                      duration,
+                      session.deviceName.isEmpty
+                          ? l10n.unknownSensor
+                          : session.deviceName,
+                    ),
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -247,7 +252,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                   if (session.bpmSamples.isEmpty ||
                       session.bpmSamples.any((s) => s <= 0))
                     Semantics(
-                      label: 'Heart rate chart: No workout data captured',
+                      label: l10n.workoutDetailsChartNoDataSemantics,
                       child: Container(
                         width: double.infinity,
                         height: _kChartHeight,
@@ -294,8 +299,11 @@ class WorkoutDetailsView extends ConsumerWidget {
                     )
                   else
                     Semantics(
-                      label:
-                          'Heart rate waveform chart showing ${session.bpmSamples.length} samples over time. Average heart rate ${session.avgBpm} BPM, Peak heart rate ${session.maxBpm} BPM.',
+                      label: l10n.workoutDetailsChartWaveformSemantics(
+                        session.bpmSamples.length,
+                        session.avgBpm,
+                        session.maxBpm,
+                      ),
                       child: Container(
                         width: double.infinity,
                         height: _kChartHeight,
@@ -319,6 +327,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                               samples: session.bpmSamples,
                               startTime: session.startTime,
                               endTime: session.endTime,
+                              emptyLabel: l10n.chartNoData,
                             ),
                           ),
                         ),
@@ -427,9 +436,16 @@ class _HrZoneLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final legend = kHeartRateZones
+        .map(
+          (z) =>
+              '${z.label} ${l10n.percentRange((z.minPercent * 100).toInt(), (z.maxPercent * 100).toInt())}',
+        )
+        .join(', ');
+
     return Semantics(
-      label:
-          'Heart rate training zones legend: ${kHeartRateZones.map((z) => '${z.label} ${(z.minPercent * 100).toInt()} to ${(z.maxPercent * 100).toInt()} percent').join(', ')}',
+      label: l10n.workoutDetailsZonesLegendSemantics(legend),
       child: Wrap(
         alignment: WrapAlignment.center,
         spacing: 16,
@@ -485,6 +501,7 @@ class BpmChart extends CustomPainter {
     required this.samples,
     required this.startTime,
     required this.endTime,
+    this.emptyLabel = 'No data',
   });
 
   /// Individual BPM readings ordered chronologically.
@@ -495,6 +512,9 @@ class BpmChart extends CustomPainter {
 
   /// Timestamp of the last sample, or `null` if the session is still active.
   final DateTime? endTime;
+
+  /// Localized text rendered when [samples] is empty.
+  final String emptyLabel;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -607,6 +627,7 @@ class BpmChart extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant BpmChart oldDelegate) {
+    if (oldDelegate.emptyLabel != emptyLabel) return true;
     if (oldDelegate.samples.length != samples.length) return true;
     for (int i = 0; i < samples.length; i++) {
       if (oldDelegate.samples[i] != samples[i]) return true;
@@ -619,7 +640,7 @@ class BpmChart extends CustomPainter {
     const labelStyle = TextStyle(color: AppColors.textSecondary, fontSize: 14);
 
     final tp = TextPainter(
-      text: const TextSpan(text: 'No data', style: labelStyle),
+      text: TextSpan(text: emptyLabel, style: labelStyle),
       textDirection: TextDirection.ltr,
     );
     tp.layout();

@@ -198,5 +198,13 @@
             "type": "String"
          }
       }
-   }
+   },
+   "chartNoData": "Brak danych",
+   "workoutDetailsHeaderSemantics": "Data treningu: {date}, czas trwania: {duration}, czujnik: {sensor}",
+   "workoutDetailsChartNoDataSemantics": "Wykres tętna: Brak zarejestrowanych danych",
+   "workoutDetailsChartWaveformSemantics": "Wykres przebiegu tętna pokazujący {count} próbek w czasie. Średnie tętno {avgBpm} BPM, tętno szczytowe {maxBpm} BPM.",
+   "workoutDetailsZonesLegendSemantics": "Legenda stref tętna treningowego: {legend}",
+   "percentRange": "{min} do {max} procent",
+   "hrMonitorRrIntervalsSemantics": "Odstępy R-R: {intervals}",
+   "millisecondsUnit": "milisekund"
 }

@@ -319,4 +319,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bodySensorLocationUnknown => 'Unknown';
+
+  @override
+  String get chartNoData => 'No data';
+
+  @override
+  String workoutDetailsHeaderSemantics(
+    String date,
+    String duration,
+    String sensor,
+  ) {
+    return 'Workout date: $date, duration: $duration, sensor: $sensor';
+  }
+
+  @override
+  String get workoutDetailsChartNoDataSemantics =>
+      'Heart rate chart: No workout data captured';
+
+  @override
+  String workoutDetailsChartWaveformSemantics(
+    int count,
+    int avgBpm,
+    int maxBpm,
+  ) {
+    return 'Heart rate waveform chart showing $count samples over time. Average heart rate $avgBpm BPM, Peak heart rate $maxBpm BPM.';
+  }
+
+  @override
+  String workoutDetailsZonesLegendSemantics(String legend) {
+    return 'Heart rate training zones legend: $legend';
+  }
+
+  @override
+  String percentRange(int min, int max) {
+    return '$min to $max percent';
+  }
+
+  @override
+  String hrMonitorRrIntervalsSemantics(String intervals) {
+    return 'R-R intervals: $intervals';
+  }
+
+  @override
+  String get millisecondsUnit => 'milliseconds';
 }

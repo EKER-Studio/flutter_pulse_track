@@ -1,202 +1,210 @@
 {
-  "@@locale": "nl",
-  "homeTitle": "PulseTrack",
-  "savedSensorsSectionTitle": "Opgeslagen sensoren (Direct verbinden)",
-  "unknownSensorLabel": "Onbekende sensor",
-  "savedSensorFallbackName": "Opgeslagen sensor",
-  "scanForNewSensorButton": "Zoeken naar nieuwe sensor",
-  "workoutHistoryTitle": "Trainingsgeschiedenis",
-  "workoutHistoryDescription": "Bekijk eerdere hartslagsessies en statistieken.",
-  "scanner_title": "Scanner",
-  "bluetooth_searching_label": "Bluetooth scannen",
-  "bluetooth_disabled_label": "Bluetooth uitgeschakeld",
-  "device_unknown_label": "Onbekend apparaat",
-  "toggle_filter_tooltip": "Namen- en nabijheidsfilter in-/uitschakelen",
-  "ready_to_scan": "Klaar om te scannen",
-  "start_scan_description": "Tik op Scannen om te zoeken naar sensoren.",
-  "scan_button_label": "Scannen",
-  "bluetooth_required": "Bluetooth vereist",
-  "bluetooth_off_description": "Bluetooth is uitgeschakeld of niet geautoriseerd. Schakel Bluetooth in en verleen machtigingen om naar sensoren te scannen.",
-  "empty_state_title": "ZIE JE JE APPARAAT NIET?",
-  "empty_state_bullets": "• Controleer of de sensor is ingeschakeld.\n• Controleer de batterij van de sensor.\n• Ga dichter bij het apparaat staan.\n• Probeer de scanfilters uit te schakelen.",
-  "retry_scan_label": "Opnieuw scannen",
-  "scan_failed_title": "Scannen mislukt",
-  "retry_button_label": "Opnieuw proberen",
-  "searching_sensors": "Zoeken naar actieve sensoren...",
-  "unknown_device": "Onbekend apparaat",
-  "scan_button_semantic_label": "Starten met scannen naar hartslagsensoren",
-  "retry_scan_semantic_label": "Opnieuw scannen naar sensoren",
-  "connectToSensor": "Verbinden met {sensorName}",
-  "@connectToSensor": {
-    "description": "Semantic label for saved sensor chips on the home screen.",
-    "placeholders": {
-      "sensorName": {
-        "type": "String"
+   "@@locale": "nl",
+   "homeTitle": "PulseTrack",
+   "savedSensorsSectionTitle": "Opgeslagen sensoren (Direct verbinden)",
+   "unknownSensorLabel": "Onbekende sensor",
+   "savedSensorFallbackName": "Opgeslagen sensor",
+   "scanForNewSensorButton": "Zoeken naar nieuwe sensor",
+   "workoutHistoryTitle": "Trainingsgeschiedenis",
+   "workoutHistoryDescription": "Bekijk eerdere hartslagsessies en statistieken.",
+   "scanner_title": "Scanner",
+   "bluetooth_searching_label": "Bluetooth scannen",
+   "bluetooth_disabled_label": "Bluetooth uitgeschakeld",
+   "device_unknown_label": "Onbekend apparaat",
+   "toggle_filter_tooltip": "Namen- en nabijheidsfilter in-/uitschakelen",
+   "ready_to_scan": "Klaar om te scannen",
+   "start_scan_description": "Tik op Scannen om te zoeken naar sensoren.",
+   "scan_button_label": "Scannen",
+   "bluetooth_required": "Bluetooth vereist",
+   "bluetooth_off_description": "Bluetooth is uitgeschakeld of niet geautoriseerd. Schakel Bluetooth in en verleen machtigingen om naar sensoren te scannen.",
+   "empty_state_title": "ZIE JE JE APPARAAT NIET?",
+   "empty_state_bullets": "• Controleer of de sensor is ingeschakeld.\n• Controleer de batterij van de sensor.\n• Ga dichter bij het apparaat staan.\n• Probeer de scanfilters uit te schakelen.",
+   "retry_scan_label": "Opnieuw scannen",
+   "scan_failed_title": "Scannen mislukt",
+   "retry_button_label": "Opnieuw proberen",
+   "searching_sensors": "Zoeken naar actieve sensoren...",
+   "unknown_device": "Onbekend apparaat",
+   "scan_button_semantic_label": "Starten met scannen naar hartslagsensoren",
+   "retry_scan_semantic_label": "Opnieuw scannen naar sensoren",
+   "connectToSensor": "Verbinden met {sensorName}",
+   "@connectToSensor": {
+      "description": "Semantic label for saved sensor chips on the home screen.",
+      "placeholders": {
+         "sensorName": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "deviceListTileHint": "MAC-adres {id}, signaalsterkte {rssi} dBm. Dubbeltik om te verbinden.",
-  "@deviceListTileHint": {
-    "description": "Semantics hint for each device row in the scanner list.",
-    "placeholders": {
-      "id": {
-        "type": "String"
-      },
-      "rssi": {
-        "type": "int"
+   },
+   "deviceListTileHint": "MAC-adres {id}, signaalsterkte {rssi} dBm. Dubbeltik om te verbinden.",
+   "@deviceListTileHint": {
+      "description": "Semantics hint for each device row in the scanner list.",
+      "placeholders": {
+         "id": {
+            "type": "String"
+         },
+         "rssi": {
+            "type": "int"
+         }
       }
-    }
-  },
-  "disconnectButton": "Verbinding verbreken",
-  "disconnectHint": "Verbinding met {deviceName} verbreken",
-  "@disconnectHint": {
-    "description": "Semantics hint for the disconnect button.",
-    "placeholders": {
-      "deviceName": {
-        "type": "String"
+   },
+   "disconnectButton": "Verbinding verbreken",
+   "disconnectHint": "Verbinding met {deviceName} verbreken",
+   "@disconnectHint": {
+      "description": "Semantics hint for the disconnect button.",
+      "placeholders": {
+         "deviceName": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "disconnectedStatus": "Verbinding verbroken",
-  "returnToScannerButton": "Terug naar scanner",
-  "returnToScannerHint": "Keert terug naar het apparaatscannerscherm",
-  "connectingMessage": "Verbinden met apparaat...\nVerbinding tot stand brengen",
-  "discoveringServicesMessage": "Services zoeken... Even geduld a.u.b...",
-  "heartRateLabel": "Hartslag",
-  "heartRateLiveLabel": "Hartslag: {bpm} slagen per minuut",
-  "@heartRateLiveLabel": {
-    "description": "Accessibility live region label for the current heart rate.",
-    "placeholders": {
-      "bpm": {
-        "type": "int"
+   },
+   "disconnectedStatus": "Verbinding verbroken",
+   "returnToScannerButton": "Terug naar scanner",
+   "returnToScannerHint": "Keert terug naar het apparaatscannerscherm",
+   "connectingMessage": "Verbinden met apparaat...\nVerbinding tot stand brengen",
+   "discoveringServicesMessage": "Services zoeken... Even geduld a.u.b...",
+   "heartRateLabel": "Hartslag",
+   "heartRateLiveLabel": "Hartslag: {bpm} slagen per minuut",
+   "@heartRateLiveLabel": {
+      "description": "Accessibility live region label for the current heart rate.",
+      "placeholders": {
+         "bpm": {
+            "type": "int"
+         }
       }
-    }
-  },
-  "bpmUnit": "BPM",
-  "bodySensorLocationTitle": "Sensorpositie",
-  "bodySensorLocationLabel": "Sensorpositie: {location}",
-  "@bodySensorLocationLabel": {
-    "description": "Accessibility label for the sensor location card.",
-    "placeholders": {
-      "location": {
-        "type": "String"
+   },
+   "bpmUnit": "BPM",
+   "bodySensorLocationTitle": "Sensorpositie",
+   "bodySensorLocationLabel": "Sensorpositie: {location}",
+   "@bodySensorLocationLabel": {
+      "description": "Accessibility label for the sensor location card.",
+      "placeholders": {
+         "location": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "sensorBatteryTitle": "Sensorbatterij",
-  "sensorBatteryLabel": "Sensorbatterijniveau: {level}",
-  "@sensorBatteryLabel": {
-    "description": "Accessibility label for the battery card.",
-    "placeholders": {
-      "level": {
-        "type": "String"
+   },
+   "sensorBatteryTitle": "Sensorbatterij",
+   "sensorBatteryLabel": "Sensorbatterijniveau: {level}",
+   "@sensorBatteryLabel": {
+      "description": "Accessibility label for the battery card.",
+      "placeholders": {
+         "level": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "batteryNotAvailable": "N.v.t.",
-  "connectionFailedTitle": "Verbinding mislukt",
-  "retryConnectionButton": "Verbinding opnieuw proberen",
-  "retryConnectionHint": "Probeert opnieuw verbinding te maken met de hartslagsensor",
-  "goBackButton": "Terug",
-  "goBackHint": "Keert terug naar het vorige scherm",
-  "workoutHistoryAppBarTitle": "Trainingsgeschiedenis",
-  "deleteSessionLabel": "Verwijderen",
-  "deleteSessionHint": "Verwijdert deze trainingssessie",
-  "unableToLoadHistory": "Kan trainingsgeschiedenis niet laden. Probeer het later opnieuw.",
-  "unknownSensorName": "Onbekende sensor",
-  "noWorkoutsTitle": "Nog geen trainingen vastgelegd",
-  "noWorkoutsDescription": "Voltooi een hartslagmeting om je geschiedenis hier te bekijken.",
-  "workoutCardLabel": "Training op {date}",
-  "@workoutCardLabel": {
-    "description": "Semantic label for a workout history card.",
-    "placeholders": {
-      "date": {
-        "type": "String"
+   },
+   "batteryNotAvailable": "N.v.t.",
+   "connectionFailedTitle": "Verbinding mislukt",
+   "retryConnectionButton": "Verbinding opnieuw proberen",
+   "retryConnectionHint": "Probeert opnieuw verbinding te maken met de hartslagsensor",
+   "goBackButton": "Terug",
+   "goBackHint": "Keert terug naar het vorige scherm",
+   "workoutHistoryAppBarTitle": "Trainingsgeschiedenis",
+   "deleteSessionLabel": "Verwijderen",
+   "deleteSessionHint": "Verwijdert deze trainingssessie",
+   "unableToLoadHistory": "Kan trainingsgeschiedenis niet laden. Probeer het later opnieuw.",
+   "unknownSensorName": "Onbekende sensor",
+   "noWorkoutsTitle": "Nog geen trainingen vastgelegd",
+   "noWorkoutsDescription": "Voltooi een hartslagmeting om je geschiedenis hier te bekijken.",
+   "workoutCardLabel": "Training op {date}",
+   "@workoutCardLabel": {
+      "description": "Semantic label for a workout history card.",
+      "placeholders": {
+         "date": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "workoutCardHint": "Duur {duration}, sensor {device}. Gemiddelde hartslag {avg} BPM, maximale hartslag {max} BPM. Veeg naar links om te verwijderen.",
-  "@workoutCardHint": {
-    "description": "Semantics hint for a workout history card.",
-    "placeholders": {
-      "duration": {
-        "type": "String"
-      },
-      "device": {
-        "type": "String"
-      },
-      "avg": {
-        "type": "int"
-      },
-      "max": {
-        "type": "int"
+   },
+   "workoutCardHint": "Duur {duration}, sensor {device}. Gemiddelde hartslag {avg} BPM, maximale hartslag {max} BPM. Veeg naar links om te verwijderen.",
+   "@workoutCardHint": {
+      "description": "Semantics hint for a workout history card.",
+      "placeholders": {
+         "duration": {
+            "type": "String"
+         },
+         "device": {
+            "type": "String"
+         },
+         "avg": {
+            "type": "int"
+         },
+         "max": {
+            "type": "int"
+         }
       }
-    }
-  },
-  "unableToDeleteSession": "Kan sessie niet verwijderen. Probeer het opnieuw.",
-  "avgBpmMetric": "Gem. BPM",
-  "maxBpmMetric": "Max BPM",
-  "todayPrefix": "Vandaag, {time}",
-  "@todayPrefix": {
-    "description": "Date prefix for workouts that occurred today.",
-    "placeholders": {
-      "time": {
-        "type": "String"
+   },
+   "unableToDeleteSession": "Kan sessie niet verwijderen. Probeer het opnieuw.",
+   "avgBpmMetric": "Gem. BPM",
+   "maxBpmMetric": "Max BPM",
+   "todayPrefix": "Vandaag, {time}",
+   "@todayPrefix": {
+      "description": "Date prefix for workouts that occurred today.",
+      "placeholders": {
+         "time": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "yesterdayPrefix": "Gisteren, {time}",
-  "@yesterdayPrefix": {
-    "description": "Date prefix for workouts that occurred yesterday.",
-    "placeholders": {
-      "time": {
-        "type": "String"
+   },
+   "yesterdayPrefix": "Gisteren, {time}",
+   "@yesterdayPrefix": {
+      "description": "Date prefix for workouts that occurred yesterday.",
+      "placeholders": {
+         "time": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "failedToLoadSavedSensors": "Kan opgeslagen sensoren niet laden: {error}",
-  "@failedToLoadSavedSensors": {
-    "description": "Error shown when saved sensors fail to load.",
-    "placeholders": {
-      "error": {
-        "type": "String"
+   },
+   "failedToLoadSavedSensors": "Kan opgeslagen sensoren niet laden: {error}",
+   "@failedToLoadSavedSensors": {
+      "description": "Error shown when saved sensors fail to load.",
+      "placeholders": {
+         "error": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "routeErrorTitle": "Navigatiefout",
-  "routeErrorNotFound": "Pagina niet gevonden",
-  "routeErrorInvalidLink": "Ongeldig adres of verbroken deep link.",
-  "routeErrorBackHome": "Terug naar startpagina",
-  "workoutDetailsTitle": "Trainingsdetails",
-  "workoutDetailsBackHint": "Terug naar trainingsgeschiedenis",
-  "workoutDetailsExportHint": "Trainingsgegevens exporteren naar CSV",
-  "workoutDetailsExportFailed": "Exporteren van sessie mislukt: {error}",
-  "@workoutDetailsExportFailed": {
-    "description": "Snackbar when export fails.",
-    "placeholders": {
-      "error": {
-        "type": "String"
+   },
+   "routeErrorTitle": "Navigatiefout",
+   "routeErrorNotFound": "Pagina niet gevonden",
+   "routeErrorInvalidLink": "Ongeldig adres of verbroken deep link.",
+   "routeErrorBackHome": "Terug naar startpagina",
+   "workoutDetailsTitle": "Trainingsdetails",
+   "workoutDetailsBackHint": "Terug naar trainingsgeschiedenis",
+   "workoutDetailsExportHint": "Trainingsgegevens exporteren naar CSV",
+   "workoutDetailsExportFailed": "Exporteren van sessie mislukt: {error}",
+   "@workoutDetailsExportFailed": {
+      "description": "Snackbar when export fails.",
+      "placeholders": {
+         "error": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "workoutDetailsSummary": "Samenvatting",
-  "workoutDetailsHeartRateOverTime": "Hartslagverloop",
-  "workoutDetailsNoData": "Geen trainingsgegevens vastgelegd",
-  "workoutDetailsNotCompleted": "De training is niet voltooid",
-  "workoutDetailsSensorDisconnected": "De sensor is mogelijk losgekoppeld voordat gegevens werden opgeslagen",
-  "workoutDetailsNoValidData": "Er zijn geen geldige hartslaggegevens vastgelegd",
-  "workoutDetailsAvgBpm": "Gemiddelde BPM",
-  "workoutDetailsPeakBpm": "Maximale BPM",
-  "workoutDetailsDuration": "Duur",
-  "workoutDetailsSamples": "Metingen",
-  "inProgress": "Bezig",
-  "unknownSensor": "Onbekende sensor",
-  "bodySensorLocationOther": "Overig",
-  "bodySensorLocationChest": "Borst",
-  "bodySensorLocationWrist": "Pols",
-  "bodySensorLocationFinger": "Vinger",
-  "bodySensorLocationHand": "Hand",
-  "bodySensorLocationEarLobe": "Oorlel",
-  "bodySensorLocationFoot": "Voet",
-  "bodySensorLocationUnknown": "Onbekend"
+   },
+   "workoutDetailsSummary": "Samenvatting",
+   "workoutDetailsHeartRateOverTime": "Hartslagverloop",
+   "workoutDetailsNoData": "Geen trainingsgegevens vastgelegd",
+   "workoutDetailsNotCompleted": "De training is niet voltooid",
+   "workoutDetailsSensorDisconnected": "De sensor is mogelijk losgekoppeld voordat gegevens werden opgeslagen",
+   "workoutDetailsNoValidData": "Er zijn geen geldige hartslaggegevens vastgelegd",
+   "workoutDetailsAvgBpm": "Gemiddelde BPM",
+   "workoutDetailsPeakBpm": "Maximale BPM",
+   "workoutDetailsDuration": "Duur",
+   "workoutDetailsSamples": "Metingen",
+   "inProgress": "Bezig",
+   "unknownSensor": "Onbekende sensor",
+   "bodySensorLocationOther": "Overig",
+   "bodySensorLocationChest": "Borst",
+   "bodySensorLocationWrist": "Pols",
+   "bodySensorLocationFinger": "Vinger",
+   "bodySensorLocationHand": "Hand",
+   "bodySensorLocationEarLobe": "Oorlel",
+   "bodySensorLocationFoot": "Voet",
+   "bodySensorLocationUnknown": "Onbekend",
+   "chartNoData": "Geen gegevens",
+   "workoutDetailsHeaderSemantics": "Trainingsdatum: {date}, duur: {duration}, sensor: {sensor}",
+   "workoutDetailsChartNoDataSemantics": "Hartslaggrafiek: Geen trainingsgegevens vastgelegd",
+   "workoutDetailsChartWaveformSemantics": "Hartslaggolfvormgrafiek met {count} metingen in de loop van de tijd. Gemiddelde hartslag {avgBpm} BPM, piekhartslag {maxBpm} BPM.",
+   "workoutDetailsZonesLegendSemantics": "Legenda hartslagtrainingszones: {legend}",
+   "percentRange": "{min} tot {max} procent",
+   "hrMonitorRrIntervalsSemantics": "R-R-intervallen: {intervals}",
+   "millisecondsUnit": "milliseconden"
 }

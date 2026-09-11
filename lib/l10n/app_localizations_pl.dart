@@ -322,4 +322,47 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get bodySensorLocationUnknown => 'Nieznane';
+
+  @override
+  String get chartNoData => 'Brak danych';
+
+  @override
+  String workoutDetailsHeaderSemantics(
+    String date,
+    String duration,
+    String sensor,
+  ) {
+    return 'Data treningu: $date, czas trwania: $duration, czujnik: $sensor';
+  }
+
+  @override
+  String get workoutDetailsChartNoDataSemantics =>
+      'Wykres tętna: Brak zarejestrowanych danych';
+
+  @override
+  String workoutDetailsChartWaveformSemantics(
+    int count,
+    int avgBpm,
+    int maxBpm,
+  ) {
+    return 'Wykres przebiegu tętna pokazujący $count próbek w czasie. Średnie tętno $avgBpm BPM, tętno szczytowe $maxBpm BPM.';
+  }
+
+  @override
+  String workoutDetailsZonesLegendSemantics(String legend) {
+    return 'Legenda stref tętna treningowego: $legend';
+  }
+
+  @override
+  String percentRange(int min, int max) {
+    return '$min do $max procent';
+  }
+
+  @override
+  String hrMonitorRrIntervalsSemantics(String intervals) {
+    return 'Odstępy R-R: $intervals';
+  }
+
+  @override
+  String get millisecondsUnit => 'milisekund';
 }
