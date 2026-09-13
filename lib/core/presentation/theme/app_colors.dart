@@ -5,77 +5,77 @@ abstract final class AppColors {
   AppColors._();
 
   // Backgrounds
-  /// Scaffold background color.
-  static const Color scaffoldBackground = Color(0xFF121212);
+  /// Scaffold background color (dark surface).
+  static const Color scaffoldBackground = Color(0xFF111318);
 
-  /// Surface card background color.
-  static const Color surfaceBackground = Color(0xFF1E1E1E);
+  /// Surface card background color (surfaceContainerLow).
+  static const Color surfaceBackground = Color(0xFF191C20);
 
-  /// Badge and chip background color.
-  static const Color badgeBackground = Color(0xFF2A2A2A);
+  /// Badge and chip background color (surfaceContainerHigh).
+  static const Color badgeBackground = Color(0xFF282A2F);
 
-  /// Darker background variant for contrast.
-  static const Color darkerBackground = Color(0xFF0D0D0D);
+  /// Darker background variant for contrast (surfaceContainerLowest).
+  static const Color darkerBackground = Color(0xFF0C0E13);
 
   // Accents
-  /// Primary accent blue.
-  static const Color accentBlue = Colors.blueAccent;
+  /// Primary accent blue (Material 3 Dark Primary).
+  static const Color accentBlue = Color(0xFFADC6FF);
 
-  /// Primary accent red.
-  static const Color accentRed = Colors.redAccent;
+  /// Primary accent red (Material 3 Dark Error).
+  static const Color accentRed = Color(0xFFFFB4AB);
 
-  /// Primary accent green.
-  static const Color accentGreen = Colors.greenAccent;
+  /// Primary accent green (Feedback Success Dark).
+  static const Color accentGreen = Color(0xFF7CE38B);
 
-  /// Primary accent orange.
-  static const Color accentOrange = Colors.orangeAccent;
+  /// Primary accent orange (Feedback Warning Dark).
+  static const Color accentOrange = Color(0xFFFFD56B);
 
   // Text
-  /// Primary text color.
-  static const Color textPrimary = Colors.white;
+  /// Primary text color (onSurface).
+  static const Color textPrimary = Color(0xFFE2E2E9);
 
-  /// Secondary text color.
-  static const Color textSecondary = Colors.grey;
+  /// Secondary text color (onSurfaceVariant).
+  static const Color textSecondary = Color(0xFFC4C6D0);
 
-  /// Tertiary muted text color.
-  static const Color textTertiary = Color(0xFF757575);
+  /// Tertiary muted text color (outline).
+  static const Color textTertiary = Color(0xFF8E9099);
 
-  /// Muted text color for disabled states.
-  static const Color textMuted = Color(0xFFBDBDBD);
+  /// Muted text color for disabled states (outline).
+  static const Color textMuted = Color(0xFF8E9099);
 
   // Feedback
-  /// Error feedback red.
-  static const Color errorRed = Colors.red;
+  /// Error feedback red (error).
+  static const Color errorRed = Color(0xFFFFB4AB);
 
-  /// Success feedback green.
-  static const Color successGreen = Colors.green;
+  /// Success feedback green (feedback success).
+  static const Color successGreen = Color(0xFF7CE38B);
 
   // Borders
-  /// Subtle border color.
-  static const Color borderSubtle = Colors.white10;
+  /// Subtle border color (outlineVariant with alpha).
+  static const Color borderSubtle = Color(0x33C4C6D0);
 
   // Chart
   /// Chart grid line color.
-  static const Color chartGridLine = Colors.white12;
+  static const Color chartGridLine = Color(0x29C4C6D0);
 
   /// Gradient start for chart fill.
-  static Color get chartFillStart => Colors.white.withValues(alpha: 0.05);
+  static Color get chartFillStart => accentBlue.withValues(alpha: 0.28);
 
   /// Gradient end for chart fill.
-  static Color get chartFillEnd => Colors.white.withValues(alpha: 0.0);
+  static Color get chartFillEnd => accentBlue.withValues(alpha: 0.0);
 
   // Stat icons
   /// Average BPM stat icon color.
-  static const Color statIconAvg = Color(0xFFFF6B6B);
+  static const Color statIconAvg = Color(0xFFFFB4AB);
 
   /// Peak BPM stat icon color.
-  static const Color statIconPeak = Color(0xFFFFD93D);
+  static const Color statIconPeak = Color(0xFFFFD56B);
 
   /// Duration stat icon color.
-  static const Color statIconDuration = Color(0xFF6BCB77);
+  static const Color statIconDuration = Color(0xFF7CE38B);
 
   /// Samples stat icon color.
-  static const Color statIconSamples = Color(0xFF4D96FF);
+  static const Color statIconSamples = Color(0xFFADC6FF);
 
   // HR zone palette
   /// Heart rate zone 1 color.

@@ -3,10 +3,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/navigation/app_router.dart';
-import 'core/presentation/theme/app_colors.dart';
+import 'core/presentation/theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
 
-/// Root widget that configures the MaterialApp with a dark theme and GoRouter navigation.
+/// Root widget that configures the MaterialApp with Material 3 theming and GoRouter navigation.
 class App extends ConsumerWidget {
   const App({super.key});
 
@@ -17,13 +17,8 @@ class App extends ConsumerWidget {
     return MaterialApp.router(
       title: 'PulseTrack',
       themeMode: ThemeMode.dark,
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.accentRed,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       routerConfig: router,
       localizationsDelegates: const [
         AppLocalizations.delegate,
