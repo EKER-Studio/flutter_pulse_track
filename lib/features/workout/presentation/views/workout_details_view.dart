@@ -525,8 +525,8 @@ class BpmChart extends CustomPainter {
     // Vertical padding: expands the Y-axis range so the waveform never clips
     // at the canvas edge. Clamped to [0, 20] BPM to avoid excessive whitespace.
     final padding = (bpmMax - bpmMin).toDouble().clamp(0.0, 20.0);
-    final rangeMin = (bpmMin - padding).toDouble();
-    final rangeMax = (bpmMax + padding).toDouble();
+    final rangeMin = bpmMin - padding;
+    final rangeMax = bpmMax + padding;
     final effectiveRange = rangeMax - rangeMin == 0 ? 1.0 : rangeMax - rangeMin;
 
     final chartWidth = size.width;

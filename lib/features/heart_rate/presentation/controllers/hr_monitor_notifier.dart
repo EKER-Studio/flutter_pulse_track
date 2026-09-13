@@ -200,7 +200,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       await _safeDisconnectDevice();
       await _handleConnectFailure(
         isReconnect: isReconnect,
-        failureMessage: 'Failed to connect: ${e.toString()}',
+        failureMessage: 'Failed to connect: $e',
       );
       return;
     } finally {
@@ -255,7 +255,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       await _safeDisconnectDevice();
       await _handleConnectFailure(
         isReconnect: isReconnect,
-        failureMessage: 'Service discovery failed: ${e.toString()}',
+        failureMessage: 'Service discovery failed: $e',
       );
       return;
     }
@@ -346,7 +346,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       await _safeDisconnectDevice();
       await _handleConnectFailure(
         isReconnect: isReconnect,
-        failureMessage: 'Failed to enable HR notifications: ${e.toString()}',
+        failureMessage: 'Failed to enable HR notifications: $e',
       );
       return;
     }
@@ -395,7 +395,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
               stackTrace: stack,
             );
             state = MonitorState.failure(
-              message: 'Live data stream error: ${error.toString()}',
+              message: 'Live data stream error: $error',
             );
           },
           onDone: () {
