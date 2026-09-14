@@ -14,6 +14,9 @@ import 'package:pulse_track/core/infrastructure/services/analytics_service.dart'
 import 'package:pulse_track/features/settings/presentation/screens/licenses_screen.dart';
 import 'package:pulse_track/features/settings/presentation/screens/settings_screen.dart';
 import 'package:pulse_track/features/workout/presentation/views/workout_details_view.dart';
+import 'package:pulse_track/core/presentation/screens/biometric_shield_screen.dart';
+import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
+import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
 
 part 'app_router.g.dart';
 
@@ -24,13 +27,35 @@ part 'app_router.g.dart';
 @riverpod
 GoRouter appRouter(Ref ref) {
   final analyticsObserver = ref.watch(analyticsObserverProvider);
+  UserSettings settings;
+  try {
+    settings = ref.watch(appSettingsProvider);
+  } catch (_) {
+    settings = const UserSettings();
+  }
 
   return GoRouter(
     initialLocation: '/',
     observers: [?analyticsObserver],
     errorBuilder: (BuildContext context, GoRouterState state) =>
         RouteErrorView(error: state.error),
+    redirect: (context, state) {
+      final isGoingToShield = state.matchedLocation == '/shield';
+      if (settings.isLocked) {
+        return isGoingToShield ? null : '/shield';
+      }
+      if (isGoingToShield) {
+        return '/';
+      }
+      return null;
+    },
     routes: <RouteBase>[
+      GoRoute(
+        path: '/shield',
+        name: 'shield',
+        builder: (BuildContext context, GoRouterState state) =>
+            const BiometricShieldScreen(),
+      ),
       GoRoute(
         path: '/',
         name: 'home',

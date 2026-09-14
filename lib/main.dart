@@ -6,22 +6,19 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar_community/isar.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'app.dart';
-import 'core/utils/app_logger.dart';
+import 'core/infrastructure/storage/database_module.dart';
 import 'core/infrastructure/storage/isar_provider.dart';
 import 'core/presentation/theme/app_colors.dart';
+import 'core/utils/app_logger.dart';
+import 'core/utils/crash_reporter.dart';
 import 'firebase_options.dart';
 
 import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart'
     as domain;
 
-import 'features/workout/infrastructure/models/device_profile_dto.dart';
-import 'features/workout/infrastructure/models/workout_session_dto.dart';
 import 'features/workout/infrastructure/repositories/workout_persistence_repository.dart';
-import 'features/settings/infrastructure/models/user_settings_dto.dart';
 
 /// Application entry point.
 ///
@@ -62,9 +59,11 @@ Future<void> main() async {
     if (kReleaseMode) {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
       await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+      AppCrashReporter.setFirebaseAvailable(true);
     } else {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
       await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
+      AppCrashReporter.setFirebaseAvailable(false);
     }
   } catch (e, st) {
     log.w(
@@ -75,20 +74,7 @@ Future<void> main() async {
   }
 
   try {
-    final dir = await getApplicationDocumentsDirectory();
-    // SECURITY-DECISION: Isar stores health data (BPM samples, device names) in
-    // plaintext. Encryption-at-rest via Isar `encryptionKey` is intentionally
-    // deferred — data is device-local, not backed up, and `flutter_secure_storage`
-    // key management adds migration complexity. Re-evaluate before Play Store
-    // release handling sensitive health data. See C-1.
-    // Dual-open guard prevents "Isar already opened" on hot-restart.
-    final isar =
-        Isar.getInstance() ??
-        await Isar.open([
-          DeviceProfileDtoSchema,
-          WorkoutSessionDtoSchema,
-          UserSettingsDtoSchema,
-        ], directory: dir.path);
+    final isar = await DatabaseModule.initialize();
 
     final repo = WorkoutPersistenceRepository(isar);
     await repo.sanitizeCrashedSessions();
