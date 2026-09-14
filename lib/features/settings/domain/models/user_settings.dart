@@ -14,12 +14,16 @@ class UserSettings {
   /// Whether the app is currently locked behind biometric shield.
   final bool isLocked;
 
+  /// Whether onboarding wizard has been completed.
+  final bool isOnboardingCompleted;
+
   /// Creates a [UserSettings] instance.
   const UserSettings({
     this.themeMode = AppThemeMode.system,
     this.defaultMaxHr = 190,
     this.isBiometricLockEnabled = false,
     this.isLocked = false,
+    this.isOnboardingCompleted = false,
   });
 
   /// Creates a copy of [UserSettings] with the given fields replaced.
@@ -28,6 +32,7 @@ class UserSettings {
     int? defaultMaxHr,
     bool? isBiometricLockEnabled,
     bool? isLocked,
+    bool? isOnboardingCompleted,
   }) {
     return UserSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -35,6 +40,8 @@ class UserSettings {
       isBiometricLockEnabled:
           isBiometricLockEnabled ?? this.isBiometricLockEnabled,
       isLocked: isLocked ?? this.isLocked,
+      isOnboardingCompleted:
+          isOnboardingCompleted ?? this.isOnboardingCompleted,
     );
   }
 
@@ -46,9 +53,15 @@ class UserSettings {
           themeMode == other.themeMode &&
           defaultMaxHr == other.defaultMaxHr &&
           isBiometricLockEnabled == other.isBiometricLockEnabled &&
-          isLocked == other.isLocked;
+          isLocked == other.isLocked &&
+          isOnboardingCompleted == other.isOnboardingCompleted;
 
   @override
-  int get hashCode =>
-      Object.hash(themeMode, defaultMaxHr, isBiometricLockEnabled, isLocked);
+  int get hashCode => Object.hash(
+    themeMode,
+    defaultMaxHr,
+    isBiometricLockEnabled,
+    isLocked,
+    isOnboardingCompleted,
+  );
 }

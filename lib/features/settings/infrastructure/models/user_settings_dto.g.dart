@@ -27,8 +27,13 @@ const UserSettingsDtoSchema = CollectionSchema(
       name: r'isBiometricLockEnabled',
       type: IsarType.bool,
     ),
-    r'themeMode': PropertySchema(
+    r'isOnboardingCompleted': PropertySchema(
       id: 2,
+      name: r'isOnboardingCompleted',
+      type: IsarType.bool,
+    ),
+    r'themeMode': PropertySchema(
+      id: 3,
       name: r'themeMode',
       type: IsarType.byte,
       enumMap: _UserSettingsDtothemeModeEnumValueMap,
@@ -67,7 +72,8 @@ void _userSettingsDtoSerialize(
 ) {
   writer.writeLong(offsets[0], object.defaultMaxHr);
   writer.writeBool(offsets[1], object.isBiometricLockEnabled);
-  writer.writeByte(offsets[2], object.themeMode.index);
+  writer.writeBool(offsets[2], object.isOnboardingCompleted);
+  writer.writeByte(offsets[3], object.themeMode.index);
 }
 
 UserSettingsDto _userSettingsDtoDeserialize(
@@ -80,9 +86,10 @@ UserSettingsDto _userSettingsDtoDeserialize(
   object.defaultMaxHr = reader.readLong(offsets[0]);
   object.id = id;
   object.isBiometricLockEnabled = reader.readBool(offsets[1]);
+  object.isOnboardingCompleted = reader.readBool(offsets[2]);
   object.themeMode =
       _UserSettingsDtothemeModeValueEnumMap[reader.readByteOrNull(
-        offsets[2],
+        offsets[3],
       )] ??
       AppThemeMode.system;
   return object;
@@ -100,6 +107,8 @@ P _userSettingsDtoDeserializeProp<P>(
     case 1:
       return (reader.readBool(offset)) as P;
     case 2:
+      return (reader.readBool(offset)) as P;
+    case 3:
       return (_UserSettingsDtothemeModeValueEnumMap[reader.readByteOrNull(
                 offset,
               )] ??
@@ -343,6 +352,18 @@ extension UserSettingsDtoQueryFilter
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
+  isOnboardingCompletedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'isOnboardingCompleted',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
   themeModeEqualTo(AppThemeMode value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -435,6 +456,20 @@ extension UserSettingsDtoQuerySortBy
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByIsOnboardingCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isOnboardingCompleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByIsOnboardingCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isOnboardingCompleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
   sortByThemeMode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'themeMode', Sort.asc);
@@ -492,6 +527,20 @@ extension UserSettingsDtoQuerySortThenBy
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByIsOnboardingCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isOnboardingCompleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByIsOnboardingCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isOnboardingCompleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
   thenByThemeMode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'themeMode', Sort.asc);
@@ -523,6 +572,13 @@ extension UserSettingsDtoQueryWhereDistinct
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QDistinct>
+  distinctByIsOnboardingCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isOnboardingCompleted');
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QDistinct>
   distinctByThemeMode() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'themeMode');
@@ -548,6 +604,13 @@ extension UserSettingsDtoQueryProperty
   isBiometricLockEnabledProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isBiometricLockEnabled');
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, bool, QQueryOperations>
+  isOnboardingCompletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isOnboardingCompleted');
     });
   }
 

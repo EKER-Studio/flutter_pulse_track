@@ -62,4 +62,12 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
   void setLocked(bool locked) {
     state = state.copyWith(isLocked: locked);
   }
+
+  /// Marks onboarding as completed and persists it.
+  Future<void> completeOnboarding() async {
+    final repository = ref.read(userSettingsRepositoryProvider);
+    final updated = state.copyWith(isOnboardingCompleted: true);
+    state = updated;
+    await repository.saveSettings(updated);
+  }
 }

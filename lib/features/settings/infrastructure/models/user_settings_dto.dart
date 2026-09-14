@@ -24,6 +24,9 @@ class UserSettingsDto {
   /// Whether biometric lock is enabled.
   bool isBiometricLockEnabled = false;
 
+  /// Whether onboarding has been completed.
+  bool isOnboardingCompleted = false;
+
   /// Converts this database entity to a pure domain [UserSettings] model.
   UserSettings toDomain() {
     return UserSettings(
@@ -31,6 +34,7 @@ class UserSettingsDto {
       defaultMaxHr: defaultMaxHr,
       isBiometricLockEnabled: isBiometricLockEnabled,
       isLocked: false,
+      isOnboardingCompleted: isOnboardingCompleted,
     );
   }
 
@@ -41,6 +45,7 @@ class UserSettingsDto {
     dto.themeMode = settings.themeMode;
     dto.defaultMaxHr = settings.defaultMaxHr;
     dto.isBiometricLockEnabled = settings.isBiometricLockEnabled;
+    dto.isOnboardingCompleted = settings.isOnboardingCompleted;
     return dto;
   }
 }
