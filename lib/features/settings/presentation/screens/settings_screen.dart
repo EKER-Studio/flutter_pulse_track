@@ -15,6 +15,7 @@ import 'package:pulse_track/features/settings/presentation/widgets/components/se
 import 'package:pulse_track/features/settings/presentation/widgets/components/theme_selection_dialog.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/wipe_data_dialog.dart';
 import 'package:pulse_track/features/workout/domain/services/workout_export_service.dart';
+import 'package:pulse_track/core/integrations/biometrics/biometric_service.dart';
 import 'package:pulse_track/features/workout/domain/usecases/delete_workout_session_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_workout_session_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
@@ -231,6 +232,50 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             titleColor: AppColors.errorRed,
             subtitle: l10n.settingsWipeDataSubtitle,
             onTap: () => _wipeData(context),
+          ),
+          const SizedBox(height: 16),
+
+          // Security section
+          SettingsSectionHeader(title: l10n.biometricLock),
+          SettingsTile(
+            icon: Icons.lock_outline_rounded,
+            title: l10n.biometricLock,
+            subtitle: l10n.biometricDesc,
+            trailing: Switch(
+              value: settings.isBiometricLockEnabled,
+              onChanged: (enabled) async {
+                if (enabled) {
+                  final result = await BiometricService.instance.authenticate(
+                    localizedReason: l10n.biometricAuthReason,
+                    authMessages: BiometricService.createAuthMessages(l10n),
+                  );
+                  if (result == BiometricAuthResult.success) {
+                    await ref
+                        .read(appSettingsProvider.notifier)
+                        .updateBiometricLock(true);
+                    ref.read(appSettingsProvider.notifier).setLocked(true);
+                  } else if (BiometricService.isTerminalFailure(result) ||
+                      result == BiometricAuthResult.notAvailable) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l10n.biometricsNotAvailable)),
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l10n.biometricAuthFailed)),
+                      );
+                    }
+                  }
+                } else {
+                  await ref
+                      .read(appSettingsProvider.notifier)
+                      .updateBiometricLock(false);
+                  ref.read(appSettingsProvider.notifier).setLocked(false);
+                }
+              },
+            ),
           ),
           const SizedBox(height: 16),
 

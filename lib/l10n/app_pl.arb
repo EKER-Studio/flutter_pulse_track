@@ -262,5 +262,20 @@
    "csvExportSuccess": "Treningi zostały pomyślnie wyeksportowane.",
    "csvExportShareSubject": "Eksport historii treningów PulseTrack",
    "save": "Zapisz",
-   "errorGeneric": "Wystąpił błąd: {error}"
+   "errorGeneric": "Wystąpił błąd: {error}",
+   "biometricAuthFailed": "Uwierzytelnienie biometryczne nie powiodło się lub zostało anulowane.",
+   "biometricAuthReason": "Potwierdź tożsamość, aby uzyskać dostęp do aplikacji",
+   "biometricDesc": "Dodatkowe zabezpieczenie aplikacji",
+   "biometricLock": "Ochrona biometryczna",
+   "biometricLockoutBody": "Dane biometryczne nie są już dostępne lub zapisane na tym urządzeniu. Wyłącz blokadę biometryczną, aby odzyskać dostęp do danych, albo pozostaw ją włączoną.",
+   "biometricLockoutTitle": "Blokada biometryczna niedostępna",
+   "biometricStepOptionalTitle": "Ochrona biometryczna",
+   "biometricStepSubtitle": "Zabezpiecz swoje pomiary przed wglądem innych osób i odblokowuj aplikację błyskawicznie za pomocą twarzy lub odcisku palca.",
+   "biometricStepTitle": "Ochrona biometryczna",
+   "biometricsNotAvailable": "Biometria nie jest dostępna na tym urządzeniu",
+   "appLocked": "Aplikacja zablokowana",
+   "appLockedStatusIconSemantics": "Ikona statusu blokady aplikacji",
+   "unlock": "Odblokuj",
+   "keepLocked": "Pozostaw zablokowane",
+   "disableLock": "Wyłącz blokadę"
 }

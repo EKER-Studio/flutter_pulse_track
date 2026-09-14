@@ -769,5 +769,20 @@
             "type": "String"
          }
       }
-   }
+   },
+   "biometricAuthFailed": "Biometric authentication failed or was canceled.",
+   "biometricAuthReason": "Authenticate to access Balance",
+   "biometricDesc": "Additional app security",
+   "biometricLock": "Biometric Protection",
+   "biometricLockoutBody": "Biometrics are no longer available or enrolled on this device. Turn off the biometric lock to regain access to your data, or keep it locked.",
+   "biometricLockoutTitle": "Biometric lock unavailable",
+   "biometricStepOptionalTitle": "Biometric Protection",
+   "biometricStepSubtitle": "Secure your measurements from prying eyes and unlock the app instantly using your face or fingerprint.",
+   "biometricStepTitle": "Biometric Protection",
+   "biometricsNotAvailable": "Biometrics not available on this device",
+   "appLocked": "App Locked",
+   "appLockedStatusIconSemantics": "Application locked status icon",
+   "unlock": "Unlock",
+   "keepLocked": "Keep locked",
+   "disableLock": "Turn off lock"
 }
