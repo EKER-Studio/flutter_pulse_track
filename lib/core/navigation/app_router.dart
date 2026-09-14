@@ -17,6 +17,7 @@ import 'package:pulse_track/features/workout/presentation/views/workout_details_
 import 'package:pulse_track/core/presentation/screens/biometric_shield_screen.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
+import 'package:pulse_track/features/navigation/presentation/screens/main_navigation_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -57,12 +58,6 @@ GoRouter appRouter(Ref ref) {
             const BiometricShieldScreen(),
       ),
       GoRoute(
-        path: '/',
-        name: 'home',
-        builder: (BuildContext context, GoRouterState state) =>
-            const HrHomeView(),
-      ),
-      GoRoute(
         path: '/scanner',
         name: 'scanner',
         builder: (BuildContext context, GoRouterState state) =>
@@ -81,41 +76,65 @@ GoRouter appRouter(Ref ref) {
           return HrMonitorView(deviceId: deviceId, deviceName: deviceName);
         },
       ),
-      GoRoute(
-        path: '/history',
-        name: 'history',
-        builder: (BuildContext context, GoRouterState state) =>
-            const WorkoutHistoryView(),
-        routes: <RouteBase>[
-          GoRoute(
-            path: 'details/:sessionId',
-            name: 'workoutDetails',
-            builder: (BuildContext context, GoRouterState state) {
-              final extra = state.extra;
-              if (extra is WorkoutSession) {
-                return WorkoutDetailsView(session: extra);
-              }
-              final sessionIdStr = state.pathParameters['sessionId'];
-              final sessionId = int.tryParse(sessionIdStr ?? '');
-              if (sessionId != null) {
-                return WorkoutDetailsLoaderView(sessionId: sessionId);
-              }
-              return const RouteErrorView();
-            },
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            MainNavigationScreen(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/',
+                name: 'home',
+                builder: (BuildContext context, GoRouterState state) =>
+                    const HrHomeView(),
+              ),
+            ],
           ),
-        ],
-      ),
-      GoRoute(
-        path: '/settings',
-        name: 'settings',
-        builder: (BuildContext context, GoRouterState state) =>
-            const SettingsScreen(),
-        routes: <RouteBase>[
-          GoRoute(
-            path: 'licenses',
-            name: 'settingsLicenses',
-            builder: (BuildContext context, GoRouterState state) =>
-                const LicensesScreen(),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/history',
+                name: 'history',
+                builder: (BuildContext context, GoRouterState state) =>
+                    const WorkoutHistoryView(),
+                routes: <RouteBase>[
+                  GoRoute(
+                    path: 'details/:sessionId',
+                    name: 'workoutDetails',
+                    builder: (BuildContext context, GoRouterState state) {
+                      final extra = state.extra;
+                      if (extra is WorkoutSession) {
+                        return WorkoutDetailsView(session: extra);
+                      }
+                      final sessionIdStr = state.pathParameters['sessionId'];
+                      final sessionId = int.tryParse(sessionIdStr ?? '');
+                      if (sessionId != null) {
+                        return WorkoutDetailsLoaderView(sessionId: sessionId);
+                      }
+                      return const RouteErrorView();
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/settings',
+                name: 'settings',
+                builder: (BuildContext context, GoRouterState state) =>
+                    const SettingsScreen(),
+                routes: <RouteBase>[
+                  GoRoute(
+                    path: 'licenses',
+                    name: 'settingsLicenses',
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const LicensesScreen(),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
