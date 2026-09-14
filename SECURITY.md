@@ -11,7 +11,7 @@ Only the latest released version of PulseTrack receives security updates.
 
 ## Reporting a Vulnerability
 
-We take the security and privacy of user biometric and workout data very seriously.
+We take the security and privacy of user health data very seriously.
 
 If you believe you have discovered a security vulnerability in PulseTrack, please do NOT create a public issue on GitHub. Instead, report it privately:
 
@@ -22,6 +22,7 @@ If you believe you have discovered a security vulnerability in PulseTrack, pleas
 
 ## Security Architecture Highlights
 
-- **Local-First & Offline:** Heart rate measurements, workout sessions, and sensor locations never leave the device unless explicitly exported by the user.
-- **Secure BLE Communication:** Standard Bluetooth SIG Heart Rate Service (0x180D) communication is handled locally with no intermediate cloud relay or external telemetry.
-- **Privacy-First Analytics:** Telemetry events never log sensitive biometric or health indicators (BPM values, heart rate zone distributions, workout notes).
+- **Local-First & Offline:** Health data (heart rate samples, workout sessions, device profiles) never leaves the device unless explicitly exported by the user.
+- **AES-256 Encryption:** Sensitive fields are encrypted with AES-256-CBC + HMAC-SHA256 via `FieldCipher`, with keys isolated in platform-native hardware keychains (Android Keystore / iOS Keychain) via `flutter_secure_storage`.
+- **Biometric Shield:** Optional biometric lock (`local_auth` with fallback to PIN/pattern/password) protects the app when backgrounded; `BiometricShieldScreen` enforces re-authentication on resume.
+- **Privacy-First Analytics:** Telemetry events never log sensitive biometric or health indicators (heart rate values, device MAC addresses, workout metrics).
