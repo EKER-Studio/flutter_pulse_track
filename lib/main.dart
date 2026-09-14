@@ -21,6 +21,7 @@ import 'package:pulse_track/features/workout/domain/repositories/workout_persist
 import 'features/workout/infrastructure/models/device_profile_dto.dart';
 import 'features/workout/infrastructure/models/workout_session_dto.dart';
 import 'features/workout/infrastructure/repositories/workout_persistence_repository.dart';
+import 'features/settings/infrastructure/models/user_settings_dto.dart';
 
 /// Application entry point.
 ///
@@ -86,6 +87,7 @@ Future<void> main() async {
         await Isar.open([
           DeviceProfileDtoSchema,
           WorkoutSessionDtoSchema,
+          UserSettingsDtoSchema,
         ], directory: dir.path);
 
     final repo = WorkoutPersistenceRepository(isar);
