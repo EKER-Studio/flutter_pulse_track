@@ -11,6 +11,8 @@ import 'package:pulse_track/features/heart_rate/presentation/views/workout_histo
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
 import 'package:pulse_track/core/infrastructure/services/analytics_service.dart';
+import 'package:pulse_track/features/settings/presentation/screens/licenses_screen.dart';
+import 'package:pulse_track/features/settings/presentation/screens/settings_screen.dart';
 import 'package:pulse_track/features/workout/presentation/views/workout_details_view.dart';
 
 part 'app_router.g.dart';
@@ -75,6 +77,20 @@ GoRouter appRouter(Ref ref) {
               }
               return const RouteErrorView();
             },
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/settings',
+        name: 'settings',
+        builder: (BuildContext context, GoRouterState state) =>
+            const SettingsScreen(),
+        routes: <RouteBase>[
+          GoRoute(
+            path: 'licenses',
+            name: 'settingsLicenses',
+            builder: (BuildContext context, GoRouterState state) =>
+                const LicensesScreen(),
           ),
         ],
       ),
