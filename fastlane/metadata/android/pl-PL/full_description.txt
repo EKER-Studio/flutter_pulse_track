@@ -1,0 +1,12 @@
+PulseTrack to profesjonalny monitor tętna i analityka treningów dla czujników Bluetooth LE.
+
+Funkcje:
+• Pomiar tętna w czasie rzeczywistym przez BLE
+• Historia treningów ze strefami Z1-Z5
+• Synchronizacja z Health Connect i Apple Health
+• Import/eksport CSV i zarządzanie danymi
+• Adaptacyjna nawigacja dla telefonów i tabletów
+• Ochrona biometryczna i szyfrowanie lokalne
+• Widżety i codzienne przypomnienia
+
+Prywatność: wszystkie dane pozostają na urządzeniu, szyfrowane AES-256.

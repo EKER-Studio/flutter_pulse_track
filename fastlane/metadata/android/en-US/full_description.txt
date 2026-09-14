@@ -1,0 +1,12 @@
+PulseTrack is a professional heart rate monitor and workout analytics app for Bluetooth LE sensors.
+
+Features:
+• Real-time heart rate monitoring via BLE
+• Workout history with heart rate zones Z1-Z5
+• Health Connect and Apple Health sync
+• CSV import/export and data management
+• Adaptive navigation for phones and tablets
+• Biometric protection and local-first encryption
+• Home widgets and daily reminders
+
+Privacy first: all data stays on your device, encrypted with AES-256.

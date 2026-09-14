@@ -1,0 +1,22 @@
+default_platform(:android)
+
+platform :android do
+  desc "Deploy to Play Store internal track"
+  lane :internal do
+    gradle(task: "bundle", build_type: "Release")
+    supply(track: "internal", aab: "build/app/outputs/bundle/release/app-release.aab")
+  end
+
+  desc "Take screenshots"
+  lane :screenshots do
+    capture_android_screenshots
+  end
+end
+
+platform :ios do
+  desc "Deploy to TestFlight"
+  lane :beta do
+    build_ios_app(scheme: "Runner")
+    upload_to_testflight
+  end
+end
