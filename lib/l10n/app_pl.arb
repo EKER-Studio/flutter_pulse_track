@@ -293,5 +293,81 @@
    "tabHomeSemanticsLabel": "Zakładka Strona główna",
    "@tabHomeSemanticsLabel": {
       "description": "Semantics label for home tab"
+   },
+   "onboardingWelcomeTitle": "Witamy w PulseTrack",
+   "@onboardingWelcomeTitle": {
+      "description": "Onboarding: onboardingWelcomeTitle"
+   },
+   "onboardingWelcomeSubtitle": "Twój profesjonalny monitor tętna i analityka treningów",
+   "@onboardingWelcomeSubtitle": {
+      "description": "Onboarding: onboardingWelcomeSubtitle"
+   },
+   "onboardingWelcomeHealthSync": "Synchronizacja Zdrowia",
+   "@onboardingWelcomeHealthSync": {
+      "description": "Onboarding: onboardingWelcomeHealthSync"
+   },
+   "onboardingWelcomeHistory": "Historia Treningów",
+   "@onboardingWelcomeHistory": {
+      "description": "Onboarding: onboardingWelcomeHistory"
+   },
+   "onboardingWelcomePrivacy": "Prywatność",
+   "@onboardingWelcomePrivacy": {
+      "description": "Onboarding: onboardingWelcomePrivacy"
+   },
+   "onboardingWelcomeStart": "Rozpocznij",
+   "@onboardingWelcomeStart": {
+      "description": "Onboarding: onboardingWelcomeStart"
+   },
+   "onboardingPermissionsTitle": "Uprawnienia",
+   "@onboardingPermissionsTitle": {
+      "description": "Onboarding: onboardingPermissionsTitle"
+   },
+   "onboardingPermissionsSubtitle": "Potrzebujemy kilku uprawnień dla pełnej funkcjonalności",
+   "@onboardingPermissionsSubtitle": {
+      "description": "Onboarding: onboardingPermissionsSubtitle"
+   },
+   "permissionBluetoothTitle": "Bluetooth",
+   "@permissionBluetoothTitle": {
+      "description": "Onboarding: permissionBluetoothTitle"
+   },
+   "permissionBluetoothSubtitle": "Do skanowania i łączenia z czujnikami tętna",
+   "@permissionBluetoothSubtitle": {
+      "description": "Onboarding: permissionBluetoothSubtitle"
+   },
+   "permissionNotificationsTitle": "Powiadomienia",
+   "@permissionNotificationsTitle": {
+      "description": "Onboarding: permissionNotificationsTitle"
+   },
+   "permissionNotificationsSubtitle": "Aby przypominać o treningach",
+   "@permissionNotificationsSubtitle": {
+      "description": "Onboarding: permissionNotificationsSubtitle"
+   },
+   "permissionHealthTitle": "Dane Zdrowotne",
+   "@permissionHealthTitle": {
+      "description": "Onboarding: permissionHealthTitle"
+   },
+   "permissionHealthSubtitle": "Do synchronizacji z Apple Health / Health Connect",
+   "@permissionHealthSubtitle": {
+      "description": "Onboarding: permissionHealthSubtitle"
+   },
+   "onboardingCompleteTitle": "Wszystko Gotowe!",
+   "@onboardingCompleteTitle": {
+      "description": "Onboarding: onboardingCompleteTitle"
+   },
+   "onboardingCompleteSubtitle": "Zacznij monitorować tętno i treningi",
+   "@onboardingCompleteSubtitle": {
+      "description": "Onboarding: onboardingCompleteSubtitle"
+   },
+   "getStarted": "Rozpocznij",
+   "@getStarted": {
+      "description": "Onboarding: getStarted"
+   },
+   "back": "Wstecz",
+   "@back": {
+      "description": "Onboarding: back"
+   },
+   "next": "Dalej",
+   "@next": {
+      "description": "Onboarding: next"
    }
 }

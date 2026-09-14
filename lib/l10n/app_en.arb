@@ -800,5 +800,81 @@
    "tabHomeSemanticsLabel": "Home tab",
    "@tabHomeSemanticsLabel": {
       "description": "Semantics label for home tab"
+   },
+   "onboardingWelcomeTitle": "Welcome to PulseTrack",
+   "@onboardingWelcomeTitle": {
+      "description": "Onboarding: onboardingWelcomeTitle"
+   },
+   "onboardingWelcomeSubtitle": "Your professional heart rate monitor and workout analytics companion",
+   "@onboardingWelcomeSubtitle": {
+      "description": "Onboarding: onboardingWelcomeSubtitle"
+   },
+   "onboardingWelcomeHealthSync": "Health Sync",
+   "@onboardingWelcomeHealthSync": {
+      "description": "Onboarding: onboardingWelcomeHealthSync"
+   },
+   "onboardingWelcomeHistory": "Workout History",
+   "@onboardingWelcomeHistory": {
+      "description": "Onboarding: onboardingWelcomeHistory"
+   },
+   "onboardingWelcomePrivacy": "Privacy First",
+   "@onboardingWelcomePrivacy": {
+      "description": "Onboarding: onboardingWelcomePrivacy"
+   },
+   "onboardingWelcomeStart": "Get Started",
+   "@onboardingWelcomeStart": {
+      "description": "Onboarding: onboardingWelcomeStart"
+   },
+   "onboardingPermissionsTitle": "Permissions",
+   "@onboardingPermissionsTitle": {
+      "description": "Onboarding: onboardingPermissionsTitle"
+   },
+   "onboardingPermissionsSubtitle": "We need a few permissions to provide full functionality",
+   "@onboardingPermissionsSubtitle": {
+      "description": "Onboarding: onboardingPermissionsSubtitle"
+   },
+   "permissionBluetoothTitle": "Bluetooth",
+   "@permissionBluetoothTitle": {
+      "description": "Onboarding: permissionBluetoothTitle"
+   },
+   "permissionBluetoothSubtitle": "To scan and connect to heart rate sensors",
+   "@permissionBluetoothSubtitle": {
+      "description": "Onboarding: permissionBluetoothSubtitle"
+   },
+   "permissionNotificationsTitle": "Notifications",
+   "@permissionNotificationsTitle": {
+      "description": "Onboarding: permissionNotificationsTitle"
+   },
+   "permissionNotificationsSubtitle": "To remind you about workouts",
+   "@permissionNotificationsSubtitle": {
+      "description": "Onboarding: permissionNotificationsSubtitle"
+   },
+   "permissionHealthTitle": "Health Data",
+   "@permissionHealthTitle": {
+      "description": "Onboarding: permissionHealthTitle"
+   },
+   "permissionHealthSubtitle": "To sync workouts with Apple Health / Health Connect",
+   "@permissionHealthSubtitle": {
+      "description": "Onboarding: permissionHealthSubtitle"
+   },
+   "onboardingCompleteTitle": "You're All Set!",
+   "@onboardingCompleteTitle": {
+      "description": "Onboarding: onboardingCompleteTitle"
+   },
+   "onboardingCompleteSubtitle": "Start tracking your heart rate and workouts",
+   "@onboardingCompleteSubtitle": {
+      "description": "Onboarding: onboardingCompleteSubtitle"
+   },
+   "getStarted": "Get Started",
+   "@getStarted": {
+      "description": "Onboarding: getStarted"
+   },
+   "back": "Back",
+   "@back": {
+      "description": "Onboarding: back"
+   },
+   "next": "Next",
+   "@next": {
+      "description": "Onboarding: next"
    }
 }
