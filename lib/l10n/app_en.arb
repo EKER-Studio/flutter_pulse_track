@@ -510,7 +510,7 @@
    },
    "cancel": "Cancel",
    "@cancel": {
-      "description": "Label for generic cancel actions across dialogs and buttons."
+      "description": "Generic cancel button label."
    },
    "installFromPlayStore": "Install from Play Store",
    "@installFromPlayStore": {
@@ -555,5 +555,219 @@
    "healthSyncUnavailable": "Health sync unavailable on this device",
    "@healthSyncUnavailable": {
       "description": "Warning shown when health ecosystem APIs are unavailable on current device."
+   },
+   "settingsTitle": "Settings",
+   "@settingsTitle": {
+      "description": "Title of the settings screen."
+   },
+   "settingsSectionAppearance": "Appearance",
+   "@settingsSectionAppearance": {
+      "description": "Header for the appearance settings section."
+   },
+   "settingsTheme": "Theme",
+   "@settingsTheme": {
+      "description": "Label for theme mode selection tile."
+   },
+   "settingsThemeSystem": "System default",
+   "@settingsThemeSystem": {
+      "description": "Label for system default theme."
+   },
+   "settingsThemeLight": "Light",
+   "@settingsThemeLight": {
+      "description": "Label for light theme."
+   },
+   "settingsThemeDark": "Dark",
+   "@settingsThemeDark": {
+      "description": "Label for dark theme."
+   },
+   "settingsSectionWorkout": "Workout & Metrics",
+   "@settingsSectionWorkout": {
+      "description": "Header for workout parameters section."
+   },
+   "settingsDefaultMaxHr": "Max Heart Rate",
+   "@settingsDefaultMaxHr": {
+      "description": "Title of max HR setting."
+   },
+   "settingsDefaultMaxHrSubtitle": "{bpm} BPM (Heart rate zones calculation)",
+   "@settingsDefaultMaxHrSubtitle": {
+      "description": "Subtitle showing current max HR.",
+      "placeholders": {
+         "bpm": {
+            "type": "int"
+         }
+      }
+   },
+   "settingsMaxHrDialogTitle": "Set Max Heart Rate",
+   "@settingsMaxHrDialogTitle": {
+      "description": "Title of max HR configuration dialog."
+   },
+   "settingsMaxHrDialogHint": "Target max heart rate in BPM (50 - 240)",
+   "@settingsMaxHrDialogHint": {
+      "description": "Hint in max HR configuration dialog."
+   },
+   "settingsSectionData": "Data Management",
+   "@settingsSectionData": {
+      "description": "Header for data management section."
+   },
+   "settingsExportAllWorkouts": "Export All Workouts",
+   "@settingsExportAllWorkouts": {
+      "description": "Title for exporting all workouts."
+   },
+   "settingsExportAllWorkoutsSubtitle": "Generate and share CSV of all sessions",
+   "@settingsExportAllWorkoutsSubtitle": {
+      "description": "Subtitle for exporting all workouts."
+   },
+   "settingsImportWorkouts": "Import Workouts",
+   "@settingsImportWorkouts": {
+      "description": "Title for importing workouts from CSV."
+   },
+   "settingsImportWorkoutsSubtitle": "Import workout sessions from a CSV file",
+   "@settingsImportWorkoutsSubtitle": {
+      "description": "Subtitle for importing workouts from CSV."
+   },
+   "settingsWipeData": "Wipe All Workouts",
+   "@settingsWipeData": {
+      "description": "Title for wiping all workout history."
+   },
+   "settingsWipeDataSubtitle": "Permanently delete all workout history",
+   "@settingsWipeDataSubtitle": {
+      "description": "Subtitle for wiping all workout history."
+   },
+   "settingsSectionAbout": "About & Support",
+   "@settingsSectionAbout": {
+      "description": "Header for about and support section."
+   },
+   "settingsVersion": "Version",
+   "@settingsVersion": {
+      "description": "Label for app version tile."
+   },
+   "settingsLicenses": "Licenses",
+   "@settingsLicenses": {
+      "description": "Label for open-source licenses tile."
+   },
+   "settingsLicensesSubtitle": "Open-source software licenses",
+   "@settingsLicensesSubtitle": {
+      "description": "Subtitle for licenses tile."
+   },
+   "settingsPrivacyPolicy": "Privacy Policy",
+   "@settingsPrivacyPolicy": {
+      "description": "Label for privacy policy tile."
+   },
+   "settingsPrivacyPolicySubtitle": "Learn how your biometric data is protected locally",
+   "@settingsPrivacyPolicySubtitle": {
+      "description": "Subtitle for privacy policy tile."
+   },
+   "settingsSupport": "Support & Feedback",
+   "@settingsSupport": {
+      "description": "Label for support tile."
+   },
+   "settingsSupportSubtitle": "Contact the development team",
+   "@settingsSupportSubtitle": {
+      "description": "Subtitle for support tile."
+   },
+   "settingsSourceCode": "Source Code",
+   "@settingsSourceCode": {
+      "description": "Label for source code tile."
+   },
+   "settingsSourceCodeSubtitle": "View PulseTrack repository on GitHub",
+   "@settingsSourceCodeSubtitle": {
+      "description": "Subtitle for source code tile."
+   },
+   "wipeDataDialogTitle": "Delete All Workout Data?",
+   "@wipeDataDialogTitle": {
+      "description": "Title of wipe data confirmation dialog."
+   },
+   "wipeDataDialogContent": "This action cannot be undone. All recorded sessions and heart rate telemetry will be permanently wiped from your device.",
+   "@wipeDataDialogContent": {
+      "description": "Content of wipe data confirmation dialog."
+   },
+   "wipeDataConfirm": "Delete Everything",
+   "@wipeDataConfirm": {
+      "description": "Button to confirm wiping data."
+   },
+   "wipeDataSuccess": "All workout data has been wiped successfully.",
+   "@wipeDataSuccess": {
+      "description": "Snackbar message after wiping data."
+   },
+   "csvPreviewTitle": "Import Workouts Preview",
+   "@csvPreviewTitle": {
+      "description": "Title of CSV import preview dialog."
+   },
+   "csvPreviewSessionsCount": "{count, plural, =1{1 session found} other{{count} sessions found}}",
+   "@csvPreviewSessionsCount": {
+      "description": "Number of valid workout sessions found.",
+      "placeholders": {
+         "count": {
+            "type": "int"
+         }
+      }
+   },
+   "csvPreviewDateRange": "{start} – {end}",
+   "@csvPreviewDateRange": {
+      "description": "Date range of sessions to import.",
+      "placeholders": {
+         "start": {
+            "type": "String"
+         },
+         "end": {
+            "type": "String"
+         }
+      }
+   },
+   "csvPreviewSkippedRows": "{count, plural, =1{1 invalid row will be skipped} other{{count} invalid rows will be skipped}}",
+   "@csvPreviewSkippedRows": {
+      "description": "Number of skipped invalid rows.",
+      "placeholders": {
+         "count": {
+            "type": "int"
+         }
+      }
+   },
+   "csvPreviewConfirmImport": "Import ({count})",
+   "@csvPreviewConfirmImport": {
+      "description": "Button to confirm importing valid sessions.",
+      "placeholders": {
+         "count": {
+            "type": "int"
+         }
+      }
+   },
+   "csvImportSuccess": "Successfully imported {count} workout sessions.",
+   "@csvImportSuccess": {
+      "description": "Snackbar message after successful CSV import.",
+      "placeholders": {
+         "count": {
+            "type": "int"
+         }
+      }
+   },
+   "csvImportNoValidData": "No valid workout sessions found in the selected CSV file.",
+   "@csvImportNoValidData": {
+      "description": "Snackbar message when CSV file has no parseable workouts."
+   },
+   "csvExportEmpty": "No workout sessions to export.",
+   "@csvExportEmpty": {
+      "description": "Snackbar message when user tries to export empty history."
+   },
+   "csvExportSuccess": "Workout sessions exported successfully.",
+   "@csvExportSuccess": {
+      "description": "Snackbar message after exporting workouts to CSV."
+   },
+   "csvExportShareSubject": "PulseTrack Workout History Export",
+   "@csvExportShareSubject": {
+      "description": "Subject line when sharing exported CSV."
+   },
+   "save": "Save",
+   "@save": {
+      "description": "Generic save button label."
+   },
+   "errorGeneric": "An error occurred: {error}",
+   "@errorGeneric": {
+      "description": "Generic error message with parameter.",
+      "placeholders": {
+         "error": {
+            "type": "String"
+         }
+      }
    }
 }
