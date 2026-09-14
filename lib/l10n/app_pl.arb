@@ -206,5 +206,17 @@
    "workoutDetailsZonesLegendSemantics": "Legenda stref tętna treningowego: {legend}",
    "percentRange": "{min} do {max} procent",
    "hrMonitorRrIntervalsSemantics": "Odstępy R-R: {intervals}",
-   "millisecondsUnit": "milisekund"
+   "millisecondsUnit": "milisekund",
+   "cancel": "Anuluj",
+   "installFromPlayStore": "Zainstaluj ze sklepu Play",
+   "healthConnectRequiredTitle": "Wymagana aplikacja Health Connect",
+   "healthConnectRequiredSubtitle": "Pobierz oficjalną aplikację Google Health Connect ze sklepu Play, aby włączyć synchronizację.",
+   "healthPermissionDenied": "Uprawnienia do danych zdrowotnych są wymagane, aby synchronizować tętno i treningi.",
+   "healthServiceNameAndroid": "Health Connect",
+   "healthServiceNameIOS": "Apple Health",
+   "healthServiceNameOther": "Usługi zdrowotne",
+   "healthSyncDescAndroid": "Synchronizuj dane tętna i treningów z Health Connect",
+   "healthSyncDescIOS": "Synchronizuj dane tętna i treningów z Apple Health",
+   "healthSyncDescOther": "Synchronizuj dane tętna i treningów z aplikacjami zdrowotnymi",
+   "healthSyncUnavailable": "Synchronizacja zdrowotna niedostępna na tym urządzeniu"
 }

@@ -507,5 +507,53 @@
    "millisecondsUnit": "milliseconds",
    "@millisecondsUnit": {
       "description": "Full word for the unit of time milliseconds for accessibility screen readers."
+   },
+   "cancel": "Cancel",
+   "@cancel": {
+      "description": "Label for generic cancel actions across dialogs and buttons."
+   },
+   "installFromPlayStore": "Install from Play Store",
+   "@installFromPlayStore": {
+      "description": "Button label directing user to Google Play Store to install Health Connect."
+   },
+   "healthConnectRequiredTitle": "Health Connect App Required",
+   "@healthConnectRequiredTitle": {
+      "description": "Title of dialog informing user that Google Health Connect must be installed."
+   },
+   "healthConnectRequiredSubtitle": "Download the official Google Health Connect app from the Play Store to enable sync.",
+   "@healthConnectRequiredSubtitle": {
+      "description": "Explanation prompting user to install Health Connect from Google Play."
+   },
+   "healthPermissionDenied": "Health data permissions are required to sync heart rate and workouts.",
+   "@healthPermissionDenied": {
+      "description": "Message shown when health read or write permissions are rejected."
+   },
+   "healthServiceNameAndroid": "Health Connect",
+   "@healthServiceNameAndroid": {
+      "description": "Platform brand name for Android Health Connect."
+   },
+   "healthServiceNameIOS": "Apple Health",
+   "@healthServiceNameIOS": {
+      "description": "Platform brand name for iOS Apple Health."
+   },
+   "healthServiceNameOther": "Health Services",
+   "@healthServiceNameOther": {
+      "description": "Generic brand name for health services on unsupported or desktop platforms."
+   },
+   "healthSyncDescAndroid": "Sync heart rate and workout data with Health Connect",
+   "@healthSyncDescAndroid": {
+      "description": "Description of health synchronization on Android devices."
+   },
+   "healthSyncDescIOS": "Sync heart rate and workout data with Apple Health",
+   "@healthSyncDescIOS": {
+      "description": "Description of health synchronization on iOS devices."
+   },
+   "healthSyncDescOther": "Sync heart rate and workout data with health services",
+   "@healthSyncDescOther": {
+      "description": "Description of health synchronization on other platforms."
+   },
+   "healthSyncUnavailable": "Health sync unavailable on this device",
+   "@healthSyncUnavailable": {
+      "description": "Warning shown when health ecosystem APIs are unavailable on current device."
    }
 }
