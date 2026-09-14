@@ -7,5 +7,5 @@ enum AppThemeMode {
   light,
 
   /// Enforces dark background and reduced-glare dark colors.
-  dark;
+  dark,
 }

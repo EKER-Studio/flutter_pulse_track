@@ -29,6 +29,7 @@ class CsvWorkoutImportAnalysis {
 class CsvWorkoutImporter {
   /// Default const constructor for [CsvWorkoutImporter].
   const CsvWorkoutImporter();
+
   /// Parses [rawCsv] content into a [CsvWorkoutImportAnalysis].
   ///
   /// Supports both multi-session export files and single-session time-series exports.
@@ -53,10 +54,15 @@ class CsvWorkoutImporter {
       );
     }
 
-    final header = rows.first.map((e) => e.toString().trim().toLowerCase()).toList();
+    final header = rows.first
+        .map((e) => e.toString().trim().toLowerCase())
+        .toList();
 
     // Determine format: Single session time-series vs Multi-session table
-    if (header.contains('timestamp') && (header.contains('heartrate(bpm)') || header.contains('heartrate') || header.contains('bpm'))) {
+    if (header.contains('timestamp') &&
+        (header.contains('heartrate(bpm)') ||
+            header.contains('heartrate') ||
+            header.contains('bpm'))) {
       return _parseTimeSeriesFormat(rows);
     } else if (header.contains('starttime') || header.contains('start_time')) {
       return _parseMultiSessionFormat(rows, header);
@@ -70,7 +76,9 @@ class CsvWorkoutImporter {
   }
 
   CsvWorkoutImportAnalysis _parseTimeSeriesFormat(List<List<dynamic>> rows) {
-    final header = rows.first.map((e) => e.toString().trim().toLowerCase()).toList();
+    final header = rows.first
+        .map((e) => e.toString().trim().toLowerCase())
+        .toList();
     final timeIdx = header.indexOf('timestamp');
     var bpmIdx = header.indexOf('heartrate(bpm)');
     if (bpmIdx == -1) bpmIdx = header.indexOf('heartrate');
@@ -85,7 +93,8 @@ class CsvWorkoutImporter {
 
     for (var i = 1; i < rows.length; i++) {
       final row = rows[i];
-      if (row.isEmpty || (row.length == 1 && row.first.toString().trim().isEmpty)) {
+      if (row.isEmpty ||
+          (row.length == 1 && row.first.toString().trim().isEmpty)) {
         continue;
       }
       try {
@@ -151,14 +160,24 @@ class CsvWorkoutImporter {
     List<List<dynamic>> rows,
     List<String> header,
   ) {
-    final startIdx = header.indexWhere((h) => h == 'starttime' || h == 'start_time');
+    final startIdx = header.indexWhere(
+      (h) => h == 'starttime' || h == 'start_time',
+    );
     final endIdx = header.indexWhere((h) => h == 'endtime' || h == 'end_time');
     final avgIdx = header.indexWhere((h) => h == 'avgbpm' || h == 'avg_bpm');
     final maxIdx = header.indexWhere((h) => h == 'maxbpm' || h == 'max_bpm');
-    final samplesIdx = header.indexWhere((h) => h == 'bpmsamples' || h == 'bpm_samples' || h == 'samples');
-    final sensorIdx = header.indexWhere((h) => h == 'sensorlocation' || h == 'sensor_location');
-    final macIdx = header.indexWhere((h) => h == 'deviceaddress' || h == 'devicemacaddress' || h == 'mac');
-    final nameIdx = header.indexWhere((h) => h == 'devicename' || h == 'device_name' || h == 'name');
+    final samplesIdx = header.indexWhere(
+      (h) => h == 'bpmsamples' || h == 'bpm_samples' || h == 'samples',
+    );
+    final sensorIdx = header.indexWhere(
+      (h) => h == 'sensorlocation' || h == 'sensor_location',
+    );
+    final macIdx = header.indexWhere(
+      (h) => h == 'deviceaddress' || h == 'devicemacaddress' || h == 'mac',
+    );
+    final nameIdx = header.indexWhere(
+      (h) => h == 'devicename' || h == 'device_name' || h == 'name',
+    );
 
     final validSessions = <WorkoutSession>[];
     var skippedRows = 0;
@@ -167,7 +186,8 @@ class CsvWorkoutImporter {
 
     for (var i = 1; i < rows.length; i++) {
       final row = rows[i];
-      if (row.isEmpty || (row.length == 1 && row.first.toString().trim().isEmpty)) {
+      if (row.isEmpty ||
+          (row.length == 1 && row.first.toString().trim().isEmpty)) {
         continue;
       }
       try {
@@ -182,7 +202,11 @@ class CsvWorkoutImporter {
 
         final samples = <int>[];
         if (samplesIdx != -1 && samplesIdx < row.length) {
-          final rawSamples = row[samplesIdx].toString().replaceAll('[', '').replaceAll(']', '').trim();
+          final rawSamples = row[samplesIdx]
+              .toString()
+              .replaceAll('[', '')
+              .replaceAll(']', '')
+              .trim();
           if (rawSamples.isNotEmpty) {
             final delimiter = rawSamples.contains(';') ? ';' : ',';
             for (final part in rawSamples.split(delimiter)) {
@@ -192,8 +216,12 @@ class CsvWorkoutImporter {
           }
         }
 
-        var avg = avgIdx != -1 && avgIdx < row.length ? int.tryParse(row[avgIdx].toString().trim()) ?? 0 : 0;
-        var max = maxIdx != -1 && maxIdx < row.length ? int.tryParse(row[maxIdx].toString().trim()) ?? 0 : 0;
+        var avg = avgIdx != -1 && avgIdx < row.length
+            ? int.tryParse(row[avgIdx].toString().trim()) ?? 0
+            : 0;
+        var max = maxIdx != -1 && maxIdx < row.length
+            ? int.tryParse(row[maxIdx].toString().trim()) ?? 0
+            : 0;
 
         if (samples.isNotEmpty && (avg == 0 || max == 0)) {
           var sum = 0;
@@ -204,9 +232,15 @@ class CsvWorkoutImporter {
           avg = (sum / samples.length).round();
         }
 
-        final sensorLocation = sensorIdx != -1 && sensorIdx < row.length ? int.tryParse(row[sensorIdx].toString().trim()) ?? 0 : 0;
-        final mac = macIdx != -1 && macIdx < row.length ? row[macIdx].toString().trim() : 'IMPORTED';
-        final name = nameIdx != -1 && nameIdx < row.length ? row[nameIdx].toString().trim() : 'Imported Session';
+        final sensorLocation = sensorIdx != -1 && sensorIdx < row.length
+            ? int.tryParse(row[sensorIdx].toString().trim()) ?? 0
+            : 0;
+        final mac = macIdx != -1 && macIdx < row.length
+            ? row[macIdx].toString().trim()
+            : 'IMPORTED';
+        final name = nameIdx != -1 && nameIdx < row.length
+            ? row[nameIdx].toString().trim()
+            : 'Imported Session';
 
         final session = WorkoutSession(
           id: 0,

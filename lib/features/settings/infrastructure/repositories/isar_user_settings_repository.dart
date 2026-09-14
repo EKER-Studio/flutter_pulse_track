@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pulse_track/core/infrastructure/storage/isar_provider.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 import 'package:pulse_track/features/settings/domain/repositories/user_settings_repository.dart';
+
 import '../models/user_settings_dto.dart';
 
 part 'isar_user_settings_repository.g.dart';

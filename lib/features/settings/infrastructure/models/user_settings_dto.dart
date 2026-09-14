@@ -23,10 +23,7 @@ class UserSettingsDto {
 
   /// Converts this database entity to a pure domain [UserSettings] model.
   UserSettings toDomain() {
-    return UserSettings(
-      themeMode: themeMode,
-      defaultMaxHr: defaultMaxHr,
-    );
+    return UserSettings(themeMode: themeMode, defaultMaxHr: defaultMaxHr);
   }
 
   /// Creates a [UserSettingsDto] pre-populated from domain [settings].

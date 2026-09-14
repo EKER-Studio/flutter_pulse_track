@@ -30,6 +30,13 @@ class HrHomeView extends ConsumerWidget {
           style: Theme.of(context).textTheme.titleLarge
               ?.copyWith(fontWeight: FontWeight.bold),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            tooltip: l10n.settingsTitle,
+            onPressed: () => context.push('/settings'),
+          ),
+        ],
       ),
       body: Builder(
         builder: (context) {

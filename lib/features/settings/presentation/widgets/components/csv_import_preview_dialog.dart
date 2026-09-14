@@ -40,7 +40,9 @@ class CsvImportPreviewDialog extends StatelessWidget {
     if (analysis.earliestDate != null && analysis.latestDate != null) {
       final start = dateFormat.format(analysis.earliestDate!);
       final end = dateFormat.format(analysis.latestDate!);
-      dateRangeText = start == end ? start : l10n.csvPreviewDateRange(start, end);
+      dateRangeText = start == end
+          ? start
+          : l10n.csvPreviewDateRange(start, end);
     }
 
     final validCount = analysis.validSessions.length;
@@ -93,8 +95,11 @@ class CsvImportPreviewDialog extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.warning_amber_rounded,
-                      color: AppColors.errorRed, size: 20),
+                  const Icon(
+                    Icons.warning_amber_rounded,
+                    color: AppColors.errorRed,
+                    size: 20,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(

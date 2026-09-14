@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pulse_track/features/settings/domain/services/csv_workout_importer.dart';
+
+part 'csv_workout_import_service.g.dart';
 
 /// Exception thrown when the selected CSV file exceeds the memory safety limit.
 class FileTooLargeException implements Exception {
@@ -14,7 +17,8 @@ class FileTooLargeException implements Exception {
   const FileTooLargeException({required this.maxBytes});
 
   @override
-  String toString() => 'FileTooLargeException: file exceeds ${maxBytes ~/ (1024 * 1024)} MB';
+  String toString() =>
+      'FileTooLargeException: file exceeds ${maxBytes ~/ (1024 * 1024)} MB';
 }
 
 /// Coordinates file picking from device storage and delegating
@@ -27,7 +31,7 @@ class CsvWorkoutImportService {
 
   /// Creates a [CsvWorkoutImportService].
   const CsvWorkoutImportService({CsvWorkoutImporter? importer})
-      : _importer = importer ?? const CsvWorkoutImporter();
+    : _importer = importer ?? const CsvWorkoutImporter();
 
   /// Prompts user to pick a CSV file and parses it into [CsvWorkoutImportAnalysis].
   ///
@@ -56,4 +60,10 @@ class CsvWorkoutImportService {
 
     return _importer.parse(content);
   }
+}
+
+/// Riverpod provider supplying a singleton instance of [CsvWorkoutImportService].
+@riverpod
+CsvWorkoutImportService csvWorkoutImportService(Ref ref) {
+  return const CsvWorkoutImportService();
 }

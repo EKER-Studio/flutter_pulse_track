@@ -15,10 +15,7 @@ class UserSettings {
   });
 
   /// Creates a copy of [UserSettings] with the given fields replaced.
-  UserSettings copyWith({
-    AppThemeMode? themeMode,
-    int? defaultMaxHr,
-  }) {
+  UserSettings copyWith({AppThemeMode? themeMode, int? defaultMaxHr}) {
     return UserSettings(
       themeMode: themeMode ?? this.themeMode,
       defaultMaxHr: defaultMaxHr ?? this.defaultMaxHr,

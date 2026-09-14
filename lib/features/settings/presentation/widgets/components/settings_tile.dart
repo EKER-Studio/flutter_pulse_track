@@ -16,6 +16,12 @@ class SettingsTile extends StatelessWidget {
   /// Optional custom trailing widget. Defaults to a subtle chevron.
   final Widget? trailing;
 
+  /// Optional icon color override.
+  final Color? iconColor;
+
+  /// Optional title color override.
+  final Color? titleColor;
+
   /// Callback when user taps the tile.
   final VoidCallback? onTap;
 
@@ -26,11 +32,15 @@ class SettingsTile extends StatelessWidget {
     super.key,
     this.subtitle,
     this.trailing,
+    this.iconColor,
+    this.titleColor,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final effectiveColor = iconColor ?? AppColors.accentBlue;
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       elevation: 0,
@@ -45,26 +55,25 @@ class SettingsTile extends StatelessWidget {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: AppColors.accentBlue.withAlpha(25),
+            color: effectiveColor.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, color: AppColors.accentBlue, size: 20),
+          child: Icon(icon, color: effectiveColor, size: 20),
         ),
         title: Text(
           title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(context).textTheme.titleMedium
+              ?.copyWith(fontWeight: FontWeight.w600, color: titleColor),
         ),
         subtitle: subtitle != null
             ? Text(
                 subtitle!,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                style: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: AppColors.textSecondary),
               )
             : null,
-        trailing: trailing ??
+        trailing:
+            trailing ??
             (onTap != null
                 ? const Icon(
                     Icons.chevron_right,

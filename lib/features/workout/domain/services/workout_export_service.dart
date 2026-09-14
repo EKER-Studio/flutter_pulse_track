@@ -96,13 +96,81 @@ class WorkoutExportService {
     }
   }
 
+  /// Generates a standardized multi-session CSV representation of [sessions].
+  ///
+  /// Maps each workout session to a row with timestamps, aggregates, and semicolon-separated BPM samples.
+  /// @param sessions The list of workout sessions to serialize.
+  Future<String> generateAllSessionsCsv(List<WorkoutSession> sessions) async {
+    final rows = <List<dynamic>>[
+      <dynamic>[
+        'StartTime',
+        'EndTime',
+        'AvgBpm',
+        'MaxBpm',
+        'BpmSamples',
+        'SensorLocation',
+        'DeviceMacAddress',
+        'DeviceName',
+      ],
+    ];
+
+    for (final session in sessions) {
+      rows.add(<dynamic>[
+        session.startTime.toIso8601String(),
+        session.endTime?.toIso8601String() ??
+            session.startTime.toIso8601String(),
+        session.avgBpm,
+        session.maxBpm,
+        session.bpmSamples.join(';'),
+        session.sensorLocationIndex,
+        session.deviceMacAddress,
+        session.deviceName,
+      ]);
+    }
+
+    return Csv().encode(rows);
+  }
+
+  /// Exports all [sessions] to a CSV file in the temporary directory and opens the system share sheet.
+  ///
+  /// @param sessions The list of workout sessions to export.
+  Future<void> exportAndShareAllSessions(List<WorkoutSession> sessions) async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      await _cleanupOldExportFiles(tempDir);
+
+      final csvContent = await generateAllSessionsCsv(sessions);
+      final filePath = '${tempDir.path}/pulsetrack_workouts_export.csv';
+      final file = File(filePath);
+
+      await file.writeAsString(csvContent);
+      log.i(
+        '[WorkoutExportService] Bulk CSV generated at $filePath (${csvContent.length} bytes)',
+      );
+
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: 'PulseTrack Workouts Export (${sessions.length} sessions)',
+        ),
+      );
+    } catch (e, st) {
+      log.e(
+        '[WorkoutExportService] Failed to export all workout sessions',
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
+  }
+
   Future<void> _cleanupOldExportFiles(Directory tempDir) async {
     try {
       if (!await tempDir.exists()) return;
       final entities = tempDir.listSync();
       for (final entity in entities) {
         if (entity is File &&
-            entity.path.contains('pulsetrack_workout_') &&
+            entity.path.contains('pulsetrack_workout') &&
             entity.path.endsWith('.csv')) {
           try {
             await entity.delete();
