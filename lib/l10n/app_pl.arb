@@ -277,5 +277,21 @@
    "appLockedStatusIconSemantics": "Ikona statusu blokady aplikacji",
    "unlock": "Odblokuj",
    "keepLocked": "Pozostaw zablokowane",
-   "disableLock": "Wyłącz blokadę"
+   "disableLock": "Wyłącz blokadę",
+   "tabHome": "Strona główna",
+   "@tabHome": {
+      "description": "Label for home tab in bottom navigation"
+   },
+   "tabHistory": "Historia",
+   "@tabHistory": {
+      "description": "Label for workout history tab"
+   },
+   "tabSettings": "Ustawienia",
+   "@tabSettings": {
+      "description": "Label for settings tab"
+   },
+   "tabHomeSemanticsLabel": "Zakładka Strona główna",
+   "@tabHomeSemanticsLabel": {
+      "description": "Semantics label for home tab"
+   }
 }

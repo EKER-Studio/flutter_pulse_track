@@ -784,5 +784,21 @@
    "appLockedStatusIconSemantics": "Application locked status icon",
    "unlock": "Unlock",
    "keepLocked": "Keep locked",
-   "disableLock": "Turn off lock"
+   "disableLock": "Turn off lock",
+   "tabHome": "Home",
+   "@tabHome": {
+      "description": "Label for home tab in bottom navigation"
+   },
+   "tabHistory": "History",
+   "@tabHistory": {
+      "description": "Label for workout history tab"
+   },
+   "tabSettings": "Settings",
+   "@tabSettings": {
+      "description": "Label for settings tab"
+   },
+   "tabHomeSemanticsLabel": "Home tab",
+   "@tabHomeSemanticsLabel": {
+      "description": "Semantics label for home tab"
+   }
 }
