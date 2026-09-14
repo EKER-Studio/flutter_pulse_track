@@ -184,4 +184,47 @@ void main() {
       expect(lines[3].contains(end.toIso8601String()), isTrue);
     });
   });
+
+  group('WorkoutExportService generateAllSessionsCsv', () {
+    test('creates multi-session CSV with all columns and rows', () async {
+      final session1 = WorkoutSession(
+        id: 1,
+        startTime: DateTime.utc(2026, 7, 28, 10, 0, 0),
+        endTime: DateTime.utc(2026, 7, 28, 10, 30, 0),
+        avgBpm: 130,
+        maxBpm: 160,
+        bpmSamples: [120, 130, 160],
+        sensorLocationIndex: 1,
+        deviceMacAddress: 'AA:BB:CC',
+        deviceName: 'Polar H10',
+      );
+      final session2 = WorkoutSession(
+        id: 2,
+        startTime: DateTime.utc(2026, 7, 29, 9, 0, 0),
+        endTime: DateTime.utc(2026, 7, 29, 9, 45, 0),
+        avgBpm: 140,
+        maxBpm: 170,
+        bpmSamples: [130, 140, 170],
+        sensorLocationIndex: 2,
+        deviceMacAddress: 'DD:EE:FF',
+        deviceName: 'Garmin HRM',
+      );
+
+      final csv = await exportService.generateAllSessionsCsv([
+        session1,
+        session2,
+      ]);
+      final lines = csv.trim().split(RegExp(r'\r?\n'));
+
+      expect(lines.length, 3);
+      expect(
+        lines[0],
+        'StartTime,EndTime,AvgBpm,MaxBpm,BpmSamples,SensorLocation,DeviceMacAddress,DeviceName',
+      );
+      expect(lines[1].contains('Polar H10'), isTrue);
+      expect(lines[1].contains('120;130;160'), isTrue);
+      expect(lines[2].contains('Garmin HRM'), isTrue);
+      expect(lines[2].contains('130;140;170'), isTrue);
+    });
+  });
 }
