@@ -8,17 +8,33 @@ class UserSettings {
   /// Default maximum heart rate in BPM used for zone thresholds calculation.
   final int defaultMaxHr;
 
+  /// Whether biometric app lock is enabled.
+  final bool isBiometricLockEnabled;
+
+  /// Whether the app is currently locked behind biometric shield.
+  final bool isLocked;
+
   /// Creates a [UserSettings] instance.
   const UserSettings({
     this.themeMode = AppThemeMode.system,
     this.defaultMaxHr = 190,
+    this.isBiometricLockEnabled = false,
+    this.isLocked = false,
   });
 
   /// Creates a copy of [UserSettings] with the given fields replaced.
-  UserSettings copyWith({AppThemeMode? themeMode, int? defaultMaxHr}) {
+  UserSettings copyWith({
+    AppThemeMode? themeMode,
+    int? defaultMaxHr,
+    bool? isBiometricLockEnabled,
+    bool? isLocked,
+  }) {
     return UserSettings(
       themeMode: themeMode ?? this.themeMode,
       defaultMaxHr: defaultMaxHr ?? this.defaultMaxHr,
+      isBiometricLockEnabled:
+          isBiometricLockEnabled ?? this.isBiometricLockEnabled,
+      isLocked: isLocked ?? this.isLocked,
     );
   }
 
@@ -28,8 +44,11 @@ class UserSettings {
       other is UserSettings &&
           runtimeType == other.runtimeType &&
           themeMode == other.themeMode &&
-          defaultMaxHr == other.defaultMaxHr;
+          defaultMaxHr == other.defaultMaxHr &&
+          isBiometricLockEnabled == other.isBiometricLockEnabled &&
+          isLocked == other.isLocked;
 
   @override
-  int get hashCode => Object.hash(themeMode, defaultMaxHr);
+  int get hashCode =>
+      Object.hash(themeMode, defaultMaxHr, isBiometricLockEnabled, isLocked);
 }

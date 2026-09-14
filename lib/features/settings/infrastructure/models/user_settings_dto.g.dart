@@ -22,8 +22,13 @@ const UserSettingsDtoSchema = CollectionSchema(
       name: r'defaultMaxHr',
       type: IsarType.long,
     ),
-    r'themeMode': PropertySchema(
+    r'isBiometricLockEnabled': PropertySchema(
       id: 1,
+      name: r'isBiometricLockEnabled',
+      type: IsarType.bool,
+    ),
+    r'themeMode': PropertySchema(
+      id: 2,
       name: r'themeMode',
       type: IsarType.byte,
       enumMap: _UserSettingsDtothemeModeEnumValueMap,
@@ -61,7 +66,8 @@ void _userSettingsDtoSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.defaultMaxHr);
-  writer.writeByte(offsets[1], object.themeMode.index);
+  writer.writeBool(offsets[1], object.isBiometricLockEnabled);
+  writer.writeByte(offsets[2], object.themeMode.index);
 }
 
 UserSettingsDto _userSettingsDtoDeserialize(
@@ -73,9 +79,10 @@ UserSettingsDto _userSettingsDtoDeserialize(
   final object = UserSettingsDto();
   object.defaultMaxHr = reader.readLong(offsets[0]);
   object.id = id;
+  object.isBiometricLockEnabled = reader.readBool(offsets[1]);
   object.themeMode =
       _UserSettingsDtothemeModeValueEnumMap[reader.readByteOrNull(
-        offsets[1],
+        offsets[2],
       )] ??
       AppThemeMode.system;
   return object;
@@ -91,6 +98,8 @@ P _userSettingsDtoDeserializeProp<P>(
     case 0:
       return (reader.readLong(offset)) as P;
     case 1:
+      return (reader.readBool(offset)) as P;
+    case 2:
       return (_UserSettingsDtothemeModeValueEnumMap[reader.readByteOrNull(
                 offset,
               )] ??
@@ -322,6 +331,18 @@ extension UserSettingsDtoQueryFilter
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
+  isBiometricLockEnabledEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'isBiometricLockEnabled',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
   themeModeEqualTo(AppThemeMode value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -400,6 +421,20 @@ extension UserSettingsDtoQuerySortBy
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByIsBiometricLockEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isBiometricLockEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByIsBiometricLockEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isBiometricLockEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
   sortByThemeMode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'themeMode', Sort.asc);
@@ -443,6 +478,20 @@ extension UserSettingsDtoQuerySortThenBy
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByIsBiometricLockEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isBiometricLockEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByIsBiometricLockEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isBiometricLockEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
   thenByThemeMode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'themeMode', Sort.asc);
@@ -467,6 +516,13 @@ extension UserSettingsDtoQueryWhereDistinct
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QDistinct>
+  distinctByIsBiometricLockEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isBiometricLockEnabled');
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QDistinct>
   distinctByThemeMode() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'themeMode');
@@ -485,6 +541,13 @@ extension UserSettingsDtoQueryProperty
   QueryBuilder<UserSettingsDto, int, QQueryOperations> defaultMaxHrProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'defaultMaxHr');
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, bool, QQueryOperations>
+  isBiometricLockEnabledProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isBiometricLockEnabled');
     });
   }
 

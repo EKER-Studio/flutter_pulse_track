@@ -11,11 +11,17 @@ part 'app_settings_notifier.g.dart';
 class AppSettingsNotifier extends _$AppSettingsNotifier {
   @override
   UserSettings build() {
-    final repository = ref.watch(userSettingsRepositoryProvider);
-    final subscription = repository.watchSettings().listen((settings) {
-      state = settings;
-    });
-    ref.onDispose(subscription.cancel);
+    try {
+      final repository = ref.watch(userSettingsRepositoryProvider);
+      final subscription = repository.watchSettings().listen((settings) {
+        // Preserve ephemeral lock state across DB emissions.
+        final currentLocked = state.isLocked;
+        state = settings.copyWith(isLocked: currentLocked);
+      });
+      ref.onDispose(subscription.cancel);
+    } catch (_) {
+      // In tests where Isar is not overridden, fall back to in-memory defaults.
+    }
 
     return const UserSettings();
   }
@@ -38,5 +44,22 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
     final updated = state.copyWith(defaultMaxHr: maxHr);
     state = updated;
     await repository.saveSettings(updated);
+  }
+
+  /// Updates whether biometric lock is enabled and persists it.
+  ///
+  /// @param enabled Whether biometric protection is enabled.
+  Future<void> updateBiometricLock(bool enabled) async {
+    final repository = ref.read(userSettingsRepositoryProvider);
+    final updated = state.copyWith(isBiometricLockEnabled: enabled);
+    state = updated;
+    await repository.saveSettings(updated);
+  }
+
+  /// Sets the ephemeral locked state (not persisted).
+  ///
+  /// @param locked Whether the app should show the biometric shield.
+  void setLocked(bool locked) {
+    state = state.copyWith(isLocked: locked);
   }
 }

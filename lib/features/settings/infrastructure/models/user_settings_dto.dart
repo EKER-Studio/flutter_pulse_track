@@ -21,9 +21,17 @@ class UserSettingsDto {
   /// Default maximum heart rate in BPM.
   int defaultMaxHr = 190;
 
+  /// Whether biometric lock is enabled.
+  bool isBiometricLockEnabled = false;
+
   /// Converts this database entity to a pure domain [UserSettings] model.
   UserSettings toDomain() {
-    return UserSettings(themeMode: themeMode, defaultMaxHr: defaultMaxHr);
+    return UserSettings(
+      themeMode: themeMode,
+      defaultMaxHr: defaultMaxHr,
+      isBiometricLockEnabled: isBiometricLockEnabled,
+      isLocked: false,
+    );
   }
 
   /// Creates a [UserSettingsDto] pre-populated from domain [settings].
@@ -32,6 +40,7 @@ class UserSettingsDto {
     dto.id = 1;
     dto.themeMode = settings.themeMode;
     dto.defaultMaxHr = settings.defaultMaxHr;
+    dto.isBiometricLockEnabled = settings.isBiometricLockEnabled;
     return dto;
   }
 }
