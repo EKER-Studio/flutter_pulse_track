@@ -18,6 +18,7 @@ import 'package:pulse_track/core/presentation/screens/biometric_shield_screen.da
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
 import 'package:pulse_track/features/navigation/presentation/screens/main_navigation_screen.dart';
+import 'package:pulse_track/features/onboarding/presentation/screens/onboarding_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -42,10 +43,17 @@ GoRouter appRouter(Ref ref) {
         RouteErrorView(error: state.error),
     redirect: (context, state) {
       final isGoingToShield = state.matchedLocation == '/shield';
+      final isGoingToOnboarding = state.matchedLocation == '/onboarding';
       if (settings.isLocked) {
         return isGoingToShield ? null : '/shield';
       }
       if (isGoingToShield) {
+        return '/';
+      }
+      if (!settings.isOnboardingCompleted) {
+        return isGoingToOnboarding ? null : '/onboarding';
+      }
+      if (isGoingToOnboarding) {
         return '/';
       }
       return null;
@@ -56,6 +64,12 @@ GoRouter appRouter(Ref ref) {
         name: 'shield',
         builder: (BuildContext context, GoRouterState state) =>
             const BiometricShieldScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding',
+        name: 'onboarding',
+        builder: (BuildContext context, GoRouterState state) =>
+            const OnboardingScreen(),
       ),
       GoRoute(
         path: '/scanner',

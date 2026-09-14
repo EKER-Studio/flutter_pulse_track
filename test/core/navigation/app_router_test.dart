@@ -19,6 +19,8 @@ import 'package:pulse_track/features/workout/domain/usecases/save_partial_workou
 import 'package:pulse_track/features/workout/domain/usecases/save_workout_session_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
+import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
+import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
 class _MockHeartRateMonitorService extends Mock
@@ -93,6 +95,9 @@ void main() {
         ),
         savePartialWorkoutSessionUseCaseProvider.overrideWithValue(
           mockSavePartialWorkoutSessionUseCase,
+        ),
+        appSettingsProvider.overrideWithValue(
+          const UserSettings(isOnboardingCompleted: true),
         ),
       ],
     );
