@@ -72,6 +72,10 @@
 		<string>PulseTrack requires Bluetooth access to discover and connect to heart rate monitors and chest straps.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>Location access is required by the system to scan for and identify nearby Bluetooth Low Energy fitness sensors.</string>
+		<key>NSHealthShareUsageDescription</key>
+		<string>PulseTrack requires read access to your health and workout data to display heart rate telemetry and training metrics.</string>
+		<key>NSHealthUpdateUsageDescription</key>
+		<string>PulseTrack requires write access to sync heart rate telemetry and workout sessions to Apple Health.</string>
 		<key>UIBackgroundModes</key>
 		<array>
 			<string>bluetooth-central</string>
