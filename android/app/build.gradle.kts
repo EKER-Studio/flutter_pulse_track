@@ -31,9 +31,8 @@ android {
 
     defaultConfig {
         applicationId = "com.ekerstudio.pulsetrack"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // Health Connect and stable background BLE require a minimum SDK of 26.
+        minSdk = 26
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
