@@ -42,3 +42,8 @@
 # Preserves Bluetooth Low Energy communication interfaces and channel callbacks.
 -keep class com.boskokg.flutter_blue_plus.** { *; }
 
+# --- Health Connect / AndroidX Health ---
+-keep class androidx.health.** { *; }
+-dontwarn androidx.health.**
+
+
