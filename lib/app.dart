@@ -4,10 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/infrastructure/storage/database_module.dart';
 import 'core/integrations/biometrics/biometric_lock_observer.dart';
+import 'core/integrations/widgets/widget_sync_service.dart';
 import 'core/navigation/app_router.dart';
 import 'core/presentation/theme/app_theme.dart';
 import 'features/settings/domain/models/app_theme_mode.dart';
 import 'features/settings/presentation/controllers/app_settings_notifier.dart';
+import 'features/workout/domain/usecases/watch_workout_history_usecase.dart';
 import 'l10n/app_localizations.dart';
 
 /// Root widget that configures the MaterialApp with Material 3 theming and GoRouter navigation.
@@ -26,19 +28,21 @@ class App extends ConsumerWidget {
     };
 
     return _BiometricObserverRegistrar(
-      child: MaterialApp.router(
-        title: 'PulseTrack',
-        themeMode: themeMode,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        routerConfig: router,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
+      child: _WidgetSyncObserver(
+        child: MaterialApp.router(
+          title: 'PulseTrack',
+          themeMode: themeMode,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          routerConfig: router,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+        ),
       ),
     );
   }
@@ -84,6 +88,35 @@ class _BiometricObserverRegistrarState
   void dispose() {
     _observer?.dispose();
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
+
+/// Synchronizes workout history to home widgets.
+class _WidgetSyncObserver extends ConsumerStatefulWidget {
+  final Widget child;
+  const _WidgetSyncObserver({required this.child});
+
+  @override
+  ConsumerState<_WidgetSyncObserver> createState() =>
+      _WidgetSyncObserverState();
+}
+
+class _WidgetSyncObserverState extends ConsumerState<_WidgetSyncObserver> {
+  @override
+  void initState() {
+    super.initState();
+    // Listen to workout history and push to widgets.
+    ref.listenManual(
+      watchWorkoutHistoryStreamProvider,
+      (previous, next) {
+        next.whenData((sessions) {
+          WidgetSyncService.instance.updateWidgetData(sessions: sessions);
+        });
+      },
+    );
   }
 
   @override

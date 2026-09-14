@@ -10,6 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'app.dart';
 import 'core/infrastructure/storage/database_module.dart';
 import 'core/infrastructure/storage/isar_provider.dart';
+import 'core/integrations/notifications/notification_service.dart';
+import 'core/integrations/widgets/widget_sync_service.dart';
 import 'core/presentation/theme/app_colors.dart';
 import 'core/utils/app_logger.dart';
 import 'core/utils/crash_reporter.dart';
@@ -70,6 +72,29 @@ Future<void> main() async {
       'Firebase initialization skipped or failed: $e',
       error: e,
       stackTrace: st,
+    );
+  }
+
+  // Initialize widget and notification services.
+  try {
+    await WidgetSyncService.instance.initialize();
+  } catch (e, stack) {
+    await AppCrashReporter.recordError(
+      e,
+      stack,
+      reason: 'WidgetSyncService initialization failed',
+      fatal: false,
+    );
+  }
+
+  try {
+    await NotificationService.instance.initialize();
+  } catch (e, stack) {
+    await AppCrashReporter.recordError(
+      e,
+      stack,
+      reason: 'NotificationService initialization failed',
+      fatal: false,
     );
   }
 
