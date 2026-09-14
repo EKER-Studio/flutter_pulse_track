@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -21,7 +20,7 @@ class NotificationService {
 
   bool _initialized = false;
 
-  String _channelId = 'pulsetrack_reminders';
+  final String _channelId = 'pulsetrack_reminders';
   String _channelName = 'Workout Reminders';
   String _channelDescription = 'Reminds you to track your heart rate';
 
@@ -46,7 +45,8 @@ class NotificationService {
   Future<void> _updateAndroidChannel() async {
     final androidPlugin = _plugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     if (androidPlugin == null) return;
     final channel = AndroidNotificationChannel(
       _channelId,
@@ -66,7 +66,8 @@ class NotificationService {
 
       final androidPlugin = _plugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+            AndroidFlutterLocalNotificationsPlugin
+          >();
       final channel = AndroidNotificationChannel(
         _channelId,
         _channelName,
@@ -75,8 +76,9 @@ class NotificationService {
       );
       await androidPlugin?.createNotificationChannel(channel);
 
-      const androidSettings =
-          AndroidInitializationSettings('@drawable/ic_notification');
+      const androidSettings = AndroidInitializationSettings(
+        '@drawable/ic_notification',
+      );
       const darwinSettings = DarwinInitializationSettings(
         requestAlertPermission: true,
         requestBadgePermission: true,
@@ -84,7 +86,7 @@ class NotificationService {
       );
 
       await _plugin.initialize(
-        settings: const InitializationSettings(
+        const InitializationSettings(
           android: androidSettings,
           iOS: darwinSettings,
         ),
@@ -156,7 +158,14 @@ class NotificationService {
 
   tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
     final now = tz.TZDateTime.now(tz.local);
-    var scheduled = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+    var scheduled = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
     if (scheduled.isBefore(now)) {
       scheduled = scheduled.add(const Duration(days: 1));
     }
