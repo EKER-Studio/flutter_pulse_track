@@ -56,8 +56,14 @@ class WidgetSyncService {
         await HomeWidget.saveWidgetData<String>('avg_bpm', '${latest.avgBpm}');
         await HomeWidget.saveWidgetData<String>('max_bpm', '${latest.maxBpm}');
         await HomeWidget.saveWidgetData<String>('duration', durationStr);
-        await HomeWidget.saveWidgetData<String>('device_name', latest.deviceName);
-        await HomeWidget.saveWidgetData<int>('samples_count', latest.bpmSamples.length);
+        await HomeWidget.saveWidgetData<String>(
+          'device_name',
+          latest.deviceName,
+        );
+        await HomeWidget.saveWidgetData<int>(
+          'samples_count',
+          latest.bpmSamples.length,
+        );
       }
 
       await HomeWidget.updateWidget(

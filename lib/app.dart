@@ -109,14 +109,11 @@ class _WidgetSyncObserverState extends ConsumerState<_WidgetSyncObserver> {
   void initState() {
     super.initState();
     // Listen to workout history and push to widgets.
-    ref.listenManual(
-      watchWorkoutHistoryStreamProvider,
-      (previous, next) {
-        next.whenData((sessions) {
-          WidgetSyncService.instance.updateWidgetData(sessions: sessions);
-        });
-      },
-    );
+    ref.listenManual(watchWorkoutHistoryStreamProvider, (previous, next) {
+      next.whenData((sessions) {
+        WidgetSyncService.instance.updateWidgetData(sessions: sessions);
+      });
+    });
   }
 
   @override
