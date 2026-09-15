@@ -78,6 +78,17 @@ abstract class WorkoutPersistenceRepository {
   /// Returns a [Future] that completes once the record is deleted.
   Future<void> deleteWorkoutSession(int sessionId);
 
+  /// Permanently deletes all workout sessions identified by [sessionIds] in a single transaction.
+  ///
+  /// Returns a [Future] that completes once the records are deleted.
+  Future<void> deleteWorkoutSessions(List<int> sessionIds);
+
+  /// Persists multiple workout sessions in a single transaction.
+  ///
+  /// Takes the list of domain [sessions] to persist.
+  /// Returns a [Future] that completes when all sessions are written.
+  Future<void> saveWorkoutSessionsBatch(List<WorkoutSession> sessions);
+
   /// Scans persistent storage for crashed/unclosed workout sessions (where `endTime` is null).
   ///
   /// Finalizes incomplete records by assigning an estimated `endTime` derived from

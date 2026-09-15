@@ -147,6 +147,38 @@ class WorkoutPersistenceRepository
     });
   }
 
+  /// Permanently deletes all workout sessions identified by [sessionIds] in a single transaction.
+  @override
+  Future<void> deleteWorkoutSessions(List<int> sessionIds) async {
+    if (sessionIds.isEmpty) return;
+    await _isar.writeTxn(() async {
+      for (final id in sessionIds) {
+        await _isar.workoutSessionDtos.delete(id);
+      }
+    });
+  }
+
+  /// Persists multiple workout sessions in a single transaction.
+  @override
+  Future<void> saveWorkoutSessionsBatch(List<WorkoutSession> sessions) async {
+    if (sessions.isEmpty) return;
+    await _isar.writeTxn(() async {
+      for (final session in sessions) {
+        final dto = WorkoutSessionDto()
+          ..id = Isar.autoIncrement
+          ..startTime = session.startTime.toUtc()
+          ..endTime = session.endTime?.toUtc()
+          ..avgBpm = session.avgBpm
+          ..maxBpm = session.maxBpm
+          ..bpmSamples = session.bpmSamples
+          ..sensorLocationIndex = session.sensorLocationIndex
+          ..deviceMacAddress = session.deviceMacAddress
+          ..deviceName = session.deviceName;
+        await _isar.workoutSessionDtos.put(dto);
+      }
+    });
+  }
+
   /// Scans persistent storage for crashed/unclosed workout sessions (where [WorkoutSessionDto.endTime] is null).
   ///
   /// Finalizes incomplete records by assigning an estimated [WorkoutSessionDto.endTime] derived from
