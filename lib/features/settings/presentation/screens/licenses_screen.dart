@@ -77,8 +77,12 @@ class _LicensesScreenState extends State<LicensesScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final packageInfo = snapshot.data?[0] as PackageInfo?;
-          final licenses = (snapshot.data?[1] as List<PackageLicense>?) ?? [];
+          final packageInfo = snapshot.data?[0] is PackageInfo
+              ? snapshot.data![0] as PackageInfo
+              : null;
+          final licenses = snapshot.data?[1] is List<PackageLicense>
+              ? snapshot.data![1] as List<PackageLicense>
+              : <PackageLicense>[];
 
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

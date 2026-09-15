@@ -71,6 +71,7 @@ class _MaxHrSelectionDialogState extends State<MaxHrSelectionDialog> {
     final l10n = AppLocalizations.of(context);
 
     return AlertDialog(
+      scrollable: true,
       title: Text(l10n.settingsMaxHrDialogTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,

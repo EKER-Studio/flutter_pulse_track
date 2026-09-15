@@ -251,10 +251,10 @@ class _CompletionStep extends StatelessWidget {
         style: Theme.of(context).textTheme.bodyMedium,
         textAlign: TextAlign.center,
       ),
-      content: const Icon(
+      content: Icon(
         Icons.check_circle_outline,
         size: 96,
-        color: Colors.green,
+        color: Theme.of(context).colorScheme.primary,
       ),
       footer: Row(
         children: [

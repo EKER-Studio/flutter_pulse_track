@@ -100,8 +100,12 @@ class CsvWorkoutImporter {
       try {
         final timeStr = row[timeIdx].toString().trim();
         final bpmStr = row[bpmIdx].toString().trim();
-        final timestamp = DateTime.parse(timeStr);
-        final bpm = int.parse(bpmStr);
+        final timestamp = DateTime.tryParse(timeStr);
+        final bpm = int.tryParse(bpmStr);
+        if (timestamp == null || bpm == null) {
+          skippedRows++;
+          continue;
+        }
 
         if (firstTime == null || timestamp.isBefore(firstTime)) {
           firstTime = timestamp;
@@ -192,7 +196,11 @@ class CsvWorkoutImporter {
       }
       try {
         final startStr = row[startIdx].toString().trim();
-        final startTime = DateTime.parse(startStr);
+        final startTime = DateTime.tryParse(startStr);
+        if (startTime == null) {
+          skippedRows++;
+          continue;
+        }
 
         DateTime? endTime;
         if (endIdx != -1 && endIdx < row.length) {
