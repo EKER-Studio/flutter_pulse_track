@@ -67,13 +67,29 @@ class AdaptiveNavigationRail extends StatelessWidget {
                       label: Text(l10n.tabHome),
                     ),
                     NavigationRailDestination(
-                      icon: const Icon(Icons.history_outlined),
-                      selectedIcon: const Icon(Icons.history),
+                      icon: Semantics(
+                        selected: selectedIndex == 1,
+                        label: l10n.tabHistorySemanticsLabel,
+                        child: const Icon(Icons.history_outlined),
+                      ),
+                      selectedIcon: Semantics(
+                        selected: selectedIndex == 1,
+                        label: l10n.tabHistorySemanticsLabel,
+                        child: const Icon(Icons.history),
+                      ),
                       label: Text(l10n.tabHistory),
                     ),
                     NavigationRailDestination(
-                      icon: const Icon(Icons.settings_outlined),
-                      selectedIcon: const Icon(Icons.settings),
+                      icon: Semantics(
+                        selected: selectedIndex == 2,
+                        label: l10n.tabSettingsSemanticsLabel,
+                        child: const Icon(Icons.settings_outlined),
+                      ),
+                      selectedIcon: Semantics(
+                        selected: selectedIndex == 2,
+                        label: l10n.tabSettingsSemanticsLabel,
+                        child: const Icon(Icons.settings),
+                      ),
                       label: Text(l10n.tabSettings),
                     ),
                   ],

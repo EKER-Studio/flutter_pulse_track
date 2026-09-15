@@ -80,15 +80,23 @@ class AdaptiveBottomNavigationBar extends StatelessWidget {
                 label: l10n.tabHome,
               ),
             ),
-            NavigationDestination(
-              icon: const Icon(Icons.history_outlined),
-              selectedIcon: const Icon(Icons.history),
-              label: l10n.tabHistory,
+            Semantics(
+              selected: selectedIndex == 1,
+              label: l10n.tabHistorySemanticsLabel,
+              child: NavigationDestination(
+                icon: const Icon(Icons.history_outlined),
+                selectedIcon: const Icon(Icons.history),
+                label: l10n.tabHistory,
+              ),
             ),
-            NavigationDestination(
-              icon: const Icon(Icons.settings_outlined),
-              selectedIcon: const Icon(Icons.settings),
-              label: l10n.tabSettings,
+            Semantics(
+              selected: selectedIndex == 2,
+              label: l10n.tabSettingsSemanticsLabel,
+              child: NavigationDestination(
+                icon: const Icon(Icons.settings_outlined),
+                selectedIcon: const Icon(Icons.settings),
+                label: l10n.tabSettings,
+              ),
             ),
           ],
         ),

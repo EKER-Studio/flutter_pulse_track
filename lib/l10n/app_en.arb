@@ -801,6 +801,14 @@
    "@tabHomeSemanticsLabel": {
       "description": "Semantics label for home tab"
    },
+   "tabHistorySemanticsLabel": "History tab",
+   "@tabHistorySemanticsLabel": {
+      "description": "Semantics label for history tab"
+   },
+   "tabSettingsSemanticsLabel": "Settings tab",
+   "@tabSettingsSemanticsLabel": {
+      "description": "Semantics label for settings tab"
+   },
    "onboardingWelcomeTitle": "Welcome to PulseTrack",
    "@onboardingWelcomeTitle": {
       "description": "Onboarding: onboardingWelcomeTitle"
