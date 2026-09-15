@@ -46,8 +46,9 @@ class WidgetSyncService {
           ..sort((a, b) => a.startTime.compareTo(b.startTime));
         final latest = sorted.last;
         final dateStr = DateFormat('dd MMM, HH:mm').format(latest.startTime);
-        final duration = latest.endTime != null
-            ? latest.endTime!.difference(latest.startTime)
+        final endTime = latest.endTime;
+        final duration = endTime != null
+            ? endTime.difference(latest.startTime)
             : Duration.zero;
         final durationStr = _formatDuration(duration);
 

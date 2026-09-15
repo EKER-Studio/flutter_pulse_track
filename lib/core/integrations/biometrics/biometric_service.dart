@@ -153,10 +153,11 @@ class BiometricService {
   bool get isAuthenticating => _activeAuthFuture != null;
 
   /// Whether authentication finished very recently (within 1 second).
-  bool get wasAuthenticatingRecently =>
-      _lastAuthCompletionTime != null &&
-      DateTime.now().difference(_lastAuthCompletionTime!) <
-          const Duration(seconds: 1);
+  bool get wasAuthenticatingRecently {
+    final lastCompletion = _lastAuthCompletionTime;
+    return lastCompletion != null &&
+        DateTime.now().difference(lastCompletion) < const Duration(seconds: 1);
+  }
 
   /// Prompts the user for device credential authentication.
   Future<BiometricAuthResult> authenticate({

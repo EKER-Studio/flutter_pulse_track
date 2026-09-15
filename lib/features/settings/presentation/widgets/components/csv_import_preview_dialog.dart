@@ -37,9 +37,11 @@ class CsvImportPreviewDialog extends StatelessWidget {
     );
 
     String? dateRangeText;
-    if (analysis.earliestDate != null && analysis.latestDate != null) {
-      final start = dateFormat.format(analysis.earliestDate!);
-      final end = dateFormat.format(analysis.latestDate!);
+    final earliestDate = analysis.earliestDate;
+    final latestDate = analysis.latestDate;
+    if (earliestDate != null && latestDate != null) {
+      final start = dateFormat.format(earliestDate);
+      final end = dateFormat.format(latestDate);
       dateRangeText = start == end
           ? start
           : l10n.csvPreviewDateRange(start, end);

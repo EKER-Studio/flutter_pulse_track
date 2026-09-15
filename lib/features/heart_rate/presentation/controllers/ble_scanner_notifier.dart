@@ -245,7 +245,8 @@ class BleScannerNotifier extends _$BleScannerNotifier
   }
 
   void _ensureEmptyStateTimerRunning() {
-    if (_emptyStateTimer == null || !_emptyStateTimer!.isActive) {
+    final timer = _emptyStateTimer;
+    if (timer == null || !timer.isActive) {
       _emptyStateTimer = Timer(_kEmptyStateWindow, _onEmptyStateWindowElapsed);
       log.d(
         '[BleScannerNotifier] Empty-state timer re-armed '

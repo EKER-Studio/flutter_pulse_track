@@ -36,8 +36,9 @@ class _LicensesScreenState extends State<LicensesScreen> {
   @override
   void initState() {
     super.initState();
-    _packageInfoFuture = widget.packageInfo != null
-        ? Future.value(widget.packageInfo!)
+    final packageInfo = widget.packageInfo;
+    _packageInfoFuture = packageInfo != null
+        ? Future.value(packageInfo)
         : PackageInfo.fromPlatform();
     _licensesFuture = _loadLicenses();
   }

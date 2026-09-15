@@ -24,8 +24,9 @@ class WorkoutExportService {
       return Csv().encode(rows);
     }
 
-    final totalDuration = session.endTime != null
-        ? session.endTime!.difference(session.startTime)
+    final endTime = session.endTime;
+    final totalDuration = endTime != null
+        ? endTime.difference(session.startTime)
         : Duration.zero;
 
     final divisor = sampleCount > 1 ? sampleCount - 1 : 1;

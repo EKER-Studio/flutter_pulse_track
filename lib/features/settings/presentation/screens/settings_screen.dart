@@ -174,6 +174,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final settings = ref.watch(appSettingsProvider);
+    final packageInfo = _packageInfo;
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
@@ -284,8 +285,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           SettingsTile(
             icon: Icons.info_outline_rounded,
             title: l10n.settingsVersion,
-            subtitle: _packageInfo != null
-                ? 'v${_packageInfo!.version} (${_packageInfo!.buildNumber})'
+            subtitle: packageInfo != null
+                ? 'v${packageInfo.version} (${packageInfo.buildNumber})'
                 : '...',
           ),
           SettingsTile(

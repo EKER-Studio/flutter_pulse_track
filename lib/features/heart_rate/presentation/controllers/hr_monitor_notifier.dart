@@ -206,7 +206,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       _connectTimer = null;
     }
 
-    if (!ref.mounted || _device == null || _isDisconnecting) {
+    final device = _device;
+    if (!ref.mounted || device == null || _isDisconnecting) {
       log.w(
         '[HrMonitorNotifier] connect() aborted — notifier disposed or disconnecting '
         'while awaiting physical link.',
@@ -217,7 +218,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     log.i('[HrMonitorNotifier] Physical link established.');
 
     _connectionStateSubscription = _monitorService
-        .connectionState(_device!)
+        .connectionState(device)
         .listen(_onDeviceConnectionStateChanged);
 
     state = const MonitorState.discoveringServices();
@@ -230,7 +231,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     List<BluetoothService> services;
     try {
       services = await _monitorService
-          .discoverServices(_device!)
+          .discoverServices(device)
           .timeout(_kDiscoverServicesTimeout);
     } on TimeoutException {
       log.e(
@@ -798,9 +799,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   }
 
   Future<void> _safeDisconnectDevice() async {
-    if (_device == null) return;
+    final device = _device;
+    if (device == null) return;
     try {
-      await _monitorService.disconnect(_device!);
+      await _monitorService.disconnect(device);
       log.d('[HrMonitorNotifier] Link-layer disconnect completed.');
     } catch (e) {
       log.w(
