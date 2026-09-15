@@ -253,7 +253,7 @@ class HrScannerView extends ConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  onPressed: () => notifier.startScan(),
+                  onPressed: () => notifier.retry(),
                 ),
               ),
             ],
@@ -321,7 +321,7 @@ class HrScannerView extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    onPressed: () => notifier.startScan(),
+                    onPressed: () => notifier.retry(),
                     child: Text(
                       AppLocalizations.of(context).scan_button_label,
                       style: const TextStyle(color: AppColors.textPrimary),
