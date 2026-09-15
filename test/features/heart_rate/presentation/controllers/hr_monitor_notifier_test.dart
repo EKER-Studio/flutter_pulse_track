@@ -12,6 +12,7 @@ import 'package:pulse_track/features/heart_rate/domain/models/body_sensor_locati
 import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
 import 'package:pulse_track/features/heart_rate/infrastructure/services/fbp_heart_rate_monitor_service.dart';
 import 'package:pulse_track/features/heart_rate/presentation/controllers/hr_monitor_notifier.dart';
+import 'package:pulse_track/features/workout/application/workout_providers.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_device_profile_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_partial_workout_session_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_workout_session_usecase.dart';

@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_home_view.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
-import 'package:pulse_track/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
+import 'package:pulse_track/features/workout/application/workout_providers.dart';
 
 void main() {
   testWidgets('HrHomeView renders without crashing', (

@@ -12,8 +12,7 @@ import 'package:pulse_track/features/heart_rate/presentation/views/hr_scanner_vi
 import 'package:pulse_track/features/heart_rate/presentation/views/workout_history_view.dart';
 import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
-import 'package:pulse_track/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
-import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
+import 'package:pulse_track/features/workout/application/workout_providers.dart';
 import 'package:pulse_track/features/workout/presentation/views/workout_details_view.dart';
 
 import 'helpers/screenshot_test_helper.dart';

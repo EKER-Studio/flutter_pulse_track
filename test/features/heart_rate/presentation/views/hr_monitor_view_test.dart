@@ -7,6 +7,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pulse_track/core/infrastructure/services/foreground_service_manager.dart';
 import 'package:pulse_track/features/heart_rate/infrastructure/services/fbp_heart_rate_monitor_service.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
+import 'package:pulse_track/features/workout/application/workout_providers.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_device_profile_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_partial_workout_session_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_workout_session_usecase.dart';

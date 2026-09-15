@@ -9,7 +9,7 @@ import 'package:pulse_track/features/settings/presentation/screens/settings_scre
 import 'package:pulse_track/features/settings/presentation/widgets/components/max_hr_selection_dialog.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/theme_selection_dialog.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
-import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
+import 'package:pulse_track/features/workout/application/workout_providers.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
 class FakeAppSettingsNotifier extends AppSettingsNotifier {
