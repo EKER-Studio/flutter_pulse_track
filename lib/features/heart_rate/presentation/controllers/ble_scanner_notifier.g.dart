@@ -9,21 +9,33 @@ part of 'ble_scanner_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Manages BLE scanning lifecycle and filters discovered devices.
+///
+/// Auto-disposed when the scanner view is popped; [_cleanup] stops the
+/// hardware scan and cancels all subscriptions, so no radio or battery
+/// resources leak beyond the view lifetime.
 
 @ProviderFor(BleScannerNotifier)
 final bleScannerProvider = BleScannerNotifierProvider._();
 
 /// Manages BLE scanning lifecycle and filters discovered devices.
+///
+/// Auto-disposed when the scanner view is popped; [_cleanup] stops the
+/// hardware scan and cancels all subscriptions, so no radio or battery
+/// resources leak beyond the view lifetime.
 final class BleScannerNotifierProvider
     extends $NotifierProvider<BleScannerNotifier, BleScannerState> {
   /// Manages BLE scanning lifecycle and filters discovered devices.
+  ///
+  /// Auto-disposed when the scanner view is popped; [_cleanup] stops the
+  /// hardware scan and cancels all subscriptions, so no radio or battery
+  /// resources leak beyond the view lifetime.
   BleScannerNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'bleScannerProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -45,9 +57,13 @@ final class BleScannerNotifierProvider
 }
 
 String _$bleScannerNotifierHash() =>
-    r'aeb58ee36794e8ba2a8025f89f6057d335cff034';
+    r'766465542cde900d930881ff09517e9577c969fc';
 
 /// Manages BLE scanning lifecycle and filters discovered devices.
+///
+/// Auto-disposed when the scanner view is popped; [_cleanup] stops the
+/// hardware scan and cancels all subscriptions, so no radio or battery
+/// resources leak beyond the view lifetime.
 
 abstract class _$BleScannerNotifier extends $Notifier<BleScannerState> {
   BleScannerState build();

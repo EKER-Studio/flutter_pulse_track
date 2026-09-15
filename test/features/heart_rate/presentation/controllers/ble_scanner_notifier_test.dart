@@ -87,8 +87,14 @@ buildMockService({bool isScanningNow = false}) {
 /// Reads the [bleScannerProvider] to trigger lazy [build()] and returns the
 /// notifier. All tests that interact with the notifier MUST call this before
 /// driving streams, so the internal subscriptions are registered.
-BleScannerNotifier initNotifier(ProviderContainer c) =>
-    c.read(bleScannerProvider.notifier);
+///
+/// Holds a subscription like the scanner view's `watch` does, so the
+/// auto-dispose provider stays alive for the test duration instead of
+/// being torn down immediately after the synchronous read.
+BleScannerNotifier initNotifier(ProviderContainer c) {
+  c.listen<BleScannerState>(bleScannerProvider, (_, _) {});
+  return c.read(bleScannerProvider.notifier);
+}
 
 // ── Tests ──────────────────────────────────────────────────────────────────
 
@@ -358,7 +364,7 @@ void main() {
     test('off transitions to AdapterOffScannerState', () async {
       final m = buildMockService();
       container = createContainer(scannerService: m.service);
-      container!.read(bleScannerProvider);
+      initNotifier(container!);
 
       m.adapterStateController.add(BluetoothAdapterState.off);
       await Future.delayed(Duration.zero);
@@ -370,7 +376,7 @@ void main() {
     test('on from adapterOff transitions to idle', () async {
       final m = buildMockService();
       container = createContainer(scannerService: m.service);
-      container!.read(bleScannerProvider);
+      initNotifier(container!);
 
       m.adapterStateController.add(BluetoothAdapterState.off);
       await Future.delayed(Duration.zero);
@@ -389,7 +395,7 @@ void main() {
     test('on from idle does not change state', () async {
       final m = buildMockService();
       container = createContainer(scannerService: m.service);
-      container!.read(bleScannerProvider);
+      initNotifier(container!);
 
       m.adapterStateController.add(BluetoothAdapterState.on);
       await Future.delayed(Duration.zero);
