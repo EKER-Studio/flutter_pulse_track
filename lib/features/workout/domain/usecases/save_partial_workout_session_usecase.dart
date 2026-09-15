@@ -1,8 +1,4 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart';
-
-part 'save_partial_workout_session_usecase.g.dart';
 
 /// Encapsulates the application logic for persisting a partial workout session
 /// snapshot as a checkpoint during an active workout.
@@ -46,14 +42,5 @@ class SavePartialWorkoutSessionUseCase {
     avgBpm: avgBpm,
     maxBpm: maxBpm,
     existingId: existingId,
-  );
-}
-
-/// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
-@riverpod
-SavePartialWorkoutSessionUseCase savePartialWorkoutSessionUseCase(Ref ref) {
-  return SavePartialWorkoutSessionUseCase(
-    ref.watch(workoutPersistenceRepositoryProvider),
   );
 }

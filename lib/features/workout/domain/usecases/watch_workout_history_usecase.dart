@@ -1,9 +1,5 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart';
-
-part 'watch_workout_history_usecase.g.dart';
 
 /// Encapsulates reactively observing the full workout session history.
 ///
@@ -21,20 +17,4 @@ class WatchWorkoutHistoryUseCase {
   ///
   /// Emits a new list of workout sessions whenever records are inserted or removed.
   Stream<List<WorkoutSession>> call() => _repository.watchWorkoutHistory();
-}
-
-/// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
-@riverpod
-WatchWorkoutHistoryUseCase watchWorkoutHistoryUseCase(Ref ref) {
-  return WatchWorkoutHistoryUseCase(
-    ref.watch(workoutPersistenceRepositoryProvider),
-  );
-}
-
-/// Reactive stream of workout history for direct use in
-/// `ref.watch(watchWorkoutHistoryStreamProvider)` from views using [ref].
-@riverpod
-Stream<List<WorkoutSession>> watchWorkoutHistoryStream(Ref ref) {
-  return ref.watch(watchWorkoutHistoryUseCaseProvider).call();
 }

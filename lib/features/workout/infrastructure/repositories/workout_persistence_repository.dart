@@ -1,7 +1,5 @@
 import 'package:isar_community/isar.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:pulse_track/core/infrastructure/storage/isar_provider.dart';
 import 'package:pulse_track/core/utils/app_logger.dart';
 import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
@@ -9,8 +7,6 @@ import 'package:pulse_track/features/workout/domain/repositories/workout_persist
     as domain;
 import 'package:pulse_track/features/workout/infrastructure/models/device_profile_dto.dart';
 import 'package:pulse_track/features/workout/infrastructure/models/workout_session_dto.dart';
-
-part 'workout_persistence_repository.g.dart';
 
 /// Concrete Isar-backed implementation of [WorkoutPersistenceRepository].
 ///
@@ -148,7 +144,6 @@ class WorkoutPersistenceRepository
   }
 
   /// Permanently deletes all workout sessions identified by [sessionIds] in a single transaction.
-  @override
   Future<void> deleteWorkoutSessions(List<int> sessionIds) async {
     if (sessionIds.isEmpty) return;
     await _isar.writeTxn(() async {
@@ -159,7 +154,6 @@ class WorkoutPersistenceRepository
   }
 
   /// Persists multiple workout sessions in a single transaction.
-  @override
   Future<void> saveWorkoutSessionsBatch(List<WorkoutSession> sessions) async {
     if (sessions.isEmpty) return;
     await _isar.writeTxn(() async {
@@ -246,11 +240,4 @@ class WorkoutPersistenceRepository
         deviceMacAddress: dto.deviceMacAddress,
         deviceName: dto.deviceName,
       );
-}
-
-/// Riverpod provider delivering the [WorkoutPersistenceRepository] instance using [ref].
-@riverpod
-WorkoutPersistenceRepository workoutPersistenceRepository(Ref ref) {
-  final isar = ref.watch(isarProvider);
-  return WorkoutPersistenceRepository(isar);
 }

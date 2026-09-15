@@ -1,9 +1,5 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
-
-part 'workout_persistence_repository.g.dart';
 
 /// Repository contract for persisting workout sessions and device profiles.
 ///
@@ -94,15 +90,4 @@ abstract class WorkoutPersistenceRepository {
   /// Finalizes incomplete records by assigning an estimated `endTime` derived from
   /// recorded heart rate samples or deletes empty orphaned records.
   Future<void> sanitizeCrashedSessions();
-}
-
-/// Provider supplying the [WorkoutPersistenceRepository] domain contract.
-///
-/// Throws [UnimplementedError] by default. Must be overridden in [ProviderScope]
-/// with a concrete infrastructure implementation.
-@riverpod
-WorkoutPersistenceRepository workoutPersistenceRepository(Ref ref) {
-  throw UnimplementedError(
-    'workoutPersistenceRepositoryProvider must be overridden in ProviderScope with an initialized instance.',
-  );
 }

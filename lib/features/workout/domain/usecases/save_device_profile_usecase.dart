@@ -1,8 +1,4 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart';
-
-part 'save_device_profile_usecase.g.dart';
 
 /// Encapsulates the application logic for caching a BLE sensor profile.
 ///
@@ -30,14 +26,5 @@ class SaveDeviceProfileUseCase {
     macAddress: macAddress,
     name: name,
     sensorLocationIndex: sensorLocationIndex,
-  );
-}
-
-/// Riverpod provider that supplies a [SaveDeviceProfileUseCase] wired to the
-/// abstract [WorkoutPersistenceRepository] contract using [ref].
-@riverpod
-SaveDeviceProfileUseCase saveDeviceProfileUseCase(Ref ref) {
-  return SaveDeviceProfileUseCase(
-    ref.watch(workoutPersistenceRepositoryProvider),
   );
 }
