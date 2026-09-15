@@ -1,210 +1,587 @@
 {
-   "@@locale": "nl",
-   "homeTitle": "PulseTrack",
-   "savedSensorsSectionTitle": "Opgeslagen sensoren (Direct verbinden)",
-   "unknownSensorLabel": "Onbekende sensor",
-   "savedSensorFallbackName": "Opgeslagen sensor",
-   "scanForNewSensorButton": "Zoeken naar nieuwe sensor",
-   "workoutHistoryTitle": "Trainingsgeschiedenis",
-   "workoutHistoryDescription": "Bekijk eerdere hartslagsessies en statistieken.",
-   "scanner_title": "Scanner",
-   "bluetooth_searching_label": "Bluetooth scannen",
-   "bluetooth_disabled_label": "Bluetooth uitgeschakeld",
-   "device_unknown_label": "Onbekend apparaat",
-   "toggle_filter_tooltip": "Namen- en nabijheidsfilter in-/uitschakelen",
-   "ready_to_scan": "Klaar om te scannen",
-   "start_scan_description": "Tik op Scannen om te zoeken naar sensoren.",
-   "scan_button_label": "Scannen",
-   "bluetooth_required": "Bluetooth vereist",
-   "bluetooth_off_description": "Bluetooth is uitgeschakeld of niet geautoriseerd. Schakel Bluetooth in en verleen machtigingen om naar sensoren te scannen.",
-   "empty_state_title": "ZIE JE JE APPARAAT NIET?",
-   "empty_state_bullets": "• Controleer of de sensor is ingeschakeld.\n• Controleer de batterij van de sensor.\n• Ga dichter bij het apparaat staan.\n• Probeer de scanfilters uit te schakelen.",
-   "retry_scan_label": "Opnieuw scannen",
-   "scan_failed_title": "Scannen mislukt",
-   "retry_button_label": "Opnieuw proberen",
-   "searching_sensors": "Zoeken naar actieve sensoren...",
-   "unknown_device": "Onbekend apparaat",
-   "scan_button_semantic_label": "Starten met scannen naar hartslagsensoren",
-   "retry_scan_semantic_label": "Opnieuw scannen naar sensoren",
-   "connectToSensor": "Verbinden met {sensorName}",
-   "@connectToSensor": {
-      "description": "Semantic label for saved sensor chips on the home screen.",
-      "placeholders": {
-         "sensorName": {
-            "type": "String"
-         }
+  "@@locale": "nl",
+  "@back": {
+    "description": "Onboarding: back"
+  },
+  "@bodySensorLocationLabel": {
+    "description": "Accessibility label for the sensor location card.",
+    "placeholders": {
+      "location": {
+        "type": "String"
       }
-   },
-   "deviceListTileHint": "MAC-adres {id}, signaalsterkte {rssi} dBm. Dubbeltik om te verbinden.",
-   "@deviceListTileHint": {
-      "description": "Semantics hint for each device row in the scanner list.",
-      "placeholders": {
-         "id": {
-            "type": "String"
-         },
-         "rssi": {
-            "type": "int"
-         }
+    }
+  },
+  "@cancel": {
+    "description": "Generic cancel button label."
+  },
+  "@connectToSensor": {
+    "description": "Semantic label for saved sensor chips on the home screen.",
+    "placeholders": {
+      "sensorName": {
+        "type": "String"
       }
-   },
-   "disconnectButton": "Verbinding verbreken",
-   "disconnectHint": "Verbinding met {deviceName} verbreken",
-   "@disconnectHint": {
-      "description": "Semantics hint for the disconnect button.",
-      "placeholders": {
-         "deviceName": {
-            "type": "String"
-         }
+    }
+  },
+  "@csvExportEmpty": {
+    "description": "Snackbar message when user tries to export empty history."
+  },
+  "@csvExportShareSubject": {
+    "description": "Subject line when sharing exported CSV."
+  },
+  "@csvExportSuccess": {
+    "description": "Snackbar message after exporting workouts to CSV."
+  },
+  "@csvImportNoValidData": {
+    "description": "Snackbar message when CSV file has no parseable workouts."
+  },
+  "@csvImportSuccess": {
+    "description": "Snackbar message after successful CSV import.",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
-   },
-   "disconnectedStatus": "Verbinding verbroken",
-   "returnToScannerButton": "Terug naar scanner",
-   "returnToScannerHint": "Keert terug naar het apparaatscannerscherm",
-   "connectingMessage": "Verbinden met apparaat...\nVerbinding tot stand brengen",
-   "discoveringServicesMessage": "Services zoeken... Even geduld a.u.b...",
-   "heartRateLabel": "Hartslag",
-   "heartRateLiveLabel": "Hartslag: {bpm} slagen per minuut",
-   "@heartRateLiveLabel": {
-      "description": "Accessibility live region label for the current heart rate.",
-      "placeholders": {
-         "bpm": {
-            "type": "int"
-         }
+    }
+  },
+  "@csvPreviewConfirmImport": {
+    "description": "Button to confirm importing valid sessions.",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
-   },
-   "bpmUnit": "BPM",
-   "bodySensorLocationTitle": "Sensorpositie",
-   "bodySensorLocationLabel": "Sensorpositie: {location}",
-   "@bodySensorLocationLabel": {
-      "description": "Accessibility label for the sensor location card.",
-      "placeholders": {
-         "location": {
-            "type": "String"
-         }
+    }
+  },
+  "@csvPreviewDateRange": {
+    "description": "Date range of sessions to import.",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
       }
-   },
-   "sensorBatteryTitle": "Sensorbatterij",
-   "sensorBatteryLabel": "Sensorbatterijniveau: {level}",
-   "@sensorBatteryLabel": {
-      "description": "Accessibility label for the battery card.",
-      "placeholders": {
-         "level": {
-            "type": "String"
-         }
+    }
+  },
+  "@csvPreviewSessionsCount": {
+    "description": "Number of valid workout sessions found.",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
-   },
-   "batteryNotAvailable": "N.v.t.",
-   "connectionFailedTitle": "Verbinding mislukt",
-   "retryConnectionButton": "Verbinding opnieuw proberen",
-   "retryConnectionHint": "Probeert opnieuw verbinding te maken met de hartslagsensor",
-   "goBackButton": "Terug",
-   "goBackHint": "Keert terug naar het vorige scherm",
-   "workoutHistoryAppBarTitle": "Trainingsgeschiedenis",
-   "deleteSessionLabel": "Verwijderen",
-   "deleteSessionHint": "Verwijdert deze trainingssessie",
-   "unableToLoadHistory": "Kan trainingsgeschiedenis niet laden. Probeer het later opnieuw.",
-   "unknownSensorName": "Onbekende sensor",
-   "noWorkoutsTitle": "Nog geen trainingen vastgelegd",
-   "noWorkoutsDescription": "Voltooi een hartslagmeting om je geschiedenis hier te bekijken.",
-   "workoutCardLabel": "Training op {date}",
-   "@workoutCardLabel": {
-      "description": "Semantic label for a workout history card.",
-      "placeholders": {
-         "date": {
-            "type": "String"
-         }
+    }
+  },
+  "@csvPreviewSkippedRows": {
+    "description": "Number of skipped invalid rows.",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
-   },
-   "workoutCardHint": "Duur {duration}, sensor {device}. Gemiddelde hartslag {avg} BPM, maximale hartslag {max} BPM. Veeg naar links om te verwijderen.",
-   "@workoutCardHint": {
-      "description": "Semantics hint for a workout history card.",
-      "placeholders": {
-         "duration": {
-            "type": "String"
-         },
-         "device": {
-            "type": "String"
-         },
-         "avg": {
-            "type": "int"
-         },
-         "max": {
-            "type": "int"
-         }
+    }
+  },
+  "@csvPreviewTitle": {
+    "description": "Title of CSV import preview dialog."
+  },
+  "@deviceListTileHint": {
+    "description": "Semantics hint for each device row in the scanner list.",
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "rssi": {
+        "type": "int"
       }
-   },
-   "unableToDeleteSession": "Kan sessie niet verwijderen. Probeer het opnieuw.",
-   "avgBpmMetric": "Gem. BPM",
-   "maxBpmMetric": "Max BPM",
-   "todayPrefix": "Vandaag, {time}",
-   "@todayPrefix": {
-      "description": "Date prefix for workouts that occurred today.",
-      "placeholders": {
-         "time": {
-            "type": "String"
-         }
+    }
+  },
+  "@disconnectHint": {
+    "description": "Semantics hint for the disconnect button.",
+    "placeholders": {
+      "deviceName": {
+        "type": "String"
       }
-   },
-   "yesterdayPrefix": "Gisteren, {time}",
-   "@yesterdayPrefix": {
-      "description": "Date prefix for workouts that occurred yesterday.",
-      "placeholders": {
-         "time": {
-            "type": "String"
-         }
+    }
+  },
+  "@errorGeneric": {
+    "description": "Generic error message with parameter.",
+    "placeholders": {
+      "error": {
+        "type": "String"
       }
-   },
-   "failedToLoadSavedSensors": "Kan opgeslagen sensoren niet laden: {error}",
-   "@failedToLoadSavedSensors": {
-      "description": "Error shown when saved sensors fail to load.",
-      "placeholders": {
-         "error": {
-            "type": "String"
-         }
+    }
+  },
+  "@failedToLoadSavedSensors": {
+    "description": "Error shown when saved sensors fail to load.",
+    "placeholders": {
+      "error": {
+        "type": "String"
       }
-   },
-   "routeErrorTitle": "Navigatiefout",
-   "routeErrorNotFound": "Pagina niet gevonden",
-   "routeErrorInvalidLink": "Ongeldig adres of verbroken deep link.",
-   "routeErrorBackHome": "Terug naar startpagina",
-   "workoutDetailsTitle": "Trainingsdetails",
-   "workoutDetailsBackHint": "Terug naar trainingsgeschiedenis",
-   "workoutDetailsExportHint": "Trainingsgegevens exporteren naar CSV",
-   "workoutDetailsExportFailed": "Exporteren van sessie mislukt: {error}",
-   "@workoutDetailsExportFailed": {
-      "description": "Snackbar when export fails.",
-      "placeholders": {
-         "error": {
-            "type": "String"
-         }
+    }
+  },
+  "@getStarted": {
+    "description": "Onboarding: getStarted"
+  },
+  "@healthConnectRequiredSubtitle": {
+    "description": "Explanation prompting user to install Health Connect from Google Play."
+  },
+  "@healthConnectRequiredTitle": {
+    "description": "Title of dialog informing user that Google Health Connect must be installed."
+  },
+  "@healthPermissionDenied": {
+    "description": "Message shown when health read or write permissions are rejected."
+  },
+  "@healthServiceNameAndroid": {
+    "description": "Platform brand name for Android Health Connect."
+  },
+  "@healthServiceNameIOS": {
+    "description": "Platform brand name for iOS Apple Health."
+  },
+  "@healthServiceNameOther": {
+    "description": "Generic brand name for health services on unsupported or desktop platforms."
+  },
+  "@healthSyncDescAndroid": {
+    "description": "Description of health synchronization on Android devices."
+  },
+  "@healthSyncDescIOS": {
+    "description": "Description of health synchronization on iOS devices."
+  },
+  "@healthSyncDescOther": {
+    "description": "Description of health synchronization on other platforms."
+  },
+  "@healthSyncUnavailable": {
+    "description": "Warning shown when health ecosystem APIs are unavailable on current device."
+  },
+  "@heartRateLiveLabel": {
+    "description": "Accessibility live region label for the current heart rate.",
+    "placeholders": {
+      "bpm": {
+        "type": "int"
       }
-   },
-   "workoutDetailsSummary": "Samenvatting",
-   "workoutDetailsHeartRateOverTime": "Hartslagverloop",
-   "workoutDetailsNoData": "Geen trainingsgegevens vastgelegd",
-   "workoutDetailsNotCompleted": "De training is niet voltooid",
-   "workoutDetailsSensorDisconnected": "De sensor is mogelijk losgekoppeld voordat gegevens werden opgeslagen",
-   "workoutDetailsNoValidData": "Er zijn geen geldige hartslaggegevens vastgelegd",
-   "workoutDetailsAvgBpm": "Gemiddelde BPM",
-   "workoutDetailsPeakBpm": "Maximale BPM",
-   "workoutDetailsDuration": "Duur",
-   "workoutDetailsSamples": "Metingen",
-   "inProgress": "Bezig",
-   "unknownSensor": "Onbekende sensor",
-   "bodySensorLocationOther": "Overig",
-   "bodySensorLocationChest": "Borst",
-   "bodySensorLocationWrist": "Pols",
-   "bodySensorLocationFinger": "Vinger",
-   "bodySensorLocationHand": "Hand",
-   "bodySensorLocationEarLobe": "Oorlel",
-   "bodySensorLocationFoot": "Voet",
-   "bodySensorLocationUnknown": "Onbekend",
-   "chartNoData": "Geen gegevens",
-   "workoutDetailsHeaderSemantics": "Trainingsdatum: {date}, duur: {duration}, sensor: {sensor}",
-   "workoutDetailsChartNoDataSemantics": "Hartslaggrafiek: Geen trainingsgegevens vastgelegd",
-   "workoutDetailsChartWaveformSemantics": "Hartslaggolfvormgrafiek met {count} metingen in de loop van de tijd. Gemiddelde hartslag {avgBpm} BPM, piekhartslag {maxBpm} BPM.",
-   "workoutDetailsZonesLegendSemantics": "Legenda hartslagtrainingszones: {legend}",
-   "percentRange": "{min} tot {max} procent",
-   "hrMonitorRrIntervalsSemantics": "R-R-intervallen: {intervals}",
-   "millisecondsUnit": "milliseconden"
+    }
+  },
+  "@installFromPlayStore": {
+    "description": "Button label directing user to Google Play Store to install Health Connect."
+  },
+  "@next": {
+    "description": "Onboarding: next"
+  },
+  "@onboardingCompleteSubtitle": {
+    "description": "Onboarding: onboardingCompleteSubtitle"
+  },
+  "@onboardingCompleteTitle": {
+    "description": "Onboarding: onboardingCompleteTitle"
+  },
+  "@onboardingPermissionsSubtitle": {
+    "description": "Onboarding: onboardingPermissionsSubtitle"
+  },
+  "@onboardingPermissionsTitle": {
+    "description": "Onboarding: onboardingPermissionsTitle"
+  },
+  "@onboardingWelcomeHealthSync": {
+    "description": "Onboarding: onboardingWelcomeHealthSync"
+  },
+  "@onboardingWelcomeHistory": {
+    "description": "Onboarding: onboardingWelcomeHistory"
+  },
+  "@onboardingWelcomePrivacy": {
+    "description": "Onboarding: onboardingWelcomePrivacy"
+  },
+  "@onboardingWelcomeStart": {
+    "description": "Onboarding: onboardingWelcomeStart"
+  },
+  "@onboardingWelcomeSubtitle": {
+    "description": "Onboarding: onboardingWelcomeSubtitle"
+  },
+  "@onboardingWelcomeTitle": {
+    "description": "Onboarding: onboardingWelcomeTitle"
+  },
+  "@permissionBluetoothSubtitle": {
+    "description": "Onboarding: permissionBluetoothSubtitle"
+  },
+  "@permissionBluetoothTitle": {
+    "description": "Onboarding: permissionBluetoothTitle"
+  },
+  "@permissionHealthSubtitle": {
+    "description": "Onboarding: permissionHealthSubtitle"
+  },
+  "@permissionHealthTitle": {
+    "description": "Onboarding: permissionHealthTitle"
+  },
+  "@permissionNotificationsSubtitle": {
+    "description": "Onboarding: permissionNotificationsSubtitle"
+  },
+  "@permissionNotificationsTitle": {
+    "description": "Onboarding: permissionNotificationsTitle"
+  },
+  "@save": {
+    "description": "Generic save button label."
+  },
+  "@sensorBatteryLabel": {
+    "description": "Accessibility label for the battery card.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "@settingsDefaultMaxHr": {
+    "description": "Title of max HR setting."
+  },
+  "@settingsDefaultMaxHrSubtitle": {
+    "description": "Subtitle showing current max HR.",
+    "placeholders": {
+      "bpm": {
+        "type": "int"
+      }
+    }
+  },
+  "@settingsExportAllWorkouts": {
+    "description": "Title for exporting all workouts."
+  },
+  "@settingsExportAllWorkoutsSubtitle": {
+    "description": "Subtitle for exporting all workouts."
+  },
+  "@settingsImportWorkouts": {
+    "description": "Title for importing workouts from CSV."
+  },
+  "@settingsImportWorkoutsSubtitle": {
+    "description": "Subtitle for importing workouts from CSV."
+  },
+  "@settingsLicenses": {
+    "description": "Label for open-source licenses tile."
+  },
+  "@settingsLicensesSubtitle": {
+    "description": "Subtitle for licenses tile."
+  },
+  "@settingsMaxHrDialogHint": {
+    "description": "Hint in max HR configuration dialog."
+  },
+  "@settingsMaxHrDialogTitle": {
+    "description": "Title of max HR configuration dialog."
+  },
+  "@settingsPrivacyPolicy": {
+    "description": "Label for privacy policy tile."
+  },
+  "@settingsPrivacyPolicySubtitle": {
+    "description": "Subtitle for privacy policy tile."
+  },
+  "@settingsSectionAbout": {
+    "description": "Header for about and support section."
+  },
+  "@settingsSectionAppearance": {
+    "description": "Header for the appearance settings section."
+  },
+  "@settingsSectionData": {
+    "description": "Header for data management section."
+  },
+  "@settingsSectionWorkout": {
+    "description": "Header for workout parameters section."
+  },
+  "@settingsSourceCode": {
+    "description": "Label for source code tile."
+  },
+  "@settingsSourceCodeSubtitle": {
+    "description": "Subtitle for source code tile."
+  },
+  "@settingsSupport": {
+    "description": "Label for support tile."
+  },
+  "@settingsSupportSubtitle": {
+    "description": "Subtitle for support tile."
+  },
+  "@settingsTheme": {
+    "description": "Label for theme mode selection tile."
+  },
+  "@settingsThemeDark": {
+    "description": "Label for dark theme."
+  },
+  "@settingsThemeLight": {
+    "description": "Label for light theme."
+  },
+  "@settingsThemeSystem": {
+    "description": "Label for system default theme."
+  },
+  "@settingsTitle": {
+    "description": "Title of the settings screen."
+  },
+  "@settingsVersion": {
+    "description": "Label for app version tile."
+  },
+  "@settingsWipeData": {
+    "description": "Title for wiping all workout history."
+  },
+  "@settingsWipeDataSubtitle": {
+    "description": "Subtitle for wiping all workout history."
+  },
+  "@tabHistory": {
+    "description": "Label for workout history tab"
+  },
+  "@tabHistorySemanticsLabel": {
+    "description": "Semantics label for history tab"
+  },
+  "@tabHome": {
+    "description": "Label for home tab in bottom navigation"
+  },
+  "@tabHomeSemanticsLabel": {
+    "description": "Semantics label for home tab"
+  },
+  "@tabSettings": {
+    "description": "Label for settings tab"
+  },
+  "@tabSettingsSemanticsLabel": {
+    "description": "Semantics label for settings tab"
+  },
+  "@todayPrefix": {
+    "description": "Date prefix for workouts that occurred today.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@wipeDataConfirm": {
+    "description": "Button to confirm wiping data."
+  },
+  "@wipeDataDialogContent": {
+    "description": "Content of wipe data confirmation dialog."
+  },
+  "@wipeDataDialogTitle": {
+    "description": "Title of wipe data confirmation dialog."
+  },
+  "@wipeDataSuccess": {
+    "description": "Snackbar message after wiping data."
+  },
+  "@workoutCardHint": {
+    "description": "Semantics hint for a workout history card.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "device": {
+        "type": "String"
+      },
+      "avg": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "@workoutCardLabel": {
+    "description": "Semantic label for a workout history card.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@workoutDetailsExportFailed": {
+    "description": "Snackbar when export fails.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@yesterdayPrefix": {
+    "description": "Date prefix for workouts that occurred yesterday.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "appLocked": "App Locked",
+  "appLockedStatusIconSemantics": "Application locked status icon",
+  "avgBpmMetric": "Gem. BPM",
+  "back": "Back",
+  "batteryNotAvailable": "N.v.t.",
+  "biometricAuthFailed": "Biometric authentication failed or was canceled.",
+  "biometricAuthReason": "Authenticate to access Balance",
+  "biometricDesc": "Additional app security",
+  "biometricLock": "Biometric Protection",
+  "biometricLockoutBody": "Biometrics are no longer available or enrolled on this device. Turn off the biometric lock to regain access to your data, or keep it locked.",
+  "biometricLockoutTitle": "Biometric lock unavailable",
+  "biometricStepOptionalTitle": "Biometric Protection",
+  "biometricStepSubtitle": "Secure your measurements from prying eyes and unlock the app instantly using your face or fingerprint.",
+  "biometricStepTitle": "Biometric Protection",
+  "biometricsNotAvailable": "Biometrics not available on this device",
+  "bluetooth_disabled_label": "Bluetooth uitgeschakeld",
+  "bluetooth_off_description": "Bluetooth is uitgeschakeld of niet geautoriseerd. Schakel Bluetooth in en verleen machtigingen om naar sensoren te scannen.",
+  "bluetooth_required": "Bluetooth vereist",
+  "bluetooth_searching_label": "Bluetooth scannen",
+  "bodySensorLocationChest": "Borst",
+  "bodySensorLocationEarLobe": "Oorlel",
+  "bodySensorLocationFinger": "Vinger",
+  "bodySensorLocationFoot": "Voet",
+  "bodySensorLocationHand": "Hand",
+  "bodySensorLocationLabel": "Sensorpositie: {location}",
+  "bodySensorLocationOther": "Overig",
+  "bodySensorLocationTitle": "Sensorpositie",
+  "bodySensorLocationUnknown": "Onbekend",
+  "bodySensorLocationWrist": "Pols",
+  "bpmUnit": "BPM",
+  "cancel": "Cancel",
+  "chartNoData": "Geen gegevens",
+  "connectToSensor": "Verbinden met {sensorName}",
+  "connectingMessage": "Verbinden met apparaat...\nVerbinding tot stand brengen",
+  "connectionFailedTitle": "Verbinding mislukt",
+  "csvExportEmpty": "No workout sessions to export.",
+  "csvExportShareSubject": "PulseTrack Workout History Export",
+  "csvExportSuccess": "Workout sessions exported successfully.",
+  "csvImportNoValidData": "No valid workout sessions found in the selected CSV file.",
+  "csvImportSuccess": "Successfully imported {count} workout sessions.",
+  "csvPreviewConfirmImport": "Import ({count})",
+  "csvPreviewDateRange": "{start} – {end}",
+  "csvPreviewSessionsCount": "{count, plural, =1{1 session found} other{{count} sessions found}}",
+  "csvPreviewSkippedRows": "{count, plural, =1{1 invalid row will be skipped} other{{count} invalid rows will be skipped}}",
+  "csvPreviewTitle": "Import Workouts Preview",
+  "deleteSessionHint": "Verwijdert deze trainingssessie",
+  "deleteSessionLabel": "Verwijderen",
+  "deviceListTileHint": "MAC-adres {id}, signaalsterkte {rssi} dBm. Dubbeltik om te verbinden.",
+  "device_unknown_label": "Onbekend apparaat",
+  "disableLock": "Turn off lock",
+  "disconnectButton": "Verbinding verbreken",
+  "disconnectHint": "Verbinding met {deviceName} verbreken",
+  "disconnectedStatus": "Verbinding verbroken",
+  "discoveringServicesMessage": "Services zoeken... Even geduld a.u.b...",
+  "empty_state_bullets": "• Controleer of de sensor is ingeschakeld.\n• Controleer de batterij van de sensor.\n• Ga dichter bij het apparaat staan.\n• Probeer de scanfilters uit te schakelen.",
+  "empty_state_title": "ZIE JE JE APPARAAT NIET?",
+  "errorGeneric": "An error occurred: {error}",
+  "failedToLoadSavedSensors": "Kan opgeslagen sensoren niet laden: {error}",
+  "getStarted": "Get Started",
+  "goBackButton": "Terug",
+  "goBackHint": "Keert terug naar het vorige scherm",
+  "healthConnectRequiredSubtitle": "Download the official Google Health Connect app from the Play Store to enable sync.",
+  "healthConnectRequiredTitle": "Health Connect App Required",
+  "healthPermissionDenied": "Health data permissions are required to sync heart rate and workouts.",
+  "healthServiceNameAndroid": "Health Connect",
+  "healthServiceNameIOS": "Apple Health",
+  "healthServiceNameOther": "Health Services",
+  "healthSyncDescAndroid": "Sync heart rate and workout data with Health Connect",
+  "healthSyncDescIOS": "Sync heart rate and workout data with Apple Health",
+  "healthSyncDescOther": "Sync heart rate and workout data with health services",
+  "healthSyncUnavailable": "Health sync unavailable on this device",
+  "heartRateLabel": "Hartslag",
+  "heartRateLiveLabel": "Hartslag: {bpm} slagen per minuut",
+  "homeTitle": "PulseTrack",
+  "hrMonitorRrIntervalsSemantics": "R-R-intervallen: {intervals}",
+  "inProgress": "Bezig",
+  "installFromPlayStore": "Install from Play Store",
+  "keepLocked": "Keep locked",
+  "maxBpmMetric": "Max BPM",
+  "millisecondsUnit": "milliseconden",
+  "next": "Next",
+  "noWorkoutsDescription": "Voltooi een hartslagmeting om je geschiedenis hier te bekijken.",
+  "noWorkoutsTitle": "Nog geen trainingen vastgelegd",
+  "onboardingCompleteSubtitle": "Start tracking your heart rate and workouts",
+  "onboardingCompleteTitle": "You're All Set!",
+  "onboardingPermissionsSubtitle": "We need a few permissions to provide full functionality",
+  "onboardingPermissionsTitle": "Permissions",
+  "onboardingWelcomeHealthSync": "Health Sync",
+  "onboardingWelcomeHistory": "Workout History",
+  "onboardingWelcomePrivacy": "Privacy First",
+  "onboardingWelcomeStart": "Get Started",
+  "onboardingWelcomeSubtitle": "Your professional heart rate monitor and workout analytics companion",
+  "onboardingWelcomeTitle": "Welcome to PulseTrack",
+  "percentRange": "{min} tot {max} procent",
+  "permissionBluetoothSubtitle": "To scan and connect to heart rate sensors",
+  "permissionBluetoothTitle": "Bluetooth",
+  "permissionHealthSubtitle": "To sync workouts with Apple Health / Health Connect",
+  "permissionHealthTitle": "Health Data",
+  "permissionNotificationsSubtitle": "To remind you about workouts",
+  "permissionNotificationsTitle": "Notifications",
+  "ready_to_scan": "Klaar om te scannen",
+  "retryConnectionButton": "Verbinding opnieuw proberen",
+  "retryConnectionHint": "Probeert opnieuw verbinding te maken met de hartslagsensor",
+  "retry_button_label": "Opnieuw proberen",
+  "retry_scan_label": "Opnieuw scannen",
+  "retry_scan_semantic_label": "Opnieuw scannen naar sensoren",
+  "returnToScannerButton": "Terug naar scanner",
+  "returnToScannerHint": "Keert terug naar het apparaatscannerscherm",
+  "routeErrorBackHome": "Terug naar startpagina",
+  "routeErrorInvalidLink": "Ongeldig adres of verbroken deep link.",
+  "routeErrorNotFound": "Pagina niet gevonden",
+  "routeErrorTitle": "Navigatiefout",
+  "save": "Save",
+  "savedSensorFallbackName": "Opgeslagen sensor",
+  "savedSensorsSectionTitle": "Opgeslagen sensoren (Direct verbinden)",
+  "scanForNewSensorButton": "Zoeken naar nieuwe sensor",
+  "scan_button_label": "Scannen",
+  "scan_button_semantic_label": "Starten met scannen naar hartslagsensoren",
+  "scan_failed_title": "Scannen mislukt",
+  "scanner_title": "Scanner",
+  "searching_sensors": "Zoeken naar actieve sensoren...",
+  "sensorBatteryLabel": "Sensorbatterijniveau: {level}",
+  "sensorBatteryTitle": "Sensorbatterij",
+  "settingsDefaultMaxHr": "Max Heart Rate",
+  "settingsDefaultMaxHrSubtitle": "{bpm} BPM (Heart rate zones calculation)",
+  "settingsExportAllWorkouts": "Export All Workouts",
+  "settingsExportAllWorkoutsSubtitle": "Generate and share CSV of all sessions",
+  "settingsImportWorkouts": "Import Workouts",
+  "settingsImportWorkoutsSubtitle": "Import workout sessions from a CSV file",
+  "settingsLicenses": "Licenses",
+  "settingsLicensesSubtitle": "Open-source software licenses",
+  "settingsMaxHrDialogHint": "Target max heart rate in BPM (50 - 240)",
+  "settingsMaxHrDialogTitle": "Set Max Heart Rate",
+  "settingsPrivacyPolicy": "Privacy Policy",
+  "settingsPrivacyPolicySubtitle": "Learn how your biometric data is protected locally",
+  "settingsSectionAbout": "About & Support",
+  "settingsSectionAppearance": "Appearance",
+  "settingsSectionData": "Data Management",
+  "settingsSectionWorkout": "Workout & Metrics",
+  "settingsSourceCode": "Source Code",
+  "settingsSourceCodeSubtitle": "View PulseTrack repository on GitHub",
+  "settingsSupport": "Support & Feedback",
+  "settingsSupportSubtitle": "Contact the development team",
+  "settingsTheme": "Theme",
+  "settingsThemeDark": "Dark",
+  "settingsThemeLight": "Light",
+  "settingsThemeSystem": "System default",
+  "settingsTitle": "Settings",
+  "settingsVersion": "Version",
+  "settingsWipeData": "Wipe All Workouts",
+  "settingsWipeDataSubtitle": "Permanently delete all workout history",
+  "start_scan_description": "Tik op Scannen om te zoeken naar sensoren.",
+  "tabHistory": "History",
+  "tabHistorySemanticsLabel": "History tab",
+  "tabHome": "Home",
+  "tabHomeSemanticsLabel": "Home tab",
+  "tabSettings": "Settings",
+  "tabSettingsSemanticsLabel": "Settings tab",
+  "todayPrefix": "Vandaag, {time}",
+  "toggle_filter_tooltip": "Namen- en nabijheidsfilter in-/uitschakelen",
+  "unableToDeleteSession": "Kan sessie niet verwijderen. Probeer het opnieuw.",
+  "unableToLoadHistory": "Kan trainingsgeschiedenis niet laden. Probeer het later opnieuw.",
+  "unknownSensor": "Onbekende sensor",
+  "unknownSensorLabel": "Onbekende sensor",
+  "unknownSensorName": "Onbekende sensor",
+  "unknown_device": "Onbekend apparaat",
+  "unlock": "Unlock",
+  "wipeDataConfirm": "Delete Everything",
+  "wipeDataDialogContent": "This action cannot be undone. All recorded sessions and heart rate telemetry will be permanently wiped from your device.",
+  "wipeDataDialogTitle": "Delete All Workout Data?",
+  "wipeDataSuccess": "All workout data has been wiped successfully.",
+  "workoutCardHint": "Duur {duration}, sensor {device}. Gemiddelde hartslag {avg} BPM, maximale hartslag {max} BPM. Veeg naar links om te verwijderen.",
+  "workoutCardLabel": "Training op {date}",
+  "workoutDetailsAvgBpm": "Gemiddelde BPM",
+  "workoutDetailsBackHint": "Terug naar trainingsgeschiedenis",
+  "workoutDetailsChartNoDataSemantics": "Hartslaggrafiek: Geen trainingsgegevens vastgelegd",
+  "workoutDetailsChartWaveformSemantics": "Hartslaggolfvormgrafiek met {count} metingen in de loop van de tijd. Gemiddelde hartslag {avgBpm} BPM, piekhartslag {maxBpm} BPM.",
+  "workoutDetailsDuration": "Duur",
+  "workoutDetailsExportFailed": "Exporteren van sessie mislukt: {error}",
+  "workoutDetailsExportHint": "Trainingsgegevens exporteren naar CSV",
+  "workoutDetailsHeaderSemantics": "Trainingsdatum: {date}, duur: {duration}, sensor: {sensor}",
+  "workoutDetailsHeartRateOverTime": "Hartslagverloop",
+  "workoutDetailsNoData": "Geen trainingsgegevens vastgelegd",
+  "workoutDetailsNoValidData": "Er zijn geen geldige hartslaggegevens vastgelegd",
+  "workoutDetailsNotCompleted": "De training is niet voltooid",
+  "workoutDetailsPeakBpm": "Maximale BPM",
+  "workoutDetailsSamples": "Metingen",
+  "workoutDetailsSensorDisconnected": "De sensor is mogelijk losgekoppeld voordat gegevens werden opgeslagen",
+  "workoutDetailsSummary": "Samenvatting",
+  "workoutDetailsTitle": "Trainingsdetails",
+  "workoutDetailsZonesLegendSemantics": "Legenda hartslagtrainingszones: {legend}",
+  "workoutHistoryAppBarTitle": "Trainingsgeschiedenis",
+  "workoutHistoryDescription": "Bekijk eerdere hartslagsessies en statistieken.",
+  "workoutHistoryTitle": "Trainingsgeschiedenis",
+  "yesterdayPrefix": "Gisteren, {time}"
 }

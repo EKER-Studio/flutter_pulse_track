@@ -1,373 +1,381 @@
 {
-   "@@locale": "pl",
-   "homeTitle": "PulseTrack",
-   "savedSensorsSectionTitle": "Zapisane czujniki (Połączenie bezpośrednie)",
-   "unknownSensorLabel": "Nieznany czujnik",
-   "savedSensorFallbackName": "Zapisany czujnik",
-   "scanForNewSensorButton": "Skanuj nowe urządzenie",
-   "workoutHistoryTitle": "Historia treningów",
-   "workoutHistoryDescription": "Przeglądaj przeszłe sesje tętna i analitykę.",
-   "scanner_title": "Skaner",
-   "bluetooth_searching_label": "Skanowanie Bluetooth",
-   "bluetooth_disabled_label": "Bluetooth wyłączony",
-   "device_unknown_label": "Nieznane urządzenie",
-   "toggle_filter_tooltip": "Przełącz filtr nazw i pobliskich urządzeń",
-   "ready_to_scan": "Gotowy do skanowania",
-   "start_scan_description": "Stuknij Skanuj, aby rozpocząć wyszukiwanie czujników.",
-   "scan_button_label": "Skanuj",
-   "bluetooth_required": "Wymagany Bluetooth",
-   "bluetooth_off_description": "Adapter Bluetooth jest wyłączony lub brak uprawnień. Włącz Bluetooth i przyznaj uprawnienia lokalne, aby skanować czujniki.",
-   "empty_state_title": "NIE WIDZISZ SWOJEGO URZĄDZENIA?",
-   "empty_state_bullets": "• Upewnij się, że czujnik jest włączony.\n• Sprawdź baterię czujnika.\n• Zbliż się do urządzenia.\n• Spróbuj wyłączyć filtry skanowania.",
-   "retry_scan_label": "Ponów skanowanie",
-   "scan_failed_title": "Skanowanie nie powiodło się",
-   "retry_button_label": "Ponów",
-   "searching_sensors": "Wyszukiwanie aktywnych czujników...",
-   "unknown_device": "Nieznane urządzenie",
-   "scan_button_semantic_label": "Rozpocznij skanowanie w poszukiwaniu czujników tętna",
-   "retry_scan_semantic_label": "Ponów skanowanie w poszukiwaniu czujników",
-   "connectToSensor": "Połącz z {sensorName}",
-   "deviceListTileHint": "Adres MAC {id}, moc sygnału {rssi} dBm. Stuknij dwukrotnie, aby połączyć.",
-   "disconnectButton": "Rozłącz",
-   "disconnectHint": "Rozłącza z urządzeniem {deviceName}",
-   "disconnectedStatus": "Rozłączono",
-   "returnToScannerButton": "Powrót do skanera",
-   "returnToScannerHint": "Powraca do ekranu skanera urządzeń",
-   "connectingMessage": "Łączenie z urządzeniem...\nTrwa nawiązywanie połączenia",
-   "discoveringServicesMessage": "Wyszukiwanie usług... Proszę czekać...",
-   "heartRateLabel": "Tętno",
-   "heartRateLiveLabel": "Tętno: {bpm} uderzeń na minutę",
-   "bpmUnit": "BPM",
-   "bodySensorLocationTitle": "Lokalizacja czujnika",
-   "bodySensorLocationLabel": "Lokalizacja czujnika: {location}",
-   "sensorBatteryTitle": "Bateria czujnika",
-   "sensorBatteryLabel": "Poziom baterii czujnika: {level}",
-   "batteryNotAvailable": "Brak danych",
-   "connectionFailedTitle": "Połączenie nieudane",
-   "retryConnectionButton": "Ponów połączenie",
-   "retryConnectionHint": "Próbuje ponownie połączyć się z czujnikiem tętna",
-   "goBackButton": "Wstecz",
-   "goBackHint": "Powraca do poprzedniego ekranu",
-   "workoutHistoryAppBarTitle": "Historia treningów",
-   "deleteSessionLabel": "Usuń",
-   "deleteSessionHint": "Usuwa tę sesję treningową",
-   "unableToLoadHistory": "Nie można wczytać historii treningów. Spróbuj ponownie później.",
-   "unknownSensorName": "Nieznany czujnik",
-   "noWorkoutsTitle": "Brak zarejestrowanych treningów",
-   "noWorkoutsDescription": "Ukończ sesję monitorowania tętna, aby zobaczyć historię treningów w tym miejscu.",
-   "workoutCardLabel": "Trening w dniu {date}",
-   "workoutCardHint": "Czas trwania {duration}, czujnik {device}. Średnie tętno {avg} BPM, Szczytowe tętno {max} BPM. Przesuń w lewo, aby usunąć.",
-   "unableToDeleteSession": "Nie można usunąć sesji. Spróbuj ponownie.",
-   "avgBpmMetric": "Śr. BPM",
-   "maxBpmMetric": "Maks. BPM",
-   "todayPrefix": "Dzisiaj, {time}",
-   "yesterdayPrefix": "Wczoraj, {time}",
-   "failedToLoadSavedSensors": "Nie można wczytać zapisanych czujników: {error}",
-   "routeErrorTitle": "Błąd nawigacji",
-   "routeErrorNotFound": "Nie znaleziono żądanej strony",
-   "routeErrorInvalidLink": "Nieprawidłowy adres lub uszkodzony link głęboki.",
-   "routeErrorBackHome": "Powrót do strony głównej",
-   "workoutDetailsTitle": "Szczegóły treningu",
-   "workoutDetailsBackHint": "Powrót do historii treningów",
-   "workoutDetailsExportHint": "Eksportuj dane treningu do CSV",
-   "workoutDetailsExportFailed": "Nie udało się wyeksportować sesji: {error}",
-   "workoutDetailsSummary": "Podsumowanie",
-   "workoutDetailsHeartRateOverTime": "Tętno w czasie",
-   "workoutDetailsNoData": "Brak zarejestrowanych danych",
-   "workoutDetailsNotCompleted": "Trening nie został ukończony",
-   "workoutDetailsSensorDisconnected": "Czujnik mógł zostać rozłączony przed zapisem danych",
-   "workoutDetailsNoValidData": "Nie zarejestrowano prawidłowych danych tętna",
-   "workoutDetailsAvgBpm": "Śr. BPM",
-   "workoutDetailsPeakBpm": "Maks. BPM",
-   "workoutDetailsDuration": "Czas trwania",
-   "workoutDetailsSamples": "Próbki",
-   "inProgress": "W trakcie",
-   "unknownSensor": "Nieznany czujnik",
-   "bodySensorLocationOther": "Inne",
-   "bodySensorLocationChest": "Klatka piersiowa",
-   "bodySensorLocationWrist": "Nadgarstek",
-   "bodySensorLocationFinger": "Palec",
-   "bodySensorLocationHand": "Dłoń",
-   "bodySensorLocationEarLobe": "Płatek ucha",
-   "bodySensorLocationFoot": "Stopa",
-   "bodySensorLocationUnknown": "Nieznane",
-   "@failedToLoadSavedSensors": {
-      "description": "Error shown when saved sensors fail to load.",
-      "placeholders": {
-         "error": {
-            "type": "String"
-         }
+  "@@locale": "pl",
+  "@back": {
+    "description": "Onboarding: back"
+  },
+  "@bodySensorLocationLabel": {
+    "description": "Accessibility label for the sensor location card.",
+    "placeholders": {
+      "location": {
+        "type": "String"
       }
-   },
-   "@workoutCardHint": {
-      "description": "Semantics hint for a workout history card.",
-      "placeholders": {
-         "duration": {
-            "type": "String"
-         },
-         "device": {
-            "type": "String"
-         },
-         "avg": {
-            "type": "int"
-         },
-         "max": {
-            "type": "int"
-         }
+    }
+  },
+  "@connectToSensor": {
+    "description": "Semantic label for saved sensor chips on the home screen.",
+    "placeholders": {
+      "sensorName": {
+        "type": "String"
       }
-   },
-   "@workoutCardLabel": {
-      "description": "Semantic label for a workout history card.",
-      "placeholders": {
-         "date": {
-            "type": "String"
-         }
+    }
+  },
+  "@deviceListTileHint": {
+    "description": "Semantics hint for each device row in the scanner list.",
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "rssi": {
+        "type": "int"
       }
-   },
-   "@yesterdayPrefix": {
-      "description": "Date prefix for workouts that occurred yesterday.",
-      "placeholders": {
-         "time": {
-            "type": "String"
-         }
+    }
+  },
+  "@disconnectHint": {
+    "description": "Semantics hint for the disconnect button.",
+    "placeholders": {
+      "deviceName": {
+        "type": "String"
       }
-   },
-   "@sensorBatteryLabel": {
-      "description": "Accessibility label for the battery card.",
-      "placeholders": {
-         "level": {
-            "type": "String"
-         }
+    }
+  },
+  "@failedToLoadSavedSensors": {
+    "description": "Error shown when saved sensors fail to load.",
+    "placeholders": {
+      "error": {
+        "type": "String"
       }
-   },
-   "@bodySensorLocationLabel": {
-      "description": "Accessibility label for the sensor location card.",
-      "placeholders": {
-         "location": {
-            "type": "String"
-         }
+    }
+  },
+  "@getStarted": {
+    "description": "Onboarding: getStarted"
+  },
+  "@heartRateLiveLabel": {
+    "description": "Accessibility live region label for the current heart rate.",
+    "placeholders": {
+      "bpm": {
+        "type": "int"
       }
-   },
-   "@connectToSensor": {
-      "description": "Semantic label for saved sensor chips on the home screen.",
-      "placeholders": {
-         "sensorName": {
-            "type": "String"
-         }
+    }
+  },
+  "@next": {
+    "description": "Onboarding: next"
+  },
+  "@onboardingCompleteSubtitle": {
+    "description": "Onboarding: onboardingCompleteSubtitle"
+  },
+  "@onboardingCompleteTitle": {
+    "description": "Onboarding: onboardingCompleteTitle"
+  },
+  "@onboardingPermissionsSubtitle": {
+    "description": "Onboarding: onboardingPermissionsSubtitle"
+  },
+  "@onboardingPermissionsTitle": {
+    "description": "Onboarding: onboardingPermissionsTitle"
+  },
+  "@onboardingWelcomeHealthSync": {
+    "description": "Onboarding: onboardingWelcomeHealthSync"
+  },
+  "@onboardingWelcomeHistory": {
+    "description": "Onboarding: onboardingWelcomeHistory"
+  },
+  "@onboardingWelcomePrivacy": {
+    "description": "Onboarding: onboardingWelcomePrivacy"
+  },
+  "@onboardingWelcomeStart": {
+    "description": "Onboarding: onboardingWelcomeStart"
+  },
+  "@onboardingWelcomeSubtitle": {
+    "description": "Onboarding: onboardingWelcomeSubtitle"
+  },
+  "@onboardingWelcomeTitle": {
+    "description": "Onboarding: onboardingWelcomeTitle"
+  },
+  "@permissionBluetoothSubtitle": {
+    "description": "Onboarding: permissionBluetoothSubtitle"
+  },
+  "@permissionBluetoothTitle": {
+    "description": "Onboarding: permissionBluetoothTitle"
+  },
+  "@permissionHealthSubtitle": {
+    "description": "Onboarding: permissionHealthSubtitle"
+  },
+  "@permissionHealthTitle": {
+    "description": "Onboarding: permissionHealthTitle"
+  },
+  "@permissionNotificationsSubtitle": {
+    "description": "Onboarding: permissionNotificationsSubtitle"
+  },
+  "@permissionNotificationsTitle": {
+    "description": "Onboarding: permissionNotificationsTitle"
+  },
+  "@sensorBatteryLabel": {
+    "description": "Accessibility label for the battery card.",
+    "placeholders": {
+      "level": {
+        "type": "String"
       }
-   },
-   "@todayPrefix": {
-      "description": "Date prefix for workouts that occurred today.",
-      "placeholders": {
-         "time": {
-            "type": "String"
-         }
+    }
+  },
+  "@tabHistory": {
+    "description": "Label for workout history tab"
+  },
+  "@tabHistorySemanticsLabel": {
+    "description": "Semantics label for history tab"
+  },
+  "@tabHome": {
+    "description": "Label for home tab in bottom navigation"
+  },
+  "@tabHomeSemanticsLabel": {
+    "description": "Semantics label for home tab"
+  },
+  "@tabSettings": {
+    "description": "Label for settings tab"
+  },
+  "@tabSettingsSemanticsLabel": {
+    "description": "Semantics label for settings tab"
+  },
+  "@todayPrefix": {
+    "description": "Date prefix for workouts that occurred today.",
+    "placeholders": {
+      "time": {
+        "type": "String"
       }
-   },
-   "@workoutDetailsExportFailed": {
-      "description": "Snackbar when export fails.",
-      "placeholders": {
-         "error": {
-            "type": "String"
-         }
+    }
+  },
+  "@workoutCardHint": {
+    "description": "Semantics hint for a workout history card.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "device": {
+        "type": "String"
+      },
+      "avg": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
       }
-   },
-   "@deviceListTileHint": {
-      "description": "Semantics hint for each device row in the scanner list.",
-      "placeholders": {
-         "id": {
-            "type": "String"
-         },
-         "rssi": {
-            "type": "int"
-         }
+    }
+  },
+  "@workoutCardLabel": {
+    "description": "Semantic label for a workout history card.",
+    "placeholders": {
+      "date": {
+        "type": "String"
       }
-   },
-   "@heartRateLiveLabel": {
-      "description": "Accessibility live region label for the current heart rate.",
-      "placeholders": {
-         "bpm": {
-            "type": "int"
-         }
+    }
+  },
+  "@workoutDetailsExportFailed": {
+    "description": "Snackbar when export fails.",
+    "placeholders": {
+      "error": {
+        "type": "String"
       }
-   },
-   "@disconnectHint": {
-      "description": "Semantics hint for the disconnect button.",
-      "placeholders": {
-         "deviceName": {
-            "type": "String"
-         }
+    }
+  },
+  "@yesterdayPrefix": {
+    "description": "Date prefix for workouts that occurred yesterday.",
+    "placeholders": {
+      "time": {
+        "type": "String"
       }
-   },
-   "chartNoData": "Brak danych",
-   "workoutDetailsHeaderSemantics": "Data treningu: {date}, czas trwania: {duration}, czujnik: {sensor}",
-   "workoutDetailsChartNoDataSemantics": "Wykres tętna: Brak zarejestrowanych danych",
-   "workoutDetailsChartWaveformSemantics": "Wykres przebiegu tętna pokazujący {count} próbek w czasie. Średnie tętno {avgBpm} BPM, tętno szczytowe {maxBpm} BPM.",
-   "workoutDetailsZonesLegendSemantics": "Legenda stref tętna treningowego: {legend}",
-   "percentRange": "{min} do {max} procent",
-   "hrMonitorRrIntervalsSemantics": "Odstępy R-R: {intervals}",
-   "millisecondsUnit": "milisekund",
-   "cancel": "Anuluj",
-   "installFromPlayStore": "Zainstaluj ze sklepu Play",
-   "healthConnectRequiredTitle": "Wymagana aplikacja Health Connect",
-   "healthConnectRequiredSubtitle": "Pobierz oficjalną aplikację Google Health Connect ze sklepu Play, aby włączyć synchronizację.",
-   "healthPermissionDenied": "Uprawnienia do danych zdrowotnych są wymagane, aby synchronizować tętno i treningi.",
-   "healthServiceNameAndroid": "Health Connect",
-   "healthServiceNameIOS": "Apple Health",
-   "healthServiceNameOther": "Usługi zdrowotne",
-   "healthSyncDescAndroid": "Synchronizuj dane tętna i treningów z Health Connect",
-   "healthSyncDescIOS": "Synchronizuj dane tętna i treningów z Apple Health",
-   "healthSyncDescOther": "Synchronizuj dane tętna i treningów z aplikacjami zdrowotnymi",
-   "healthSyncUnavailable": "Synchronizacja zdrowotna niedostępna na tym urządzeniu",
-   "settingsTitle": "Ustawienia",
-   "settingsSectionAppearance": "Wygląd",
-   "settingsTheme": "Motyw",
-   "settingsThemeSystem": "Domyślny systemowy",
-   "settingsThemeLight": "Jasny",
-   "settingsThemeDark": "Ciemny",
-   "settingsSectionWorkout": "Trening i parametry",
-   "settingsDefaultMaxHr": "Tętno maksymalne",
-   "settingsDefaultMaxHrSubtitle": "{bpm} BPM (Kalkulacja stref tętna)",
-   "settingsMaxHrDialogTitle": "Ustaw tętno maksymalne",
-   "settingsMaxHrDialogHint": "Docelowe tętno maksymalne w BPM (50 - 240)",
-   "settingsSectionData": "Zarządzanie danymi",
-   "settingsExportAllWorkouts": "Eksportuj wszystkie treningi",
-   "settingsExportAllWorkoutsSubtitle": "Generuj i udostępnij plik CSV wszystkich sesji",
-   "settingsImportWorkouts": "Importuj treningi",
-   "settingsImportWorkoutsSubtitle": "Importuj sesje treningowe z pliku CSV",
-   "settingsWipeData": "Wyczyść historię treningów",
-   "settingsWipeDataSubtitle": "Trwale usuń całą historię treningów",
-   "settingsSectionAbout": "O aplikacji i pomoc",
-   "settingsVersion": "Wersja",
-   "settingsLicenses": "Licencje",
-   "settingsLicensesSubtitle": "Licencje oprogramowania open-source",
-   "settingsPrivacyPolicy": "Polityka prywatności",
-   "settingsPrivacyPolicySubtitle": "Dowiedz się, jak Twoje dane są chronione lokalnie",
-   "settingsSupport": "Pomoc i kontakt",
-   "settingsSupportSubtitle": "Skontaktuj się z zespołem deweloperów",
-   "settingsSourceCode": "Kod źródłowy",
-   "settingsSourceCodeSubtitle": "Zobacz repozytorium PulseTrack na GitHubie",
-   "wipeDataDialogTitle": "Usunąć wszystkie treningi?",
-   "wipeDataDialogContent": "Tej operacji nie można cofnąć. Wszystkie zapisane sesje i telemetria tętna zostaną trwale usunięte z urządzenia.",
-   "wipeDataConfirm": "Usuń wszystko",
-   "wipeDataSuccess": "Wszystkie dane treningowe zostały pomyślnie usunięte.",
-   "csvPreviewTitle": "Podgląd importu treningów",
-   "csvPreviewSessionsCount": "{count, plural, =1{Znaleziono 1 sesję} few{Znaleziono {count} sesje} many{Znaleziono {count} sesji} other{Znaleziono {count} sesji}}",
-   "csvPreviewDateRange": "{start} – {end}",
-   "csvPreviewSkippedRows": "{count, plural, =1{1 niepoprawny wiersz zostanie pominięty} few{{count} niepoprawne wiersze zostaną pominięte} many{{count} niepoprawnych wierszy zostanie pominiętych} other{{count} niepoprawnych wierszy zostanie pominiętych}}",
-   "csvPreviewConfirmImport": "Importuj ({count})",
-   "csvImportSuccess": "Pomyślnie zaimportowano {count} sesji treningowych.",
-   "csvImportNoValidData": "W wybranym pliku CSV nie znaleziono poprawnych sesji treningowych.",
-   "csvExportEmpty": "Brak sesji treningowych do wyeksportowania.",
-   "csvExportSuccess": "Treningi zostały pomyślnie wyeksportowane.",
-   "csvExportShareSubject": "Eksport historii treningów PulseTrack",
-   "save": "Zapisz",
-   "errorGeneric": "Wystąpił błąd: {error}",
-   "biometricAuthFailed": "Uwierzytelnienie biometryczne nie powiodło się lub zostało anulowane.",
-   "biometricAuthReason": "Potwierdź tożsamość, aby uzyskać dostęp do aplikacji",
-   "biometricDesc": "Dodatkowe zabezpieczenie aplikacji",
-   "biometricLock": "Ochrona biometryczna",
-   "biometricLockoutBody": "Dane biometryczne nie są już dostępne lub zapisane na tym urządzeniu. Wyłącz blokadę biometryczną, aby odzyskać dostęp do danych, albo pozostaw ją włączoną.",
-   "biometricLockoutTitle": "Blokada biometryczna niedostępna",
-   "biometricStepOptionalTitle": "Ochrona biometryczna",
-   "biometricStepSubtitle": "Zabezpiecz swoje pomiary przed wglądem innych osób i odblokowuj aplikację błyskawicznie za pomocą twarzy lub odcisku palca.",
-   "biometricStepTitle": "Ochrona biometryczna",
-   "biometricsNotAvailable": "Biometria nie jest dostępna na tym urządzeniu",
-   "appLocked": "Aplikacja zablokowana",
-   "appLockedStatusIconSemantics": "Ikona statusu blokady aplikacji",
-   "unlock": "Odblokuj",
-   "keepLocked": "Pozostaw zablokowane",
-   "disableLock": "Wyłącz blokadę",
-   "tabHome": "Strona główna",
-   "@tabHome": {
-      "description": "Label for home tab in bottom navigation"
-   },
-   "tabHistory": "Historia",
-   "@tabHistory": {
-      "description": "Label for workout history tab"
-   },
-   "tabSettings": "Ustawienia",
-   "@tabSettings": {
-      "description": "Label for settings tab"
-   },
-   "tabHomeSemanticsLabel": "Zakładka Strona główna",
-   "@tabHomeSemanticsLabel": {
-      "description": "Semantics label for home tab"
-   },
-   "onboardingWelcomeTitle": "Witamy w PulseTrack",
-   "@onboardingWelcomeTitle": {
-      "description": "Onboarding: onboardingWelcomeTitle"
-   },
-   "onboardingWelcomeSubtitle": "Twój profesjonalny monitor tętna i analityka treningów",
-   "@onboardingWelcomeSubtitle": {
-      "description": "Onboarding: onboardingWelcomeSubtitle"
-   },
-   "onboardingWelcomeHealthSync": "Synchronizacja Zdrowia",
-   "@onboardingWelcomeHealthSync": {
-      "description": "Onboarding: onboardingWelcomeHealthSync"
-   },
-   "onboardingWelcomeHistory": "Historia Treningów",
-   "@onboardingWelcomeHistory": {
-      "description": "Onboarding: onboardingWelcomeHistory"
-   },
-   "onboardingWelcomePrivacy": "Prywatność",
-   "@onboardingWelcomePrivacy": {
-      "description": "Onboarding: onboardingWelcomePrivacy"
-   },
-   "onboardingWelcomeStart": "Rozpocznij",
-   "@onboardingWelcomeStart": {
-      "description": "Onboarding: onboardingWelcomeStart"
-   },
-   "onboardingPermissionsTitle": "Uprawnienia",
-   "@onboardingPermissionsTitle": {
-      "description": "Onboarding: onboardingPermissionsTitle"
-   },
-   "onboardingPermissionsSubtitle": "Potrzebujemy kilku uprawnień dla pełnej funkcjonalności",
-   "@onboardingPermissionsSubtitle": {
-      "description": "Onboarding: onboardingPermissionsSubtitle"
-   },
-   "permissionBluetoothTitle": "Bluetooth",
-   "@permissionBluetoothTitle": {
-      "description": "Onboarding: permissionBluetoothTitle"
-   },
-   "permissionBluetoothSubtitle": "Do skanowania i łączenia z czujnikami tętna",
-   "@permissionBluetoothSubtitle": {
-      "description": "Onboarding: permissionBluetoothSubtitle"
-   },
-   "permissionNotificationsTitle": "Powiadomienia",
-   "@permissionNotificationsTitle": {
-      "description": "Onboarding: permissionNotificationsTitle"
-   },
-   "permissionNotificationsSubtitle": "Aby przypominać o treningach",
-   "@permissionNotificationsSubtitle": {
-      "description": "Onboarding: permissionNotificationsSubtitle"
-   },
-   "permissionHealthTitle": "Dane Zdrowotne",
-   "@permissionHealthTitle": {
-      "description": "Onboarding: permissionHealthTitle"
-   },
-   "permissionHealthSubtitle": "Do synchronizacji z Apple Health / Health Connect",
-   "@permissionHealthSubtitle": {
-      "description": "Onboarding: permissionHealthSubtitle"
-   },
-   "onboardingCompleteTitle": "Wszystko Gotowe!",
-   "@onboardingCompleteTitle": {
-      "description": "Onboarding: onboardingCompleteTitle"
-   },
-   "onboardingCompleteSubtitle": "Zacznij monitorować tętno i treningi",
-   "@onboardingCompleteSubtitle": {
-      "description": "Onboarding: onboardingCompleteSubtitle"
-   },
-   "getStarted": "Rozpocznij",
-   "@getStarted": {
-      "description": "Onboarding: getStarted"
-   },
-   "back": "Wstecz",
-   "@back": {
-      "description": "Onboarding: back"
-   },
-   "next": "Dalej",
-   "@next": {
-      "description": "Onboarding: next"
-   }
+    }
+  },
+  "appLocked": "Aplikacja zablokowana",
+  "appLockedStatusIconSemantics": "Ikona statusu blokady aplikacji",
+  "avgBpmMetric": "Śr. BPM",
+  "back": "Wstecz",
+  "batteryNotAvailable": "Brak danych",
+  "biometricAuthFailed": "Uwierzytelnienie biometryczne nie powiodło się lub zostało anulowane.",
+  "biometricAuthReason": "Potwierdź tożsamość, aby uzyskać dostęp do aplikacji",
+  "biometricDesc": "Dodatkowe zabezpieczenie aplikacji",
+  "biometricLock": "Ochrona biometryczna",
+  "biometricLockoutBody": "Dane biometryczne nie są już dostępne lub zapisane na tym urządzeniu. Wyłącz blokadę biometryczną, aby odzyskać dostęp do danych, albo pozostaw ją włączoną.",
+  "biometricLockoutTitle": "Blokada biometryczna niedostępna",
+  "biometricStepOptionalTitle": "Ochrona biometryczna",
+  "biometricStepSubtitle": "Zabezpiecz swoje pomiary przed wglądem innych osób i odblokowuj aplikację błyskawicznie za pomocą twarzy lub odcisku palca.",
+  "biometricStepTitle": "Ochrona biometryczna",
+  "biometricsNotAvailable": "Biometria nie jest dostępna na tym urządzeniu",
+  "bluetooth_disabled_label": "Bluetooth wyłączony",
+  "bluetooth_off_description": "Adapter Bluetooth jest wyłączony lub brak uprawnień. Włącz Bluetooth i przyznaj uprawnienia lokalne, aby skanować czujniki.",
+  "bluetooth_required": "Wymagany Bluetooth",
+  "bluetooth_searching_label": "Skanowanie Bluetooth",
+  "bodySensorLocationChest": "Klatka piersiowa",
+  "bodySensorLocationEarLobe": "Płatek ucha",
+  "bodySensorLocationFinger": "Palec",
+  "bodySensorLocationFoot": "Stopa",
+  "bodySensorLocationHand": "Dłoń",
+  "bodySensorLocationLabel": "Lokalizacja czujnika: {location}",
+  "bodySensorLocationOther": "Inne",
+  "bodySensorLocationTitle": "Lokalizacja czujnika",
+  "bodySensorLocationUnknown": "Nieznane",
+  "bodySensorLocationWrist": "Nadgarstek",
+  "bpmUnit": "BPM",
+  "cancel": "Anuluj",
+  "chartNoData": "Brak danych",
+  "connectToSensor": "Połącz z {sensorName}",
+  "connectingMessage": "Łączenie z urządzeniem...\nTrwa nawiązywanie połączenia",
+  "connectionFailedTitle": "Połączenie nieudane",
+  "csvExportEmpty": "Brak sesji treningowych do wyeksportowania.",
+  "csvExportShareSubject": "Eksport historii treningów PulseTrack",
+  "csvExportSuccess": "Treningi zostały pomyślnie wyeksportowane.",
+  "csvImportNoValidData": "W wybranym pliku CSV nie znaleziono poprawnych sesji treningowych.",
+  "csvImportSuccess": "Pomyślnie zaimportowano {count} sesji treningowych.",
+  "csvPreviewConfirmImport": "Importuj ({count})",
+  "csvPreviewDateRange": "{start} – {end}",
+  "csvPreviewSessionsCount": "{count, plural, =1{Znaleziono 1 sesję} few{Znaleziono {count} sesje} many{Znaleziono {count} sesji} other{Znaleziono {count} sesji}}",
+  "csvPreviewSkippedRows": "{count, plural, =1{1 niepoprawny wiersz zostanie pominięty} few{{count} niepoprawne wiersze zostaną pominięte} many{{count} niepoprawnych wierszy zostanie pominiętych} other{{count} niepoprawnych wierszy zostanie pominiętych}}",
+  "csvPreviewTitle": "Podgląd importu treningów",
+  "deleteSessionHint": "Usuwa tę sesję treningową",
+  "deleteSessionLabel": "Usuń",
+  "deviceListTileHint": "Adres MAC {id}, moc sygnału {rssi} dBm. Stuknij dwukrotnie, aby połączyć.",
+  "device_unknown_label": "Nieznane urządzenie",
+  "disableLock": "Wyłącz blokadę",
+  "disconnectButton": "Rozłącz",
+  "disconnectHint": "Rozłącza z urządzeniem {deviceName}",
+  "disconnectedStatus": "Rozłączono",
+  "discoveringServicesMessage": "Wyszukiwanie usług... Proszę czekać...",
+  "empty_state_bullets": "• Upewnij się, że czujnik jest włączony.\n• Sprawdź baterię czujnika.\n• Zbliż się do urządzenia.\n• Spróbuj wyłączyć filtry skanowania.",
+  "empty_state_title": "NIE WIDZISZ SWOJEGO URZĄDZENIA?",
+  "errorGeneric": "Wystąpił błąd: {error}",
+  "failedToLoadSavedSensors": "Nie można wczytać zapisanych czujników: {error}",
+  "getStarted": "Rozpocznij",
+  "goBackButton": "Wstecz",
+  "goBackHint": "Powraca do poprzedniego ekranu",
+  "healthConnectRequiredSubtitle": "Pobierz oficjalną aplikację Google Health Connect ze sklepu Play, aby włączyć synchronizację.",
+  "healthConnectRequiredTitle": "Wymagana aplikacja Health Connect",
+  "healthPermissionDenied": "Uprawnienia do danych zdrowotnych są wymagane, aby synchronizować tętno i treningi.",
+  "healthServiceNameAndroid": "Health Connect",
+  "healthServiceNameIOS": "Apple Health",
+  "healthServiceNameOther": "Usługi zdrowotne",
+  "healthSyncDescAndroid": "Synchronizuj dane tętna i treningów z Health Connect",
+  "healthSyncDescIOS": "Synchronizuj dane tętna i treningów z Apple Health",
+  "healthSyncDescOther": "Synchronizuj dane tętna i treningów z aplikacjami zdrowotnymi",
+  "healthSyncUnavailable": "Synchronizacja zdrowotna niedostępna na tym urządzeniu",
+  "heartRateLabel": "Tętno",
+  "heartRateLiveLabel": "Tętno: {bpm} uderzeń na minutę",
+  "homeTitle": "PulseTrack",
+  "hrMonitorRrIntervalsSemantics": "Odstępy R-R: {intervals}",
+  "inProgress": "W trakcie",
+  "installFromPlayStore": "Zainstaluj ze sklepu Play",
+  "keepLocked": "Pozostaw zablokowane",
+  "maxBpmMetric": "Maks. BPM",
+  "millisecondsUnit": "milisekund",
+  "next": "Dalej",
+  "noWorkoutsDescription": "Ukończ sesję monitorowania tętna, aby zobaczyć historię treningów w tym miejscu.",
+  "noWorkoutsTitle": "Brak zarejestrowanych treningów",
+  "onboardingCompleteSubtitle": "Zacznij monitorować tętno i treningi",
+  "onboardingCompleteTitle": "Wszystko Gotowe!",
+  "onboardingPermissionsSubtitle": "Potrzebujemy kilku uprawnień dla pełnej funkcjonalności",
+  "onboardingPermissionsTitle": "Uprawnienia",
+  "onboardingWelcomeHealthSync": "Synchronizacja Zdrowia",
+  "onboardingWelcomeHistory": "Historia Treningów",
+  "onboardingWelcomePrivacy": "Prywatność",
+  "onboardingWelcomeStart": "Rozpocznij",
+  "onboardingWelcomeSubtitle": "Twój profesjonalny monitor tętna i analityka treningów",
+  "onboardingWelcomeTitle": "Witamy w PulseTrack",
+  "percentRange": "{min} do {max} procent",
+  "permissionBluetoothSubtitle": "Do skanowania i łączenia z czujnikami tętna",
+  "permissionBluetoothTitle": "Bluetooth",
+  "permissionHealthSubtitle": "Do synchronizacji z Apple Health / Health Connect",
+  "permissionHealthTitle": "Dane Zdrowotne",
+  "permissionNotificationsSubtitle": "Aby przypominać o treningach",
+  "permissionNotificationsTitle": "Powiadomienia",
+  "ready_to_scan": "Gotowy do skanowania",
+  "retryConnectionButton": "Ponów połączenie",
+  "retryConnectionHint": "Próbuje ponownie połączyć się z czujnikiem tętna",
+  "retry_button_label": "Ponów",
+  "retry_scan_label": "Ponów skanowanie",
+  "retry_scan_semantic_label": "Ponów skanowanie w poszukiwaniu czujników",
+  "returnToScannerButton": "Powrót do skanera",
+  "returnToScannerHint": "Powraca do ekranu skanera urządzeń",
+  "routeErrorBackHome": "Powrót do strony głównej",
+  "routeErrorInvalidLink": "Nieprawidłowy adres lub uszkodzony link głęboki.",
+  "routeErrorNotFound": "Nie znaleziono żądanej strony",
+  "routeErrorTitle": "Błąd nawigacji",
+  "save": "Zapisz",
+  "savedSensorFallbackName": "Zapisany czujnik",
+  "savedSensorsSectionTitle": "Zapisane czujniki (Połączenie bezpośrednie)",
+  "scanForNewSensorButton": "Skanuj nowe urządzenie",
+  "scan_button_label": "Skanuj",
+  "scan_button_semantic_label": "Rozpocznij skanowanie w poszukiwaniu czujników tętna",
+  "scan_failed_title": "Skanowanie nie powiodło się",
+  "scanner_title": "Skaner",
+  "searching_sensors": "Wyszukiwanie aktywnych czujników...",
+  "sensorBatteryLabel": "Poziom baterii czujnika: {level}",
+  "sensorBatteryTitle": "Bateria czujnika",
+  "settingsDefaultMaxHr": "Tętno maksymalne",
+  "settingsDefaultMaxHrSubtitle": "{bpm} BPM (Kalkulacja stref tętna)",
+  "settingsExportAllWorkouts": "Eksportuj wszystkie treningi",
+  "settingsExportAllWorkoutsSubtitle": "Generuj i udostępnij plik CSV wszystkich sesji",
+  "settingsImportWorkouts": "Importuj treningi",
+  "settingsImportWorkoutsSubtitle": "Importuj sesje treningowe z pliku CSV",
+  "settingsLicenses": "Licencje",
+  "settingsLicensesSubtitle": "Licencje oprogramowania open-source",
+  "settingsMaxHrDialogHint": "Docelowe tętno maksymalne w BPM (50 - 240)",
+  "settingsMaxHrDialogTitle": "Ustaw tętno maksymalne",
+  "settingsPrivacyPolicy": "Polityka prywatności",
+  "settingsPrivacyPolicySubtitle": "Dowiedz się, jak Twoje dane są chronione lokalnie",
+  "settingsSectionAbout": "O aplikacji i pomoc",
+  "settingsSectionAppearance": "Wygląd",
+  "settingsSectionData": "Zarządzanie danymi",
+  "settingsSectionWorkout": "Trening i parametry",
+  "settingsSourceCode": "Kod źródłowy",
+  "settingsSourceCodeSubtitle": "Zobacz repozytorium PulseTrack na GitHubie",
+  "settingsSupport": "Pomoc i kontakt",
+  "settingsSupportSubtitle": "Skontaktuj się z zespołem deweloperów",
+  "settingsTheme": "Motyw",
+  "settingsThemeDark": "Ciemny",
+  "settingsThemeLight": "Jasny",
+  "settingsThemeSystem": "Domyślny systemowy",
+  "settingsTitle": "Ustawienia",
+  "settingsVersion": "Wersja",
+  "settingsWipeData": "Wyczyść historię treningów",
+  "settingsWipeDataSubtitle": "Trwale usuń całą historię treningów",
+  "start_scan_description": "Stuknij Skanuj, aby rozpocząć wyszukiwanie czujników.",
+  "tabHistory": "Historia",
+  "tabHistorySemanticsLabel": "History tab",
+  "tabHome": "Strona główna",
+  "tabHomeSemanticsLabel": "Zakładka Strona główna",
+  "tabSettings": "Ustawienia",
+  "tabSettingsSemanticsLabel": "Settings tab",
+  "todayPrefix": "Dzisiaj, {time}",
+  "toggle_filter_tooltip": "Przełącz filtr nazw i pobliskich urządzeń",
+  "unableToDeleteSession": "Nie można usunąć sesji. Spróbuj ponownie.",
+  "unableToLoadHistory": "Nie można wczytać historii treningów. Spróbuj ponownie później.",
+  "unknownSensor": "Nieznany czujnik",
+  "unknownSensorLabel": "Nieznany czujnik",
+  "unknownSensorName": "Nieznany czujnik",
+  "unknown_device": "Nieznane urządzenie",
+  "unlock": "Odblokuj",
+  "wipeDataConfirm": "Usuń wszystko",
+  "wipeDataDialogContent": "Tej operacji nie można cofnąć. Wszystkie zapisane sesje i telemetria tętna zostaną trwale usunięte z urządzenia.",
+  "wipeDataDialogTitle": "Usunąć wszystkie treningi?",
+  "wipeDataSuccess": "Wszystkie dane treningowe zostały pomyślnie usunięte.",
+  "workoutCardHint": "Czas trwania {duration}, czujnik {device}. Średnie tętno {avg} BPM, Szczytowe tętno {max} BPM. Przesuń w lewo, aby usunąć.",
+  "workoutCardLabel": "Trening w dniu {date}",
+  "workoutDetailsAvgBpm": "Śr. BPM",
+  "workoutDetailsBackHint": "Powrót do historii treningów",
+  "workoutDetailsChartNoDataSemantics": "Wykres tętna: Brak zarejestrowanych danych",
+  "workoutDetailsChartWaveformSemantics": "Wykres przebiegu tętna pokazujący {count} próbek w czasie. Średnie tętno {avgBpm} BPM, tętno szczytowe {maxBpm} BPM.",
+  "workoutDetailsDuration": "Czas trwania",
+  "workoutDetailsExportFailed": "Nie udało się wyeksportować sesji: {error}",
+  "workoutDetailsExportHint": "Eksportuj dane treningu do CSV",
+  "workoutDetailsHeaderSemantics": "Data treningu: {date}, czas trwania: {duration}, czujnik: {sensor}",
+  "workoutDetailsHeartRateOverTime": "Tętno w czasie",
+  "workoutDetailsNoData": "Brak zarejestrowanych danych",
+  "workoutDetailsNoValidData": "Nie zarejestrowano prawidłowych danych tętna",
+  "workoutDetailsNotCompleted": "Trening nie został ukończony",
+  "workoutDetailsPeakBpm": "Maks. BPM",
+  "workoutDetailsSamples": "Próbki",
+  "workoutDetailsSensorDisconnected": "Czujnik mógł zostać rozłączony przed zapisem danych",
+  "workoutDetailsSummary": "Podsumowanie",
+  "workoutDetailsTitle": "Szczegóły treningu",
+  "workoutDetailsZonesLegendSemantics": "Legenda stref tętna treningowego: {legend}",
+  "workoutHistoryAppBarTitle": "Historia treningów",
+  "workoutHistoryDescription": "Przeglądaj przeszłe sesje tętna i analitykę.",
+  "workoutHistoryTitle": "Historia treningów",
+  "yesterdayPrefix": "Wczoraj, {time}"
 }

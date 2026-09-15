@@ -1,210 +1,587 @@
 {
-   "@@locale": "ja",
-   "homeTitle": "PulseTrack",
-   "savedSensorsSectionTitle": "保存されたセンサー（直接接続）",
-   "unknownSensorLabel": "不明なセンサー",
-   "savedSensorFallbackName": "保存されたセンサー",
-   "scanForNewSensorButton": "新しいセンサーをスキャン",
-   "workoutHistoryTitle": "ワークアウト履歴",
-   "workoutHistoryDescription": "過去の心拍セッションと分析を表示します。",
-   "scanner_title": "スキャナー",
-   "bluetooth_searching_label": "Bluetoothスキャン中",
-   "bluetooth_disabled_label": "Bluetoothが無効",
-   "device_unknown_label": "不明なデバイス",
-   "toggle_filter_tooltip": "名前と近接フィルターを切り替え",
-   "ready_to_scan": "スキャン準備完了",
-   "start_scan_description": "「スキャン」をタップしてセンサーの検索を開始します。",
-   "scan_button_label": "スキャン",
-   "bluetooth_required": "Bluetoothが必要です",
-   "bluetooth_off_description": "Bluetoothアダプターがオフになっているか、権限がありません。Bluetoothを有効にして権限を許可してください。",
-   "empty_state_title": "デバイスが表示されませんか？",
-   "empty_state_bullets": "• センサーの電源が入っていることを確認してください。\n• センサーのバッテリーを確認してください。\n• デバイスに近づいてください。\n• スキャンフィルターを無効にしてみてください。",
-   "retry_scan_label": "スキャンを再試行",
-   "scan_failed_title": "スキャンに失敗しました",
-   "retry_button_label": "再試行",
-   "searching_sensors": "アクティブなセンサーを検索中...",
-   "unknown_device": "不明なデバイス",
-   "scan_button_semantic_label": "心拍センサーのスキャンを開始",
-   "retry_scan_semantic_label": "センサーのスキャンを再試行",
-   "connectToSensor": "{sensorName} に接続",
-   "@connectToSensor": {
-      "description": "Semantic label for saved sensor chips on the home screen.",
-      "placeholders": {
-         "sensorName": {
-            "type": "String"
-         }
+  "@@locale": "ja",
+  "@back": {
+    "description": "Onboarding: back"
+  },
+  "@bodySensorLocationLabel": {
+    "description": "Accessibility label for the sensor location card.",
+    "placeholders": {
+      "location": {
+        "type": "String"
       }
-   },
-   "deviceListTileHint": "MACアドレス {id}、信号強度 {rssi} dBm。ダブルタップして接続。",
-   "@deviceListTileHint": {
-      "description": "Semantics hint for each device row in the scanner list.",
-      "placeholders": {
-         "id": {
-            "type": "String"
-         },
-         "rssi": {
-            "type": "int"
-         }
+    }
+  },
+  "@cancel": {
+    "description": "Generic cancel button label."
+  },
+  "@connectToSensor": {
+    "description": "Semantic label for saved sensor chips on the home screen.",
+    "placeholders": {
+      "sensorName": {
+        "type": "String"
       }
-   },
-   "disconnectButton": "切断",
-   "disconnectHint": "{deviceName} から切断します",
-   "@disconnectHint": {
-      "description": "Semantics hint for the disconnect button.",
-      "placeholders": {
-         "deviceName": {
-            "type": "String"
-         }
+    }
+  },
+  "@csvExportEmpty": {
+    "description": "Snackbar message when user tries to export empty history."
+  },
+  "@csvExportShareSubject": {
+    "description": "Subject line when sharing exported CSV."
+  },
+  "@csvExportSuccess": {
+    "description": "Snackbar message after exporting workouts to CSV."
+  },
+  "@csvImportNoValidData": {
+    "description": "Snackbar message when CSV file has no parseable workouts."
+  },
+  "@csvImportSuccess": {
+    "description": "Snackbar message after successful CSV import.",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
-   },
-   "disconnectedStatus": "切断済み",
-   "returnToScannerButton": "スキャナーに戻る",
-   "returnToScannerHint": "デバイススキャナー画面に戻ります",
-   "connectingMessage": "デバイスに接続中...\n接続ハンドシェイクを実行しています",
-   "discoveringServicesMessage": "サービスを検出中... お待ちください...",
-   "heartRateLabel": "心拍数",
-   "heartRateLiveLabel": "心拍数：毎分 {bpm} 拍",
-   "@heartRateLiveLabel": {
-      "description": "Accessibility live region label for the current heart rate.",
-      "placeholders": {
-         "bpm": {
-            "type": "int"
-         }
+    }
+  },
+  "@csvPreviewConfirmImport": {
+    "description": "Button to confirm importing valid sessions.",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
-   },
-   "bpmUnit": "BPM",
-   "bodySensorLocationTitle": "センサー装着部位",
-   "bodySensorLocationLabel": "センサー装着部位：{location}",
-   "@bodySensorLocationLabel": {
-      "description": "Accessibility label for the sensor location card.",
-      "placeholders": {
-         "location": {
-            "type": "String"
-         }
+    }
+  },
+  "@csvPreviewDateRange": {
+    "description": "Date range of sessions to import.",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
       }
-   },
-   "sensorBatteryTitle": "センサーのバッテリー",
-   "sensorBatteryLabel": "センサーのバッテリー残量：{level}",
-   "@sensorBatteryLabel": {
-      "description": "Accessibility label for the battery card.",
-      "placeholders": {
-         "level": {
-            "type": "String"
-         }
+    }
+  },
+  "@csvPreviewSessionsCount": {
+    "description": "Number of valid workout sessions found.",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
-   },
-   "batteryNotAvailable": "なし",
-   "connectionFailedTitle": "接続に失敗しました",
-   "retryConnectionButton": "接続を再試行",
-   "retryConnectionHint": "心拍センサーへの再接続を試みます",
-   "goBackButton": "戻る",
-   "goBackHint": "前の画面に戻ります",
-   "workoutHistoryAppBarTitle": "ワークアウト履歴",
-   "deleteSessionLabel": "削除",
-   "deleteSessionHint": "このワークアウトセッションを削除します",
-   "unableToLoadHistory": "ワークアウト履歴を読み込めませんでした。後でもう一度お試しください。",
-   "unknownSensorName": "不明なセンサー",
-   "noWorkoutsTitle": "ワークアウトがまだ記録されていません",
-   "noWorkoutsDescription": "心拍数モニタリングセッションを完了すると、履歴がここに表示されます。",
-   "workoutCardLabel": "{date} のワークアウト",
-   "@workoutCardLabel": {
-      "description": "Semantic label for a workout history card.",
-      "placeholders": {
-         "date": {
-            "type": "String"
-         }
+    }
+  },
+  "@csvPreviewSkippedRows": {
+    "description": "Number of skipped invalid rows.",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
-   },
-   "workoutCardHint": "時間 {duration}、センサー {device}。平均心拍数 {avg} BPM、最大心拍数 {max} BPM。左にスワイプして削除。",
-   "@workoutCardHint": {
-      "description": "Semantics hint for a workout history card.",
-      "placeholders": {
-         "duration": {
-            "type": "String"
-         },
-         "device": {
-            "type": "String"
-         },
-         "avg": {
-            "type": "int"
-         },
-         "max": {
-            "type": "int"
-         }
+    }
+  },
+  "@csvPreviewTitle": {
+    "description": "Title of CSV import preview dialog."
+  },
+  "@deviceListTileHint": {
+    "description": "Semantics hint for each device row in the scanner list.",
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "rssi": {
+        "type": "int"
       }
-   },
-   "unableToDeleteSession": "セッションを削除できませんでした。もう一度お試しください。",
-   "avgBpmMetric": "平均 BPM",
-   "maxBpmMetric": "最大 BPM",
-   "todayPrefix": "今日、{time}",
-   "@todayPrefix": {
-      "description": "Date prefix for workouts that occurred today.",
-      "placeholders": {
-         "time": {
-            "type": "String"
-         }
+    }
+  },
+  "@disconnectHint": {
+    "description": "Semantics hint for the disconnect button.",
+    "placeholders": {
+      "deviceName": {
+        "type": "String"
       }
-   },
-   "yesterdayPrefix": "昨日、{time}",
-   "@yesterdayPrefix": {
-      "description": "Date prefix for workouts that occurred yesterday.",
-      "placeholders": {
-         "time": {
-            "type": "String"
-         }
+    }
+  },
+  "@errorGeneric": {
+    "description": "Generic error message with parameter.",
+    "placeholders": {
+      "error": {
+        "type": "String"
       }
-   },
-   "failedToLoadSavedSensors": "保存されたセンサーの読み込みに失敗しました: {error}",
-   "@failedToLoadSavedSensors": {
-      "description": "Error shown when saved sensors fail to load.",
-      "placeholders": {
-         "error": {
-            "type": "String"
-         }
+    }
+  },
+  "@failedToLoadSavedSensors": {
+    "description": "Error shown when saved sensors fail to load.",
+    "placeholders": {
+      "error": {
+        "type": "String"
       }
-   },
-   "routeErrorTitle": "ナビゲーションエラー",
-   "routeErrorNotFound": "ページが見つかりません",
-   "routeErrorInvalidLink": "無効なアドレスまたは壊れたディープリンクです。",
-   "routeErrorBackHome": "ホームに戻る",
-   "workoutDetailsTitle": "ワークアウト詳細",
-   "workoutDetailsBackHint": "ワークアウト履歴に戻る",
-   "workoutDetailsExportHint": "ワークアウトデータをCSV形式でエクスポート",
-   "workoutDetailsExportFailed": "セッションのエクスポートに失敗しました: {error}",
-   "@workoutDetailsExportFailed": {
-      "description": "Snackbar when export fails.",
-      "placeholders": {
-         "error": {
-            "type": "String"
-         }
+    }
+  },
+  "@getStarted": {
+    "description": "Onboarding: getStarted"
+  },
+  "@healthConnectRequiredSubtitle": {
+    "description": "Explanation prompting user to install Health Connect from Google Play."
+  },
+  "@healthConnectRequiredTitle": {
+    "description": "Title of dialog informing user that Google Health Connect must be installed."
+  },
+  "@healthPermissionDenied": {
+    "description": "Message shown when health read or write permissions are rejected."
+  },
+  "@healthServiceNameAndroid": {
+    "description": "Platform brand name for Android Health Connect."
+  },
+  "@healthServiceNameIOS": {
+    "description": "Platform brand name for iOS Apple Health."
+  },
+  "@healthServiceNameOther": {
+    "description": "Generic brand name for health services on unsupported or desktop platforms."
+  },
+  "@healthSyncDescAndroid": {
+    "description": "Description of health synchronization on Android devices."
+  },
+  "@healthSyncDescIOS": {
+    "description": "Description of health synchronization on iOS devices."
+  },
+  "@healthSyncDescOther": {
+    "description": "Description of health synchronization on other platforms."
+  },
+  "@healthSyncUnavailable": {
+    "description": "Warning shown when health ecosystem APIs are unavailable on current device."
+  },
+  "@heartRateLiveLabel": {
+    "description": "Accessibility live region label for the current heart rate.",
+    "placeholders": {
+      "bpm": {
+        "type": "int"
       }
-   },
-   "workoutDetailsSummary": "概要",
-   "workoutDetailsHeartRateOverTime": "心拍数の推移",
-   "workoutDetailsNoData": "ワークアウトデータが記録されていません",
-   "workoutDetailsNotCompleted": "ワークアウトは完了しませんでした",
-   "workoutDetailsSensorDisconnected": "データ記録前にセンサーが切断された可能性があります",
-   "workoutDetailsNoValidData": "有効な心拍数データが記録されませんでした",
-   "workoutDetailsAvgBpm": "平均心拍数",
-   "workoutDetailsPeakBpm": "最大心拍数",
-   "workoutDetailsDuration": "所要時間",
-   "workoutDetailsSamples": "測定数",
-   "inProgress": "進行中",
-   "unknownSensor": "不明なセンサー",
-   "bodySensorLocationOther": "その他",
-   "bodySensorLocationChest": "胸部",
-   "bodySensorLocationWrist": "手首",
-   "bodySensorLocationFinger": "指",
-   "bodySensorLocationHand": "手",
-   "bodySensorLocationEarLobe": "耳たぶ",
-   "bodySensorLocationFoot": "足",
-   "bodySensorLocationUnknown": "不明",
-   "chartNoData": "データなし",
-   "workoutDetailsHeaderSemantics": "ワークアウト日：{date}、継続時間：{duration}、センサー：{sensor}",
-   "workoutDetailsChartNoDataSemantics": "心拍数グラフ：ワークアウトデータが記録されていません",
-   "workoutDetailsChartWaveformSemantics": "時間の経過に伴う{count}個のサンプルを示す心拍波形グラフ。平均心拍数 {avgBpm} BPM、最大心拍数 {maxBpm} BPM。",
-   "workoutDetailsZonesLegendSemantics": "心拍トレーニングゾーンの凡例：{legend}",
-   "percentRange": "{min} 〜 {max} パーセント",
-   "hrMonitorRrIntervalsSemantics": "R-R間隔：{intervals}",
-   "millisecondsUnit": "ミリ秒"
+    }
+  },
+  "@installFromPlayStore": {
+    "description": "Button label directing user to Google Play Store to install Health Connect."
+  },
+  "@next": {
+    "description": "Onboarding: next"
+  },
+  "@onboardingCompleteSubtitle": {
+    "description": "Onboarding: onboardingCompleteSubtitle"
+  },
+  "@onboardingCompleteTitle": {
+    "description": "Onboarding: onboardingCompleteTitle"
+  },
+  "@onboardingPermissionsSubtitle": {
+    "description": "Onboarding: onboardingPermissionsSubtitle"
+  },
+  "@onboardingPermissionsTitle": {
+    "description": "Onboarding: onboardingPermissionsTitle"
+  },
+  "@onboardingWelcomeHealthSync": {
+    "description": "Onboarding: onboardingWelcomeHealthSync"
+  },
+  "@onboardingWelcomeHistory": {
+    "description": "Onboarding: onboardingWelcomeHistory"
+  },
+  "@onboardingWelcomePrivacy": {
+    "description": "Onboarding: onboardingWelcomePrivacy"
+  },
+  "@onboardingWelcomeStart": {
+    "description": "Onboarding: onboardingWelcomeStart"
+  },
+  "@onboardingWelcomeSubtitle": {
+    "description": "Onboarding: onboardingWelcomeSubtitle"
+  },
+  "@onboardingWelcomeTitle": {
+    "description": "Onboarding: onboardingWelcomeTitle"
+  },
+  "@permissionBluetoothSubtitle": {
+    "description": "Onboarding: permissionBluetoothSubtitle"
+  },
+  "@permissionBluetoothTitle": {
+    "description": "Onboarding: permissionBluetoothTitle"
+  },
+  "@permissionHealthSubtitle": {
+    "description": "Onboarding: permissionHealthSubtitle"
+  },
+  "@permissionHealthTitle": {
+    "description": "Onboarding: permissionHealthTitle"
+  },
+  "@permissionNotificationsSubtitle": {
+    "description": "Onboarding: permissionNotificationsSubtitle"
+  },
+  "@permissionNotificationsTitle": {
+    "description": "Onboarding: permissionNotificationsTitle"
+  },
+  "@save": {
+    "description": "Generic save button label."
+  },
+  "@sensorBatteryLabel": {
+    "description": "Accessibility label for the battery card.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "@settingsDefaultMaxHr": {
+    "description": "Title of max HR setting."
+  },
+  "@settingsDefaultMaxHrSubtitle": {
+    "description": "Subtitle showing current max HR.",
+    "placeholders": {
+      "bpm": {
+        "type": "int"
+      }
+    }
+  },
+  "@settingsExportAllWorkouts": {
+    "description": "Title for exporting all workouts."
+  },
+  "@settingsExportAllWorkoutsSubtitle": {
+    "description": "Subtitle for exporting all workouts."
+  },
+  "@settingsImportWorkouts": {
+    "description": "Title for importing workouts from CSV."
+  },
+  "@settingsImportWorkoutsSubtitle": {
+    "description": "Subtitle for importing workouts from CSV."
+  },
+  "@settingsLicenses": {
+    "description": "Label for open-source licenses tile."
+  },
+  "@settingsLicensesSubtitle": {
+    "description": "Subtitle for licenses tile."
+  },
+  "@settingsMaxHrDialogHint": {
+    "description": "Hint in max HR configuration dialog."
+  },
+  "@settingsMaxHrDialogTitle": {
+    "description": "Title of max HR configuration dialog."
+  },
+  "@settingsPrivacyPolicy": {
+    "description": "Label for privacy policy tile."
+  },
+  "@settingsPrivacyPolicySubtitle": {
+    "description": "Subtitle for privacy policy tile."
+  },
+  "@settingsSectionAbout": {
+    "description": "Header for about and support section."
+  },
+  "@settingsSectionAppearance": {
+    "description": "Header for the appearance settings section."
+  },
+  "@settingsSectionData": {
+    "description": "Header for data management section."
+  },
+  "@settingsSectionWorkout": {
+    "description": "Header for workout parameters section."
+  },
+  "@settingsSourceCode": {
+    "description": "Label for source code tile."
+  },
+  "@settingsSourceCodeSubtitle": {
+    "description": "Subtitle for source code tile."
+  },
+  "@settingsSupport": {
+    "description": "Label for support tile."
+  },
+  "@settingsSupportSubtitle": {
+    "description": "Subtitle for support tile."
+  },
+  "@settingsTheme": {
+    "description": "Label for theme mode selection tile."
+  },
+  "@settingsThemeDark": {
+    "description": "Label for dark theme."
+  },
+  "@settingsThemeLight": {
+    "description": "Label for light theme."
+  },
+  "@settingsThemeSystem": {
+    "description": "Label for system default theme."
+  },
+  "@settingsTitle": {
+    "description": "Title of the settings screen."
+  },
+  "@settingsVersion": {
+    "description": "Label for app version tile."
+  },
+  "@settingsWipeData": {
+    "description": "Title for wiping all workout history."
+  },
+  "@settingsWipeDataSubtitle": {
+    "description": "Subtitle for wiping all workout history."
+  },
+  "@tabHistory": {
+    "description": "Label for workout history tab"
+  },
+  "@tabHistorySemanticsLabel": {
+    "description": "Semantics label for history tab"
+  },
+  "@tabHome": {
+    "description": "Label for home tab in bottom navigation"
+  },
+  "@tabHomeSemanticsLabel": {
+    "description": "Semantics label for home tab"
+  },
+  "@tabSettings": {
+    "description": "Label for settings tab"
+  },
+  "@tabSettingsSemanticsLabel": {
+    "description": "Semantics label for settings tab"
+  },
+  "@todayPrefix": {
+    "description": "Date prefix for workouts that occurred today.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@wipeDataConfirm": {
+    "description": "Button to confirm wiping data."
+  },
+  "@wipeDataDialogContent": {
+    "description": "Content of wipe data confirmation dialog."
+  },
+  "@wipeDataDialogTitle": {
+    "description": "Title of wipe data confirmation dialog."
+  },
+  "@wipeDataSuccess": {
+    "description": "Snackbar message after wiping data."
+  },
+  "@workoutCardHint": {
+    "description": "Semantics hint for a workout history card.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "device": {
+        "type": "String"
+      },
+      "avg": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "@workoutCardLabel": {
+    "description": "Semantic label for a workout history card.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@workoutDetailsExportFailed": {
+    "description": "Snackbar when export fails.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@yesterdayPrefix": {
+    "description": "Date prefix for workouts that occurred yesterday.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "appLocked": "App Locked",
+  "appLockedStatusIconSemantics": "Application locked status icon",
+  "avgBpmMetric": "平均 BPM",
+  "back": "Back",
+  "batteryNotAvailable": "なし",
+  "biometricAuthFailed": "Biometric authentication failed or was canceled.",
+  "biometricAuthReason": "Authenticate to access Balance",
+  "biometricDesc": "Additional app security",
+  "biometricLock": "Biometric Protection",
+  "biometricLockoutBody": "Biometrics are no longer available or enrolled on this device. Turn off the biometric lock to regain access to your data, or keep it locked.",
+  "biometricLockoutTitle": "Biometric lock unavailable",
+  "biometricStepOptionalTitle": "Biometric Protection",
+  "biometricStepSubtitle": "Secure your measurements from prying eyes and unlock the app instantly using your face or fingerprint.",
+  "biometricStepTitle": "Biometric Protection",
+  "biometricsNotAvailable": "Biometrics not available on this device",
+  "bluetooth_disabled_label": "Bluetoothが無効",
+  "bluetooth_off_description": "Bluetoothアダプターがオフになっているか、権限がありません。Bluetoothを有効にして権限を許可してください。",
+  "bluetooth_required": "Bluetoothが必要です",
+  "bluetooth_searching_label": "Bluetoothスキャン中",
+  "bodySensorLocationChest": "胸部",
+  "bodySensorLocationEarLobe": "耳たぶ",
+  "bodySensorLocationFinger": "指",
+  "bodySensorLocationFoot": "足",
+  "bodySensorLocationHand": "手",
+  "bodySensorLocationLabel": "センサー装着部位：{location}",
+  "bodySensorLocationOther": "その他",
+  "bodySensorLocationTitle": "センサー装着部位",
+  "bodySensorLocationUnknown": "不明",
+  "bodySensorLocationWrist": "手首",
+  "bpmUnit": "BPM",
+  "cancel": "Cancel",
+  "chartNoData": "データなし",
+  "connectToSensor": "{sensorName} に接続",
+  "connectingMessage": "デバイスに接続中...\n接続ハンドシェイクを実行しています",
+  "connectionFailedTitle": "接続に失敗しました",
+  "csvExportEmpty": "No workout sessions to export.",
+  "csvExportShareSubject": "PulseTrack Workout History Export",
+  "csvExportSuccess": "Workout sessions exported successfully.",
+  "csvImportNoValidData": "No valid workout sessions found in the selected CSV file.",
+  "csvImportSuccess": "Successfully imported {count} workout sessions.",
+  "csvPreviewConfirmImport": "Import ({count})",
+  "csvPreviewDateRange": "{start} – {end}",
+  "csvPreviewSessionsCount": "{count, plural, =1{1 session found} other{{count} sessions found}}",
+  "csvPreviewSkippedRows": "{count, plural, =1{1 invalid row will be skipped} other{{count} invalid rows will be skipped}}",
+  "csvPreviewTitle": "Import Workouts Preview",
+  "deleteSessionHint": "このワークアウトセッションを削除します",
+  "deleteSessionLabel": "削除",
+  "deviceListTileHint": "MACアドレス {id}、信号強度 {rssi} dBm。ダブルタップして接続。",
+  "device_unknown_label": "不明なデバイス",
+  "disableLock": "Turn off lock",
+  "disconnectButton": "切断",
+  "disconnectHint": "{deviceName} から切断します",
+  "disconnectedStatus": "切断済み",
+  "discoveringServicesMessage": "サービスを検出中... お待ちください...",
+  "empty_state_bullets": "• センサーの電源が入っていることを確認してください。\n• センサーのバッテリーを確認してください。\n• デバイスに近づいてください。\n• スキャンフィルターを無効にしてみてください。",
+  "empty_state_title": "デバイスが表示されませんか？",
+  "errorGeneric": "An error occurred: {error}",
+  "failedToLoadSavedSensors": "保存されたセンサーの読み込みに失敗しました: {error}",
+  "getStarted": "Get Started",
+  "goBackButton": "戻る",
+  "goBackHint": "前の画面に戻ります",
+  "healthConnectRequiredSubtitle": "Download the official Google Health Connect app from the Play Store to enable sync.",
+  "healthConnectRequiredTitle": "Health Connect App Required",
+  "healthPermissionDenied": "Health data permissions are required to sync heart rate and workouts.",
+  "healthServiceNameAndroid": "Health Connect",
+  "healthServiceNameIOS": "Apple Health",
+  "healthServiceNameOther": "Health Services",
+  "healthSyncDescAndroid": "Sync heart rate and workout data with Health Connect",
+  "healthSyncDescIOS": "Sync heart rate and workout data with Apple Health",
+  "healthSyncDescOther": "Sync heart rate and workout data with health services",
+  "healthSyncUnavailable": "Health sync unavailable on this device",
+  "heartRateLabel": "心拍数",
+  "heartRateLiveLabel": "心拍数：毎分 {bpm} 拍",
+  "homeTitle": "PulseTrack",
+  "hrMonitorRrIntervalsSemantics": "R-R間隔：{intervals}",
+  "inProgress": "進行中",
+  "installFromPlayStore": "Install from Play Store",
+  "keepLocked": "Keep locked",
+  "maxBpmMetric": "最大 BPM",
+  "millisecondsUnit": "ミリ秒",
+  "next": "Next",
+  "noWorkoutsDescription": "心拍数モニタリングセッションを完了すると、履歴がここに表示されます。",
+  "noWorkoutsTitle": "ワークアウトがまだ記録されていません",
+  "onboardingCompleteSubtitle": "Start tracking your heart rate and workouts",
+  "onboardingCompleteTitle": "You're All Set!",
+  "onboardingPermissionsSubtitle": "We need a few permissions to provide full functionality",
+  "onboardingPermissionsTitle": "Permissions",
+  "onboardingWelcomeHealthSync": "Health Sync",
+  "onboardingWelcomeHistory": "Workout History",
+  "onboardingWelcomePrivacy": "Privacy First",
+  "onboardingWelcomeStart": "Get Started",
+  "onboardingWelcomeSubtitle": "Your professional heart rate monitor and workout analytics companion",
+  "onboardingWelcomeTitle": "Welcome to PulseTrack",
+  "percentRange": "{min} 〜 {max} パーセント",
+  "permissionBluetoothSubtitle": "To scan and connect to heart rate sensors",
+  "permissionBluetoothTitle": "Bluetooth",
+  "permissionHealthSubtitle": "To sync workouts with Apple Health / Health Connect",
+  "permissionHealthTitle": "Health Data",
+  "permissionNotificationsSubtitle": "To remind you about workouts",
+  "permissionNotificationsTitle": "Notifications",
+  "ready_to_scan": "スキャン準備完了",
+  "retryConnectionButton": "接続を再試行",
+  "retryConnectionHint": "心拍センサーへの再接続を試みます",
+  "retry_button_label": "再試行",
+  "retry_scan_label": "スキャンを再試行",
+  "retry_scan_semantic_label": "センサーのスキャンを再試行",
+  "returnToScannerButton": "スキャナーに戻る",
+  "returnToScannerHint": "デバイススキャナー画面に戻ります",
+  "routeErrorBackHome": "ホームに戻る",
+  "routeErrorInvalidLink": "無効なアドレスまたは壊れたディープリンクです。",
+  "routeErrorNotFound": "ページが見つかりません",
+  "routeErrorTitle": "ナビゲーションエラー",
+  "save": "Save",
+  "savedSensorFallbackName": "保存されたセンサー",
+  "savedSensorsSectionTitle": "保存されたセンサー（直接接続）",
+  "scanForNewSensorButton": "新しいセンサーをスキャン",
+  "scan_button_label": "スキャン",
+  "scan_button_semantic_label": "心拍センサーのスキャンを開始",
+  "scan_failed_title": "スキャンに失敗しました",
+  "scanner_title": "スキャナー",
+  "searching_sensors": "アクティブなセンサーを検索中...",
+  "sensorBatteryLabel": "センサーのバッテリー残量：{level}",
+  "sensorBatteryTitle": "センサーのバッテリー",
+  "settingsDefaultMaxHr": "Max Heart Rate",
+  "settingsDefaultMaxHrSubtitle": "{bpm} BPM (Heart rate zones calculation)",
+  "settingsExportAllWorkouts": "Export All Workouts",
+  "settingsExportAllWorkoutsSubtitle": "Generate and share CSV of all sessions",
+  "settingsImportWorkouts": "Import Workouts",
+  "settingsImportWorkoutsSubtitle": "Import workout sessions from a CSV file",
+  "settingsLicenses": "Licenses",
+  "settingsLicensesSubtitle": "Open-source software licenses",
+  "settingsMaxHrDialogHint": "Target max heart rate in BPM (50 - 240)",
+  "settingsMaxHrDialogTitle": "Set Max Heart Rate",
+  "settingsPrivacyPolicy": "Privacy Policy",
+  "settingsPrivacyPolicySubtitle": "Learn how your biometric data is protected locally",
+  "settingsSectionAbout": "About & Support",
+  "settingsSectionAppearance": "Appearance",
+  "settingsSectionData": "Data Management",
+  "settingsSectionWorkout": "Workout & Metrics",
+  "settingsSourceCode": "Source Code",
+  "settingsSourceCodeSubtitle": "View PulseTrack repository on GitHub",
+  "settingsSupport": "Support & Feedback",
+  "settingsSupportSubtitle": "Contact the development team",
+  "settingsTheme": "Theme",
+  "settingsThemeDark": "Dark",
+  "settingsThemeLight": "Light",
+  "settingsThemeSystem": "System default",
+  "settingsTitle": "Settings",
+  "settingsVersion": "Version",
+  "settingsWipeData": "Wipe All Workouts",
+  "settingsWipeDataSubtitle": "Permanently delete all workout history",
+  "start_scan_description": "「スキャン」をタップしてセンサーの検索を開始します。",
+  "tabHistory": "History",
+  "tabHistorySemanticsLabel": "History tab",
+  "tabHome": "Home",
+  "tabHomeSemanticsLabel": "Home tab",
+  "tabSettings": "Settings",
+  "tabSettingsSemanticsLabel": "Settings tab",
+  "todayPrefix": "今日、{time}",
+  "toggle_filter_tooltip": "名前と近接フィルターを切り替え",
+  "unableToDeleteSession": "セッションを削除できませんでした。もう一度お試しください。",
+  "unableToLoadHistory": "ワークアウト履歴を読み込めませんでした。後でもう一度お試しください。",
+  "unknownSensor": "不明なセンサー",
+  "unknownSensorLabel": "不明なセンサー",
+  "unknownSensorName": "不明なセンサー",
+  "unknown_device": "不明なデバイス",
+  "unlock": "Unlock",
+  "wipeDataConfirm": "Delete Everything",
+  "wipeDataDialogContent": "This action cannot be undone. All recorded sessions and heart rate telemetry will be permanently wiped from your device.",
+  "wipeDataDialogTitle": "Delete All Workout Data?",
+  "wipeDataSuccess": "All workout data has been wiped successfully.",
+  "workoutCardHint": "時間 {duration}、センサー {device}。平均心拍数 {avg} BPM、最大心拍数 {max} BPM。左にスワイプして削除。",
+  "workoutCardLabel": "{date} のワークアウト",
+  "workoutDetailsAvgBpm": "平均心拍数",
+  "workoutDetailsBackHint": "ワークアウト履歴に戻る",
+  "workoutDetailsChartNoDataSemantics": "心拍数グラフ：ワークアウトデータが記録されていません",
+  "workoutDetailsChartWaveformSemantics": "時間の経過に伴う{count}個のサンプルを示す心拍波形グラフ。平均心拍数 {avgBpm} BPM、最大心拍数 {maxBpm} BPM。",
+  "workoutDetailsDuration": "所要時間",
+  "workoutDetailsExportFailed": "セッションのエクスポートに失敗しました: {error}",
+  "workoutDetailsExportHint": "ワークアウトデータをCSV形式でエクスポート",
+  "workoutDetailsHeaderSemantics": "ワークアウト日：{date}、継続時間：{duration}、センサー：{sensor}",
+  "workoutDetailsHeartRateOverTime": "心拍数の推移",
+  "workoutDetailsNoData": "ワークアウトデータが記録されていません",
+  "workoutDetailsNoValidData": "有効な心拍数データが記録されませんでした",
+  "workoutDetailsNotCompleted": "ワークアウトは完了しませんでした",
+  "workoutDetailsPeakBpm": "最大心拍数",
+  "workoutDetailsSamples": "測定数",
+  "workoutDetailsSensorDisconnected": "データ記録前にセンサーが切断された可能性があります",
+  "workoutDetailsSummary": "概要",
+  "workoutDetailsTitle": "ワークアウト詳細",
+  "workoutDetailsZonesLegendSemantics": "心拍トレーニングゾーンの凡例：{legend}",
+  "workoutHistoryAppBarTitle": "ワークアウト履歴",
+  "workoutHistoryDescription": "過去の心拍セッションと分析を表示します。",
+  "workoutHistoryTitle": "ワークアウト履歴",
+  "yesterdayPrefix": "昨日、{time}"
 }
