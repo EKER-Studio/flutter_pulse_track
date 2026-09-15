@@ -46,6 +46,7 @@ class DeviceProfileDto {
   /// Used to sort the "Recently connected" list and to decide whether a cached
   /// profile is stale enough to warrant a fresh GATT characteristic read on
   /// the next connection.
+  @Index()
   late DateTime lastConnectedAt;
 
   /// Cached raw index of the [BodySensorLocation] enum for the sensor body

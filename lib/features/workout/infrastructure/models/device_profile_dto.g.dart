@@ -54,6 +54,19 @@ const DeviceProfileDtoSchema = CollectionSchema(
         ),
       ],
     ),
+    r'lastConnectedAt': IndexSchema(
+      id: 8824490165085321975,
+      name: r'lastConnectedAt',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'lastConnectedAt',
+          type: IndexType.value,
+          caseSensitive: false,
+        ),
+      ],
+    ),
   },
   links: {},
   embeddedSchemas: {},
@@ -206,6 +219,15 @@ extension DeviceProfileDtoQueryWhereSort
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
+
+  QueryBuilder<DeviceProfileDto, DeviceProfileDto, QAfterWhere>
+  anyLastConnectedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'lastConnectedAt'),
+      );
+    });
+  }
 }
 
 extension DeviceProfileDtoQueryWhere
@@ -326,6 +348,109 @@ extension DeviceProfileDtoQueryWhere
               ),
             );
       }
+    });
+  }
+
+  QueryBuilder<DeviceProfileDto, DeviceProfileDto, QAfterWhereClause>
+  lastConnectedAtEqualTo(DateTime lastConnectedAt) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(
+          indexName: r'lastConnectedAt',
+          value: [lastConnectedAt],
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<DeviceProfileDto, DeviceProfileDto, QAfterWhereClause>
+  lastConnectedAtNotEqualTo(DateTime lastConnectedAt) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'lastConnectedAt',
+                lower: [],
+                upper: [lastConnectedAt],
+                includeUpper: false,
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'lastConnectedAt',
+                lower: [lastConnectedAt],
+                includeLower: false,
+                upper: [],
+              ),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'lastConnectedAt',
+                lower: [lastConnectedAt],
+                includeLower: false,
+                upper: [],
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'lastConnectedAt',
+                lower: [],
+                upper: [lastConnectedAt],
+                includeUpper: false,
+              ),
+            );
+      }
+    });
+  }
+
+  QueryBuilder<DeviceProfileDto, DeviceProfileDto, QAfterWhereClause>
+  lastConnectedAtGreaterThan(DateTime lastConnectedAt, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'lastConnectedAt',
+          lower: [lastConnectedAt],
+          includeLower: include,
+          upper: [],
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<DeviceProfileDto, DeviceProfileDto, QAfterWhereClause>
+  lastConnectedAtLessThan(DateTime lastConnectedAt, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'lastConnectedAt',
+          lower: [],
+          upper: [lastConnectedAt],
+          includeUpper: include,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<DeviceProfileDto, DeviceProfileDto, QAfterWhereClause>
+  lastConnectedAtBetween(
+    DateTime lowerLastConnectedAt,
+    DateTime upperLastConnectedAt, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'lastConnectedAt',
+          lower: [lowerLastConnectedAt],
+          includeLower: includeLower,
+          upper: [upperLastConnectedAt],
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 }
