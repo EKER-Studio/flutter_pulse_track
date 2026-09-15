@@ -9,7 +9,7 @@ import 'core/navigation/app_router.dart';
 import 'core/presentation/theme/app_theme.dart';
 import 'features/settings/domain/models/app_theme_mode.dart';
 import 'features/settings/presentation/controllers/app_settings_notifier.dart';
-import 'features/workout/domain/usecases/watch_workout_history_usecase.dart';
+import 'features/workout/application/workout_providers.dart';
 import 'l10n/app_localizations.dart';
 
 /// Root widget that configures the MaterialApp with Material 3 theming and GoRouter navigation.

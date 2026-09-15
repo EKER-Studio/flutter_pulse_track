@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
+import 'package:pulse_track/features/workout/application/workout_providers.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
-import 'package:pulse_track/features/workout/domain/services/workout_export_service.dart';
 import 'package:pulse_track/features/workout/presentation/utils/heart_rate_zones.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
@@ -78,7 +78,7 @@ class WorkoutDetailsView extends ConsumerWidget {
               onPressed: () async {
                 try {
                   await ref
-                      .read(workoutExportServiceProvider)
+                      .read(workoutExportShareServiceProvider)
                       .exportAndShareSession(session);
                 } catch (e) {
                   if (!context.mounted) return;

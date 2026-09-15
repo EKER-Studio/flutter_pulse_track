@@ -14,11 +14,9 @@ import 'package:pulse_track/features/settings/presentation/widgets/components/se
 import 'package:pulse_track/features/settings/presentation/widgets/components/settings_tile.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/theme_selection_dialog.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/wipe_data_dialog.dart';
-import 'package:pulse_track/features/workout/domain/services/workout_export_service.dart';
+import 'package:pulse_track/features/workout/application/workout_providers.dart';
+import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/core/integrations/biometrics/biometric_service.dart';
-import 'package:pulse_track/features/workout/domain/usecases/delete_workout_session_usecase.dart';
-import 'package:pulse_track/features/workout/domain/usecases/save_workout_session_usecase.dart';
-import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Screen providing user controls for appearance, workout metrics,
@@ -72,7 +70,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     try {
       await ref
-          .read(workoutExportServiceProvider)
+          .read(workoutExportShareServiceProvider)
           .exportAndShareAllSessions(sessions);
       if (context.mounted) {
         ScaffoldMessenger.of(context)
@@ -113,19 +111,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       );
       if (!confirmed) return;
 
-      final saveUseCase = ref.read(saveWorkoutSessionUseCaseProvider);
-      for (final session in analysis.validSessions) {
-        await saveUseCase.call(
-          startTime: session.startTime,
-          endTime: session.endTime ?? session.startTime,
-          samples: session.bpmSamples,
-          sensorLocationIndex: session.sensorLocationIndex,
-          macAddress: session.deviceMacAddress,
-          name: session.deviceName,
-          avgBpm: session.avgBpm,
-          maxBpm: session.maxBpm,
-        );
-      }
+      final repository = ref.read(workoutPersistenceRepositoryProvider);
+      final batch = analysis.validSessions
+          .map(
+            (s) => WorkoutSession(
+              id: 0,
+              startTime: s.startTime,
+              endTime: s.endTime ?? s.startTime,
+              avgBpm: s.avgBpm,
+              maxBpm: s.maxBpm,
+              bpmSamples: s.bpmSamples,
+              sensorLocationIndex: s.sensorLocationIndex,
+              deviceMacAddress: s.deviceMacAddress,
+              deviceName: s.deviceName,
+            ),
+          )
+          .toList();
+      await repository.saveWorkoutSessionsBatch(batch);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -151,11 +153,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (!confirmed) return;
 
     final sessions = await ref.read(watchWorkoutHistoryStreamProvider.future);
-    final deleteUseCase = ref.read(deleteWorkoutSessionUseCaseProvider);
-
-    for (final session in sessions) {
-      await deleteUseCase.call(session.id);
-    }
+    final repository = ref.read(workoutPersistenceRepositoryProvider);
+    await repository.deleteWorkoutSessions(sessions.map((s) => s.id).toList());
 
     if (context.mounted) {
       ScaffoldMessenger.of(context)
@@ -164,7 +163,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Future<void> _launchUrl(String url) async {
-    final uri = Uri.parse(url);
+    final uri = Uri.tryParse(url);
+    if (uri == null) return;
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }

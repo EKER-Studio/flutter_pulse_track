@@ -8,8 +8,8 @@ import 'package:pulse_track/features/heart_rate/presentation/views/hr_home_view.
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_scanner_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/workout_history_view.dart';
+import 'package:pulse_track/features/workout/application/workout_providers.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
-import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
 import 'package:pulse_track/core/infrastructure/services/analytics_service.dart';
 import 'package:pulse_track/features/settings/presentation/screens/licenses_screen.dart';
 import 'package:pulse_track/features/settings/presentation/screens/settings_screen.dart';

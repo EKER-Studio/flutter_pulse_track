@@ -17,8 +17,8 @@ import 'core/utils/app_logger.dart';
 import 'core/utils/crash_reporter.dart';
 import 'firebase_options.dart';
 
-import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart'
-    as domain;
+import 'package:pulse_track/features/workout/application/workout_providers.dart'
+    as app_providers;
 
 import 'features/workout/infrastructure/repositories/workout_persistence_repository.dart';
 
@@ -108,7 +108,9 @@ Future<void> main() async {
       ProviderScope(
         overrides: [
           isarProvider.overrideWithValue(isar),
-          domain.workoutPersistenceRepositoryProvider.overrideWithValue(repo),
+          app_providers.workoutPersistenceRepositoryProvider.overrideWithValue(
+            repo,
+          ),
         ],
         child: const App(),
       ),

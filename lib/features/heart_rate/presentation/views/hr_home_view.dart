@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
-import 'package:pulse_track/features/workout/domain/usecases/watch_saved_device_profiles_usecase.dart';
+import 'package:pulse_track/features/workout/application/workout_providers.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Central dashboard hub for the heart rate monitoring application.

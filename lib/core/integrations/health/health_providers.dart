@@ -2,7 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pulse_track/core/integrations/health/health_service.dart';
 import 'package:pulse_track/core/integrations/health/health_sync_coordinator.dart';
-import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart';
+import 'package:pulse_track/features/workout/application/workout_providers.dart';
 
 part 'health_providers.g.dart';
 

@@ -6,8 +6,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/core/utils/app_logger.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
-import 'package:pulse_track/features/workout/domain/usecases/delete_workout_session_usecase.dart';
-import 'package:pulse_track/features/workout/domain/usecases/watch_workout_history_usecase.dart';
+import 'package:pulse_track/features/workout/application/workout_providers.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Reactive workout history screen that displays every persisted
