@@ -80,152 +80,43 @@ class HrScannerView extends ConsumerWidget {
 
   /// Builds the idle state UI displayed when no scan is active and no devices have been found.
   Widget _buildIdleState(BuildContext context, BleScannerNotifier notifier) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.bluetooth_searching,
-            size: 80,
-            color: AppColors.textSecondary,
-            semanticLabel: AppLocalizations.of(context)
-                .bluetooth_searching_label,
-          ),
-          const SizedBox(height: 24),
-          Text(
-            AppLocalizations.of(context).ready_to_scan,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            AppLocalizations.of(context).start_scan_description,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 32),
-          Semantics(
-            label: AppLocalizations.of(context).scan_button_semantic_label,
-            button: true,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accentBlue,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
-                ),
-                minimumSize: const Size(180, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              icon: const ExcludeSemantics(
-                child: Icon(Icons.search, color: AppColors.textPrimary),
-              ),
-              label: Text(
-                AppLocalizations.of(context).scan_button_label,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onPressed: () => notifier.startScan(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Builds the UI displayed when the Bluetooth adapter is off.
-  Widget _buildAdapterOffState(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      color: AppColors.accentRed.withValues(alpha: 0.05),
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(32),
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.bluetooth_disabled,
+              Icons.bluetooth_searching,
               size: 80,
-              color: AppColors.accentRed,
+              color: AppColors.textSecondary,
               semanticLabel: AppLocalizations.of(context)
-                  .bluetooth_disabled_label,
+                  .bluetooth_searching_label,
             ),
             const SizedBox(height: 24),
             Text(
-              AppLocalizations.of(context).bluetooth_required,
+              AppLocalizations.of(context).ready_to_scan,
               style: const TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context).bluetooth_off_description,
-              textAlign: TextAlign.center,
+              AppLocalizations.of(context).start_scan_description,
               style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 16,
-                height: 1.4,
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Builds the empty state UI displayed when scanning has completed but no devices were found.
-  Widget _buildEmptyState(BuildContext context, BleScannerNotifier notifier) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.device_unknown,
-              size: 80,
-              color: AppColors.accentOrange,
-              semanticLabel: AppLocalizations.of(context).device_unknown_label,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              AppLocalizations.of(context).empty_state_title,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              AppLocalizations.of(context).empty_state_bullets,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 16,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.left,
             ),
             const SizedBox(height: 32),
-
             Semantics(
-              label: AppLocalizations.of(context).retry_scan_semantic_label,
+              label: AppLocalizations.of(context).scan_button_semantic_label,
               button: true,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accentOrange,
+                  backgroundColor: AppColors.accentBlue,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 16,
@@ -236,10 +127,10 @@ class HrScannerView extends ConsumerWidget {
                   ),
                 ),
                 icon: const ExcludeSemantics(
-                  child: Icon(Icons.refresh, color: AppColors.textPrimary),
+                  child: Icon(Icons.search, color: AppColors.textPrimary),
                 ),
                 label: Text(
-                  AppLocalizations.of(context).retry_scan_label,
+                  AppLocalizations.of(context).scan_button_label,
                   style: const TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 16,
@@ -255,70 +146,190 @@ class HrScannerView extends ConsumerWidget {
     );
   }
 
-  /// Builds the failure state UI displayed when the scan could not be started.
-  Widget _buildFailureState(
-    BuildContext context,
-    String message,
-    BleScannerNotifier notifier,
-  ) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceBackground,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: AppColors.accentRed.withValues(alpha: 0.3),
-            ),
-          ),
+  /// Builds the UI displayed when the Bluetooth adapter is off.
+  Widget _buildAdapterOffState(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        width: double.infinity,
+        color: AppColors.accentRed.withValues(alpha: 0.05),
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.error_outline,
-                size: 48,
+              Icon(
+                Icons.bluetooth_disabled,
+                size: 80,
                 color: AppColors.accentRed,
+                semanticLabel: AppLocalizations.of(context)
+                    .bluetooth_disabled_label,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                AppLocalizations.of(context).bluetooth_required,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
               Text(
-                AppLocalizations.of(context).scan_failed_title,
+                AppLocalizations.of(context).bluetooth_off_description,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 16,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds the empty state UI displayed when scanning has completed but no devices were found.
+  Widget _buildEmptyState(BuildContext context, BleScannerNotifier notifier) {
+    return SingleChildScrollView(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.device_unknown,
+                size: 80,
+                color: AppColors.accentOrange,
+                semanticLabel: AppLocalizations.of(context)
+                    .device_unknown_label,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                AppLocalizations.of(context).empty_state_title,
                 style: const TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               Text(
-                message,
-                textAlign: TextAlign.center,
+                AppLocalizations.of(context).empty_state_bullets,
                 style: const TextStyle(
                   color: AppColors.textSecondary,
-                  fontSize: 14,
+                  fontSize: 16,
+                  height: 1.5,
                 ),
+                textAlign: TextAlign.left,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
+
               Semantics(
+                label: AppLocalizations.of(context).retry_scan_semantic_label,
                 button: true,
-                label: AppLocalizations.of(context).scan_button_semantic_label,
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accentRed,
-                    minimumSize: const Size(120, 48),
+                    backgroundColor: AppColors.accentOrange,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    minimumSize: const Size(180, 48),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  icon: const ExcludeSemantics(
+                    child: Icon(Icons.refresh, color: AppColors.textPrimary),
+                  ),
+                  label: Text(
+                    AppLocalizations.of(context).retry_scan_label,
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   onPressed: () => notifier.startScan(),
-                  child: Text(
-                    AppLocalizations.of(context).scan_button_label,
-                    style: const TextStyle(color: AppColors.textPrimary),
-                  ),
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds the failure state UI displayed when the scan could not be started.
+  Widget _buildFailureState(
+    BuildContext context,
+    String message,
+    BleScannerNotifier notifier,
+  ) {
+    return SingleChildScrollView(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceBackground,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.accentRed.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: AppColors.accentRed,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  AppLocalizations.of(context).scan_failed_title,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Semantics(
+                  button: true,
+                  label: AppLocalizations.of(context)
+                      .scan_button_semantic_label,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.accentRed,
+                      minimumSize: const Size(120, 48),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () => notifier.startScan(),
+                    child: Text(
+                      AppLocalizations.of(context).scan_button_label,
+                      style: const TextStyle(color: AppColors.textPrimary),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

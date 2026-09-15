@@ -201,7 +201,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
 
   /// Renders the live telemetry dashboard showing BPM, R-R intervals, sensor location, and battery.
   Widget _buildConnectedState(AppLocalizations l10n, HrMeasurement metric) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -233,12 +233,17 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                Text(
-                  '${metric.bpm}',
-                  style: const TextStyle(
-                    fontSize: 84,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      '${metric.bpm}',
+                      style: const TextStyle(
+                        fontSize: 84,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
