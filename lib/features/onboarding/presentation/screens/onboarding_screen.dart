@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../settings/presentation/controllers/app_settings_notifier.dart';
+import '../../../../core/integrations/biometrics/biometric_service.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/onboarding_step_layout.dart';
 
@@ -208,10 +209,25 @@ class _BiometricStep extends ConsumerWidget {
         value: settings.isBiometricLockEnabled,
         onChanged: (enabled) async {
           if (enabled) {
-            // In onboarding we simply enable without auth for simplicity.
-            await ref
-                .read(appSettingsProvider.notifier)
-                .updateBiometricLock(true);
+            final result = await BiometricService.instance.authenticate(
+              localizedReason: l10n.biometricAuthReason,
+              authMessages: BiometricService.createAuthMessages(l10n),
+            );
+            if (result == BiometricAuthResult.success) {
+              await ref
+                  .read(appSettingsProvider.notifier)
+                  .updateBiometricLock(true);
+            } else if (context.mounted &&
+                (BiometricService.isTerminalFailure(result) ||
+                    result == BiometricAuthResult.notAvailable)) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(l10n.biometricsNotAvailable)),
+              );
+            } else if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(l10n.biometricAuthFailed)),
+              );
+            }
           } else {
             await ref
                 .read(appSettingsProvider.notifier)
