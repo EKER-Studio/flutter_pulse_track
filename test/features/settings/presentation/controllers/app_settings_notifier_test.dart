@@ -12,6 +12,9 @@ class InMemoryUserSettingsRepository implements UserSettingsRepository {
   UserSettings _settings = const UserSettings();
   final _controller = StreamController<UserSettings>.broadcast();
 
+  /// When set, [saveSettings] throws this instead of persisting.
+  Object? saveError;
+
   @override
   Future<UserSettings> getSettings() async => _settings;
 
@@ -20,6 +23,7 @@ class InMemoryUserSettingsRepository implements UserSettingsRepository {
 
   @override
   Future<void> saveSettings(UserSettings settings) async {
+    if (saveError != null) throw saveError!;
     _settings = settings;
     _controller.add(settings);
   }
@@ -97,6 +101,21 @@ void main() {
       expect(updatedState.themeMode, AppThemeMode.light);
       expect(updatedState.defaultMaxHr, 200);
       sub.close();
+    });
+
+    test('failed save rolls back optimistic state and rethrows', () async {
+      repository.saveError = Exception('disk full');
+
+      await expectLater(
+        container.read(appSettingsProvider.notifier).updateMaxHr(175),
+        throwsException,
+      );
+
+      final state = container.read(appSettingsProvider);
+      expect(state.defaultMaxHr, 190);
+
+      final persisted = await repository.getSettings();
+      expect(persisted.defaultMaxHr, 190);
     });
   });
 }

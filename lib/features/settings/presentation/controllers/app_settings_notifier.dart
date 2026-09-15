@@ -26,35 +26,38 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
     return const UserSettings();
   }
 
+  /// Applies [updated] optimistically, rolling back to the previous state
+  /// if persistence fails so the UI never shows an unsaved value.
+  ///
+  /// Rethrows the persistence error so callers can surface feedback.
+  Future<void> _persist(UserSettings updated) async {
+    final previous = state;
+    state = updated;
+    try {
+      await ref.read(userSettingsRepositoryProvider).saveSettings(updated);
+    } catch (_) {
+      state = previous;
+      rethrow;
+    }
+  }
+
   /// Updates the active theme mode and persists it to database.
   ///
   /// @param mode The selected theme mode.
-  Future<void> updateTheme(AppThemeMode mode) async {
-    final repository = ref.read(userSettingsRepositoryProvider);
-    final updated = state.copyWith(themeMode: mode);
-    state = updated;
-    await repository.saveSettings(updated);
-  }
+  Future<void> updateTheme(AppThemeMode mode) =>
+      _persist(state.copyWith(themeMode: mode));
 
   /// Updates the default maximum heart rate in BPM and persists it to database.
   ///
   /// @param maxHr Target max heart rate in beats per minute.
-  Future<void> updateMaxHr(int maxHr) async {
-    final repository = ref.read(userSettingsRepositoryProvider);
-    final updated = state.copyWith(defaultMaxHr: maxHr);
-    state = updated;
-    await repository.saveSettings(updated);
-  }
+  Future<void> updateMaxHr(int maxHr) =>
+      _persist(state.copyWith(defaultMaxHr: maxHr));
 
   /// Updates whether biometric lock is enabled and persists it.
   ///
   /// @param enabled Whether biometric protection is enabled.
-  Future<void> updateBiometricLock(bool enabled) async {
-    final repository = ref.read(userSettingsRepositoryProvider);
-    final updated = state.copyWith(isBiometricLockEnabled: enabled);
-    state = updated;
-    await repository.saveSettings(updated);
-  }
+  Future<void> updateBiometricLock(bool enabled) =>
+      _persist(state.copyWith(isBiometricLockEnabled: enabled));
 
   /// Sets the ephemeral locked state (not persisted).
   ///
@@ -64,10 +67,6 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
   }
 
   /// Marks onboarding as completed and persists it.
-  Future<void> completeOnboarding() async {
-    final repository = ref.read(userSettingsRepositoryProvider);
-    final updated = state.copyWith(isOnboardingCompleted: true);
-    state = updated;
-    await repository.saveSettings(updated);
-  }
+  Future<void> completeOnboarding() =>
+      _persist(state.copyWith(isOnboardingCompleted: true));
 }
