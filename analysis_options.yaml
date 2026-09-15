@@ -10,6 +10,8 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  plugins:
+    - custom_lint
   exclude:
     - "**/*.g.dart"
     - "lib/l10n/app_localizations*.dart"
@@ -17,17 +19,18 @@ analyzer:
     - "build/**"
     - "ios/Pods/**"
     - "build/ios/**"
-    - "android/**"
+    - "android/app/build/**"
     - "ios/**"
     - "web/**"
     - "windows/**"
     - "macos/**"
     - "linux/**"
+    - android/**
 
   errors:
     unused_import: error
     unused_local_variable: warning
-    dead_code: warning
+    dead_code: error
 
 linter:
   # The lint rules applied to this project can be customized in the
@@ -85,6 +88,14 @@ linter:
     - avoid_unnecessary_containers
     - unnecessary_parenthesis
 
+    - avoid_catches_without_on_clauses
+    - avoid_catching_errors
+    - unawaited_futures
+    - close_sinks
+    - avoid_as
+    - avoid_init_to_null
+    - avoid_redundant_argument_values
+    - prefer_final_fields
     # Flutter Performance & UI Polish
     - sized_box_for_whitespace
     - sized_box_shrink_expand
