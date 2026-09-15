@@ -449,6 +449,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _reconnectAttempts = 0;
     await _saveSessionToDisk();
     await _foregroundServiceManager.stopService();
+    if (!ref.mounted) return;
     state = MonitorState.failure(message: failureMessage);
   }
 
@@ -477,7 +478,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         stackTrace: st,
       );
     } finally {
-      state = const MonitorState.disconnected();
+      if (ref.mounted) {
+        state = const MonitorState.disconnected();
+      }
       _isDisconnecting = false;
       log.i('[HrMonitorNotifier] Disconnection complete.');
     }

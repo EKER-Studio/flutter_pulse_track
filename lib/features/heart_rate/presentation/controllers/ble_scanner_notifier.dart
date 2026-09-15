@@ -107,6 +107,7 @@ class BleScannerNotifier extends _$BleScannerNotifier
           error: error,
           stackTrace: stack,
         );
+        if (!ref.mounted) return;
         state = BleScannerState.failure(message: error.toString());
       },
     );
@@ -125,6 +126,7 @@ class BleScannerNotifier extends _$BleScannerNotifier
       _cancelEmptyStateTimer();
       await _scanResultsSubscription?.cancel();
       _scanResultsSubscription = null;
+      if (!ref.mounted) return;
       state = BleScannerState.failure(message: e.toString());
     }
   }
@@ -141,6 +143,7 @@ class BleScannerNotifier extends _$BleScannerNotifier
 
     await _scannerService.stopScan();
 
+    if (!ref.mounted) return;
     if (state is ScanningScannerState || state is EmptyScannerState) {
       state = const BleScannerState.idle();
     }
@@ -170,6 +173,7 @@ class BleScannerNotifier extends _$BleScannerNotifier
 
   void _onAdapterStateChanged(BluetoothAdapterState adapterState) {
     log.i('[BleScannerNotifier] Adapter state → ${adapterState.name}');
+    if (!ref.mounted) return;
 
     switch (adapterState) {
       case BluetoothAdapterState.off:
@@ -190,6 +194,7 @@ class BleScannerNotifier extends _$BleScannerNotifier
   }
 
   void _onScanResultsReceived(List<ScanResult> results) {
+    if (!ref.mounted) return;
     _lastRawResults = results;
 
     final Map<String, BleDevice> uniqueDevices = {};
@@ -255,6 +260,7 @@ class BleScannerNotifier extends _$BleScannerNotifier
       '[BleScannerNotifier] Empty-state window elapsed — '
       'no qualified devices found during active scan.',
     );
+    if (!ref.mounted) return;
     if (state is ScanningScannerState) {
       state = const BleScannerState.empty();
     }
