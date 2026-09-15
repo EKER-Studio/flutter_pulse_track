@@ -49,39 +49,46 @@ class SettingsTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         side: const BorderSide(color: AppColors.borderSubtle),
       ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        leading: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: effectiveColor.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(8),
+      child: Semantics(
+        label: subtitle != null ? '$title. $subtitle' : title,
+        button: onTap != null,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 4,
           ),
-          child: Icon(icon, color: effectiveColor, size: 20),
+          leading: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: effectiveColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, color: effectiveColor, size: 20),
+          ),
+          title: Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.w600, color: titleColor),
+          ),
+          subtitle: subtitle != null
+              ? Text(
+                  subtitle!,
+                  style: Theme.of(context).textTheme.bodySmall
+                      ?.copyWith(color: AppColors.textSecondary),
+                )
+              : null,
+          trailing:
+              trailing ??
+              (onTap != null
+                  ? const Icon(
+                      Icons.chevron_right,
+                      color: AppColors.textSecondary,
+                      size: 20,
+                    )
+                  : null),
+          onTap: onTap,
         ),
-        title: Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium
-              ?.copyWith(fontWeight: FontWeight.w600, color: titleColor),
-        ),
-        subtitle: subtitle != null
-            ? Text(
-                subtitle!,
-                style: Theme.of(context).textTheme.bodySmall
-                    ?.copyWith(color: AppColors.textSecondary),
-              )
-            : null,
-        trailing:
-            trailing ??
-            (onTap != null
-                ? const Icon(
-                    Icons.chevron_right,
-                    color: AppColors.textSecondary,
-                    size: 20,
-                  )
-                : null),
-        onTap: onTap,
       ),
     );
   }
