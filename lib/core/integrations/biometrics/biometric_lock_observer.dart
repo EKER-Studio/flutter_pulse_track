@@ -7,6 +7,10 @@ import '../../utils/crash_reporter.dart';
 import 'biometric_service.dart';
 
 /// Enforces the biometric app lock and database integrity across app lifecycle changes.
+///
+/// The lock-enabled state is always read live via [isBiometricLockEnabled]
+/// on every lifecycle transition, so toggling the setting takes effect
+/// immediately without an app restart.
 class BiometricLockObserver with WidgetsBindingObserver {
   /// Whether biometric lock is enabled.
   final bool Function() isBiometricLockEnabled;
@@ -17,8 +21,6 @@ class BiometricLockObserver with WidgetsBindingObserver {
   /// Called with `true` if locked, `false` if unlocked.
   final ValueChanged<bool> onLockStateChanged;
 
-  final Stream<bool>? lockEnabledStream;
-
   /// Resolves the localized reason shown in the biometric prompt.
   final String Function() localizedReason;
 
@@ -27,9 +29,7 @@ class BiometricLockObserver with WidgetsBindingObserver {
 
   final Future<({bool reopened})> Function() verifyDatabaseIntegrity;
 
-  bool _isLockEnabled = false;
   bool _disposed = false;
-  StreamSubscription<bool>? _subscription;
 
   /// Creates a [BiometricLockObserver].
   BiometricLockObserver({
@@ -37,15 +37,10 @@ class BiometricLockObserver with WidgetsBindingObserver {
     required this.onLockStateChanged,
     required this.localizedReason,
     this.isAppLocked,
-    this.lockEnabledStream,
     this.onDatabaseReopened,
     required this.verifyDatabaseIntegrity,
   }) {
-    _isLockEnabled = isBiometricLockEnabled();
     WidgetsBinding.instance.addObserver(this);
-    _subscription = lockEnabledStream?.listen((enabled) {
-      _isLockEnabled = enabled;
-    });
   }
 
   @override
@@ -77,7 +72,7 @@ class BiometricLockObserver with WidgetsBindingObserver {
   }
 
   Future<void> _checkBiometricLock() async {
-    if (!_isLockEnabled) return;
+    if (!isBiometricLockEnabled()) return;
 
     if (BiometricService.instance.isAuthenticating) return;
     if (BiometricService.instance.wasAuthenticatingRecently) return;
@@ -93,8 +88,6 @@ class BiometricLockObserver with WidgetsBindingObserver {
   void dispose() {
     if (_disposed) return;
     _disposed = true;
-    _subscription?.cancel();
-    _subscription = null;
     WidgetsBinding.instance.removeObserver(this);
   }
 
