@@ -10,6 +10,7 @@ import 'core/presentation/theme/app_theme.dart';
 import 'features/settings/domain/models/app_theme_mode.dart';
 import 'features/settings/presentation/controllers/app_settings_notifier.dart';
 import 'features/workout/application/workout_providers.dart';
+import 'features/workout/domain/models/workout_session.dart';
 import 'l10n/app_localizations.dart';
 
 /// Root widget that configures the MaterialApp with Material 3 theming and GoRouter navigation.
@@ -105,15 +106,27 @@ class _WidgetSyncObserver extends ConsumerStatefulWidget {
 }
 
 class _WidgetSyncObserverState extends ConsumerState<_WidgetSyncObserver> {
+  ProviderSubscription<AsyncValue<List<WorkoutSession>>>? _historySubscription;
+
   @override
   void initState() {
     super.initState();
     // Listen to workout history and push to widgets.
-    ref.listenManual(watchWorkoutHistoryStreamProvider, (previous, next) {
-      next.whenData((sessions) {
-        WidgetSyncService.instance.updateWidgetData(sessions: sessions);
-      });
-    });
+    _historySubscription = ref.listenManual(
+      watchWorkoutHistoryStreamProvider,
+      (previous, next) {
+        next.whenData((sessions) {
+          WidgetSyncService.instance.updateWidgetData(sessions: sessions);
+        });
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _historySubscription?.close();
+    _historySubscription = null;
+    super.dispose();
   }
 
   @override
