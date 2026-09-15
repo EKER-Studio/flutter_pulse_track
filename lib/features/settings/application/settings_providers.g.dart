@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'isar_user_settings_repository.dart';
+part of 'settings_providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,11 +9,17 @@ part of 'isar_user_settings_repository.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Provides the active [UserSettingsRepository] instance globally.
+///
+/// Lives in the application layer so presentation depends on the domain
+/// contract, not on the Isar-backed implementation file.
 
 @ProviderFor(userSettingsRepository)
 final userSettingsRepositoryProvider = UserSettingsRepositoryProvider._();
 
 /// Provides the active [UserSettingsRepository] instance globally.
+///
+/// Lives in the application layer so presentation depends on the domain
+/// contract, not on the Isar-backed implementation file.
 
 final class UserSettingsRepositoryProvider
     extends
@@ -24,6 +30,9 @@ final class UserSettingsRepositoryProvider
         >
     with $Provider<UserSettingsRepository> {
   /// Provides the active [UserSettingsRepository] instance globally.
+  ///
+  /// Lives in the application layer so presentation depends on the domain
+  /// contract, not on the Isar-backed implementation file.
   UserSettingsRepositoryProvider._()
     : super(
         from: null,

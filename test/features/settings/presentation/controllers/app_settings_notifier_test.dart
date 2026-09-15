@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 import 'package:pulse_track/features/settings/domain/repositories/user_settings_repository.dart';
-import 'package:pulse_track/features/settings/infrastructure/repositories/isar_user_settings_repository.dart';
+import 'package:pulse_track/features/settings/application/settings_providers.dart';
 import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
 
 class InMemoryUserSettingsRepository implements UserSettingsRepository {
