@@ -34,13 +34,15 @@ class WorkoutExportService {
     for (var i = 0; i < sampleCount; i++) {
       final elapsedMs = totalDuration.inMilliseconds > 0
           ? (i / divisor * totalDuration.inMilliseconds).round()
-          : i * 1000;
+          : i * Duration.millisecondsPerSecond;
 
       final timestamp = session.startTime.add(
         Duration(milliseconds: elapsedMs),
       );
       final bpm = session.bpmSamples[i];
-      final rrIntervalMs = bpm > 0 ? (60000 / bpm).round() : 0;
+      final rrIntervalMs = bpm > 0
+          ? (Duration.millisecondsPerMinute / bpm).round()
+          : 0;
       final sensorLocation = session.sensorLocationIndex;
 
       rows.add(<dynamic>[
