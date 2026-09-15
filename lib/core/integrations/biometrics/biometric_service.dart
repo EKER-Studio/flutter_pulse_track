@@ -7,6 +7,7 @@ import 'package:local_auth_android/local_auth_android.dart';
 import 'package:local_auth_darwin/local_auth_darwin.dart';
 import 'package:local_auth_platform_interface/local_auth_platform_interface.dart';
 
+import '../../utils/app_logger.dart';
 import '../../utils/crash_reporter.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -79,12 +80,12 @@ class BiometricService {
     try {
       final canCheck = await _authentication.canCheckBiometrics;
       if (kDebugMode) {
-        debugPrint('[BiometricService] canCheckBiometrics: $canCheck');
+        log.d('[BiometricService] canCheckBiometrics: $canCheck');
       }
       if (!canCheck) return false;
       final biometrics = await _authentication.getAvailableBiometrics();
       if (kDebugMode) {
-        debugPrint('[BiometricService] getAvailableBiometrics: $biometrics');
+        log.d('[BiometricService] getAvailableBiometrics: $biometrics');
       }
       return biometrics.isNotEmpty;
     } catch (e, stack) {
@@ -103,12 +104,12 @@ class BiometricService {
     try {
       final deviceSupported = await _authentication.isDeviceSupported();
       if (kDebugMode) {
-        debugPrint('[BiometricService] isDeviceSupported: $deviceSupported');
+        log.d('[BiometricService] isDeviceSupported: $deviceSupported');
       }
       if (!deviceSupported) return false;
       final canCheck = await _authentication.canCheckBiometrics;
       if (kDebugMode) {
-        debugPrint('[BiometricService] canCheckBiometrics: $canCheck');
+        log.d('[BiometricService] canCheckBiometrics: $canCheck');
       }
       return canCheck;
     } catch (e, stack) {
@@ -127,11 +128,11 @@ class BiometricService {
     try {
       final deviceSupported = await _authentication.isDeviceSupported();
       if (kDebugMode) {
-        debugPrint('[BiometricService] isDeviceSupported: $deviceSupported');
+        log.d('[BiometricService] isDeviceSupported: $deviceSupported');
       }
       final canCheck = await _authentication.canCheckBiometrics;
       if (kDebugMode) {
-        debugPrint('[BiometricService] canCheckBiometrics: $canCheck');
+        log.d('[BiometricService] canCheckBiometrics: $canCheck');
       }
       return deviceSupported || canCheck;
     } catch (e, stack) {
@@ -164,7 +165,7 @@ class BiometricService {
   }) async {
     if (_activeAuthFuture != null) {
       if (kDebugMode) {
-        debugPrint(
+        log.d(
           '[BiometricService] Authentication already in progress. Re-using active Future.',
         );
       }
@@ -191,9 +192,7 @@ class BiometricService {
     try {
       final canAuth = await canAuthenticate();
       if (kDebugMode) {
-        debugPrint(
-          '[BiometricService] authenticate -> canAuthenticate: $canAuth',
-        );
+        log.d('[BiometricService] authenticate -> canAuthenticate: $canAuth');
       }
       if (!canAuth) return BiometricAuthResult.notAvailable;
 
@@ -207,7 +206,7 @@ class BiometricService {
         ),
       );
       if (kDebugMode) {
-        debugPrint('[BiometricService] authenticate result: $ok');
+        log.d('[BiometricService] authenticate result: $ok');
       }
       if (ok) {
         _notifyAuthenticationSuccess();

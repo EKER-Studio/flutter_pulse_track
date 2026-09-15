@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../utils/app_logger.dart';
 import '../../utils/crash_reporter.dart';
 import '../../../features/workout/infrastructure/models/device_profile_dto.dart';
 import '../../../features/workout/infrastructure/models/workout_session_dto.dart';
@@ -173,7 +174,7 @@ class DatabaseModule {
       final instance = Isar.getInstance(dbName);
       if (instance == null || !instance.isOpen) {
         if (kDebugMode) {
-          debugPrint(
+          log.d(
             '[DatabaseModule] Isar instance invalid or closed on app resumption. Re-initializing...',
           );
         }
@@ -216,7 +217,7 @@ class DatabaseModule {
       try {
         await legacyFile.rename(quarantinePath);
         if (kDebugMode) {
-          debugPrint(
+          log.d(
             '[DatabaseModule] Quarantined legacy database to $quarantinePath',
           );
         }
@@ -248,9 +249,7 @@ class DatabaseModule {
         final backupPath = '$path/${dbName}_pre_import.isar.bak';
         await dbFile.copy(backupPath);
         if (kDebugMode) {
-          debugPrint(
-            '[DatabaseModule] Pre-import snapshot created at $backupPath',
-          );
+          log.d('[DatabaseModule] Pre-import snapshot created at $backupPath');
         }
         return backupPath;
       }
@@ -277,9 +276,7 @@ class DatabaseModule {
       await dbFile.copy(backupPath);
       await dbFile.delete();
       if (kDebugMode) {
-        debugPrint(
-          '[DatabaseModule] Corrupted database backed up to $backupPath',
-        );
+        log.d('[DatabaseModule] Corrupted database backed up to $backupPath');
       }
     }
 

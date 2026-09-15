@@ -6,6 +6,7 @@ import 'package:flutter/services.dart' show MissingPluginException;
 import 'package:path_provider/path_provider.dart';
 
 import 'crash_log.dart';
+import 'app_logger.dart';
 
 /// Centralized crash reporting and non-fatal exception logging utility.
 class AppCrashReporter {
@@ -38,14 +39,14 @@ class AppCrashReporter {
         );
       } catch (e) {
         if (kDebugMode) {
-          debugPrint('[AppCrashReporter] Crashlytics recordError failed: $e');
+          log.d('[AppCrashReporter] Crashlytics recordError failed: $e');
         }
       }
     }
 
     if (kDebugMode) {
       final reasonStr = reason != null ? ' [Reason: $reason]' : '';
-      debugPrint(
+      log.d(
         '[AppCrashReporter] ${fatal ? "FATAL" : "NON-FATAL"}$reasonStr: $error\n$effectiveStack',
       );
     }
@@ -76,7 +77,7 @@ class AppCrashReporter {
       await file.writeAsString(entry, mode: FileMode.append, flush: true);
     } catch (e) {
       if (e is! MissingPluginException && kDebugMode) {
-        debugPrint('[AppCrashReporter] writeCrashLog failed: $e');
+        log.d('[AppCrashReporter] writeCrashLog failed: $e');
       }
     }
   }
@@ -93,7 +94,7 @@ class AppCrashReporter {
       await file.writeAsString(kept, flush: true);
     } catch (e) {
       if (e is! MissingPluginException && kDebugMode) {
-        debugPrint('[AppCrashReporter] _trimCrashLog failed: $e');
+        log.d('[AppCrashReporter] _trimCrashLog failed: $e');
       }
     }
   }
