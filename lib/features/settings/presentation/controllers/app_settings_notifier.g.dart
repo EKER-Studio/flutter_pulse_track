@@ -45,7 +45,7 @@ final class AppSettingsNotifierProvider
 }
 
 String _$appSettingsNotifierHash() =>
-    r'a2986e53c0659a8892ca9fba6099756540a73cf2';
+    r'788236c29226fed9824d0fee3223b95f9b65f02b';
 
 /// Manages application-wide user settings and provides methods to mutate preferences.
 

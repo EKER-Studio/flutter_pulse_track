@@ -44,7 +44,7 @@ final class HrMonitorNotifierProvider
   }
 }
 
-String _$hrMonitorNotifierHash() => r'edc89fbaca23e261f818cd446d3979f9fdbade09';
+String _$hrMonitorNotifierHash() => r'873bf03c751564934defc47412f947b2d5649dd5';
 
 /// Manages heart rate monitor connection, GATT discovery, and live telemetry.
 
