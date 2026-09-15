@@ -111,13 +111,16 @@ jobs:
         run: flutter gen-l10n
 
       - name: Run code generation (Build Runner)
-        run: dart run build_runner build
+        run: dart run build_runner build --delete-conflicting-outputs
 
       - name: Check formatting
         run: dart format --set-exit-if-changed lib test integration_test test_driver
 
       - name: Static analysis
         run: flutter analyze
+
+      - name: Riverpod lints
+        run: dart run custom_lint
 
       - name: Run unit and widget tests
         run: flutter test --coverage --exclude-tags "golden,screenshot"
@@ -152,6 +155,10 @@ jobs:
             --obfuscate \
             --split-debug-info=build/symbols \
             --dart-define=ENVIRONMENT=prod
+
+      - name: Remove signing secrets from workspace
+        if: always()
+        run: rm -f android/app/release.keystore android/key.properties
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -222,7 +229,19 @@ jobs:
         run: flutter gen-l10n
 
       - name: Run code generation (Build Runner)
-        run: dart run build_runner build
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Check formatting
+        run: dart format --set-exit-if-changed lib test integration_test test_driver
+
+      - name: Static analysis
+        run: flutter analyze
+
+      - name: Riverpod lints
+        run: dart run custom_lint
+
+      - name: Run unit and widget tests
+        run: flutter test --coverage --exclude-tags "golden,screenshot"
 
       - name: Build IPA (release)
         run: |
@@ -231,20 +250,11 @@ jobs:
             --split-debug-info=build/symbols \
             --dart-define=ENVIRONMENT=prod \
             --export-options-plist=ios/Runner/ExportOptions.plist
-        continue-on-error: true
-
-      - name: Fallback — Build IPA without export options (unsigned)
-        if: failure()
-        run: |
-          flutter build ipa --release \
-            --obfuscate \
-            --split-debug-info=build/symbols \
-            --dart-define=ENVIRONMENT=prod --no-codesign
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
           name: release-ipa-${{ github.sha }}
           path: build/ios/ipa/*.ipa
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30
