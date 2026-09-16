@@ -25,6 +25,7 @@ analyzer:
     - "windows/**"
     - "macos/**"
     - "linux/**"
+    - android/**
 
   errors:
     unused_import: error
