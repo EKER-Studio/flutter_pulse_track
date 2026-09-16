@@ -1,11 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pulse_track/core/utils/app_logger.dart';
-
-part 'fbp_heart_rate_monitor_service.g.dart';
 
 /// Abstraction over BLE connection, service discovery, and GATT communication.
 ///
@@ -128,8 +125,3 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
     }
   }
 }
-
-/// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
-@Riverpod(keepAlive: true)
-HeartRateMonitorService heartRateMonitorService(Ref ref) =>
-    FbpHeartRateMonitorService();

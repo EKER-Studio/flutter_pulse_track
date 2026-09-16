@@ -10,7 +10,7 @@ import 'package:pulse_track/features/heart_rate/domain/models/body_sensor_locati
 import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
 import 'package:pulse_track/features/heart_rate/infrastructure/parsers/hr_packet_parser.dart';
-import 'package:pulse_track/features/heart_rate/infrastructure/services/fbp_heart_rate_monitor_service.dart';
+import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';
 import 'package:pulse_track/features/workout/application/workout_providers.dart';
 
 part 'hr_monitor_notifier.g.dart';

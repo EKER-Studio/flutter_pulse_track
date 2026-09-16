@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'fbp_bluetooth_scanner_service.dart';
+part of 'ble_providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -60,3 +60,56 @@ final class BluetoothScannerServiceProvider
 
 String _$bluetoothScannerServiceHash() =>
     r'32cf1f6ae5187f8994adc81de37da12efb864fbe';
+
+/// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
+
+@ProviderFor(heartRateMonitorService)
+final heartRateMonitorServiceProvider = HeartRateMonitorServiceProvider._();
+
+/// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
+
+final class HeartRateMonitorServiceProvider
+    extends
+        $FunctionalProvider<
+          HeartRateMonitorService,
+          HeartRateMonitorService,
+          HeartRateMonitorService
+        >
+    with $Provider<HeartRateMonitorService> {
+  /// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
+  HeartRateMonitorServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'heartRateMonitorServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$heartRateMonitorServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<HeartRateMonitorService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  HeartRateMonitorService create(Ref ref) {
+    return heartRateMonitorService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(HeartRateMonitorService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<HeartRateMonitorService>(value),
+    );
+  }
+}
+
+String _$heartRateMonitorServiceHash() =>
+    r'016a78fda1f182e0716ef69471519f8eb3fe972a';

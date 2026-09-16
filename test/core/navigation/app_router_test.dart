@@ -7,7 +7,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pulse_track/core/infrastructure/services/foreground_service_manager.dart';
 import 'package:pulse_track/core/navigation/app_router.dart';
 import 'package:pulse_track/core/presentation/views/route_error_view.dart';
-import 'package:pulse_track/features/heart_rate/infrastructure/services/fbp_heart_rate_monitor_service.dart';
+import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_home_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_scanner_view.dart';

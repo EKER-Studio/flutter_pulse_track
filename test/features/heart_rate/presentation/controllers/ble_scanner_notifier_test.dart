@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/ble_scanner_state.dart';
-import 'package:pulse_track/features/heart_rate/infrastructure/services/fbp_bluetooth_scanner_service.dart';
+import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';
 import 'package:pulse_track/features/heart_rate/presentation/controllers/ble_scanner_notifier.dart';
 
 // ── Mocks ──────────────────────────────────────────────────────────────────

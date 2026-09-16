@@ -1,11 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pulse_track/core/utils/app_logger.dart';
-
-part 'fbp_bluetooth_scanner_service.g.dart';
 
 /// Abstraction over the BLE scanner hardware.
 ///
@@ -76,8 +73,3 @@ class FbpBluetoothScannerService implements BluetoothScannerService {
     }
   }
 }
-
-/// Singleton Riverpod provider delivering the [BluetoothScannerService] using [ref].
-@Riverpod(keepAlive: true)
-BluetoothScannerService bluetoothScannerService(Ref ref) =>
-    FbpBluetoothScannerService();
