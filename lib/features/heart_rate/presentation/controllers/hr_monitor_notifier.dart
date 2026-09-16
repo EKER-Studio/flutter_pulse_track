@@ -598,7 +598,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   /// Handles app lifecycle state changes for [state], forcing an immediate checkpoint on pause/detach.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    // All background transitions, matching the scanner and lock observer:
+    // hidden fires before paused on recent Android.
     if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
       unawaited(_checkpoint());
     }

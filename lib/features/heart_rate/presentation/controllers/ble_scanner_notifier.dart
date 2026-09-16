@@ -63,8 +63,12 @@ class BleScannerNotifier extends _$BleScannerNotifier
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    // All background transitions: on recent Android, hidden fires before
+    // paused, so stopping only on paused would leak the scan.
     if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive) {
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
       if (_scannerService.isScanningNow) {
         log.i('[BleScannerNotifier] App paused — stopping scan.');
         // Fire-and-forget is intentional; lifecycle callback is synchronous.
