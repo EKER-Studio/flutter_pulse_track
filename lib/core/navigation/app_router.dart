@@ -26,22 +26,35 @@ part 'app_router.g.dart';
 ///
 /// Routes are defined declaratively and kept in a single location so the
 /// navigation graph is easy to audit and extend.
+///
+/// Settings changes refresh routing via [GoRouter.refreshListenable] instead
+/// of `ref.watch`, so toggling a setting (e.g. the theme) re-evaluates
+/// redirects without recreating the router and losing navigation state.
 @riverpod
 GoRouter appRouter(Ref ref) {
   final analyticsObserver = ref.watch(analyticsObserverProvider);
-  UserSettings settings;
-  try {
-    settings = ref.watch(appSettingsProvider);
-  } catch (_) {
-    settings = const UserSettings();
+  final settingsRefresh = _SettingsRefreshListenable();
+  ref.listen<UserSettings>(appSettingsProvider, (_, _) {
+    settingsRefresh.notify();
+  });
+  ref.onDispose(settingsRefresh.dispose);
+
+  UserSettings currentSettings() {
+    try {
+      return ref.read(appSettingsProvider);
+    } catch (_) {
+      return const UserSettings();
+    }
   }
 
   return GoRouter(
     initialLocation: '/',
     observers: [?analyticsObserver],
+    refreshListenable: settingsRefresh,
     errorBuilder: (BuildContext context, GoRouterState state) =>
         RouteErrorView(error: state.error),
     redirect: (context, state) {
+      final settings = currentSettings();
       final isGoingToShield = state.matchedLocation == '/shield';
       final isGoingToOnboarding = state.matchedLocation == '/onboarding';
       if (settings.isLocked) {
@@ -186,4 +199,10 @@ class WorkoutDetailsLoaderView extends ConsumerWidget {
       },
     );
   }
+}
+
+/// Notifies [GoRouter.refreshListenable] whenever settings change.
+class _SettingsRefreshListenable extends ChangeNotifier {
+  /// Forwards a settings change to the router.
+  void notify() => notifyListeners();
 }

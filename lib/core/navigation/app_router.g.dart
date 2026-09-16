@@ -12,6 +12,10 @@ part of 'app_router.dart';
 ///
 /// Routes are defined declaratively and kept in a single location so the
 /// navigation graph is easy to audit and extend.
+///
+/// Settings changes refresh routing via [GoRouter.refreshListenable] instead
+/// of `ref.watch`, so toggling a setting (e.g. the theme) re-evaluates
+/// redirects without recreating the router and losing navigation state.
 
 @ProviderFor(appRouter)
 final appRouterProvider = AppRouterProvider._();
@@ -20,6 +24,10 @@ final appRouterProvider = AppRouterProvider._();
 ///
 /// Routes are defined declaratively and kept in a single location so the
 /// navigation graph is easy to audit and extend.
+///
+/// Settings changes refresh routing via [GoRouter.refreshListenable] instead
+/// of `ref.watch`, so toggling a setting (e.g. the theme) re-evaluates
+/// redirects without recreating the router and losing navigation state.
 
 final class AppRouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
@@ -28,6 +36,10 @@ final class AppRouterProvider
   ///
   /// Routes are defined declaratively and kept in a single location so the
   /// navigation graph is easy to audit and extend.
+  ///
+  /// Settings changes refresh routing via [GoRouter.refreshListenable] instead
+  /// of `ref.watch`, so toggling a setting (e.g. the theme) re-evaluates
+  /// redirects without recreating the router and losing navigation state.
   AppRouterProvider._()
     : super(
         from: null,
@@ -61,4 +73,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'6478f2825e34c25701789c1fd3e0168d3569e551';
+String _$appRouterHash() => r'b57a823c55abdcf304aa688ca6148eba6eae7b61';
