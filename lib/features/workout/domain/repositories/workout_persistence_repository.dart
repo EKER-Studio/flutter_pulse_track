@@ -89,5 +89,8 @@ abstract class WorkoutPersistenceRepository {
   ///
   /// Finalizes incomplete records by assigning an estimated `endTime` derived from
   /// recorded heart rate samples or deletes empty orphaned records.
-  Future<void> sanitizeCrashedSessions();
+  /// Returns the number of handled records.
+  /// Throws when recovery itself fails so callers can report it instead of
+  /// assuming success.
+  Future<int> sanitizeCrashedSessions();
 }

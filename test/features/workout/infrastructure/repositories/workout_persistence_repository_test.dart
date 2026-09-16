@@ -477,8 +477,9 @@ void main() {
 
       await isar.writeTxn(() => isar.workoutSessionDtos.put(dto));
 
-      await repository.sanitizeCrashedSessions();
+      final sanitized = await repository.sanitizeCrashedSessions();
 
+      expect(sanitized, 1);
       final remaining = await isar.workoutSessionDtos.where().findAll();
       expect(remaining, isEmpty);
     });
@@ -499,8 +500,9 @@ void main() {
 
         await isar.writeTxn(() => isar.workoutSessionDtos.put(dto));
 
-        await repository.sanitizeCrashedSessions();
+        final sanitized = await repository.sanitizeCrashedSessions();
 
+        expect(sanitized, 1);
         final updated = await isar.workoutSessionDtos.where().findAll();
         expect(updated, hasLength(1));
         expect(updated.first.endTime, isNotNull);

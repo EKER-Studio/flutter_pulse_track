@@ -102,7 +102,19 @@ Future<void> main() async {
     final isar = await DatabaseModule.initialize();
 
     final repo = WorkoutPersistenceRepository(isar);
-    await repo.sanitizeCrashedSessions();
+    try {
+      final sanitized = await repo.sanitizeCrashedSessions();
+      if (sanitized > 0) {
+        log.i('Sanitized $sanitized crashed workout sessions on startup.');
+      }
+    } catch (e, stack) {
+      await AppCrashReporter.recordError(
+        e,
+        stack,
+        reason: 'Crashed workout session recovery failed',
+        fatal: false,
+      );
+    }
 
     runApp(
       ProviderScope(

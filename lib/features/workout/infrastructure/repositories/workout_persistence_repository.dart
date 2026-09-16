@@ -177,15 +177,17 @@ class WorkoutPersistenceRepository
   ///
   /// Finalizes incomplete records by assigning an estimated [WorkoutSessionDto.endTime] derived from
   /// recorded heart rate samples or deletes empty orphaned records.
+  /// Returns the number of handled records; rethrows recovery failures
+  /// after logging so startup can report them instead of assuming success.
   @override
-  Future<void> sanitizeCrashedSessions() async {
+  Future<int> sanitizeCrashedSessions() async {
     try {
       final crashedSessions = await _isar.workoutSessionDtos
           .filter()
           .endTimeIsNull()
           .findAll();
 
-      if (crashedSessions.isEmpty) return;
+      if (crashedSessions.isEmpty) return 0;
 
       log.i(
         '[WorkoutPersistenceRepository] Found ${crashedSessions.length} crashed/unclosed workout sessions to sanitize.',
@@ -211,12 +213,14 @@ class WorkoutPersistenceRepository
           }
         }
       });
+      return crashedSessions.length;
     } catch (e, st) {
       log.e(
         '[WorkoutPersistenceRepository] Error during sanitizeCrashedSessions',
         error: e,
         stackTrace: st,
       );
+      rethrow;
     }
   }
 
