@@ -406,6 +406,65 @@ final class WatchSavedDeviceProfilesUseCaseProvider
 String _$watchSavedDeviceProfilesUseCaseHash() =>
     r'4307426cd984fe38f594ca4e8fe8b10e9322fc78';
 
+/// Riverpod provider that supplies a [SanitizeCrashedSessionsUseCase] wired to
+/// the abstract [WorkoutPersistenceRepository] contract using [ref].
+
+@ProviderFor(sanitizeCrashedSessionsUseCase)
+final sanitizeCrashedSessionsUseCaseProvider =
+    SanitizeCrashedSessionsUseCaseProvider._();
+
+/// Riverpod provider that supplies a [SanitizeCrashedSessionsUseCase] wired to
+/// the abstract [WorkoutPersistenceRepository] contract using [ref].
+
+final class SanitizeCrashedSessionsUseCaseProvider
+    extends
+        $FunctionalProvider<
+          SanitizeCrashedSessionsUseCase,
+          SanitizeCrashedSessionsUseCase,
+          SanitizeCrashedSessionsUseCase
+        >
+    with $Provider<SanitizeCrashedSessionsUseCase> {
+  /// Riverpod provider that supplies a [SanitizeCrashedSessionsUseCase] wired to
+  /// the abstract [WorkoutPersistenceRepository] contract using [ref].
+  SanitizeCrashedSessionsUseCaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sanitizeCrashedSessionsUseCaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$sanitizeCrashedSessionsUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<SanitizeCrashedSessionsUseCase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  SanitizeCrashedSessionsUseCase create(Ref ref) {
+    return sanitizeCrashedSessionsUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SanitizeCrashedSessionsUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SanitizeCrashedSessionsUseCase>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$sanitizeCrashedSessionsUseCaseHash() =>
+    r'46814a6cd96e24bde90ca467c35014a6a2092959';
+
 /// Reactive stream of workout history for direct use in
 /// `ref.watch(watchWorkoutHistoryStreamProvider)` from views using [ref].
 

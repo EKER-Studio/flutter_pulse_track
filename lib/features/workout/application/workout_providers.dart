@@ -5,6 +5,7 @@ import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart';
 import 'package:pulse_track/features/workout/domain/usecases/delete_workout_session_usecase.dart';
+import 'package:pulse_track/features/workout/domain/usecases/sanitize_crashed_sessions_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_device_profile_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_partial_workout_session_usecase.dart';
 import 'package:pulse_track/features/workout/domain/usecases/save_workout_session_usecase.dart';
@@ -73,6 +74,15 @@ WatchWorkoutHistoryUseCase watchWorkoutHistoryUseCase(Ref ref) {
 @riverpod
 WatchSavedDeviceProfilesUseCase watchSavedDeviceProfilesUseCase(Ref ref) {
   return WatchSavedDeviceProfilesUseCase(
+    ref.watch(workoutPersistenceRepositoryProvider),
+  );
+}
+
+/// Riverpod provider that supplies a [SanitizeCrashedSessionsUseCase] wired to
+/// the abstract [WorkoutPersistenceRepository] contract using [ref].
+@riverpod
+SanitizeCrashedSessionsUseCase sanitizeCrashedSessionsUseCase(Ref ref) {
+  return SanitizeCrashedSessionsUseCase(
     ref.watch(workoutPersistenceRepositoryProvider),
   );
 }

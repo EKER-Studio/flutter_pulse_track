@@ -1,6 +1,5 @@
 import 'package:isar_community/isar.dart';
 
-import 'package:pulse_track/core/utils/app_logger.dart';
 import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/domain/repositories/workout_persistence_repository.dart'
@@ -173,55 +172,18 @@ class WorkoutPersistenceRepository
     });
   }
 
-  /// Scans persistent storage for crashed/unclosed workout sessions (where [WorkoutSessionDto.endTime] is null).
+  /// Finds persisted workout sessions that were never closed (where [WorkoutSessionDto.endTime] is null).
   ///
-  /// Finalizes incomplete records by assigning an estimated [WorkoutSessionDto.endTime] derived from
-  /// recorded heart rate samples or deletes empty orphaned records.
-  /// Returns the number of handled records; rethrows recovery failures
-  /// after logging so startup can report them instead of assuming success.
+  /// Used by crash recovery to finalize or discard orphaned records.
+  /// Returns the unclosed sessions mapped to domain, most recent first.
   @override
-  Future<int> sanitizeCrashedSessions() async {
-    try {
-      final crashedSessions = await _isar.workoutSessionDtos
-          .filter()
-          .endTimeIsNull()
-          .findAll();
-
-      if (crashedSessions.isEmpty) return 0;
-
-      log.i(
-        '[WorkoutPersistenceRepository] Found ${crashedSessions.length} crashed/unclosed workout sessions to sanitize.',
-      );
-
-      await _isar.writeTxn(() async {
-        for (final session in crashedSessions) {
-          if (session.bpmSamples.isEmpty) {
-            await _isar.workoutSessionDtos.delete(session.id);
-            log.d(
-              '[WorkoutPersistenceRepository] Deleted empty crashed session #${session.id}',
-            );
-          } else {
-            // Estimate duration based on sample count (1 sample per second)
-            final estimatedDurationSeconds = session.bpmSamples.length;
-            session.endTime = session.startTime
-                .add(Duration(seconds: estimatedDurationSeconds))
-                .toUtc();
-            await _isar.workoutSessionDtos.put(session);
-            log.i(
-              '[WorkoutPersistenceRepository] Sanitized crashed session #${session.id} with estimated endTime (${session.endTime}).',
-            );
-          }
-        }
-      });
-      return crashedSessions.length;
-    } catch (e, st) {
-      log.e(
-        '[WorkoutPersistenceRepository] Error during sanitizeCrashedSessions',
-        error: e,
-        stackTrace: st,
-      );
-      rethrow;
-    }
+  Future<List<WorkoutSession>> findUnclosedSessions() async {
+    final dtos = await _isar.workoutSessionDtos
+        .filter()
+        .endTimeIsNull()
+        .sortByStartTimeDesc()
+        .findAll();
+    return dtos.map(_workoutSessionFromDto).toList();
   }
 
   DeviceProfile _deviceProfileFromDto(DeviceProfileDto dto) => DeviceProfile(

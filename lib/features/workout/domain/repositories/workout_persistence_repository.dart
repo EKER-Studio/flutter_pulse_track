@@ -85,12 +85,9 @@ abstract class WorkoutPersistenceRepository {
   /// Returns a [Future] that completes when all sessions are written.
   Future<void> saveWorkoutSessionsBatch(List<WorkoutSession> sessions);
 
-  /// Scans persistent storage for crashed/unclosed workout sessions (where `endTime` is null).
+  /// Finds persisted workout sessions that were never closed (where `endTime` is null).
   ///
-  /// Finalizes incomplete records by assigning an estimated `endTime` derived from
-  /// recorded heart rate samples or deletes empty orphaned records.
-  /// Returns the number of handled records.
-  /// Throws when recovery itself fails so callers can report it instead of
-  /// assuming success.
-  Future<int> sanitizeCrashedSessions();
+  /// Used by crash recovery to finalize or discard orphaned records.
+  /// Returns the unclosed sessions ordered by most recent first.
+  Future<List<WorkoutSession>> findUnclosedSessions();
 }

@@ -20,6 +20,7 @@ import 'firebase_options.dart';
 import 'package:pulse_track/features/workout/application/workout_providers.dart'
     as app_providers;
 
+import 'features/workout/domain/usecases/sanitize_crashed_sessions_usecase.dart';
 import 'features/workout/infrastructure/repositories/workout_persistence_repository.dart';
 
 /// Application entry point.
@@ -103,7 +104,7 @@ Future<void> main() async {
 
     final repo = WorkoutPersistenceRepository(isar);
     try {
-      final sanitized = await repo.sanitizeCrashedSessions();
+      final sanitized = await SanitizeCrashedSessionsUseCase(repo).call();
       if (sanitized > 0) {
         log.i('Sanitized $sanitized crashed workout sessions on startup.');
       }
