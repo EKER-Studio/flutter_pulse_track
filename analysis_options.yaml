@@ -92,7 +92,6 @@ linter:
     - avoid_catching_errors
     - unawaited_futures
     - close_sinks
-    - avoid_as
     - avoid_init_to_null
     - avoid_redundant_argument_values
     - prefer_final_fields
