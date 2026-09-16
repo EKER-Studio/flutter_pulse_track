@@ -27,33 +27,20 @@ void main() {
 
     test('logWorkoutStarted completes normally without throwing', () async {
       await expectLater(
-        serviceWithoutMock.logWorkoutStarted(
-          deviceId: 'AA:BB:CC:DD:EE:FF',
-          sport: 'running',
-        ),
+        serviceWithoutMock.logWorkoutStarted(sport: 'running'),
         completes,
       );
     });
 
     test('logWorkoutCompleted completes normally without throwing', () async {
       await expectLater(
-        serviceWithoutMock.logWorkoutCompleted(
-          durationSeconds: 1800,
-          avgBpm: 145,
-          maxBpm: 172,
-        ),
+        serviceWithoutMock.logWorkoutCompleted(durationSeconds: 1800),
         completes,
       );
     });
 
     test('logDeviceConnected completes normally without throwing', () async {
-      await expectLater(
-        serviceWithoutMock.logDeviceConnected(
-          deviceId: 'AA:BB:CC:DD:EE:FF',
-          deviceName: 'Polar H10',
-        ),
-        completes,
-      );
+      await expectLater(serviceWithoutMock.logDeviceConnected(), completes);
     });
 
     test('logExportShared completes normally without throwing', () async {
@@ -84,15 +71,12 @@ void main() {
           ),
         ).thenAnswer((_) async {});
 
-        await serviceWithMock.logWorkoutStarted(
-          deviceId: 'AA:BB:CC:DD:EE:FF',
-          sport: 'cycling',
-        );
+        await serviceWithMock.logWorkoutStarted(sport: 'cycling');
 
         verify(
           () => mockAnalytics.logEvent(
             name: 'workout_started',
-            parameters: {'device_id': 'AA:BB:CC:DD:EE:FF', 'sport': 'cycling'},
+            parameters: {'sport': 'cycling'},
           ),
         ).called(1);
       },
@@ -108,20 +92,12 @@ void main() {
           ),
         ).thenAnswer((_) async {});
 
-        await serviceWithMock.logWorkoutCompleted(
-          durationSeconds: 3600,
-          avgBpm: 150,
-          maxBpm: 180,
-        );
+        await serviceWithMock.logWorkoutCompleted(durationSeconds: 3600);
 
         verify(
           () => mockAnalytics.logEvent(
             name: 'workout_completed',
-            parameters: {
-              'duration_seconds': 3600,
-              'avg_bpm': 150,
-              'max_bpm': 180,
-            },
+            parameters: {'duration_seconds': 3600},
           ),
         ).called(1);
       },
@@ -137,20 +113,10 @@ void main() {
           ),
         ).thenAnswer((_) async {});
 
-        await serviceWithMock.logDeviceConnected(
-          deviceId: 'AA:BB:CC:DD:EE:FF',
-          deviceName: 'Garmin HRM',
-        );
+        await serviceWithMock.logDeviceConnected();
 
-        verify(
-          () => mockAnalytics.logEvent(
-            name: 'device_connected',
-            parameters: {
-              'device_id': 'AA:BB:CC:DD:EE:FF',
-              'device_name': 'Garmin HRM',
-            },
-          ),
-        ).called(1);
+        verify(() => mockAnalytics.logEvent(name: 'device_connected'))
+            .called(1);
       },
     );
 

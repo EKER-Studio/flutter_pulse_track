@@ -4,6 +4,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'analytics_service.g.dart';
 
 /// Service encapsulating Firebase Analytics events for the application.
+///
+/// Privacy: events carry only aggregate, non-identifying workout metadata.
+/// Device identifiers (MAC/UUID, names) and health measurements (BPM) are
+/// never attached — see `doc/privacy_policy.md`.
 class AnalyticsService {
   /// Backing [FirebaseAnalytics] client.
   final FirebaseAnalytics? analytics;
@@ -23,50 +27,31 @@ class AnalyticsService {
 
   /// Logs when a workout tracking session starts.
   ///
-  /// @param deviceId Identifier of the connected heart rate sensor.
   /// @param sport Optional sport or workout type.
-  Future<void> logWorkoutStarted({
-    required String deviceId,
-    String? sport,
-  }) async {
+  Future<void> logWorkoutStarted({String? sport}) async {
     await analytics?.logEvent(
       name: 'workout_started',
-      parameters: {'device_id': deviceId, 'sport': ?sport},
+      parameters: {'sport': ?sport},
     );
   }
 
   /// Logs when a workout session finishes and is stored.
   ///
+  /// Only the duration is reported; BPM aggregates stay on-device.
+  ///
   /// @param durationSeconds Total elapsed duration in seconds.
-  /// @param avgBpm Average recorded heart rate.
-  /// @param maxBpm Peak recorded heart rate.
-  Future<void> logWorkoutCompleted({
-    required int durationSeconds,
-    required int avgBpm,
-    required int maxBpm,
-  }) async {
+  Future<void> logWorkoutCompleted({required int durationSeconds}) async {
     await analytics?.logEvent(
       name: 'workout_completed',
-      parameters: {
-        'duration_seconds': durationSeconds,
-        'avg_bpm': avgBpm,
-        'max_bpm': maxBpm,
-      },
+      parameters: {'duration_seconds': durationSeconds},
     );
   }
 
-  /// Logs when a BLE heart rate monitor device is connected.
+  /// Logs that a BLE heart rate monitor was connected.
   ///
-  /// @param deviceId MAC address or UUID of the device.
-  /// @param deviceName Optional advertising name of the sensor.
-  Future<void> logDeviceConnected({
-    required String deviceId,
-    String? deviceName,
-  }) async {
-    await analytics?.logEvent(
-      name: 'device_connected',
-      parameters: {'device_id': deviceId, 'device_name': ?deviceName},
-    );
+  /// Carries no device identifiers; it only counts connections.
+  Future<void> logDeviceConnected() async {
+    await analytics?.logEvent(name: 'device_connected');
   }
 
   /// Logs when recorded workouts are exported or shared.
