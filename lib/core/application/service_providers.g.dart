@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'foreground_service_manager.dart';
+part of 'service_providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator

@@ -1,6 +1,7 @@
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pulse_track/core/application/service_providers.dart';
 import 'package:pulse_track/core/infrastructure/services/foreground_service_manager.dart';
 import 'package:pulse_track/core/infrastructure/services/foreground_task_platform.dart';
 

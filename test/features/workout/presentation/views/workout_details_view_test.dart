@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pulse_track/features/workout/application/workout_providers.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
-import 'package:pulse_track/features/workout/infrastructure/services/workout_export_share_service.dart';
 import 'package:pulse_track/features/workout/presentation/views/workout_details_view.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 

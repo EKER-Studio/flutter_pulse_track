@@ -15,6 +15,9 @@ import 'package:pulse_track/features/workout/infrastructure/repositories/workout
     as infra;
 import 'package:pulse_track/features/workout/infrastructure/services/workout_export_share_service.dart';
 
+export 'package:pulse_track/features/workout/infrastructure/services/workout_export_share_service.dart'
+    show WorkoutExportShareService;
+
 part 'workout_providers.g.dart';
 
 /// Riverpod provider delivering the concrete Isar-backed [WorkoutPersistenceRepository].

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:pulse_track/core/infrastructure/services/foreground_service_manager.dart';
+import 'package:pulse_track/core/application/service_providers.dart';
 import 'package:pulse_track/core/navigation/app_router.dart';
 import 'package:pulse_track/core/presentation/views/route_error_view.dart';
 import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';

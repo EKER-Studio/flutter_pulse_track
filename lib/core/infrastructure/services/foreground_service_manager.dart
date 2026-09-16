@@ -1,13 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pulse_track/core/infrastructure/services/foreground_task_platform.dart';
 import 'package:pulse_track/core/infrastructure/services/flutter_foreground_task_platform.dart';
 import 'package:pulse_track/core/utils/app_logger.dart';
-
-part 'foreground_service_manager.g.dart';
 
 /// Root-level entry point for the foreground task isolate.
 ///
@@ -88,10 +85,4 @@ class ForegroundServiceManager {
       );
     }
   }
-}
-
-/// Provider for the [ForegroundServiceManager] instance.
-@Riverpod(keepAlive: true)
-ForegroundServiceManager foregroundServiceManager(Ref ref) {
-  return ForegroundServiceManager();
 }
