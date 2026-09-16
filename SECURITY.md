@@ -23,6 +23,6 @@ If you believe you have discovered a security vulnerability in PulseTrack, pleas
 ## Security Architecture Highlights
 
 - **Local-First & Offline:** Health data (heart rate samples, workout sessions, device profiles) never leaves the device unless explicitly exported by the user.
-- **AES-256 Encryption:** Sensitive fields are encrypted with AES-256-CBC + HMAC-SHA256 via `FieldCipher`, with keys isolated in platform-native hardware keychains (Android Keystore / iOS Keychain) via `flutter_secure_storage`.
+- **Plaintext at rest (documented decision):** The Isar database is currently stored unencrypted; `getEncryptionKey()` key-management exists for a future encrypted-storage migration, but no `encryptionKey` is wired into `Isar.open` yet. Mitigations in place: the database file and crash log are excluded from Android auto-backup, cloud backup, and device transfer (`backup_rules.xml`, `data_extraction_rules.xml`), and only `error`-level logs leave the device.
 - **Biometric Shield:** Optional biometric lock (`local_auth` with fallback to PIN/pattern/password) protects the app when backgrounded; `BiometricShieldScreen` enforces re-authentication on resume.
 - **Privacy-First Analytics:** Telemetry events never log sensitive biometric or health indicators (heart rate values, device MAC addresses, workout metrics).

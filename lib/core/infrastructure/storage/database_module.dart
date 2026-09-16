@@ -128,7 +128,9 @@ class DatabaseModule {
       return existingInstance;
     }
 
-    await getEncryptionKey();
+    // NOTE: the database is intentionally opened WITHOUT an encryption key
+    // (plaintext at rest — see SECURITY.md). getEncryptionKey() remains
+    // available for a future encrypted-storage migration.
 
     await _quarantineLegacyDatabase(dir.path);
 
