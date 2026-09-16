@@ -80,6 +80,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _monitorService = ref.read(heartRateMonitorServiceProvider);
     _foregroundServiceManager = ref.read(foregroundServiceManagerProvider);
     WidgetsBinding.instance.addObserver(this);
+    // Fire-and-forget is intentional: onDispose cannot await, so _cleanup
+    // cancels timers and subscriptions synchronously first; the async
+    // disconnects complete best-effort in the background.
     ref.onDispose(_cleanup);
     return const MonitorState.disconnected();
   }

@@ -17,6 +17,8 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 }
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
+  static const _kPageTransition = Duration(milliseconds: 300);
+
   final PageController _controller = PageController();
   int _currentIndex = 0;
 
@@ -28,10 +30,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   void _next() {
     if (_currentIndex < 3) {
-      _controller.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      _controller.nextPage(duration: _kPageTransition, curve: Curves.easeInOut);
     } else {
       _complete();
     }
@@ -40,7 +39,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _back() {
     if (_currentIndex > 0) {
       _controller.previousPage(
-        duration: const Duration(milliseconds: 300),
+        duration: _kPageTransition,
         curve: Curves.easeInOut,
       );
     }
