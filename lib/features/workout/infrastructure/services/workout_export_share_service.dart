@@ -21,9 +21,14 @@ class WorkoutExportShareService {
 
   /// Exports [session] to a CSV file in the temporary directory and opens the system share sheet.
   ///
-  /// Takes the target [session] to export.
+  /// Takes the target [session] to export and the localized [shareText]
+  /// shown in the share sheet (built by the caller via `AppLocalizations`,
+  /// since this layer has no `BuildContext`).
   /// Returns a [Future] completing when the file is written and passed to [SharePlus].
-  Future<void> exportAndShareSession(WorkoutSession session) async {
+  Future<void> exportAndShareSession(
+    WorkoutSession session, {
+    required String shareText,
+  }) async {
     try {
       final tempDir = await getTemporaryDirectory();
       await _cleanupOldExportFiles(tempDir);
@@ -38,10 +43,7 @@ class WorkoutExportShareService {
       );
 
       await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(file.path)],
-          text: 'PulseTrack Workout Export #${session.id}',
-        ),
+        ShareParams(files: [XFile(file.path)], text: shareText),
       );
     } catch (e, st) {
       log.e(
@@ -55,9 +57,13 @@ class WorkoutExportShareService {
 
   /// Exports all [sessions] to a CSV file in the temporary directory and opens the system share sheet.
   ///
-  /// Takes the list of workout [sessions] to export.
+  /// Takes the list of workout [sessions] to export and the localized
+  /// [shareText] shown in the share sheet.
   /// Returns a [Future] completing when the file is written and shared.
-  Future<void> exportAndShareAllSessions(List<WorkoutSession> sessions) async {
+  Future<void> exportAndShareAllSessions(
+    List<WorkoutSession> sessions, {
+    required String shareText,
+  }) async {
     try {
       final tempDir = await getTemporaryDirectory();
       await _cleanupOldExportFiles(tempDir);
@@ -72,10 +78,7 @@ class WorkoutExportShareService {
       );
 
       await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(file.path)],
-          text: 'PulseTrack Workouts Export (${sessions.length} sessions)',
-        ),
+        ShareParams(files: [XFile(file.path)], text: shareText),
       );
     } catch (e, st) {
       log.e(

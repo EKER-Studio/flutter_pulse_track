@@ -583,5 +583,7 @@
   "workoutHistoryAppBarTitle": "Cronologia allenamenti",
   "workoutHistoryDescription": "Visualizza le sessioni passate di frequenza cardiaca e le analisi.",
   "workoutHistoryTitle": "Cronologia allenamenti",
-  "yesterdayPrefix": "Ieri, {time}"
+  "yesterdayPrefix": "Ieri, {time}",
+  "workoutShareSingleText": "PulseTrack workout export #{id}",
+  "workoutShareBulkText": "PulseTrack workouts export ({count} sessions)"
 }

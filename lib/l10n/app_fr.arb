@@ -583,5 +583,7 @@
   "workoutHistoryAppBarTitle": "Historique des entraînements",
   "workoutHistoryDescription": "Consulter les séances passées et les statistiques.",
   "workoutHistoryTitle": "Historique des entraînements",
-  "yesterdayPrefix": "Hier, {time}"
+  "yesterdayPrefix": "Hier, {time}",
+  "workoutShareSingleText": "PulseTrack workout export #{id}",
+  "workoutShareBulkText": "PulseTrack workouts export ({count} sessions)"
 }

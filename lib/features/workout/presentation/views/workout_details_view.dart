@@ -79,7 +79,12 @@ class WorkoutDetailsView extends ConsumerWidget {
                 try {
                   await ref
                       .read(workoutExportShareServiceProvider)
-                      .exportAndShareSession(session);
+                      .exportAndShareSession(
+                        session,
+                        shareText: l10n.workoutShareSingleText(
+                          session.id.toString(),
+                        ),
+                      );
                 } catch (e) {
                   if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(

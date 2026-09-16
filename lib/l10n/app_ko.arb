@@ -583,5 +583,7 @@
   "workoutHistoryAppBarTitle": "운동 기록",
   "workoutHistoryDescription": "이전 심박수 세션 및 분석을 확인하세요.",
   "workoutHistoryTitle": "운동 기록",
-  "yesterdayPrefix": "어제, {time}"
+  "yesterdayPrefix": "어제, {time}",
+  "workoutShareSingleText": "PulseTrack workout export #{id}",
+  "workoutShareBulkText": "PulseTrack workouts export ({count} sessions)"
 }

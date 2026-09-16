@@ -583,5 +583,7 @@
   "workoutHistoryAppBarTitle": "Trainingsgeschiedenis",
   "workoutHistoryDescription": "Bekijk eerdere hartslagsessies en statistieken.",
   "workoutHistoryTitle": "Trainingsgeschiedenis",
-  "yesterdayPrefix": "Gisteren, {time}"
+  "yesterdayPrefix": "Gisteren, {time}",
+  "workoutShareSingleText": "PulseTrack workout export #{id}",
+  "workoutShareBulkText": "PulseTrack workouts export ({count} sessions)"
 }

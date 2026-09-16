@@ -583,5 +583,7 @@
   "workoutHistoryAppBarTitle": "ワークアウト履歴",
   "workoutHistoryDescription": "過去の心拍セッションと分析を表示します。",
   "workoutHistoryTitle": "ワークアウト履歴",
-  "yesterdayPrefix": "昨日、{time}"
+  "yesterdayPrefix": "昨日、{time}",
+  "workoutShareSingleText": "PulseTrack workout export #{id}",
+  "workoutShareBulkText": "PulseTrack workouts export ({count} sessions)"
 }

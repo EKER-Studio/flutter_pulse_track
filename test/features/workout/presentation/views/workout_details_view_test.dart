@@ -70,22 +70,35 @@ void main() {
   testWidgets('share button exports the displayed session', (
     WidgetTester tester,
   ) async {
-    when(() => mockShareService.exportAndShareSession(any()))
-        .thenAnswer((_) async {});
+    when(
+      () => mockShareService.exportAndShareSession(
+        any(),
+        shareText: any(named: 'shareText'),
+      ),
+    ).thenAnswer((_) async {});
     await _pumpDetails(tester, mockShareService);
     await tester.pumpAndSettle();
 
     await tester.tap(find.byIcon(Icons.share));
     await tester.pumpAndSettle();
 
-    verify(() => mockShareService.exportAndShareSession(any())).called(1);
+    verify(
+      () => mockShareService.exportAndShareSession(
+        any(),
+        shareText: any(named: 'shareText'),
+      ),
+    ).called(1);
   });
 
   testWidgets('failed export shows an error SnackBar', (
     WidgetTester tester,
   ) async {
-    when(() => mockShareService.exportAndShareSession(any()))
-        .thenThrow(Exception('share sheet unavailable'));
+    when(
+      () => mockShareService.exportAndShareSession(
+        any(),
+        shareText: any(named: 'shareText'),
+      ),
+    ).thenThrow(Exception('share sheet unavailable'));
     await _pumpDetails(tester, mockShareService);
     await tester.pumpAndSettle();
 

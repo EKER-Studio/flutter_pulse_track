@@ -583,5 +583,7 @@
   "workoutHistoryAppBarTitle": "Histórico de treinos",
   "workoutHistoryDescription": "Veja sessões anteriores de frequência cardíaca e estatísticas.",
   "workoutHistoryTitle": "Histórico de treinos",
-  "yesterdayPrefix": "Ontem, {time}"
+  "yesterdayPrefix": "Ontem, {time}",
+  "workoutShareSingleText": "PulseTrack workout export #{id}",
+  "workoutShareBulkText": "PulseTrack workouts export ({count} sessions)"
 }

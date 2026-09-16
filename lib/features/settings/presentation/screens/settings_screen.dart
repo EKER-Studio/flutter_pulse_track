@@ -71,7 +71,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     try {
       await ref
           .read(workoutExportShareServiceProvider)
-          .exportAndShareAllSessions(sessions);
+          .exportAndShareAllSessions(
+            sessions,
+            shareText: l10n.workoutShareBulkText(sessions.length.toString()),
+          );
       if (context.mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(l10n.csvExportSuccess)));

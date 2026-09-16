@@ -884,5 +884,23 @@
    "next": "Next",
    "@next": {
       "description": "Onboarding: next"
+   },
+   "workoutShareSingleText": "PulseTrack workout export #{id}",
+   "@workoutShareSingleText": {
+      "description": "Share sheet text for one workout export",
+      "placeholders": {
+         "id": {
+            "type": "String"
+         }
+      }
+   },
+   "workoutShareBulkText": "PulseTrack workouts export ({count} sessions)",
+   "@workoutShareBulkText": {
+      "description": "Share sheet text for a bulk export",
+      "placeholders": {
+         "count": {
+            "type": "String"
+         }
+      }
    }
 }

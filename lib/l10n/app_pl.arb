@@ -377,5 +377,7 @@
   "workoutHistoryAppBarTitle": "Historia treningów",
   "workoutHistoryDescription": "Przeglądaj przeszłe sesje tętna i analitykę.",
   "workoutHistoryTitle": "Historia treningów",
-  "yesterdayPrefix": "Wczoraj, {time}"
+  "yesterdayPrefix": "Wczoraj, {time}",
+  "workoutShareSingleText": "Eksport treningu PulseTrack #{id}",
+  "workoutShareBulkText": "Eksport treningów PulseTrack ({count})"
 }
