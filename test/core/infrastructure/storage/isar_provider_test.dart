@@ -31,7 +31,7 @@ void main() {
 
       try {
         container.read(isarProvider);
-      } catch (e) {
+      } on Object catch (e) {
         expect(e.toString(), contains('isarProvider'));
       }
     });
@@ -42,7 +42,7 @@ void main() {
 
       try {
         container.read(isarProvider);
-      } catch (e) {
+      } on Object catch (e) {
         expect(e.toString(), contains('UnimplementedError'));
       }
     });

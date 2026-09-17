@@ -30,10 +30,7 @@ String getScreenshotPrefix() {
 
 /// Resolves the targeted locales from the `--dart-define=SCREENSHOT_LOCALE` argument.
 List<String> getEffectiveLocales() {
-  const localeFilter = String.fromEnvironment(
-    'SCREENSHOT_LOCALE',
-    defaultValue: '',
-  );
+  const localeFilter = String.fromEnvironment('SCREENSHOT_LOCALE');
   if (localeFilter.isNotEmpty &&
       supportedScreenshotLocales.contains(localeFilter)) {
     return [localeFilter];
@@ -141,7 +138,7 @@ List<WorkoutSession> generateMockWorkoutSessions() {
   final session2Start = DateTime(now.year, now.month, now.day - 1, 18, 15);
   final session2End = session2Start.add(const Duration(hours: 1, minutes: 12));
 
-  final session3Start = DateTime(now.year, now.month, now.day - 3, 8, 0);
+  final session3Start = DateTime(now.year, now.month, now.day - 3, 8);
   final session3End = session3Start.add(
     const Duration(minutes: 36, seconds: 45),
   );
@@ -273,7 +270,6 @@ class ScreenshotDeviceFrame extends StatelessWidget {
                   color: statusBarColor ?? Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       // Left side: Time + Notification icon
                       Row(

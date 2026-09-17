@@ -4,7 +4,7 @@ import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 void main() {
   group('DeviceProfile', () {
     test('constructor assigns all fields', () {
-      final ts = DateTime(2026, 7, 23, 14, 30, 0);
+      final ts = DateTime(2026, 7, 23, 14, 30);
       final profile = DeviceProfile(
         id: 1,
         macAddress: 'AA:BB:CC:DD:EE:FF',
@@ -25,7 +25,7 @@ void main() {
         id: 1,
         macAddress: 'AA:BB:CC:DD:EE:FF',
         name: 'Polar H10',
-        lastConnectedAt: DateTime(2026, 1, 1),
+        lastConnectedAt: DateTime(2026),
         lastSensorLocationIndex: 0,
       );
 
@@ -37,7 +37,7 @@ void main() {
         id: 0,
         macAddress: '11:22:33:44:55:66',
         name: 'Test',
-        lastConnectedAt: DateTime(2026, 1, 1),
+        lastConnectedAt: DateTime(2026),
         lastSensorLocationIndex: 0,
       );
 
@@ -49,7 +49,7 @@ void main() {
         id: 1,
         macAddress: 'AA:BB:CC:DD:EE:FF',
         name: 'Test',
-        lastConnectedAt: DateTime(2026, 1, 1),
+        lastConnectedAt: DateTime(2026),
         lastSensorLocationIndex: -1,
       );
 

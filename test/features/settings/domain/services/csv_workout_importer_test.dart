@@ -37,10 +37,10 @@ Timestamp,HeartRate(bpm),RR_Interval(ms),SensorLocation
       expect(session.avgBpm, 120);
       expect(session.maxBpm, 140);
       expect(session.sensorLocationIndex, 1);
-      expect(session.startTime, DateTime.utc(2026, 7, 28, 10, 0, 0));
-      expect(session.endTime, DateTime.utc(2026, 7, 28, 10, 10, 0));
-      expect(analysis.earliestDate, DateTime.utc(2026, 7, 28, 10, 0, 0));
-      expect(analysis.latestDate, DateTime.utc(2026, 7, 28, 10, 10, 0));
+      expect(session.startTime, DateTime.utc(2026, 7, 28, 10));
+      expect(session.endTime, DateTime.utc(2026, 7, 28, 10, 10));
+      expect(analysis.earliestDate, DateTime.utc(2026, 7, 28, 10));
+      expect(analysis.latestDate, DateTime.utc(2026, 7, 28, 10, 10));
     });
 
     test('parses multi-session summary CSV format accurately', () {
@@ -56,8 +56,8 @@ StartTime,EndTime,AvgBpm,MaxBpm,BpmSamples,SensorLocation,DeviceMacAddress,Devic
       expect(analysis.skippedRowCount, 0);
 
       final session1 = analysis.validSessions[0];
-      expect(session1.startTime, DateTime.utc(2026, 7, 28, 10, 0, 0));
-      expect(session1.endTime, DateTime.utc(2026, 7, 28, 10, 30, 0));
+      expect(session1.startTime, DateTime.utc(2026, 7, 28, 10));
+      expect(session1.endTime, DateTime.utc(2026, 7, 28, 10, 30));
       expect(session1.avgBpm, 130);
       expect(session1.maxBpm, 165);
       expect(session1.bpmSamples, [120, 130, 145, 165]);
@@ -66,10 +66,10 @@ StartTime,EndTime,AvgBpm,MaxBpm,BpmSamples,SensorLocation,DeviceMacAddress,Devic
       expect(session1.deviceName, 'Polar H10');
 
       final session2 = analysis.validSessions[1];
-      expect(session2.startTime, DateTime.utc(2026, 7, 29, 8, 0, 0));
+      expect(session2.startTime, DateTime.utc(2026, 7, 29, 8));
       expect(session2.deviceName, 'Garmin HRM');
-      expect(analysis.earliestDate, DateTime.utc(2026, 7, 28, 10, 0, 0));
-      expect(analysis.latestDate, DateTime.utc(2026, 7, 29, 8, 45, 0));
+      expect(analysis.earliestDate, DateTime.utc(2026, 7, 28, 10));
+      expect(analysis.latestDate, DateTime.utc(2026, 7, 29, 8, 45));
     });
 
     test('counts invalid rows in skippedRowCount and parses valid rows', () {

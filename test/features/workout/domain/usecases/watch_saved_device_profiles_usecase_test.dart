@@ -65,7 +65,7 @@ void main() {
     });
 
     test('emits the list of profiles from repository', () {
-      final profiles = [_profile(id: 1), _profile(id: 2)];
+      final profiles = [_profile(), _profile(id: 2)];
       when(() => repository.watchSavedDeviceProfiles())
           .thenAnswer((_) => Stream.value(profiles));
 
@@ -77,8 +77,8 @@ void main() {
       when(() => repository.watchSavedDeviceProfiles())
           .thenAnswer((_) => controller.stream);
 
-      final first = [_profile(id: 1)];
-      final second = [_profile(id: 1), _profile(id: 2)];
+      final first = [_profile()];
+      final second = [_profile(), _profile(id: 2)];
       final future = expectLater(useCase.call(), emitsInOrder([first, second]));
 
       controller.add(first);

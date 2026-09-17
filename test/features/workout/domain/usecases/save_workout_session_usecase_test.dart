@@ -22,8 +22,8 @@ Future<void> _callUseCase(
   int? existingId,
 }) {
   return useCase(
-    startTime: startTime ?? DateTime(2026, 7, 23, 14, 30, 0),
-    endTime: endTime ?? DateTime(2026, 7, 23, 15, 0, 0),
+    startTime: startTime ?? DateTime(2026, 7, 23, 14, 30),
+    endTime: endTime ?? DateTime(2026, 7, 23, 15),
     samples: samples,
     sensorLocationIndex: sensorLocationIndex,
     macAddress: macAddress,
@@ -78,8 +78,8 @@ void main() {
     });
 
     test('forwards all required parameters unchanged', () async {
-      final start = DateTime(2026, 1, 15, 10, 0, 0);
-      final end = DateTime(2026, 1, 15, 11, 30, 0);
+      final start = DateTime(2026, 1, 15, 10);
+      final end = DateTime(2026, 1, 15, 11, 30);
 
       await useCase(
         startTime: start,
@@ -102,15 +102,14 @@ void main() {
           name: 'Polar H10',
           avgBpm: 89,
           maxBpm: 110,
-          existingId: null,
         ),
       ).called(1);
     });
 
     test('passes existingId when provided', () async {
       await useCase(
-        startTime: DateTime(2026, 1, 1, 0, 0, 0),
-        endTime: DateTime(2026, 1, 1, 1, 0, 0),
+        startTime: DateTime(2026),
+        endTime: DateTime(2026, 1, 1, 1),
         samples: [60],
         sensorLocationIndex: 0,
         macAddress: '00:11:22:33:44:55',
@@ -164,8 +163,8 @@ void main() {
 
     test('works with empty samples list', () async {
       await useCase(
-        startTime: DateTime(2026, 1, 1, 0, 0, 0),
-        endTime: DateTime(2026, 1, 1, 0, 30, 0),
+        startTime: DateTime(2026),
+        endTime: DateTime(2026, 1, 1, 0, 30),
         samples: [],
         sensorLocationIndex: 1,
         macAddress: '11:22:33:44:55:66',

@@ -72,7 +72,7 @@ void main() {
     });
 
     test('emits the list of sessions from repository', () {
-      final sessions = [_session(id: 1), _session(id: 2)];
+      final sessions = [_session(), _session(id: 2)];
       when(() => repository.watchWorkoutHistory())
           .thenAnswer((_) => Stream.value(sessions));
 
@@ -84,8 +84,8 @@ void main() {
       when(() => repository.watchWorkoutHistory())
           .thenAnswer((_) => controller.stream);
 
-      final first = [_session(id: 1)];
-      final second = [_session(id: 1), _session(id: 2)];
+      final first = [_session()];
+      final second = [_session(), _session(id: 2)];
       final future = expectLater(useCase.call(), emitsInOrder([first, second]));
 
       controller.add(first);

@@ -59,7 +59,7 @@ void main() {
     await _putCrashedSession(
       isar,
       samples: [],
-      startTime: DateTime(2025, 6, 1, 10, 0, 0).toUtc(),
+      startTime: DateTime(2025, 6, 1, 10).toUtc(),
     );
 
     expect(await useCase(), 1);
@@ -67,7 +67,7 @@ void main() {
   });
 
   test('finalizes sessions by estimating endTime from sample count', () async {
-    final startTime = DateTime(2025, 6, 1, 10, 0, 0).toUtc();
+    final startTime = DateTime(2025, 6, 1, 10).toUtc();
     final id = await _putCrashedSession(
       isar,
       samples: [120, 125, 130],

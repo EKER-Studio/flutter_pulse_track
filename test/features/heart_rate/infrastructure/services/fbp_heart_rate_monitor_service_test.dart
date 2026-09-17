@@ -121,9 +121,7 @@ void main() {
 
       await service.connect(device);
 
-      verify(
-        () => device.connect(license: License.nonprofit, autoConnect: false),
-      ).called(1);
+      verify(() => device.connect(license: License.nonprofit)).called(1);
     });
 
     test('delegates to device.connect with autoConnect = true', () async {
@@ -332,10 +330,7 @@ void main() {
         characteristicUuid: '00002A19-0000-1000-8000-00805F9B34FB',
       );
 
-      final hrService = _makeService(
-        serviceUuid: '0000180D-0000-1000-8000-00805F9B34FB',
-        characteristics: [hrChar],
-      );
+      final hrService = _makeService(characteristics: [hrChar]);
       final batteryService = _makeService(
         serviceUuid: '0000180F-0000-1000-8000-00805F9B34FB',
         characteristics: [batteryChar],

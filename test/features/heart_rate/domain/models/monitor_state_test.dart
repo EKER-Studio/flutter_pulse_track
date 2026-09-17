@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pulse_track/features/heart_rate/domain/models/body_sensor_location.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
 
@@ -9,8 +8,7 @@ HrMeasurement _measurement({int bpm = 72}) {
   return HrMeasurement(
     bpm: bpm,
     rrIntervals: [],
-    timestamp: DateTime(2026, 7, 23, 14, 30, 0),
-    sensorLocation: BodySensorLocation.unknown,
+    timestamp: DateTime(2026, 7, 23, 14, 30),
   );
 }
 

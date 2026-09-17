@@ -15,12 +15,7 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 class FakeAppSettingsNotifier extends AppSettingsNotifier {
   final UserSettings _initial;
 
-  FakeAppSettingsNotifier([
-    this._initial = const UserSettings(
-      themeMode: AppThemeMode.system,
-      defaultMaxHr: 190,
-    ),
-  ]);
+  FakeAppSettingsNotifier([this._initial = const UserSettings()]);
 
   @override
   UserSettings build() => _initial;
@@ -47,12 +42,7 @@ void main() {
     );
   });
 
-  Widget buildSubject({
-    UserSettings settings = const UserSettings(
-      themeMode: AppThemeMode.system,
-      defaultMaxHr: 190,
-    ),
-  }) {
+  Widget buildSubject({UserSettings settings = const UserSettings()}) {
     return ProviderScope(
       overrides: [
         appSettingsProvider.overrideWith(

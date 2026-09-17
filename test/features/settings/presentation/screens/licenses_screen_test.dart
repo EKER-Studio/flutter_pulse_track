@@ -13,7 +13,6 @@ void main() {
       packageName: 'com.ekerstudio.pulsetrack',
       version: '1.2.3',
       buildNumber: '42',
-      buildSignature: '',
     );
 
     await tester.pumpWidget(

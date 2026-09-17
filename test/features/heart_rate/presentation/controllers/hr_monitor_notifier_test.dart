@@ -130,6 +130,11 @@ buildMocks({Future<void> Function(Invocation)? onConnect}) {
 
   final connectionStateController =
       StreamController<BluetoothConnectionState>.broadcast();
+  addTearDown(() async {
+    if (!connectionStateController.isClosed) {
+      await connectionStateController.close();
+    }
+  });
   when(() => monitorService.connectionState(device))
       .thenAnswer((_) => connectionStateController.stream);
 
@@ -149,6 +154,11 @@ buildMocks({Future<void> Function(Invocation)? onConnect}) {
       .thenAnswer((_) => Future.value());
 
   final hrValueController = StreamController<List<int>>.broadcast();
+  addTearDown(() async {
+    if (!hrValueController.isClosed) {
+      await hrValueController.close();
+    }
+  });
   when(() => monitorService.onValueReceived(hrCharacteristic))
       .thenAnswer((_) => hrValueController.stream);
 
@@ -244,7 +254,7 @@ void main() {
   tearDown(() {
     try {
       container.dispose();
-    } catch (_) {}
+    } on Object catch (_) {}
   });
 
   group('initial state', () {
@@ -543,9 +553,8 @@ void main() {
       final batteryChar = _MockBluetoothCharacteristic();
       when(() => batteryChar.characteristicUuid).thenReturn(_kBatteryCharGuid);
       when(() => batteryChar.uuid).thenReturn(_kBatteryCharGuid);
-      when(() => batteryChar.properties).thenReturn(
-        const CharacteristicProperties(notify: false, indicate: false),
-      );
+      when(() => batteryChar.properties)
+          .thenReturn(const CharacteristicProperties());
 
       final batteryService = _MockBluetoothService();
       when(() => batteryService.serviceUuid).thenReturn(_kBatteryServiceGuid);

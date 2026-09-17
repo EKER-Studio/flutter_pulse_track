@@ -65,6 +65,14 @@ buildMockService({bool isScanningNow = false}) {
   final adapterStateController =
       StreamController<BluetoothAdapterState>.broadcast();
   final scanResultsController = StreamController<List<ScanResult>>.broadcast();
+  addTearDown(() async {
+    if (!adapterStateController.isClosed) {
+      await adapterStateController.close();
+    }
+    if (!scanResultsController.isClosed) {
+      await scanResultsController.close();
+    }
+  });
   when(() => service.adapterState)
       .thenAnswer((_) => adapterStateController.stream);
   when(() => service.scanResults)
@@ -322,7 +330,6 @@ void main() {
       final filteredDevice = _makeScanResult(
         deviceId: 'AA:BB:CC:DD:EE:99',
         deviceName: '',
-        rssi: -50,
       );
       m.scanResultsController.add([filteredDevice]);
       await Future.delayed(Duration.zero);
@@ -413,11 +420,7 @@ void main() {
 
       await notifier.startScan();
 
-      final device1 = _makeScanResult(
-        deviceId: 'AA:BB:CC:DD:EE:01',
-        deviceName: 'Sensor A',
-        rssi: -50,
-      );
+      final device1 = _makeScanResult(deviceName: 'Sensor A');
       final device2 = _makeScanResult(
         deviceId: 'AA:BB:CC:DD:EE:02',
         deviceName: 'Sensor B',
@@ -441,15 +444,10 @@ void main() {
 
       await notifier.startScan();
 
-      final namedDevice = _makeScanResult(
-        deviceId: 'AA:BB:CC:DD:EE:01',
-        deviceName: 'Valid Sensor',
-        rssi: -50,
-      );
+      final namedDevice = _makeScanResult(deviceName: 'Valid Sensor');
       final unnamedDevice = _makeScanResult(
         deviceId: 'AA:BB:CC:DD:EE:02',
         deviceName: '',
-        rssi: -50,
       );
       m.scanResultsController.add([namedDevice, unnamedDevice]);
       await Future.delayed(Duration.zero);
@@ -470,11 +468,7 @@ void main() {
 
         await notifier.startScan();
 
-        final strongDevice = _makeScanResult(
-          deviceId: 'AA:BB:CC:DD:EE:01',
-          deviceName: 'Strong',
-          rssi: -60,
-        );
+        final strongDevice = _makeScanResult(deviceName: 'Strong', rssi: -60);
         final weakDevice = _makeScanResult(
           deviceId: 'AA:BB:CC:DD:EE:02',
           deviceName: 'Weak',
@@ -498,16 +492,8 @@ void main() {
 
       await notifier.startScan();
 
-      final first = _makeScanResult(
-        deviceId: 'AA:BB:CC:DD:EE:01',
-        deviceName: 'Dup',
-        rssi: -60,
-      );
-      final second = _makeScanResult(
-        deviceId: 'AA:BB:CC:DD:EE:01',
-        deviceName: 'Dup',
-        rssi: -45,
-      );
+      final first = _makeScanResult(deviceName: 'Dup', rssi: -60);
+      final second = _makeScanResult(deviceName: 'Dup', rssi: -45);
       m.scanResultsController.add([first, second]);
       await Future.delayed(Duration.zero);
 
@@ -525,13 +511,7 @@ void main() {
 
       await notifier.startScan();
 
-      m.scanResultsController.add([
-        _makeScanResult(
-          deviceId: 'AA:BB:CC:DD:EE:01',
-          deviceName: '',
-          rssi: -50,
-        ),
-      ]);
+      m.scanResultsController.add([_makeScanResult(deviceName: '')]);
       await Future.delayed(Duration.zero);
 
       final state = container!.read(bleScannerProvider);
@@ -567,9 +547,7 @@ void main() {
       FakeAsync().run((async) {
         async.elapse(const Duration(seconds: 3));
 
-        m.scanResultsController.add([
-          _makeScanResult(deviceId: 'AA:BB:CC:DD:EE:01', rssi: -50),
-        ]);
+        m.scanResultsController.add([_makeScanResult()]);
         async.elapse(Duration.zero);
 
         var state = container!.read(bleScannerProvider);

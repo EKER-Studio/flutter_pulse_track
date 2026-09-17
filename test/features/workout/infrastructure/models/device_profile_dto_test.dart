@@ -25,7 +25,7 @@ void main() {
     });
 
     test('stores and returns lastConnectedAt', () {
-      final ts = DateTime(2026, 7, 23, 14, 30, 0);
+      final ts = DateTime(2026, 7, 23, 14, 30);
       final dto = DeviceProfileDto()..lastConnectedAt = ts;
       expect(dto.lastConnectedAt, ts);
     });

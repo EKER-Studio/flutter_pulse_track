@@ -29,7 +29,7 @@ HrMeasurement _measurement({
 void main() {
   group('HrMeasurement constructor', () {
     test('sets all required fields', () {
-      final ts = DateTime(2026, 7, 23, 14, 30, 0);
+      final ts = DateTime(2026, 7, 23, 14, 30);
       final m = HrMeasurement(bpm: 120, rrIntervals: [0.5, 1.0], timestamp: ts);
       expect(m.bpm, 120);
       expect(m.rrIntervals, [0.5, 1.0]);
@@ -59,10 +59,7 @@ void main() {
     });
 
     test('accepts sensorContactActive null when unsupported', () {
-      final m = _measurement(
-        sensorContactSupported: false,
-        sensorContactActive: null,
-      );
+      final m = _measurement();
       expect(m.sensorContactActive, isNull);
     });
   });
@@ -92,7 +89,7 @@ void main() {
 
     test('overrides multiple fields', () {
       final m = _measurement();
-      final now = DateTime(2027, 1, 1);
+      final now = DateTime(2027);
       final copy = m.copyWith(
         bpm: 200,
         timestamp: now,
@@ -109,7 +106,7 @@ void main() {
       'nullable field defaults preserve existing value (copyWith limitation)',
       () {
         final m = _measurement(batteryLevel: 80, sensorContactActive: true);
-        final copy = m.copyWith(batteryLevel: null, sensorContactActive: null);
+        final copy = m.copyWith();
         // copyWith uses ?? so null means "keep original" — construct a new
         // instance directly when a nullable field needs to be cleared.
         expect(copy.batteryLevel, 80);
@@ -125,7 +122,7 @@ void main() {
     });
 
     test('same field values are equal', () {
-      final ts = DateTime(2026, 1, 1);
+      final ts = DateTime(2026);
       final a = _measurement(
         bpm: 100,
         rrIntervals: [0.5, 1.0],
@@ -166,7 +163,7 @@ void main() {
     });
 
     test('different timestamp is not equal', () {
-      final a = _measurement(timestamp: DateTime(2026, 1, 1));
+      final a = _measurement(timestamp: DateTime(2026));
       final b = _measurement(timestamp: DateTime(2026, 6, 15));
       expect(a == b, isFalse);
     });
@@ -184,19 +181,19 @@ void main() {
     });
 
     test('null vs non-null batteryLevel is not equal', () {
-      final a = _measurement(batteryLevel: null);
+      final a = _measurement();
       final b = _measurement(batteryLevel: 80);
       expect(a == b, isFalse);
     });
 
     test('different sensorContactSupported is not equal', () {
-      final a = _measurement(sensorContactSupported: false);
+      final a = _measurement();
       final b = _measurement(sensorContactSupported: true);
       expect(a == b, isFalse);
     });
 
     test('null vs non-null sensorContactActive is not equal', () {
-      final a = _measurement(sensorContactActive: null);
+      final a = _measurement();
       final b = _measurement(sensorContactActive: true);
       expect(a == b, isFalse);
     });
@@ -209,7 +206,7 @@ void main() {
 
   group('hashCode', () {
     test('same field values have same hashCode', () {
-      final ts = DateTime(2026, 1, 1);
+      final ts = DateTime(2026);
       final a = _measurement(
         bpm: 100,
         rrIntervals: [0.5],

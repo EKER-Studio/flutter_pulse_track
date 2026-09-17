@@ -101,8 +101,8 @@ void main() {
   });
 
   group('saveWorkoutSession', () {
-    final startTime = DateTime(2025, 6, 1, 10, 0, 0);
-    final endTime = DateTime(2025, 6, 1, 10, 30, 0);
+    final startTime = DateTime(2025, 6, 1, 10);
+    final endTime = DateTime(2025, 6, 1, 10, 30);
 
     test('inserts a new workout session', () async {
       await repository.saveWorkoutSession(
@@ -174,7 +174,7 @@ void main() {
   });
 
   group('saveWorkoutCheckpoint', () {
-    final startTime = DateTime(2025, 6, 1, 10, 0, 0);
+    final startTime = DateTime(2025, 6, 1, 10);
 
     test('inserts a new checkpoint with null endTime', () async {
       final id = await repository.saveWorkoutCheckpoint(
@@ -316,8 +316,8 @@ void main() {
   });
 
   group('watchWorkoutHistory', () {
-    final startTime1 = DateTime(2025, 6, 1, 10, 0, 0);
-    final startTime2 = DateTime(2025, 6, 2, 10, 0, 0);
+    final startTime1 = DateTime(2025, 6, 1, 10);
+    final startTime2 = DateTime(2025, 6, 2, 10);
 
     test('fires immediately with current sessions', () async {
       await repository.saveWorkoutSession(
@@ -413,7 +413,7 @@ void main() {
   group('deleteWorkoutSession', () {
     test('deletes an existing session', () async {
       final id = await repository.saveWorkoutCheckpoint(
-        startTime: DateTime(2025, 6, 1, 10, 0, 0),
+        startTime: DateTime(2025, 6, 1, 10),
         samples: [72, 75],
         sensorLocationIndex: 1,
         macAddress: 'AA:BB:CC:DD:EE:01',
@@ -437,8 +437,8 @@ void main() {
 
     test('does not affect other sessions', () async {
       await repository.saveWorkoutSession(
-        startTime: DateTime(2025, 6, 1, 10, 0, 0),
-        endTime: DateTime(2025, 6, 1, 10, 30, 0),
+        startTime: DateTime(2025, 6, 1, 10),
+        endTime: DateTime(2025, 6, 1, 10, 30),
         samples: [72, 75],
         sensorLocationIndex: 1,
         macAddress: 'AA:BB:CC:DD:EE:01',
@@ -447,7 +447,7 @@ void main() {
         maxBpm: 75,
       );
       final id2 = await repository.saveWorkoutCheckpoint(
-        startTime: DateTime(2025, 6, 2, 10, 0, 0),
+        startTime: DateTime(2025, 6, 2, 10),
         samples: [80, 85],
         sensorLocationIndex: 2,
         macAddress: 'AA:BB:CC:DD:EE:02',
@@ -466,8 +466,8 @@ void main() {
   group('findUnclosedSessions', () {
     test('returns empty when all sessions are closed', () async {
       final dto = WorkoutSessionDto()
-        ..startTime = DateTime(2025, 6, 1, 10, 0, 0).toUtc()
-        ..endTime = DateTime(2025, 6, 1, 10, 30, 0).toUtc()
+        ..startTime = DateTime(2025, 6, 1, 10).toUtc()
+        ..endTime = DateTime(2025, 6, 1, 10, 30).toUtc()
         ..bpmSamples = [120]
         ..avgBpm = 120
         ..maxBpm = 120
@@ -482,8 +482,8 @@ void main() {
 
     test('returns only sessions with null endTime', () async {
       final closed = WorkoutSessionDto()
-        ..startTime = DateTime(2025, 6, 1, 10, 0, 0).toUtc()
-        ..endTime = DateTime(2025, 6, 1, 10, 30, 0).toUtc()
+        ..startTime = DateTime(2025, 6, 1, 10).toUtc()
+        ..endTime = DateTime(2025, 6, 1, 10, 30).toUtc()
         ..bpmSamples = [120]
         ..avgBpm = 120
         ..maxBpm = 120
@@ -491,7 +491,7 @@ void main() {
         ..deviceMacAddress = 'AA:BB:CC:DD:EE:01'
         ..deviceName = 'Sensor';
       final crashed = WorkoutSessionDto()
-        ..startTime = DateTime(2025, 6, 2, 10, 0, 0).toUtc()
+        ..startTime = DateTime(2025, 6, 2, 10).toUtc()
         ..endTime = null
         ..bpmSamples = [120, 125]
         ..avgBpm = 122

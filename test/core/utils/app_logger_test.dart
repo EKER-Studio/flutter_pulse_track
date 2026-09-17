@@ -24,7 +24,7 @@ void main() {
 
   group('FirebaseCrashlyticsOutput', () {
     test('returns early in debug mode without throwing when enableInDebug is false', () {
-      final output = FirebaseCrashlyticsOutput(enableInDebug: false);
+      final output = FirebaseCrashlyticsOutput();
       final event = LogEvent(Level.error, 'test error');
 
       expect(
@@ -34,7 +34,7 @@ void main() {
     });
 
     test('does not throw with error details in debug mode when enableInDebug is false', () {
-      final output = FirebaseCrashlyticsOutput(enableInDebug: false);
+      final output = FirebaseCrashlyticsOutput();
       final event = LogEvent(
         Level.error,
         'error context',

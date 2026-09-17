@@ -13,8 +13,8 @@ void main() {
     test(
       'generateCsv creates correct header and tabular rows for a valid session',
       () async {
-        final startTime = DateTime.utc(2026, 7, 28, 10, 0, 0);
-        final endTime = DateTime.utc(2026, 7, 28, 10, 10, 0);
+        final startTime = DateTime.utc(2026, 7, 28, 10);
+        final endTime = DateTime.utc(2026, 7, 28, 10, 10);
 
         final session = WorkoutSession(
           id: 42,
@@ -57,7 +57,7 @@ void main() {
       () async {
         final session = WorkoutSession(
           id: 101,
-          startTime: DateTime.utc(2026, 7, 28, 10, 0, 0),
+          startTime: DateTime.utc(2026, 7, 28, 10),
           endTime: DateTime.utc(2026, 7, 28, 10, 0, 5),
           avgBpm: 0,
           maxBpm: 0,
@@ -81,8 +81,8 @@ void main() {
     test('generateCsv handles bpm zero as RR 0', () async {
       final session = WorkoutSession(
         id: 2,
-        startTime: DateTime.utc(2026, 7, 28, 10, 0, 0),
-        endTime: DateTime.utc(2026, 7, 28, 10, 1, 0),
+        startTime: DateTime.utc(2026, 7, 28, 10),
+        endTime: DateTime.utc(2026, 7, 28, 10, 1),
         avgBpm: 0,
         maxBpm: 0,
         bpmSamples: [0, 60],
@@ -102,8 +102,8 @@ void main() {
       () async {
         final session = WorkoutSession(
           id: 3,
-          startTime: DateTime.utc(2026, 7, 28, 10, 0, 0),
-          endTime: DateTime.utc(2026, 7, 28, 10, 5, 0),
+          startTime: DateTime.utc(2026, 7, 28, 10),
+          endTime: DateTime.utc(2026, 7, 28, 10, 5),
           avgBpm: 80,
           maxBpm: 80,
           bpmSamples: [80],
@@ -121,7 +121,7 @@ void main() {
     );
 
     test('generateCsv uses i*1000 fallback when endTime is null', () async {
-      final start = DateTime.utc(2026, 7, 28, 10, 0, 0);
+      final start = DateTime.utc(2026, 7, 28, 10);
       final session = WorkoutSession(
         id: 4,
         startTime: start,
@@ -149,8 +149,8 @@ void main() {
     test('generateCsv encodes sensorLocationIndex correctly', () async {
       final session = WorkoutSession(
         id: 5,
-        startTime: DateTime.utc(2026, 7, 28, 10, 0, 0),
-        endTime: DateTime.utc(2026, 7, 28, 10, 10, 0),
+        startTime: DateTime.utc(2026, 7, 28, 10),
+        endTime: DateTime.utc(2026, 7, 28, 10, 10),
         avgBpm: 90,
         maxBpm: 90,
         bpmSamples: [90, 90],
@@ -164,8 +164,8 @@ void main() {
     });
 
     test('generateCsv distributes timestamps across totalDuration', () async {
-      final start = DateTime.utc(2026, 7, 28, 10, 0, 0);
-      final end = DateTime.utc(2026, 7, 28, 10, 1, 0);
+      final start = DateTime.utc(2026, 7, 28, 10);
+      final end = DateTime.utc(2026, 7, 28, 10, 1);
       final session = WorkoutSession(
         id: 6,
         startTime: start,
@@ -189,8 +189,8 @@ void main() {
     test('creates multi-session CSV with all columns and rows', () async {
       final session1 = WorkoutSession(
         id: 1,
-        startTime: DateTime.utc(2026, 7, 28, 10, 0, 0),
-        endTime: DateTime.utc(2026, 7, 28, 10, 30, 0),
+        startTime: DateTime.utc(2026, 7, 28, 10),
+        endTime: DateTime.utc(2026, 7, 28, 10, 30),
         avgBpm: 130,
         maxBpm: 160,
         bpmSamples: [120, 130, 160],
@@ -200,8 +200,8 @@ void main() {
       );
       final session2 = WorkoutSession(
         id: 2,
-        startTime: DateTime.utc(2026, 7, 29, 9, 0, 0),
-        endTime: DateTime.utc(2026, 7, 29, 9, 45, 0),
+        startTime: DateTime.utc(2026, 7, 29, 9),
+        endTime: DateTime.utc(2026, 7, 29, 9, 45),
         avgBpm: 140,
         maxBpm: 170,
         bpmSamples: [130, 140, 170],

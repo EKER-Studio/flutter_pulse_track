@@ -60,8 +60,8 @@ void main() {
       ).thenAnswer((_) async {});
 
       await repository.saveWorkoutSession(
-        startTime: DateTime(2026, 7, 23, 14, 0, 0),
-        endTime: DateTime(2026, 7, 23, 15, 30, 0),
+        startTime: DateTime(2026, 7, 23, 14),
+        endTime: DateTime(2026, 7, 23, 15, 30),
         samples: [60, 72, 88],
         sensorLocationIndex: 1,
         macAddress: 'AA:BB:CC:DD:EE:FF',
@@ -101,7 +101,7 @@ void main() {
       ).thenAnswer((_) async {});
 
       await repository.saveWorkoutSession(
-        startTime: DateTime(2026, 1, 1),
+        startTime: DateTime(2026),
         endTime: DateTime(2026, 1, 1, 1),
         samples: [60],
         sensorLocationIndex: 0,
@@ -162,7 +162,7 @@ void main() {
         ).thenAnswer((_) async => 7);
 
         final id = await repository.saveWorkoutCheckpoint(
-          startTime: DateTime(2026, 1, 1),
+          startTime: DateTime(2026),
           samples: [60],
           sensorLocationIndex: 0,
           macAddress: 'AA:BB:CC:DD:EE:FF',
@@ -190,7 +190,7 @@ void main() {
       ).thenAnswer((_) async => 15);
 
       final id = await repository.saveWorkoutCheckpoint(
-        startTime: DateTime(2026, 1, 1),
+        startTime: DateTime(2026),
         samples: [72, 80],
         sensorLocationIndex: 1,
         macAddress: 'AA:BB:CC:DD:EE:FF',

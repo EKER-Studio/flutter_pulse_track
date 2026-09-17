@@ -3,8 +3,8 @@ import 'package:pulse_track/features/workout/domain/models/workout_session.dart'
 
 void main() {
   group('WorkoutSession', () {
-    final start = DateTime(2026, 7, 23, 14, 0, 0);
-    final end = DateTime(2026, 7, 23, 15, 30, 0);
+    final start = DateTime(2026, 7, 23, 14);
+    final end = DateTime(2026, 7, 23, 15, 30);
 
     test('constructor assigns all fields', () {
       final session = WorkoutSession(

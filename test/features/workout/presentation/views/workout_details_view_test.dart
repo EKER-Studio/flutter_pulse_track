@@ -13,7 +13,7 @@ class _MockWorkoutExportShareService extends Mock
 
 WorkoutSession _makeSession() => WorkoutSession(
   id: 7,
-  startTime: DateTime(2026, 9, 1, 10, 0),
+  startTime: DateTime(2026, 9, 1, 10),
   endTime: DateTime(2026, 9, 1, 10, 30),
   avgBpm: 132,
   maxBpm: 168,

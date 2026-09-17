@@ -33,7 +33,7 @@ void main() {
   group('call', () {
     test('delegates to repository.saveWorkoutCheckpoint', () async {
       await useCase(
-        startTime: DateTime(2026, 7, 23, 14, 30, 0),
+        startTime: DateTime(2026, 7, 23, 14, 30),
         samples: [72, 80],
         sensorLocationIndex: 2,
         macAddress: 'AA:BB:CC:DD:EE:FF',
@@ -57,7 +57,7 @@ void main() {
     });
 
     test('forwards all required parameters unchanged', () async {
-      final start = DateTime(2026, 1, 15, 10, 0, 0);
+      final start = DateTime(2026, 1, 15, 10);
 
       await useCase(
         startTime: start,
@@ -78,7 +78,6 @@ void main() {
           name: 'Garmin HRM Pro',
           avgBpm: 79,
           maxBpm: 95,
-          existingId: null,
         ),
       ).called(1);
     });
@@ -98,7 +97,7 @@ void main() {
       ).thenAnswer((_) async => 42);
 
       final id = await useCase(
-        startTime: DateTime(2026, 1, 1),
+        startTime: DateTime(2026),
         samples: [60],
         sensorLocationIndex: 0,
         macAddress: '00:00:00:00:00:00',
@@ -125,7 +124,7 @@ void main() {
       ).thenAnswer((_) async => 0);
 
       final id = await useCase(
-        startTime: DateTime(2026, 1, 1),
+        startTime: DateTime(2026),
         samples: [72],
         sensorLocationIndex: 1,
         macAddress: 'AA:BB:CC:DD:EE:FF',
@@ -139,7 +138,7 @@ void main() {
 
     test('passes existingId when provided', () async {
       await useCase(
-        startTime: DateTime(2026, 1, 1),
+        startTime: DateTime(2026),
         samples: [60],
         sensorLocationIndex: 0,
         macAddress: 'AA:BB:CC:DD:EE:FF',
@@ -179,7 +178,7 @@ void main() {
 
       expect(
         () => useCase(
-          startTime: DateTime(2026, 1, 1),
+          startTime: DateTime(2026),
           samples: [60],
           sensorLocationIndex: 0,
           macAddress: 'AA:BB:CC:DD:EE:FF',

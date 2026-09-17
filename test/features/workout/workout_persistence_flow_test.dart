@@ -37,7 +37,7 @@ void main() {
   });
 
   test('checkpoint, finalize, stream, and export round-trip', () async {
-    final startTime = DateTime(2026, 9, 1, 10, 0, 0).toUtc();
+    final startTime = DateTime(2026, 9, 1, 10).toUtc();
     const samples = [120, 125, 130];
 
     // In-progress checkpoint returns a row id for later finalization.

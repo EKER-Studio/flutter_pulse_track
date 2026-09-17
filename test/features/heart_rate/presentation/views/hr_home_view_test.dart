@@ -61,7 +61,7 @@ void main() {
         id: 1,
         macAddress: 'AA:BB:CC:DD:EE:01',
         name: 'Polar H10',
-        lastConnectedAt: DateTime(2026, 1, 1),
+        lastConnectedAt: DateTime(2026),
         lastSensorLocationIndex: 1,
       ),
     ];

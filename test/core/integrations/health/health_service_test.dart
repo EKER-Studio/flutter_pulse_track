@@ -340,7 +340,7 @@ void main() {
     });
 
     test('writeHeartRate writes numeric BPM data point', () async {
-      final timestamp = DateTime(2026, 9, 13, 12, 0);
+      final timestamp = DateTime(2026, 9, 13, 12);
       when(
         () => mockHealth.writeHealthData(
           value: 145.0,
@@ -363,7 +363,7 @@ void main() {
     test('writeWorkoutSession writes workout data and avg BPM', () async {
       final session = WorkoutSession(
         id: 1,
-        startTime: DateTime(2026, 9, 13, 10, 0),
+        startTime: DateTime(2026, 9, 13, 10),
         endTime: DateTime(2026, 9, 13, 10, 30),
         avgBpm: 140,
         maxBpm: 175,
