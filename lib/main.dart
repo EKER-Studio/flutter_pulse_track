@@ -76,7 +76,6 @@ Future<void> main() async {
     );
   }
 
-  // Initialize widget and notification services.
   try {
     await WidgetSyncService.instance.initialize();
   } on Object catch (e, stack) {
