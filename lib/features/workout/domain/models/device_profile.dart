@@ -22,8 +22,6 @@ class DeviceProfile {
   /// characteristic 0x2A38 during the last session with this sensor.
   final int lastSensorLocationIndex;
 
-  /// Creates an immutable [DeviceProfile] with the specified [id], [macAddress],
-  /// [name], [lastConnectedAt], and [lastSensorLocationIndex].
   const DeviceProfile({
     required this.id,
     required this.macAddress,

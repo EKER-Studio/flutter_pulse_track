@@ -8,7 +8,6 @@ import 'package:pulse_track/features/workout/domain/repositories/workout_persist
 class DeleteWorkoutSessionUseCase {
   final WorkoutPersistenceRepository _repository;
 
-  /// Creates an instance backed by the given [_repository].
   DeleteWorkoutSessionUseCase(this._repository);
 
   /// Permanently deletes the workout session identified by [sessionId].

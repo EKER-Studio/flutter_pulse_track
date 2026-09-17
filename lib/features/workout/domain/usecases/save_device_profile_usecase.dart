@@ -9,7 +9,6 @@ import 'package:pulse_track/features/workout/domain/repositories/workout_persist
 class SaveDeviceProfileUseCase {
   final WorkoutPersistenceRepository _repository;
 
-  /// Creates an instance backed by the given [_repository].
   SaveDeviceProfileUseCase(this._repository);
 
   /// Persists or updates the device profile for the sensor identified by [macAddress].

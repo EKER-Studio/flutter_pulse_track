@@ -11,7 +11,6 @@ import 'package:pulse_track/features/workout/domain/repositories/workout_persist
 class SavePartialWorkoutSessionUseCase {
   final WorkoutPersistenceRepository _repository;
 
-  /// Creates an instance backed by the given [_repository].
   SavePartialWorkoutSessionUseCase(this._repository);
 
   /// Persists a partial workout session snapshot to local storage.

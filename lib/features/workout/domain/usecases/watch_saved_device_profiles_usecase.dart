@@ -10,7 +10,6 @@ import 'package:pulse_track/features/workout/domain/repositories/workout_persist
 class WatchSavedDeviceProfilesUseCase {
   final WorkoutPersistenceRepository _repository;
 
-  /// Creates an instance backed by the given [_repository].
   WatchSavedDeviceProfilesUseCase(this._repository);
 
   /// Streams every saved [DeviceProfile], most-recently connected first.

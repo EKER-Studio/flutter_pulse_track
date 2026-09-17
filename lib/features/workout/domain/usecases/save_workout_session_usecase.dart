@@ -8,7 +8,6 @@ import 'package:pulse_track/features/workout/domain/repositories/workout_persist
 class SaveWorkoutSessionUseCase {
   final WorkoutPersistenceRepository _repository;
 
-  /// Creates an instance backed by the given [_repository].
   SaveWorkoutSessionUseCase(this._repository);
 
   /// Persists a workout session snapshot to local storage.

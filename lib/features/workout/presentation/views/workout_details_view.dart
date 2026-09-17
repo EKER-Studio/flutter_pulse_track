@@ -343,7 +343,6 @@ class WorkoutDetailsView extends ConsumerWidget {
     );
   }
 
-  /// Builds a single summary tile showing an icon, a numeric [value], and a [label].
   Widget _summaryTile({
     required String label,
     required String value,
@@ -488,7 +487,6 @@ class _HrZoneLegend extends StatelessWidget {
 ///   which would otherwise produce `NaN` / `Infinity` offsets and crash
 ///   the canvas paint pass.
 class BpmChart extends CustomPainter {
-  /// Creates a [BpmChart] painter for the given BPM [samples], [startTime], and [endTime].
   BpmChart({
     required this.samples,
     required this.startTime,
@@ -627,7 +625,6 @@ class BpmChart extends CustomPainter {
     return false;
   }
 
-  /// Paints a centered "No data" label when the sample list is empty.
   void _drawEmpty(Canvas canvas, Size size) {
     const labelStyle = TextStyle(color: AppColors.textSecondary, fontSize: 14);
 

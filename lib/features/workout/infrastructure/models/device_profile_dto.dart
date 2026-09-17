@@ -19,7 +19,6 @@ part 'device_profile_dto.g.dart';
 /// name "macAddress" is retained for cross-platform naming consistency.
 @collection
 class DeviceProfileDto {
-  /// Default constructor for [DeviceProfileDto].
   DeviceProfileDto();
 
   /// Auto-incremented primary key managed by Isar.

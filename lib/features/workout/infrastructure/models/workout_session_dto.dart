@@ -20,7 +20,6 @@ part 'workout_session_dto.g.dart';
 ///   date-range scans on the history view.
 @collection
 class WorkoutSessionDto {
-  /// Default constructor for [WorkoutSessionDto].
   WorkoutSessionDto();
 
   /// Auto-incremented primary key managed by Isar.

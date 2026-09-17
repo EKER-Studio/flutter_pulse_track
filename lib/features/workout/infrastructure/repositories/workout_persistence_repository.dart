@@ -15,7 +15,6 @@ class WorkoutPersistenceRepository
     implements domain.WorkoutPersistenceRepository {
   final Isar _isar;
 
-  /// Creates a [WorkoutPersistenceRepository] instance backed by the given [_isar] database.
   const WorkoutPersistenceRepository(this._isar);
 
   /// Caches the BLE sensor profile to the database.

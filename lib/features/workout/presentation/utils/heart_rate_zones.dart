@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 /// Heart rate zone definitions and utilities based on a configurable max heart rate.
 class HeartRateZone {
-  /// Creates a [HeartRateZone] instance with [label], [minPercent], [maxPercent], and [color].
   const HeartRateZone({
     required this.label,
     required this.minPercent,

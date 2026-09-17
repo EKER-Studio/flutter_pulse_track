@@ -20,15 +20,12 @@ export 'package:pulse_track/features/workout/infrastructure/services/workout_exp
 
 part 'workout_providers.g.dart';
 
-/// Riverpod provider delivering the concrete Isar-backed [WorkoutPersistenceRepository].
 @riverpod
 WorkoutPersistenceRepository workoutPersistenceRepository(Ref ref) {
   final isar = ref.watch(isarProvider);
   return infra.WorkoutPersistenceRepository(isar);
 }
 
-/// Riverpod provider that supplies a [SaveWorkoutSessionUseCase] wired to the
-/// abstract [WorkoutPersistenceRepository] contract using [ref].
 @riverpod
 SaveWorkoutSessionUseCase saveWorkoutSessionUseCase(Ref ref) {
   return SaveWorkoutSessionUseCase(
@@ -36,8 +33,6 @@ SaveWorkoutSessionUseCase saveWorkoutSessionUseCase(Ref ref) {
   );
 }
 
-/// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 @riverpod
 SavePartialWorkoutSessionUseCase savePartialWorkoutSessionUseCase(Ref ref) {
   return SavePartialWorkoutSessionUseCase(
@@ -45,8 +40,6 @@ SavePartialWorkoutSessionUseCase savePartialWorkoutSessionUseCase(Ref ref) {
   );
 }
 
-/// Riverpod provider that supplies a [SaveDeviceProfileUseCase] wired to the
-/// abstract [WorkoutPersistenceRepository] contract using [ref].
 @riverpod
 SaveDeviceProfileUseCase saveDeviceProfileUseCase(Ref ref) {
   return SaveDeviceProfileUseCase(
@@ -54,8 +47,6 @@ SaveDeviceProfileUseCase saveDeviceProfileUseCase(Ref ref) {
   );
 }
 
-/// Riverpod provider that supplies a [DeleteWorkoutSessionUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 @riverpod
 DeleteWorkoutSessionUseCase deleteWorkoutSessionUseCase(Ref ref) {
   return DeleteWorkoutSessionUseCase(
@@ -63,8 +54,6 @@ DeleteWorkoutSessionUseCase deleteWorkoutSessionUseCase(Ref ref) {
   );
 }
 
-/// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 @riverpod
 WatchWorkoutHistoryUseCase watchWorkoutHistoryUseCase(Ref ref) {
   return WatchWorkoutHistoryUseCase(
@@ -72,8 +61,6 @@ WatchWorkoutHistoryUseCase watchWorkoutHistoryUseCase(Ref ref) {
   );
 }
 
-/// Riverpod provider that supplies a [WatchSavedDeviceProfilesUseCase] wired
-/// to the abstract [WorkoutPersistenceRepository] contract using [ref].
 @riverpod
 WatchSavedDeviceProfilesUseCase watchSavedDeviceProfilesUseCase(Ref ref) {
   return WatchSavedDeviceProfilesUseCase(
@@ -81,8 +68,6 @@ WatchSavedDeviceProfilesUseCase watchSavedDeviceProfilesUseCase(Ref ref) {
   );
 }
 
-/// Riverpod provider that supplies a [SanitizeCrashedSessionsUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 @riverpod
 SanitizeCrashedSessionsUseCase sanitizeCrashedSessionsUseCase(Ref ref) {
   return SanitizeCrashedSessionsUseCase(
@@ -90,21 +75,16 @@ SanitizeCrashedSessionsUseCase sanitizeCrashedSessionsUseCase(Ref ref) {
   );
 }
 
-/// Reactive stream of workout history for direct use in
-/// `ref.watch(watchWorkoutHistoryStreamProvider)` from views using [ref].
 @riverpod
 Stream<List<WorkoutSession>> watchWorkoutHistoryStream(Ref ref) {
   return ref.watch(watchWorkoutHistoryUseCaseProvider).call();
 }
 
-/// Reactive stream of saved device profiles for direct use in
-/// `ref.watch(watchSavedDeviceProfilesStreamProvider)` from views using [ref].
 @riverpod
 Stream<List<DeviceProfile>> watchSavedDeviceProfilesStream(Ref ref) {
   return ref.watch(watchSavedDeviceProfilesUseCaseProvider).call();
 }
 
-/// Riverpod provider supplying a singleton [WorkoutExportShareService].
 @riverpod
 WorkoutExportShareService workoutExportShareService(Ref ref) {
   return WorkoutExportShareService();

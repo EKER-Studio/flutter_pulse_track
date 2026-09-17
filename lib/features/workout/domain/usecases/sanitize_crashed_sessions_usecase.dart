@@ -11,7 +11,6 @@ import 'package:pulse_track/features/workout/domain/repositories/workout_persist
 class SanitizeCrashedSessionsUseCase {
   final WorkoutPersistenceRepository _repository;
 
-  /// Creates an instance backed by the given [_repository].
   SanitizeCrashedSessionsUseCase(this._repository);
 
   /// Scans persistent storage for crashed sessions and recovers them.

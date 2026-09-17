@@ -13,7 +13,6 @@ import 'package:pulse_track/features/workout/domain/services/workout_export_serv
 /// Pure CSV generation lives in the domain [WorkoutExportService]; this class
 /// only handles file I/O ([getTemporaryDirectory], [File]) and [SharePlus].
 class WorkoutExportShareService {
-  /// Creates a service delegating CSV generation to [exportService].
   WorkoutExportShareService([WorkoutExportService? exportService])
     : _exportService = exportService ?? WorkoutExportService();
 
