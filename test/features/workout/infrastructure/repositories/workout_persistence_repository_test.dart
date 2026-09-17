@@ -463,6 +463,107 @@ void main() {
     });
   });
 
+  group('deleteWorkoutSessions', () {
+    Future<int> saveCheckpoint(DateTime start) async {
+      final id = await repository.saveWorkoutCheckpoint(
+        startTime: start,
+        samples: const [72, 75],
+        sensorLocationIndex: 1,
+        macAddress: 'AA:BB:CC:DD:EE:01',
+        name: 'Polar H10',
+        avgBpm: 73,
+        maxBpm: 75,
+      );
+      return id!;
+    }
+
+    test('deletes multiple sessions in one call', () async {
+      final id1 = await saveCheckpoint(DateTime(2025, 6, 1, 10));
+      final id2 = await saveCheckpoint(DateTime(2025, 6, 2, 10));
+      await saveCheckpoint(DateTime(2025, 6, 3, 10));
+
+      await repository.deleteWorkoutSessions([id1, id2]);
+
+      final sessions = await isar.workoutSessionDtos.where().findAll();
+      expect(sessions, hasLength(1));
+    });
+
+    test('does nothing for an empty id list', () async {
+      await saveCheckpoint(DateTime(2025, 6, 1, 10));
+
+      await repository.deleteWorkoutSessions([]);
+
+      final sessions = await isar.workoutSessionDtos.where().findAll();
+      expect(sessions, hasLength(1));
+    });
+
+    test('ignores unknown ids without throwing', () async {
+      final id = await saveCheckpoint(DateTime(2025, 6, 1, 10));
+
+      await repository.deleteWorkoutSessions([id, 999999]);
+
+      final sessions = await isar.workoutSessionDtos.where().findAll();
+      expect(sessions, isEmpty);
+    });
+  });
+
+  group('saveWorkoutSessionsBatch', () {
+    WorkoutSession domainSession({
+      int id = 0,
+      required DateTime start,
+      DateTime? end,
+      bool open = false,
+      List<int> samples = const [70, 80],
+    }) {
+      return WorkoutSession(
+        id: id,
+        startTime: start,
+        endTime: open ? null : (end ?? start.add(const Duration(minutes: 30))),
+        avgBpm: 75,
+        maxBpm: 80,
+        bpmSamples: samples,
+        sensorLocationIndex: 1,
+        deviceMacAddress: 'AA:BB:CC:DD:EE:01',
+        deviceName: 'Polar H10',
+      );
+    }
+
+    test('persists every session with its data', () async {
+      await repository.saveWorkoutSessionsBatch([
+        domainSession(start: DateTime(2025, 6, 1, 10)),
+        domainSession(start: DateTime(2025, 6, 2, 10)),
+      ]);
+
+      final sessions = await isar.workoutSessionDtos.where().findAll();
+      expect(sessions, hasLength(2));
+      expect(
+        sessions.map((s) => s.startTime.toUtc()).toList(),
+        containsAll([
+          DateTime(2025, 6, 1, 10).toUtc(),
+          DateTime(2025, 6, 2, 10).toUtc(),
+        ]),
+      );
+      expect(sessions.first.avgBpm, 75);
+      expect(sessions.first.bpmSamples, [70, 80]);
+    });
+
+    test('preserves null endTime for open sessions', () async {
+      await repository.saveWorkoutSessionsBatch([
+        domainSession(start: DateTime(2025, 6, 1, 10), open: true),
+      ]);
+
+      final sessions = await repository.findUnclosedSessions();
+      expect(sessions, hasLength(1));
+    });
+
+    test('does nothing for an empty list', () async {
+      await repository.saveWorkoutSessionsBatch([]);
+
+      final sessions = await isar.workoutSessionDtos.where().findAll();
+      expect(sessions, isEmpty);
+    });
+  });
+
   group('findUnclosedSessions', () {
     test('returns empty when all sessions are closed', () async {
       final dto = WorkoutSessionDto()

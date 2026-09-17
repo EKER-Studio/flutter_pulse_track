@@ -211,5 +211,52 @@ void main() {
 
       verify(() => repository.deleteWorkoutSession(42)).called(1);
     });
+
+    test('deleteWorkoutSessions accepts a batch of ids', () async {
+      when(() => repository.deleteWorkoutSessions(any()))
+          .thenAnswer((_) async {});
+
+      await repository.deleteWorkoutSessions([1, 2, 3]);
+
+      verify(() => repository.deleteWorkoutSessions([1, 2, 3])).called(1);
+    });
+
+    test('saveWorkoutSessionsBatch accepts domain sessions', () async {
+      when(() => repository.saveWorkoutSessionsBatch(any()))
+          .thenAnswer((_) async {});
+      final session = WorkoutSession(
+        id: 1,
+        startTime: DateTime(2026, 7, 23, 14),
+        endTime: DateTime(2026, 7, 23, 15),
+        avgBpm: 75,
+        maxBpm: 120,
+        bpmSamples: const [60, 72],
+        sensorLocationIndex: 0,
+        deviceMacAddress: 'AA:BB',
+        deviceName: 'Test',
+      );
+
+      await repository.saveWorkoutSessionsBatch([session]);
+
+      verify(() => repository.saveWorkoutSessionsBatch([session])).called(1);
+    });
+
+    test('findUnclosedSessions returns unclosed domain sessions', () async {
+      final unclosed = WorkoutSession(
+        id: 9,
+        startTime: DateTime(2026, 7, 23, 14),
+        endTime: null,
+        avgBpm: 70,
+        maxBpm: 110,
+        bpmSamples: const [70],
+        sensorLocationIndex: 0,
+        deviceMacAddress: 'AA:BB',
+        deviceName: 'Test',
+      );
+      when(() => repository.findUnclosedSessions())
+          .thenAnswer((_) async => [unclosed]);
+
+      expect(await repository.findUnclosedSessions(), [unclosed]);
+    });
   });
 }

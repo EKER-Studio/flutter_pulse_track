@@ -186,6 +186,38 @@ void main() {
   });
 
   group('WorkoutExportService generateAllSessionsCsv', () {
+    test('returns header only for an empty session list', () async {
+      final csv = await exportService.generateAllSessionsCsv([]);
+      final lines = csv.trim().split(RegExp(r'\r?\n'));
+
+      expect(lines.length, 1);
+      expect(
+        lines[0],
+        'StartTime,EndTime,AvgBpm,MaxBpm,BpmSamples,SensorLocation,DeviceMacAddress,DeviceName',
+      );
+    });
+
+    test('falls back to startTime when endTime is null', () async {
+      final start = DateTime.utc(2026, 7, 28, 10);
+      final session = WorkoutSession(
+        id: 1,
+        startTime: start,
+        endTime: null,
+        avgBpm: 70,
+        maxBpm: 70,
+        bpmSamples: [70],
+        sensorLocationIndex: 0,
+        deviceMacAddress: 'AA:BB',
+        deviceName: 'Test',
+      );
+
+      final csv = await exportService.generateAllSessionsCsv([session]);
+      final lines = csv.trim().split(RegExp(r'\r?\n'));
+
+      expect(lines.length, 2);
+      expect(lines[1].contains(start.toIso8601String()), isTrue);
+    });
+
     test('creates multi-session CSV with all columns and rows', () async {
       final session1 = WorkoutSession(
         id: 1,

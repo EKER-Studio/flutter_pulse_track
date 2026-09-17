@@ -61,5 +61,39 @@ void main() {
 
       expect(session.bpmSamples, isEmpty);
     });
+
+    test('rejects negative avgBpm', () {
+      expect(
+        () => WorkoutSession(
+          id: 4,
+          startTime: start,
+          endTime: end,
+          avgBpm: -1,
+          maxBpm: 100,
+          bpmSamples: [60],
+          sensorLocationIndex: 0,
+          deviceMacAddress: 'AA:BB:CC:DD:EE:FF',
+          deviceName: 'Test',
+        ),
+        throwsA(isA<AssertionError>()),
+      );
+    });
+
+    test('rejects negative maxBpm', () {
+      expect(
+        () => WorkoutSession(
+          id: 5,
+          startTime: start,
+          endTime: end,
+          avgBpm: 80,
+          maxBpm: -5,
+          bpmSamples: [60],
+          sensorLocationIndex: 0,
+          deviceMacAddress: 'AA:BB:CC:DD:EE:FF',
+          deviceName: 'Test',
+        ),
+        throwsA(isA<AssertionError>()),
+      );
+    });
   });
 }
