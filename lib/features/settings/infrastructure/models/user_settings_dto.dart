@@ -33,7 +33,6 @@ class UserSettingsDto {
       themeMode: themeMode,
       defaultMaxHr: defaultMaxHr,
       isBiometricLockEnabled: isBiometricLockEnabled,
-      isLocked: false,
       isOnboardingCompleted: isOnboardingCompleted,
     );
   }

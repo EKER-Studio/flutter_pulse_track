@@ -42,11 +42,7 @@ class CsvWorkoutImporter {
     }
 
     final normalized = rawCsv.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
-    final rows = Csv(
-      fieldDelimiter: ',',
-      lineDelimiter: '\n',
-      dynamicTyping: false,
-    ).decode(normalized);
+    final rows = Csv(lineDelimiter: '\n').decode(normalized);
     if (rows.isEmpty) {
       return const CsvWorkoutImportAnalysis(
         validSessions: [],
@@ -120,7 +116,7 @@ class CsvWorkoutImporter {
         }
 
         bpmSamples.add(bpm);
-      } catch (_) {
+      } on Object catch (_) {
         skippedRows++;
       }
     }
@@ -271,7 +267,7 @@ class CsvWorkoutImporter {
         if (latest == null || checkEnd.isAfter(latest)) {
           latest = checkEnd;
         }
-      } catch (_) {
+      } on Object catch (_) {
         skippedRows++;
       }
     }

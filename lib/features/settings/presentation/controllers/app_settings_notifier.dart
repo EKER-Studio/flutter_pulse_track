@@ -19,7 +19,7 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
         state = settings.copyWith(isLocked: currentLocked);
       });
       ref.onDispose(subscription.cancel);
-    } catch (_) {
+    } on Object catch (_) {
       // In tests where Isar is not overridden, fall back to in-memory defaults.
     }
 
@@ -35,7 +35,7 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
     state = updated;
     try {
       await ref.read(userSettingsRepositoryProvider).saveSettings(updated);
-    } catch (_) {
+    } on Object catch (_) {
       state = previous;
       rethrow;
     }
