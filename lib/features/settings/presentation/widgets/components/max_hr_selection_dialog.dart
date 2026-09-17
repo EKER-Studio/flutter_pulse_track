@@ -11,7 +11,6 @@ class MaxHrSelectionDialog extends StatefulWidget {
   /// Callback when a new valid value is confirmed.
   final ValueChanged<int> onConfirmed;
 
-  /// Creates a [MaxHrSelectionDialog].
   const MaxHrSelectionDialog({
     required this.currentMaxHr,
     required this.onConfirmed,

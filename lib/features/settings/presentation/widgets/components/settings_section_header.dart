@@ -7,7 +7,6 @@ class SettingsSectionHeader extends StatelessWidget {
   /// Header title text.
   final String title;
 
-  /// Creates a [SettingsSectionHeader] with [title].
   const SettingsSectionHeader({required this.title, super.key});
 
   @override

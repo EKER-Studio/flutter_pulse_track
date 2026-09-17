@@ -11,7 +11,6 @@ class ThemeSelectionDialog extends StatelessWidget {
   /// Callback when a new mode is selected.
   final ValueChanged<AppThemeMode> onSelected;
 
-  /// Creates a [ThemeSelectionDialog].
   const ThemeSelectionDialog({
     required this.currentMode,
     required this.onSelected,

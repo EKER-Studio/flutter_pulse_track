@@ -10,7 +10,6 @@ class CsvImportPreviewDialog extends StatelessWidget {
   /// The audit summary produced by [CsvWorkoutImporter].
   final CsvWorkoutImportAnalysis analysis;
 
-  /// Creates a [CsvImportPreviewDialog].
   const CsvImportPreviewDialog({required this.analysis, super.key});
 
   /// Displays the dialog modally and returns true if user confirmed.

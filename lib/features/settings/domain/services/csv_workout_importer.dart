@@ -16,7 +16,6 @@ class CsvWorkoutImportAnalysis {
   /// Latest end or start timestamp found across parsed sessions.
   final DateTime? latestDate;
 
-  /// Creates a [CsvWorkoutImportAnalysis] summary.
   const CsvWorkoutImportAnalysis({
     required this.validSessions,
     required this.skippedRowCount,
@@ -27,7 +26,6 @@ class CsvWorkoutImportAnalysis {
 
 /// Domain service that parses CSV representations of workouts into domain entities.
 class CsvWorkoutImporter {
-  /// Default const constructor for [CsvWorkoutImporter].
   const CsvWorkoutImporter();
 
   /// Parses [rawCsv] content into a [CsvWorkoutImportAnalysis].

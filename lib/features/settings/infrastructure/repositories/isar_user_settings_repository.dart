@@ -9,7 +9,6 @@ import '../models/user_settings_dto.dart';
 class IsarUserSettingsRepository implements UserSettingsRepository {
   final Isar _isar;
 
-  /// Creates an [IsarUserSettingsRepository] with the given [_isar] instance.
   IsarUserSettingsRepository(this._isar);
 
   @override

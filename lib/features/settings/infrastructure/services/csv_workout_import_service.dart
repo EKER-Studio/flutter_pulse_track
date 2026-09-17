@@ -13,7 +13,6 @@ class FileTooLargeException implements Exception {
   /// Maximum permitted byte length.
   final int maxBytes;
 
-  /// Creates a [FileTooLargeException].
   const FileTooLargeException({required this.maxBytes});
 
   @override
@@ -29,7 +28,6 @@ class CsvWorkoutImportService {
 
   final CsvWorkoutImporter _importer;
 
-  /// Creates a [CsvWorkoutImportService].
   const CsvWorkoutImportService({CsvWorkoutImporter? importer})
     : _importer = importer ?? const CsvWorkoutImporter();
 
@@ -62,7 +60,6 @@ class CsvWorkoutImportService {
   }
 }
 
-/// Riverpod provider supplying a singleton instance of [CsvWorkoutImportService].
 @riverpod
 CsvWorkoutImportService csvWorkoutImportService(Ref ref) {
   return const CsvWorkoutImportService();

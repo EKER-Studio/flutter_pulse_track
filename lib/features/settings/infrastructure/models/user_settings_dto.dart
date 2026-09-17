@@ -8,7 +8,6 @@ part 'user_settings_dto.g.dart';
 /// Isar database collection storing persistent user configuration.
 @collection
 class UserSettingsDto {
-  /// Default constructor.
   UserSettingsDto();
 
   /// Singleton primary key. Always 1.

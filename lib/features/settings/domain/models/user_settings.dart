@@ -17,7 +17,6 @@ class UserSettings {
   /// Whether onboarding wizard has been completed.
   final bool isOnboardingCompleted;
 
-  /// Creates a [UserSettings] instance.
   const UserSettings({
     this.themeMode = AppThemeMode.system,
     this.defaultMaxHr = 190,

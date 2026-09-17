@@ -25,7 +25,6 @@ class SettingsTile extends StatelessWidget {
   /// Callback when user taps the tile.
   final VoidCallback? onTap;
 
-  /// Creates a [SettingsTile].
   const SettingsTile({
     required this.icon,
     required this.title,

@@ -5,7 +5,6 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Destructive confirmation dialog before wiping all workout history.
 class WipeDataDialog extends StatelessWidget {
-  /// Creates a [WipeDataDialog].
   const WipeDataDialog({super.key});
 
   /// Displays the dialog modally and returns true if user confirmed.

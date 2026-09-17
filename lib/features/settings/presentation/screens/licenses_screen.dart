@@ -13,7 +13,6 @@ class PackageLicense {
   /// List of license paragraphs.
   final List<String> paragraphs;
 
-  /// Creates a [PackageLicense].
   const PackageLicense({required this.packageName, required this.paragraphs});
 }
 
@@ -22,7 +21,6 @@ class LicensesScreen extends StatefulWidget {
   /// Optional pre-loaded [PackageInfo] instance.
   final PackageInfo? packageInfo;
 
-  /// Creates a [LicensesScreen].
   const LicensesScreen({super.key, this.packageInfo});
 
   @override

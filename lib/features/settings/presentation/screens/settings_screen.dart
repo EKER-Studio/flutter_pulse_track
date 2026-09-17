@@ -22,7 +22,6 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 /// Screen providing user controls for appearance, workout metrics,
 /// data import/export/wipe operations, and app attribution.
 class SettingsScreen extends ConsumerStatefulWidget {
-  /// Creates a [SettingsScreen].
   const SettingsScreen({super.key});
 
   @override
