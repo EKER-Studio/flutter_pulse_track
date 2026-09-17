@@ -45,6 +45,19 @@ void main() {
 
       expect(await repository.getSettings(), settings);
     });
+
+    test('later saves overwrite earlier ones', () async {
+      await repository.saveSettings(const UserSettings(defaultMaxHr: 170));
+      await repository.saveSettings(const UserSettings(defaultMaxHr: 180));
+
+      expect((await repository.getSettings()).defaultMaxHr, 180);
+    });
+
+    test('ephemeral lock state is not persisted', () async {
+      await repository.saveSettings(const UserSettings(isLocked: true));
+
+      expect((await repository.getSettings()).isLocked, isFalse);
+    });
   });
 
   group('watchSettings', () {

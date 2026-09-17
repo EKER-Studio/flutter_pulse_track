@@ -15,11 +15,17 @@ class InMemoryUserSettingsRepository implements UserSettingsRepository {
   /// When set, [saveSettings] throws this instead of persisting.
   Object? saveError;
 
+  /// When true, [watchSettings] throws instead of returning the stream.
+  bool throwOnWatch = false;
+
   @override
   Future<UserSettings> getSettings() async => _settings;
 
   @override
-  Stream<UserSettings> watchSettings() => _controller.stream;
+  Stream<UserSettings> watchSettings() {
+    if (throwOnWatch) throw StateError('no database');
+    return _controller.stream;
+  }
 
   @override
   Future<void> saveSettings(UserSettings settings) async {
@@ -116,6 +122,62 @@ void main() {
 
       final persisted = await repository.getSettings();
       expect(persisted.defaultMaxHr, 190);
+    });
+
+    test('updateBiometricLock persists the flag', () async {
+      await container
+          .read(appSettingsProvider.notifier)
+          .updateBiometricLock(true);
+
+      expect(
+        container.read(appSettingsProvider).isBiometricLockEnabled,
+        isTrue,
+      );
+      expect((await repository.getSettings()).isBiometricLockEnabled, isTrue);
+    });
+
+    test('completeOnboarding persists the flag', () async {
+      await container.read(appSettingsProvider.notifier).completeOnboarding();
+
+      expect(container.read(appSettingsProvider).isOnboardingCompleted, isTrue);
+      expect((await repository.getSettings()).isOnboardingCompleted, isTrue);
+    });
+
+    test('setLocked toggles ephemeral state without persisting', () async {
+      container.read(appSettingsProvider.notifier).setLocked(true);
+      expect(container.read(appSettingsProvider).isLocked, isTrue);
+      expect((await repository.getSettings()).isLocked, isFalse);
+
+      container.read(appSettingsProvider.notifier).setLocked(false);
+      expect(container.read(appSettingsProvider).isLocked, isFalse);
+    });
+
+    test('database emissions preserve the ephemeral lock state', () async {
+      final sub = container.listen(appSettingsProvider, (_, _) {});
+      container.read(appSettingsProvider.notifier).setLocked(true);
+
+      await repository.saveSettings(
+        const UserSettings(themeMode: AppThemeMode.light),
+      );
+      await pumpEventQueue();
+
+      final state = container.read(appSettingsProvider);
+      expect(state.themeMode, AppThemeMode.light);
+      expect(state.isLocked, isTrue);
+      sub.close();
+    });
+
+    test('build falls back to defaults when the repository throws', () {
+      repository.throwOnWatch = true;
+
+      final fresh = ProviderContainer(
+        overrides: [
+          userSettingsRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(fresh.dispose);
+
+      expect(fresh.read(appSettingsProvider), const UserSettings());
     });
   });
 }

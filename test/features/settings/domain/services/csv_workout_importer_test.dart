@@ -98,7 +98,97 @@ val4,val5,val6
 
         expect(analysis.validSessions, isEmpty);
         expect(analysis.skippedRowCount, 3);
+        expect(analysis.earliestDate, isNull);
+        expect(analysis.latestDate, isNull);
       },
     );
+
+    test('parses CRLF line endings in data rows', () {
+      const csv =
+          'Timestamp,HeartRate(bpm)\r\n'
+          '2026-07-28T10:00:00.000Z,100\r\n'
+          '2026-07-28T10:05:00.000Z,140\r\n';
+
+      final analysis = importer.parse(csv);
+
+      expect(analysis.validSessions.length, 1);
+      expect(analysis.skippedRowCount, 0);
+      expect(analysis.validSessions.first.bpmSamples, [100, 140]);
+    });
+
+    test('skips malformed time-series rows and parses the rest', () {
+      const csv = '''
+Timestamp,HeartRate(bpm)
+2026-07-28T10:00:00.000Z,100
+not-a-date,120
+2026-07-28T10:05:00.000Z,not-a-bpm
+
+2026-07-28T10:10:00.000Z,120
+''';
+
+      final analysis = importer.parse(csv);
+
+      expect(analysis.validSessions.length, 1);
+      expect(analysis.skippedRowCount, 2);
+      expect(analysis.validSessions.first.bpmSamples, [100, 120]);
+    });
+
+    test('returns empty analysis when all time-series rows are invalid', () {
+      const csv = '''
+Timestamp,HeartRate(bpm)
+not-a-date,120
+2026-07-28T10:05:00.000Z,not-a-bpm
+''';
+
+      final analysis = importer.parse(csv);
+
+      expect(analysis.validSessions, isEmpty);
+      expect(analysis.skippedRowCount, 2);
+    });
+
+    test('parses alternative multi-session header spellings', () {
+      const csv = '''
+start_time,end_time,avg_bpm,max_bpm,bpm_samples,sensor_location,mac,name
+2026-07-28T10:00:00.000Z,2026-07-28T10:30:00.000Z,0,0,"120,130,140",1,AA:BB:CC,Polar
+''';
+
+      final analysis = importer.parse(csv);
+
+      expect(analysis.validSessions.length, 1);
+      final session = analysis.validSessions.first;
+      // avg/max recomputed from comma-separated samples when columns are 0.
+      expect(session.bpmSamples, [120, 130, 140]);
+      expect(session.avgBpm, 130);
+      expect(session.maxBpm, 140);
+      expect(session.deviceMacAddress, 'AA:BB:CC');
+      expect(session.deviceName, 'Polar');
+    });
+
+    test('falls back to IMPORTED identity when columns are missing', () {
+      const csv = '''
+StartTime,EndTime,AvgBpm,MaxBpm,BpmSamples
+2026-07-28T10:00:00.000Z,2026-07-28T10:30:00.000Z,130,165,120;130
+''';
+
+      final analysis = importer.parse(csv);
+
+      expect(analysis.validSessions.length, 1);
+      final session = analysis.validSessions.first;
+      expect(session.deviceMacAddress, 'IMPORTED');
+      expect(session.deviceName, 'Imported Session');
+    });
+
+    test('falls back to IMPORTED identity when values are blank', () {
+      const csv = '''
+StartTime,DeviceMacAddress,DeviceName
+2026-07-28T10:00:00.000Z,,
+''';
+
+      final analysis = importer.parse(csv);
+
+      expect(analysis.validSessions.length, 1);
+      expect(analysis.validSessions.first.deviceMacAddress, 'IMPORTED');
+      expect(analysis.validSessions.first.deviceName, 'Imported Session');
+    });
   });
 }
