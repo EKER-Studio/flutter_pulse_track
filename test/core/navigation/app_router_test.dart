@@ -6,7 +6,9 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:pulse_track/core/application/service_providers.dart';
 import 'package:pulse_track/core/navigation/app_router.dart';
+import 'package:pulse_track/core/presentation/screens/biometric_shield_screen.dart';
 import 'package:pulse_track/core/presentation/views/route_error_view.dart';
+import 'package:pulse_track/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_home_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
@@ -73,7 +75,9 @@ void main() {
     when(() => mockForegroundManager.stopService()).thenAnswer((_) async {});
   });
 
-  ProviderContainer createContainer() {
+  ProviderContainer createContainer({
+    UserSettings settings = const UserSettings(isOnboardingCompleted: true),
+  }) {
     return ProviderContainer(
       overrides: [
         watchSavedDeviceProfilesStreamProvider.overrideWithValue(
@@ -95,9 +99,7 @@ void main() {
         savePartialWorkoutSessionUseCaseProvider.overrideWithValue(
           mockSavePartialWorkoutSessionUseCase,
         ),
-        appSettingsProvider.overrideWithValue(
-          const UserSettings(isOnboardingCompleted: true),
-        ),
+        appSettingsProvider.overrideWithValue(settings),
       ],
     );
   }
@@ -202,5 +204,99 @@ void main() {
         expect(find.byType(RouteErrorView), findsOneWidget);
       },
     );
+  });
+
+  group('AppRouter redirect (lock and onboarding gates)', () {
+    testWidgets('locked app redirects initial "/" to "/shield"', (
+      tester,
+    ) async {
+      final container = createContainer(
+        settings: const UserSettings(
+          isOnboardingCompleted: true,
+          isLocked: true,
+        ),
+      );
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(buildTestApp(container));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BiometricShieldScreen), findsOneWidget);
+      expect(find.byType(HrHomeView), findsNothing);
+    });
+
+    testWidgets('locked app redirects "/history" to "/shield"', (tester) async {
+      final container = createContainer(
+        settings: const UserSettings(
+          isOnboardingCompleted: true,
+          isLocked: true,
+        ),
+      );
+      addTearDown(container.dispose);
+
+      container.read(appRouterProvider).go('/history');
+      await tester.pumpWidget(buildTestApp(container));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BiometricShieldScreen), findsOneWidget);
+    });
+
+    testWidgets('locked app stays on "/shield" without redirect loop', (
+      tester,
+    ) async {
+      final container = createContainer(
+        settings: const UserSettings(
+          isOnboardingCompleted: true,
+          isLocked: true,
+        ),
+      );
+      addTearDown(container.dispose);
+
+      container.read(appRouterProvider).go('/shield');
+      await tester.pumpWidget(buildTestApp(container));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BiometricShieldScreen), findsOneWidget);
+    });
+
+    testWidgets(
+      'incomplete onboarding redirects initial "/" to "/onboarding"',
+      (tester) async {
+        final container = createContainer(settings: const UserSettings());
+        addTearDown(container.dispose);
+
+        await tester.pumpWidget(buildTestApp(container));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(OnboardingScreen), findsOneWidget);
+        expect(find.byType(HrHomeView), findsNothing);
+      },
+    );
+
+    testWidgets('completed onboarding redirects "/onboarding" back to "/"', (
+      tester,
+    ) async {
+      final container = createContainer();
+      addTearDown(container.dispose);
+
+      container.read(appRouterProvider).go('/onboarding');
+      await tester.pumpWidget(buildTestApp(container));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(HrHomeView), findsOneWidget);
+      expect(find.byType(OnboardingScreen), findsNothing);
+    });
+
+    testWidgets('unlocked shield route redirects to "/"', (tester) async {
+      final container = createContainer();
+      addTearDown(container.dispose);
+
+      container.read(appRouterProvider).go('/shield');
+      await tester.pumpWidget(buildTestApp(container));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(HrHomeView), findsOneWidget);
+      expect(find.byType(BiometricShieldScreen), findsNothing);
+    });
   });
 }
