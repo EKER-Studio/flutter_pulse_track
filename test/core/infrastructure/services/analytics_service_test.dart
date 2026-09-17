@@ -82,6 +82,21 @@ void main() {
       },
     );
 
+    test('logWorkoutStarted omits the sport key when sport is null', () async {
+      when(
+        () => mockAnalytics.logEvent(
+          name: any(named: 'name'),
+          parameters: any(named: 'parameters'),
+        ),
+      ).thenAnswer((_) async {});
+
+      await serviceWithMock.logWorkoutStarted();
+
+      verify(
+        () => mockAnalytics.logEvent(name: 'workout_started', parameters: {}),
+      ).called(1);
+    });
+
     test(
       'logWorkoutCompleted logs workout_completed event with parameters',
       () async {

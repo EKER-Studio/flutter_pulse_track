@@ -189,6 +189,213 @@ void main() {
 
       expect(result, isNull);
     });
+
+    test('honors an explicit startDate override', () async {
+      final startDate = DateTime.now().toUtc().subtract(
+        const Duration(days: 7),
+      );
+      DateTime? capturedStart;
+      when(
+        () => mockHealthService.fetchWorkoutHistory(
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+        ),
+      ).thenAnswer((invocation) async {
+        capturedStart = invocation.namedArguments[#start] as DateTime;
+        return [];
+      });
+      when(() => mockRepository.watchWorkoutHistory())
+          .thenAnswer((_) => Stream.value(const []));
+
+      final result = await coordinator.sync(startDate: startDate);
+
+      expect(result, isNotNull);
+      expect(capturedStart, startDate);
+    });
+
+    test(
+      'counts failed writes as not exported but still returns a result',
+      () async {
+        final now = DateTime.now().toUtc();
+        final localSession = WorkoutSession(
+          id: 20,
+          startTime: now.subtract(const Duration(hours: 2)),
+          endTime: now.subtract(const Duration(hours: 1)),
+          avgBpm: 135,
+          maxBpm: 160,
+          bpmSamples: const [130, 140],
+          sensorLocationIndex: 1,
+          deviceMacAddress: '11:22:33:44:55:66',
+          deviceName: 'Strap',
+        );
+        when(
+          () => mockHealthService.fetchWorkoutHistory(
+            start: any(named: 'start'),
+            end: any(named: 'end'),
+          ),
+        ).thenAnswer((_) async => []);
+        when(() => mockRepository.watchWorkoutHistory())
+            .thenAnswer((_) => Stream.value([localSession]));
+        when(
+          () => mockHealthService.writeWorkoutSession(
+            session: any(named: 'session'),
+          ),
+        ).thenAnswer((_) async => false);
+
+        final result = await coordinator.sync(
+          lastSyncTime: now.subtract(const Duration(days: 1)),
+        );
+
+        expect(result, isNotNull);
+        expect(result!.pushedLocalCount, 0);
+      },
+    );
+
+    test('ignores sessions outside the sync window', () async {
+      final now = DateTime.now().toUtc();
+      final staleSession = WorkoutSession(
+        id: 21,
+        startTime: now.subtract(const Duration(days: 60)),
+        endTime: now
+            .subtract(const Duration(days: 60))
+            .add(const Duration(minutes: 30)),
+        avgBpm: 130,
+        maxBpm: 155,
+        bpmSamples: const [130],
+        sensorLocationIndex: 1,
+        deviceMacAddress: '11:22:33:44:55:66',
+        deviceName: 'Strap',
+      );
+      when(
+        () => mockHealthService.fetchWorkoutHistory(
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+        ),
+      ).thenAnswer((_) async => []);
+      when(() => mockRepository.watchWorkoutHistory())
+          .thenAnswer((_) => Stream.value([staleSession]));
+
+      final result = await coordinator.sync(
+        lastSyncTime: now.subtract(const Duration(days: 1)),
+      );
+
+      expect(result, isNotNull);
+      expect(result!.pushedLocalCount, 0);
+      verifyNever(
+        () => mockHealthService.writeWorkoutSession(
+          session: any(named: 'session'),
+        ),
+      );
+    });
+
+    test('returns null when the repository stream throws', () async {
+      when(
+        () => mockHealthService.fetchWorkoutHistory(
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+        ),
+      ).thenAnswer((_) async => []);
+      when(() => mockRepository.watchWorkoutHistory())
+          .thenThrow(Exception('DB gone'));
+
+      expect(await coordinator.sync(), isNull);
+    });
+
+    test('deduplicates a remote record exactly 60s away', () async {
+      final now = DateTime.now().toUtc();
+      final sessionTime = now.subtract(const Duration(hours: 2));
+      final localSession = WorkoutSession(
+        id: 22,
+        startTime: sessionTime,
+        endTime: sessionTime.add(const Duration(minutes: 30)),
+        avgBpm: 130,
+        maxBpm: 155,
+        bpmSamples: const [130],
+        sensorLocationIndex: 1,
+        deviceMacAddress: '11:22:33:44:55:66',
+        deviceName: 'Strap',
+      );
+      final remotePoint = HealthDataPoint(
+        uuid: 'remote-uuid-60',
+        value: WorkoutHealthValue(
+          workoutActivityType: HealthWorkoutActivityType.OTHER,
+        ),
+        type: HealthDataType.WORKOUT,
+        unit: HealthDataUnit.NO_UNIT,
+        dateFrom: sessionTime.add(const Duration(seconds: 60)),
+        dateTo: sessionTime.add(const Duration(minutes: 30)),
+        sourcePlatform: HealthPlatformType.appleHealth,
+        sourceDeviceId: 'source-device',
+        sourceId: 'source-id',
+        sourceName: 'Apple Health',
+      );
+      when(
+        () => mockHealthService.fetchWorkoutHistory(
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+        ),
+      ).thenAnswer((_) async => [remotePoint]);
+      when(() => mockRepository.watchWorkoutHistory())
+          .thenAnswer((_) => Stream.value([localSession]));
+
+      final result = await coordinator.sync();
+
+      expect(result, isNotNull);
+      expect(result!.pushedLocalCount, 0);
+      verifyNever(
+        () => mockHealthService.writeWorkoutSession(
+          session: any(named: 'session'),
+        ),
+      );
+    });
+
+    test('exports a remote record 61s away', () async {
+      final now = DateTime.now().toUtc();
+      final sessionTime = now.subtract(const Duration(hours: 2));
+      final localSession = WorkoutSession(
+        id: 23,
+        startTime: sessionTime,
+        endTime: sessionTime.add(const Duration(minutes: 30)),
+        avgBpm: 130,
+        maxBpm: 155,
+        bpmSamples: const [130],
+        sensorLocationIndex: 1,
+        deviceMacAddress: '11:22:33:44:55:66',
+        deviceName: 'Strap',
+      );
+      final remotePoint = HealthDataPoint(
+        uuid: 'remote-uuid-61',
+        value: WorkoutHealthValue(
+          workoutActivityType: HealthWorkoutActivityType.OTHER,
+        ),
+        type: HealthDataType.WORKOUT,
+        unit: HealthDataUnit.NO_UNIT,
+        dateFrom: sessionTime.add(const Duration(seconds: 61)),
+        dateTo: sessionTime.add(const Duration(minutes: 30)),
+        sourcePlatform: HealthPlatformType.appleHealth,
+        sourceDeviceId: 'source-device',
+        sourceId: 'source-id',
+        sourceName: 'Apple Health',
+      );
+      when(
+        () => mockHealthService.fetchWorkoutHistory(
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+        ),
+      ).thenAnswer((_) async => [remotePoint]);
+      when(() => mockRepository.watchWorkoutHistory())
+          .thenAnswer((_) => Stream.value([localSession]));
+      when(
+        () => mockHealthService.writeWorkoutSession(
+          session: any(named: 'session'),
+        ),
+      ).thenAnswer((_) async => true);
+
+      final result = await coordinator.sync();
+
+      expect(result, isNotNull);
+      expect(result!.pushedLocalCount, 1);
+    });
   });
 
   group('HealthSyncCoordinator.exportSession', () {

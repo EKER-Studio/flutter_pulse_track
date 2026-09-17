@@ -43,6 +43,26 @@ class _FakeForegroundTaskPlatform implements ForegroundTaskPlatform {
   }
 }
 
+/// Platform double whose stop always throws, for the swallow test.
+class _ThrowingStopPlatform implements ForegroundTaskPlatform {
+  bool stopCalled = false;
+
+  @override
+  Future<void> init() async {}
+
+  @override
+  Future<bool> isRunningService() async => true;
+
+  @override
+  Future<void> startService({required void Function() callback}) async {}
+
+  @override
+  Future<void> stopService() async {
+    stopCalled = true;
+    throw Exception('stop failed');
+  }
+}
+
 // ── Tests ─────────────────────────────────────────────────────────────────
 
 void main() {
@@ -120,6 +140,16 @@ void main() {
       await manager.stopService();
 
       expect(platform.stopCalled, false);
+    });
+
+    test('swallows platform errors instead of throwing', () async {
+      final throwingPlatform = _ThrowingStopPlatform();
+      final throwingManager = ForegroundServiceManager(
+        platform: throwingPlatform,
+      );
+
+      await expectLater(throwingManager.stopService(), completes);
+      expect(throwingPlatform.stopCalled, true);
     });
   });
 

@@ -63,12 +63,12 @@ void main() {
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(_urlLauncherChannel, (call) async {
-          if (shouldLaunchFail) {
-            return false;
-          }
           if (call.method == 'launch') {
             final url = (call.arguments as Map)['url'] as String;
             launchedUrls.add(url);
+            if (shouldLaunchFail) {
+              return false;
+            }
             return true;
           }
           return false;
@@ -259,6 +259,15 @@ void main() {
       final result = await service.openSystemSettings();
       expect(result, isTrue);
     });
+
+    test('returns false when the platform channel throws', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(_permissionMethodChannel, (call) async {
+            throw PlatformException(code: 'UNAVAILABLE');
+          });
+
+      expect(await service.openSystemSettings(), isFalse);
+    });
   });
 
   group('HealthService.installHealthConnect', () {
@@ -278,6 +287,20 @@ void main() {
       expect(
         launchedUrls,
         contains('market://details?id=com.google.android.apps.healthdata'),
+      );
+    });
+
+    test('falls back to Play Store when market launch fails', () async {
+      when(() => mockPlatformDetector.isAndroid).thenReturn(true);
+      shouldLaunchFail = true;
+
+      await service.installHealthConnect();
+
+      expect(
+        launchedUrls,
+        contains(
+          'https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata',
+        ),
       );
     });
   });
@@ -416,6 +439,215 @@ void main() {
           recordingMethod: RecordingMethod.manual,
         ),
       ).called(1);
+    });
+
+    WorkoutSession openSession({
+      List<int> samples = const [130, 140, 145],
+      int avgBpm = 140,
+      String deviceName = 'Polar H10',
+    }) {
+      return WorkoutSession(
+        id: 1,
+        startTime: DateTime(2026, 9, 13, 10),
+        endTime: null,
+        avgBpm: avgBpm,
+        maxBpm: 175,
+        bpmSamples: samples,
+        sensorLocationIndex: 1,
+        deviceMacAddress: 'AA:BB:CC:DD:EE:FF',
+        deviceName: deviceName,
+      );
+    }
+
+    test('estimates endTime from sample count when endTime is null', () async {
+      final session = openSession();
+      final expectedEnd = DateTime(
+        2026,
+        9,
+        13,
+        10,
+      ).add(const Duration(seconds: 3));
+      when(
+        () => mockHealth.writeWorkoutData(
+          activityType: any(named: 'activityType'),
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+          title: any(named: 'title'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      ).thenAnswer((_) async => true);
+      when(
+        () => mockHealth.writeHealthData(
+          value: any(named: 'value'),
+          unit: any(named: 'unit'),
+          type: any(named: 'type'),
+          startTime: any(named: 'startTime'),
+          endTime: any(named: 'endTime'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      ).thenAnswer((_) async => true);
+
+      expect(await service.writeWorkoutSession(session: session), isTrue);
+      verify(
+        () => mockHealth.writeWorkoutData(
+          activityType: HealthWorkoutActivityType.OTHER,
+          start: DateTime(2026, 9, 13, 10),
+          end: expectedEnd,
+          title: 'Polar H10',
+          recordingMethod: RecordingMethod.manual,
+        ),
+      ).called(1);
+    });
+
+    test('falls back to one minute when samples are empty', () async {
+      final session = openSession(samples: [], avgBpm: 0);
+      final expectedEnd = DateTime(
+        2026,
+        9,
+        13,
+        10,
+      ).add(const Duration(minutes: 1));
+      when(
+        () => mockHealth.writeWorkoutData(
+          activityType: any(named: 'activityType'),
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+          title: any(named: 'title'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      ).thenAnswer((_) async => true);
+
+      expect(await service.writeWorkoutSession(session: session), isTrue);
+      verify(
+        () => mockHealth.writeWorkoutData(
+          activityType: HealthWorkoutActivityType.OTHER,
+          start: DateTime(2026, 9, 13, 10),
+          end: expectedEnd,
+          title: 'Polar H10',
+          recordingMethod: RecordingMethod.manual,
+        ),
+      ).called(1);
+    });
+
+    test('falls back to default title for empty device name', () async {
+      final session = openSession(deviceName: '');
+      String? capturedTitle;
+      when(
+        () => mockHealth.writeWorkoutData(
+          activityType: any(named: 'activityType'),
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+          title: any(named: 'title'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      ).thenAnswer((invocation) async {
+        capturedTitle =
+            invocation.namedArguments[const Symbol('title')] as String?;
+        return true;
+      });
+      when(
+        () => mockHealth.writeHealthData(
+          value: any(named: 'value'),
+          unit: any(named: 'unit'),
+          type: any(named: 'type'),
+          startTime: any(named: 'startTime'),
+          endTime: any(named: 'endTime'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      ).thenAnswer((_) async => true);
+
+      expect(await service.writeWorkoutSession(session: session), isTrue);
+      expect(capturedTitle, 'PulseTrack Workout');
+    });
+
+    test('skips average write when avgBpm is zero', () async {
+      final session = openSession(avgBpm: 0);
+      when(
+        () => mockHealth.writeWorkoutData(
+          activityType: any(named: 'activityType'),
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+          title: any(named: 'title'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      ).thenAnswer((_) async => true);
+
+      expect(await service.writeWorkoutSession(session: session), isTrue);
+      verifyNever(
+        () => mockHealth.writeHealthData(
+          value: any(named: 'value'),
+          unit: any(named: 'unit'),
+          type: any(named: 'type'),
+          startTime: any(named: 'startTime'),
+          endTime: any(named: 'endTime'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      );
+    });
+
+    test('still succeeds when the average write fails', () async {
+      final session = openSession();
+      when(
+        () => mockHealth.writeWorkoutData(
+          activityType: any(named: 'activityType'),
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+          title: any(named: 'title'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      ).thenAnswer((_) async => true);
+      when(
+        () => mockHealth.writeHealthData(
+          value: any(named: 'value'),
+          unit: any(named: 'unit'),
+          type: any(named: 'type'),
+          startTime: any(named: 'startTime'),
+          endTime: any(named: 'endTime'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      ).thenThrow(Exception('avg failed'));
+
+      expect(await service.writeWorkoutSession(session: session), isTrue);
+    });
+
+    test('returns false when the workout write fails', () async {
+      final session = openSession();
+      when(
+        () => mockHealth.writeWorkoutData(
+          activityType: any(named: 'activityType'),
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+          title: any(named: 'title'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      ).thenAnswer((_) async => false);
+
+      expect(await service.writeWorkoutSession(session: session), isFalse);
+      verifyNever(
+        () => mockHealth.writeHealthData(
+          value: any(named: 'value'),
+          unit: any(named: 'unit'),
+          type: any(named: 'type'),
+          startTime: any(named: 'startTime'),
+          endTime: any(named: 'endTime'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      );
+    });
+
+    test('returns false when the plugin throws', () async {
+      final session = openSession();
+      when(
+        () => mockHealth.writeWorkoutData(
+          activityType: any(named: 'activityType'),
+          start: any(named: 'start'),
+          end: any(named: 'end'),
+          title: any(named: 'title'),
+          recordingMethod: any(named: 'recordingMethod'),
+        ),
+      ).thenThrow(Exception('native down'));
+
+      expect(await service.writeWorkoutSession(session: session), isFalse);
     });
   });
 }
