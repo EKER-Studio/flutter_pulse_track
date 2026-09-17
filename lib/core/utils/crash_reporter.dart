@@ -37,7 +37,7 @@ class AppCrashReporter {
           reason: reason,
           fatal: fatal,
         );
-      } catch (e) {
+      } on Object catch (e) {
         if (kDebugMode) {
           log.d('[AppCrashReporter] Crashlytics recordError failed: $e');
         }
@@ -75,7 +75,7 @@ class AppCrashReporter {
       }
 
       await file.writeAsString(entry, mode: FileMode.append, flush: true);
-    } catch (e) {
+    } on Object catch (e) {
       if (e is! MissingPluginException && kDebugMode) {
         log.d('[AppCrashReporter] writeCrashLog failed: $e');
       }
@@ -92,7 +92,7 @@ class AppCrashReporter {
           ? ''
           : tail.substring(firstEntryStart + 2);
       await file.writeAsString(kept, flush: true);
-    } catch (e) {
+    } on Object catch (e) {
       if (e is! MissingPluginException && kDebugMode) {
         log.d('[AppCrashReporter] _trimCrashLog failed: $e');
       }

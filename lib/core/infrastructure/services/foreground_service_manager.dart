@@ -77,7 +77,7 @@ class ForegroundServiceManager {
         await _platform.stopService();
         log.i('[ForegroundServiceManager] Foreground service stopped cleanly.');
       }
-    } catch (e, st) {
+    } on Object catch (e, st) {
       log.e(
         '[ForegroundServiceManager] Error while stopping foreground service',
         error: e,

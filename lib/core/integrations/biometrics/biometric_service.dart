@@ -88,12 +88,11 @@ class BiometricService {
         log.d('[BiometricService] getAvailableBiometrics: $biometrics');
       }
       return biometrics.isNotEmpty;
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: '[BiometricService] isAvailable check failed',
-        fatal: false,
       );
       return false;
     }
@@ -112,12 +111,11 @@ class BiometricService {
         log.d('[BiometricService] canCheckBiometrics: $canCheck');
       }
       return canCheck;
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: '[BiometricService] isSupported check failed',
-        fatal: false,
       );
       return false;
     }
@@ -135,12 +133,11 @@ class BiometricService {
         log.d('[BiometricService] canCheckBiometrics: $canCheck');
       }
       return deviceSupported || canCheck;
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: '[BiometricService] canAuthenticate check failed',
-        fatal: false,
       );
       return false;
     }
@@ -200,11 +197,7 @@ class BiometricService {
       final ok = await LocalAuthPlatform.instance.authenticate(
         localizedReason: localizedReason,
         authMessages: authMessages ?? const <AuthMessages>[],
-        options: const AuthenticationOptions(
-          biometricOnly: false,
-          stickyAuth: true,
-          useErrorDialogs: true,
-        ),
+        options: const AuthenticationOptions(stickyAuth: true),
       );
       if (kDebugMode) {
         log.d('[BiometricService] authenticate result: $ok');
@@ -222,7 +215,6 @@ class BiometricService {
           stack,
           reason:
               '[BiometricService] LocalAuthException ${e.code.name}: ${e.description}',
-          fatal: false,
         );
       }
       return switch (e.code) {
@@ -251,7 +243,6 @@ class BiometricService {
         e,
         stack,
         reason: '[BiometricService] MissingPluginException: $e',
-        fatal: false,
       );
       return BiometricAuthResult.notAvailable;
     } on PlatformException catch (e, stack) {
@@ -259,7 +250,6 @@ class BiometricService {
         e,
         stack,
         reason: '[BiometricService] PlatformException: ${e.code} ${e.message}',
-        fatal: false,
       );
       return switch (e.code) {
         'LockedOut' => BiometricAuthResult.lockedOut,
@@ -276,12 +266,11 @@ class BiometricService {
         'auth_in_progress' => BiometricAuthResult.error,
         _ => BiometricAuthResult.error,
       };
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: '[BiometricService] authenticate unexpected exception',
-        fatal: false,
       );
       return BiometricAuthResult.error;
     }

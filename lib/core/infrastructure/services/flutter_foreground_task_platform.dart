@@ -12,18 +12,12 @@ class FlutterForegroundTaskPlatform implements ForegroundTaskPlatform {
         channelName: 'Workout Session',
         channelDescription:
             'Keeps the heart rate monitor alive in the background',
-        channelImportance: NotificationChannelImportance.LOW,
-        priority: NotificationPriority.LOW,
       ),
       iosNotificationOptions: const IOSNotificationOptions(
         showNotification: false,
-        playSound: false,
       ),
       foregroundTaskOptions: ForegroundTaskOptions(
         eventAction: ForegroundTaskEventAction.nothing(),
-        autoRunOnBoot: false,
-        allowWakeLock: true,
-        allowWifiLock: false,
       ),
     );
   }

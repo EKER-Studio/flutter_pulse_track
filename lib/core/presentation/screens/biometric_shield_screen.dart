@@ -59,12 +59,11 @@ class _BiometricShieldScreenState extends ConsumerState<BiometricShieldScreen> {
               .showSnackBar(SnackBar(content: Text(l10n.biometricAuthFailed)));
         }
       }
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: 'Authentication threw in BiometricShieldScreen',
-        fatal: false,
       );
       if (!ref.read(appSettingsProvider).isLocked) {
         ref.read(appSettingsProvider.notifier).setLocked(true);

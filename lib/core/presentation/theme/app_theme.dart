@@ -228,11 +228,11 @@ abstract final class AppTheme {
       fillColor: lightColorScheme.surfaceContainerHighest,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: lightColorScheme.outline, width: 1),
+        borderSide: BorderSide(color: lightColorScheme.outline),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: lightColorScheme.outline, width: 1),
+        borderSide: BorderSide(color: lightColorScheme.outline),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
@@ -339,11 +339,11 @@ abstract final class AppTheme {
       fillColor: darkColorScheme.surfaceContainerHighest,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: darkColorScheme.outline, width: 1),
+        borderSide: BorderSide(color: darkColorScheme.outline),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: darkColorScheme.outline, width: 1),
+        borderSide: BorderSide(color: darkColorScheme.outline),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),

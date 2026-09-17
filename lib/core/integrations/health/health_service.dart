@@ -106,7 +106,7 @@ class NativeHealthService implements HealthService {
       try {
         await _health.configure();
         _isConfigured = true;
-      } catch (e, stack) {
+      } on Object catch (e, stack) {
         log.e(
           '[HealthService] Health plugin configuration failed',
           error: e,
@@ -125,7 +125,7 @@ class NativeHealthService implements HealthService {
       await _ensureConfigured();
       final sdkStatus = await _health.getHealthConnectSdkStatus();
       return sdkStatus == HealthConnectSdkStatus.sdkAvailable;
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       log.e(
         '[HealthService] isHealthApiAvailable failed',
         error: e,
@@ -158,7 +158,7 @@ class NativeHealthService implements HealthService {
           )
           .timeout(_operationTimeout);
       return granted ?? false;
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       log.e(
         '[HealthService] hasPermissions failed',
         error: e,
@@ -180,7 +180,7 @@ class NativeHealthService implements HealthService {
               permissions: _healthDataAccessReadWrite,
             )
             .timeout(_operationTimeout);
-      } catch (e, stack) {
+      } on Object catch (e, stack) {
         log.e(
           '[HealthService] requestAuthorization failed',
           error: e,
@@ -197,7 +197,7 @@ class NativeHealthService implements HealthService {
         return await hasPermissions();
       }
       return granted;
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       log.e(
         '[HealthService] requestPermissions failed',
         error: e,
@@ -211,7 +211,7 @@ class NativeHealthService implements HealthService {
   Future<bool> openSystemSettings() async {
     try {
       return await openAppSettings().timeout(_operationTimeout);
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       log.e(
         '[HealthService] openSystemSettings failed',
         error: e,
@@ -234,7 +234,7 @@ class NativeHealthService implements HealthService {
           mode: LaunchMode.externalApplication,
         );
       }
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       log.e(
         '[HealthService] installHealthConnect failed',
         error: e,
@@ -259,7 +259,7 @@ class NativeHealthService implements HealthService {
         },
       );
       return points;
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       log.e(
         '[HealthService] fetchHeartRateHistory error',
         error: e,
@@ -282,7 +282,7 @@ class NativeHealthService implements HealthService {
         endTime: end,
       );
       return points;
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       log.e(
         '[HealthService] fetchWorkoutHistory error',
         error: e,
@@ -307,7 +307,7 @@ class NativeHealthService implements HealthService {
         endTime: timestamp,
         recordingMethod: RecordingMethod.manual,
       );
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       log.e(
         '[HealthService] writeHeartRate error',
         error: e,
@@ -351,7 +351,7 @@ class NativeHealthService implements HealthService {
             endTime: end,
             recordingMethod: RecordingMethod.manual,
           );
-        } catch (e, stack) {
+        } on Object catch (e, stack) {
           log.w(
             '[HealthService] Failed to write average heart rate data point for workout session',
             error: e,
@@ -361,7 +361,7 @@ class NativeHealthService implements HealthService {
       }
 
       return workoutSuccess;
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       log.e(
         '[HealthService] writeWorkoutSession error',
         error: e,

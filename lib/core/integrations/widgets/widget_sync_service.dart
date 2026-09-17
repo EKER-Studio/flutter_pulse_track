@@ -18,12 +18,11 @@ class WidgetSyncService {
   Future<void> initialize() async {
     try {
       await HomeWidget.setAppGroupId(appGroupId);
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: 'Failed to initialize WidgetSyncService',
-        fatal: false,
       );
     }
   }
@@ -71,12 +70,11 @@ class WidgetSyncService {
         name: androidWidgetName,
         iOSName: iOSWidgetName,
       );
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: 'Failed to update widget data',
-        fatal: false,
       );
     }
   }

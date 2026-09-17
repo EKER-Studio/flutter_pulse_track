@@ -57,7 +57,7 @@ final class AnalyticsServiceProvider
   }
 }
 
-String _$analyticsServiceHash() => r'c16b0295f5d42cf54db886e0459ca972b8cf8089';
+String _$analyticsServiceHash() => r'2794993d9fe99683b5813ab84fcefabdc9320736';
 
 /// Provider for the [FirebaseAnalyticsObserver] navigation observer.
 
@@ -109,4 +109,4 @@ final class AnalyticsObserverProvider
   }
 }
 
-String _$analyticsObserverHash() => r'7a4036aa65f47d435541a85f8443345066045bbb';
+String _$analyticsObserverHash() => r'b6e6be108cb59329c60fbd34be6752b49d1e6ef1';

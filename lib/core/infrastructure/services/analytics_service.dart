@@ -74,7 +74,7 @@ class AnalyticsService {
 AnalyticsService analyticsService(Ref ref) {
   try {
     return AnalyticsService(analytics: FirebaseAnalytics.instance);
-  } catch (_) {
+  } on Object catch (_) {
     return AnalyticsService();
   }
 }
@@ -84,7 +84,7 @@ AnalyticsService analyticsService(Ref ref) {
 FirebaseAnalyticsObserver? analyticsObserver(Ref ref) {
   try {
     return FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance);
-  } catch (_) {
+  } on Object catch (_) {
     return null;
   }
 }

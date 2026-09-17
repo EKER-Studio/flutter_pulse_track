@@ -79,11 +79,7 @@ class NotificationService {
       const androidSettings = AndroidInitializationSettings(
         '@drawable/ic_notification',
       );
-      const darwinSettings = DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
+      const darwinSettings = DarwinInitializationSettings();
 
       await _plugin.initialize(
         const InitializationSettings(
@@ -97,12 +93,11 @@ class NotificationService {
       );
 
       _initialized = true;
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: 'Failed to initialize NotificationService',
-        fatal: false,
       );
     }
   }
@@ -133,12 +128,11 @@ class NotificationService {
         matchDateTimeComponents: DateTimeComponents.time,
         payload: '/history',
       );
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: 'Failed to schedule daily reminder',
-        fatal: false,
       );
     }
   }
@@ -146,12 +140,11 @@ class NotificationService {
   Future<void> cancelDailyReminder() async {
     try {
       await _plugin.cancel(_dailyReminderId);
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: 'Failed to cancel daily reminder',
-        fatal: false,
       );
     }
   }

@@ -30,12 +30,11 @@ class DatabaseModule {
     String? stored;
     try {
       stored = await _secureStorage.read(key: _encryptionKeyKey);
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: '[DatabaseModule] Failed to read encryption key from secure storage',
-        fatal: false,
       );
     }
 
@@ -48,7 +47,7 @@ class DatabaseModule {
         throw FormatException(
           'Malformed stored encryption key: expected 32 bytes, got ${decoded.length}',
         );
-      } catch (e) {
+      } on Object catch (e) {
         throw FormatException('Malformed stored encryption key: $e');
       }
     }
@@ -69,34 +68,31 @@ class DatabaseModule {
                 key: _encryptionKeyKey,
                 value: content,
               );
-            } catch (e, stack) {
+            } on Object catch (e, stack) {
               await AppCrashReporter.recordError(
                 e,
                 stack,
                 reason: '[DatabaseModule] Failed to migrate legacy key to secure storage',
-                fatal: false,
               );
             }
             try {
               await legacyKeyFile.delete();
-            } catch (e, stack) {
+            } on Object catch (e, stack) {
               await AppCrashReporter.recordError(
                 e,
                 stack,
                 reason: '[DatabaseModule] Failed to delete legacy key file after migration',
-                fatal: false,
               );
             }
             return Uint8List.fromList(decoded);
           }
         }
       }
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: '[DatabaseModule] Error checking legacy encryption key file',
-        fatal: false,
       );
     }
 
@@ -107,12 +103,11 @@ class DatabaseModule {
 
     try {
       await _secureStorage.write(key: _encryptionKeyKey, value: base64Key);
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: '[DatabaseModule] Failed to write new encryption key to secure storage',
-        fatal: false,
       );
     }
 
@@ -136,28 +131,26 @@ class DatabaseModule {
 
     try {
       return await _openIsar(dir.path);
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: '[DatabaseModule] Failed to open Isar database',
-        fatal: false,
       );
 
       try {
         await backupCorruptedDatabase(dir.path);
-      } catch (backupError, backupStack) {
+      } on Object catch (backupError, backupStack) {
         await AppCrashReporter.recordError(
           backupError,
           backupStack,
           reason: '[DatabaseModule] Database backup during recovery failed',
-          fatal: false,
         );
       }
 
       try {
         return await _openIsar(dir.path);
-      } catch (retryError, retryStack) {
+      } on Object catch (retryError, retryStack) {
         await AppCrashReporter.recordError(
           retryError,
           retryStack,
@@ -183,12 +176,11 @@ class DatabaseModule {
         return (instance: await initialize(), reopened: true);
       }
       return (instance: instance, reopened: false);
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: '[DatabaseModule] Error verifying Isar instance integrity on resumption',
-        fatal: false,
       );
       return (instance: await initialize(), reopened: true);
     }
@@ -223,16 +215,15 @@ class DatabaseModule {
             '[DatabaseModule] Quarantined legacy database to $quarantinePath',
           );
         }
-      } catch (e) {
+      } on Object catch (_) {
         try {
           await legacyFile.copy(quarantinePath);
           await legacyFile.delete();
-        } catch (fallbackError, fallbackStack) {
+        } on Object catch (fallbackError, fallbackStack) {
           await AppCrashReporter.recordError(
             fallbackError,
             fallbackStack,
             reason: '[DatabaseModule] Failed to quarantine legacy database',
-            fatal: false,
           );
         }
       }
@@ -255,12 +246,11 @@ class DatabaseModule {
         }
         return backupPath;
       }
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: '[DatabaseModule] Failed to create pre-import snapshot',
-        fatal: false,
       );
     }
     return null;

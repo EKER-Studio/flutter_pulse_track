@@ -100,7 +100,7 @@ class HealthSyncCoordinator {
         remoteCount: remoteWorkouts.length,
         pushedLocalCount: exportedCount,
       );
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       log.e(
         '[HealthSyncCoordinator] Health sync failure',
         error: e,
@@ -116,7 +116,7 @@ class HealthSyncCoordinator {
   Future<bool> exportSession(WorkoutSession session) async {
     try {
       return await healthService.writeWorkoutSession(session: session);
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       log.e(
         '[HealthSyncCoordinator] exportSession failed',
         error: e,

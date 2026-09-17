@@ -42,7 +42,7 @@ GoRouter appRouter(Ref ref) {
   UserSettings currentSettings() {
     try {
       return ref.read(appSettingsProvider);
-    } catch (_) {
+    } on Object catch (_) {
       return const UserSettings();
     }
   }

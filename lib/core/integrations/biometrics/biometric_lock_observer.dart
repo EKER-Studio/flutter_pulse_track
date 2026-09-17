@@ -61,12 +61,11 @@ class BiometricLockObserver with WidgetsBindingObserver {
       if (result.reopened) {
         await onDatabaseReopened?.call();
       }
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: '[BiometricLockObserver] Database integrity check on resumption failed',
-        fatal: false,
       );
     }
   }

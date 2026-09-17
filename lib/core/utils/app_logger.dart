@@ -8,14 +8,7 @@ import 'package:logger/logger.dart' hide ProductionFilter;
 /// Outputs formatted log messages to the console in debug mode and forwards
 /// errors to Firebase Crashlytics in production.
 final log = Logger(
-  printer: PrettyPrinter(
-    methodCount: 2,
-    errorMethodCount: 8,
-    lineLength: 120,
-    colors: true,
-    printEmojis: true,
-    dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
-  ),
+  printer: PrettyPrinter(dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart),
   filter: ProductionFilter(),
   output: MultiOutput([ConsoleOutput(), FirebaseCrashlyticsOutput()]),
 );
@@ -62,7 +55,7 @@ class FirebaseCrashlyticsOutput extends LogOutput {
           reason: event.origin.message,
         );
       }
-    } catch (_) {
+    } on Object catch (_) {
       // Safe fallback when Crashlytics is unreachable.
     }
   }
