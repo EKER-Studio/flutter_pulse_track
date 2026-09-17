@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fake_async/fake_async.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -576,6 +577,66 @@ void main() {
       container = null;
 
       verify(() => m.service.stopScan()).called(1);
+    });
+  });
+
+  group('app lifecycle background stop', () {
+    for (final state in [
+      AppLifecycleState.paused,
+      AppLifecycleState.inactive,
+      AppLifecycleState.hidden,
+      AppLifecycleState.detached,
+    ]) {
+      test('$state stops an active scan', () async {
+        final m = buildMockService(isScanningNow: true);
+        container = createContainer(scannerService: m.service);
+        final notifier = initNotifier(container!);
+
+        notifier.didChangeAppLifecycleState(state);
+        await Future.delayed(Duration.zero);
+
+        verify(() => m.service.stopScan()).called(1);
+      });
+    }
+
+    test('paused ignores an idle radio', () async {
+      final m = buildMockService();
+      container = createContainer(scannerService: m.service);
+      final notifier = initNotifier(container!);
+
+      notifier.didChangeAppLifecycleState(AppLifecycleState.paused);
+      await Future.delayed(Duration.zero);
+
+      verifyNever(() => m.service.stopScan());
+    });
+  });
+
+  group('scanResults stream errors', () {
+    test('stream error transitions to FailureScannerState', () async {
+      final m = buildMockService();
+      container = createContainer(scannerService: m.service);
+      final notifier = initNotifier(container!);
+
+      await notifier.startScan();
+      m.scanResultsController.addError(Exception('radio glitch'));
+      await Future.delayed(Duration.zero);
+
+      final state = container!.read(bleScannerProvider);
+      expect(state, isA<FailureScannerState>());
+      expect((state as FailureScannerState).message, contains('radio glitch'));
+    });
+  });
+
+  group('stopScan error propagation', () {
+    test('hardware stopScan failure propagates to the caller', () async {
+      final m = buildMockService();
+      container = createContainer(scannerService: m.service);
+      final notifier = initNotifier(container!);
+
+      await notifier.startScan();
+      when(() => m.service.stopScan()).thenThrow(Exception('stop failed'));
+
+      await expectLater(notifier.stopScan(), throwsException);
     });
   });
 }

@@ -348,28 +348,41 @@ void main() {
     });
   });
 
-  // ── FbpBluetoothScannerService: smoke tests ───────────────────────────
+  // ── FbpBluetoothScannerService: real implementation ──────────────────
+  // These tests exercise the production class directly. Without platform
+  // channels the FlutterBluePlus statics throw, which is exactly what
+  // verifies the rethrow paths; the idle guard is verified by completion.
 
-  group('FbpBluetoothScannerService', () {
-    test('can be instantiated', () {
-      final impl = FbpBluetoothScannerService();
-      expect(impl, isA<BluetoothScannerService>());
+  group('FbpBluetoothScannerService real implementation', () {
+    test('can be instantiated as a BluetoothScannerService', () {
+      expect(FbpBluetoothScannerService(), isA<BluetoothScannerService>());
     });
 
-    test('adapterState returns a broadcast stream', () {
+    test('adapterState and scanResults expose streams without throwing', () {
       final impl = FbpBluetoothScannerService();
+
       expect(impl.adapterState, isA<Stream<BluetoothAdapterState>>());
-    });
-
-    test('scanResults returns a broadcast stream', () {
-      final impl = FbpBluetoothScannerService();
       expect(impl.scanResults, isA<Stream<List<ScanResult>>>());
     });
 
-    test('isScanningNow returns a bool', () {
+    test('startScan rethrows platform errors instead of swallowing', () {
       final impl = FbpBluetoothScannerService();
-      // Just verify it returns without throwing - platform is not available
-      expect(() => impl.isScanningNow, returnsNormally);
+
+      // On unit-test platforms the FlutterBluePlus statics throw
+      // (UnsupportedError here); the production catch-all must rethrow
+      // whatever surfaces instead of swallowing it.
+      expect(
+        () => impl.startScan(withServices: [Guid('180d')]),
+        throwsA(anything),
+      );
     });
+
+    test('stopScan rethrows platform errors instead of swallowing', () async {
+      final impl = FbpBluetoothScannerService();
+
+      await expectLater(impl.stopScan(), throwsA(anything));
+    });
+    // NOTE: stopScan's idle guard (isScanningNow == false → no hardware
+    // call) needs real BLE hardware — unreachable in unit tests by design.
   });
 }
