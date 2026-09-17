@@ -16,7 +16,6 @@ class OnboardingStepLayout extends StatelessWidget {
   /// Footer with actions.
   final Widget footer;
 
-  /// Creates an [OnboardingStepLayout].
   const OnboardingStepLayout({
     super.key,
     required this.titleWidget,

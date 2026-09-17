@@ -9,7 +9,6 @@ import '../widgets/onboarding_step_layout.dart';
 
 /// Onboarding wizard with welcome, permissions, biometric and completion steps.
 class OnboardingScreen extends ConsumerStatefulWidget {
-  /// Creates an [OnboardingScreen].
   const OnboardingScreen({super.key});
 
   @override
