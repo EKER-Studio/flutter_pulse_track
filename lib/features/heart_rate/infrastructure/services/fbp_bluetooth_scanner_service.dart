@@ -55,7 +55,7 @@ class FbpBluetoothScannerService implements BluetoothScannerService {
         withServices: withServices,
         timeout: timeout,
       );
-    } catch (e) {
+    } on Object catch (e) {
       log.e('[FbpBluetoothScannerService] startScan failed', error: e);
       rethrow;
     }
@@ -67,7 +67,7 @@ class FbpBluetoothScannerService implements BluetoothScannerService {
       if (FlutterBluePlus.isScanningNow) {
         await FlutterBluePlus.stopScan();
       }
-    } catch (e) {
+    } on Object catch (e) {
       log.e('[FbpBluetoothScannerService] stopScan failed', error: e);
       rethrow;
     }

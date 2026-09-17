@@ -70,7 +70,7 @@ class HrPacketParser {
         sensorContactSupported: sensorContactSupported,
         sensorContactActive: sensorContactActive,
       );
-    } catch (e, st) {
+    } on Object catch (e, st) {
       log.w(
         '[HrPacketParser] Malformed BLE HR packet encountered, returning null.',
         error: e,

@@ -66,7 +66,7 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
         license: License.nonprofit,
         autoConnect: autoConnect,
       );
-    } catch (e) {
+    } on Object catch (e) {
       log.e('[FbpHeartRateMonitorService] connect failed', error: e);
       rethrow;
     }
@@ -76,7 +76,7 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
   Future<void> disconnect(BluetoothDevice device) async {
     try {
       await device.disconnect();
-    } catch (e) {
+    } on Object catch (e) {
       log.e('[FbpHeartRateMonitorService] disconnect failed', error: e);
       rethrow;
     }
@@ -92,7 +92,7 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
   ) async {
     try {
       return await device.discoverServices();
-    } catch (e) {
+    } on Object catch (e) {
       log.e('[FbpHeartRateMonitorService] discoverServices failed', error: e);
       rethrow;
     }
@@ -105,7 +105,7 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
   ) async {
     try {
       await characteristic.setNotifyValue(value);
-    } catch (e) {
+    } on Object catch (e) {
       log.e('[FbpHeartRateMonitorService] setNotifyValue failed', error: e);
       rethrow;
     }
@@ -119,7 +119,7 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
   Future<List<int>> read(BluetoothCharacteristic characteristic) async {
     try {
       return await characteristic.read();
-    } catch (e) {
+    } on Object catch (e) {
       log.e('[FbpHeartRateMonitorService] read failed', error: e);
       rethrow;
     }

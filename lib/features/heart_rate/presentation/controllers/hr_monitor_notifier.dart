@@ -163,7 +163,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     try {
       await _foregroundServiceManager.startService();
-    } catch (e) {
+    } on Object catch (e) {
       log.w(
         '[HrMonitorNotifier] Foreground service failed to start — proceeding without notification wrapper.',
         error: e,
@@ -194,7 +194,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     try {
       _device = _monitorService.fromId(deviceId);
       await _monitorService.connect(_device!, autoConnect: false);
-    } catch (e, st) {
+    } on Object catch (e, st) {
       log.e('[HrMonitorNotifier] connect() threw', error: e, stackTrace: st);
       _connectTimer?.cancel();
       _connectTimer = null;
@@ -248,7 +248,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         failureMessage: 'Service discovery timed out. Please move closer to the sensor and retry.',
       );
       return;
-    } catch (e, st) {
+    } on Object catch (e, st) {
       log.e(
         '[HrMonitorNotifier] discoverServices() threw',
         error: e,
@@ -327,7 +327,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
             name: deviceName,
             sensorLocationIndex: sensorLocation.index,
           );
-    } catch (e) {
+    } on Object catch (e) {
       log.e('[HrMonitorNotifier] saveDeviceProfile() failed', error: e);
     }
 
@@ -339,7 +339,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     try {
       await _monitorService.setNotifyValue(hrCharacteristic, true);
-    } catch (e, st) {
+    } on Object catch (e, st) {
       log.e(
         '[HrMonitorNotifier] setNotifyValue(true) failed',
         error: e,
@@ -475,7 +475,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       await _safeDisconnectDevice();
       await _saveSessionToDisk();
       await _foregroundServiceManager.stopService();
-    } catch (e, st) {
+    } on Object catch (e, st) {
       log.e(
         '[HrMonitorNotifier] Error during disconnect()',
         error: e,
@@ -524,7 +524,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           existingId: _checkpointSessionId,
         );
       }
-    } catch (e) {
+    } on Object catch (e) {
       log.e(
         '[HrMonitorNotifier] Failed to persist workout session (data may be lost)',
         error: e,
@@ -591,7 +591,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         'with ${_collectedBpmSamples.length} samples (row id: '
         '$_checkpointSessionId).',
       );
-    } catch (e) {
+    } on Object catch (e) {
       log.e('[HrMonitorNotifier] Checkpoint failed', error: e);
     } finally {
       _checkpointInProgress = false;
@@ -648,7 +648,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         6 => BodySensorLocation.foot,
         _ => BodySensorLocation.other,
       };
-    } catch (e) {
+    } on Object catch (e) {
       log.w(
         '[HrMonitorNotifier] Optional 0x2A38 read failed (ignored)',
         error: e,
@@ -700,7 +700,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           '[HrMonitorNotifier] Battery level initial read timed out (2 s) — '
           'will rely on notifications if available.',
         );
-      } catch (e) {
+      } on Object catch (e) {
         log.e(
           '[HrMonitorNotifier] Battery level initial read failed',
           error: e,
@@ -739,7 +739,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           'support notifications/indications. Using initial read value.',
         );
       }
-    } catch (e) {
+    } on Object catch (e) {
       log.w(
         '[HrMonitorNotifier] Battery service resolution failed (ignored)',
         error: e,
@@ -811,7 +811,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     try {
       await _monitorService.disconnect(device);
       log.d('[HrMonitorNotifier] Link-layer disconnect completed.');
-    } catch (e) {
+    } on Object catch (e) {
       log.w(
         '[HrMonitorNotifier] _safeDisconnectDevice() error (logged, not re-thrown)',
         error: e,
@@ -830,7 +830,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     if (_collectedBpmSamples.isNotEmpty && !_saveInProgress) {
       try {
         await _saveSessionToDisk();
-      } catch (e, st) {
+      } on Object catch (e, st) {
         log.e(
           '[HrMonitorNotifier] _cleanup: Failed to force-save session to disk',
           error: e,
@@ -856,7 +856,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         log.d(
           '[HrMonitorNotifier] _cleanup: Successfully disconnected from device.',
         );
-      } catch (e, st) {
+      } on Object catch (e, st) {
         log.w(
           '[HrMonitorNotifier] _cleanup disconnect error',
           error: e,
@@ -880,7 +880,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     try {
       await _foregroundServiceManager.stopService();
-    } catch (e, st) {
+    } on Object catch (e, st) {
       log.w(
         '[HrMonitorNotifier] _cleanup stopService error',
         error: e,

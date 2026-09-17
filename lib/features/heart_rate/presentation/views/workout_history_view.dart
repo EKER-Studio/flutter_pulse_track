@@ -106,7 +106,7 @@ class WorkoutHistoryView extends ConsumerWidget {
                           .read(deleteWorkoutSessionUseCaseProvider)
                           .call(session.id);
                       return true;
-                    } catch (e, st) {
+                    } on Object catch (e, st) {
                       log.e(
                         'Failed to delete session',
                         error: e,
@@ -208,7 +208,7 @@ class WorkoutHistoryView extends ConsumerWidget {
             decoration: BoxDecoration(
               color: AppColors.surfaceBackground,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.borderSubtle, width: 1),
+              border: Border.all(color: AppColors.borderSubtle),
             ),
             child: Padding(
               padding: const EdgeInsets.all(16.0),

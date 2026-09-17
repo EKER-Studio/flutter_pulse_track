@@ -436,7 +436,7 @@ class HrScannerView extends ConsumerWidget {
                     final targetName = device.name.isEmpty
                         ? AppLocalizations.of(context).unknown_device
                         : device.name;
-                    context.push(
+                    await context.push(
                       '/monitor?deviceId=${Uri.encodeComponent(device.id)}&deviceName=${Uri.encodeComponent(targetName)}',
                     );
                   },

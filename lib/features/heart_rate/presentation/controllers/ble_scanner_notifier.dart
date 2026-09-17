@@ -129,7 +129,7 @@ class BleScannerNotifier extends _$BleScannerNotifier
         '[BleScannerNotifier] startScan() returned '
         '(hardware scan window closed).',
       );
-    } catch (e) {
+    } on Object catch (e) {
       log.e('[BleScannerNotifier] startScan() threw', error: e);
       _cancelEmptyStateTimer();
       await _scanResultsSubscription?.cancel();
@@ -283,7 +283,7 @@ class BleScannerNotifier extends _$BleScannerNotifier
     if (_scannerService.isScanningNow) {
       try {
         await _scannerService.stopScan();
-      } catch (e, st) {
+      } on Object catch (e, st) {
         log.w(
           '[BleScannerNotifier] _cleanup stopScan error',
           error: e,
