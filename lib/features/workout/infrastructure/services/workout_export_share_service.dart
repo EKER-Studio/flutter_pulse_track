@@ -45,7 +45,7 @@ class WorkoutExportShareService {
       await SharePlus.instance.share(
         ShareParams(files: [XFile(file.path)], text: shareText),
       );
-    } catch (e, st) {
+    } on Object catch (e, st) {
       log.e(
         '[WorkoutExportShareService] Failed to export workout session #${session.id}',
         error: e,
@@ -80,7 +80,7 @@ class WorkoutExportShareService {
       await SharePlus.instance.share(
         ShareParams(files: [XFile(file.path)], text: shareText),
       );
-    } catch (e, st) {
+    } on Object catch (e, st) {
       log.e(
         '[WorkoutExportShareService] Failed to export all workout sessions',
         error: e,
@@ -103,7 +103,7 @@ class WorkoutExportShareService {
             log.d(
               '[WorkoutExportShareService] Cleaned up old temp export: ${entity.path}',
             );
-          } catch (e) {
+          } on Object catch (e) {
             log.w(
               '[WorkoutExportShareService] Failed to delete temp file ${entity.path}',
               error: e,
@@ -111,7 +111,7 @@ class WorkoutExportShareService {
           }
         }
       }
-    } catch (e) {
+    } on Object catch (e) {
       log.w(
         '[WorkoutExportShareService] Error scanning temp dir for old exports',
         error: e,

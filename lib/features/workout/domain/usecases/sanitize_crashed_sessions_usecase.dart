@@ -30,7 +30,7 @@ class SanitizeCrashedSessionsUseCase {
         await _recover(session);
       }
       return unclosed.length;
-    } catch (e, st) {
+    } on Object catch (e, st) {
       log.e(
         '[SanitizeCrashedSessionsUseCase] Error during crash recovery',
         error: e,

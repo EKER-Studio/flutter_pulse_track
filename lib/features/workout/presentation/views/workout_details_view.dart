@@ -85,7 +85,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                           session.id.toString(),
                         ),
                       );
-                } catch (e) {
+                } on Object catch (e) {
                   if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -122,10 +122,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                       decoration: BoxDecoration(
                         color: _kCardBackgroundColor,
                         borderRadius: BorderRadius.circular(_kCardBorderRadius),
-                        border: Border.all(
-                          color: AppColors.borderSubtle,
-                          width: 1,
-                        ),
+                        border: Border.all(color: AppColors.borderSubtle),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(_kDefaultPadding),
@@ -262,10 +259,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(
                             _kCardBorderRadius,
                           ),
-                          border: Border.all(
-                            color: AppColors.borderSubtle,
-                            width: 1,
-                          ),
+                          border: Border.all(color: AppColors.borderSubtle),
                         ),
                         child: Center(
                           child: Column(
@@ -313,10 +307,7 @@ class WorkoutDetailsView extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(
                             _kCardBorderRadius,
                           ),
-                          border: Border.all(
-                            color: AppColors.borderSubtle,
-                            width: 1,
-                          ),
+                          border: Border.all(color: AppColors.borderSubtle),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -366,7 +357,7 @@ class WorkoutDetailsView extends ConsumerWidget {
         decoration: BoxDecoration(
           color: _kCardBackgroundColor,
           borderRadius: BorderRadius.circular(_kCardBorderRadius),
-          border: Border.all(color: AppColors.borderSubtle, width: 1),
+          border: Border.all(color: AppColors.borderSubtle),
         ),
         child: Column(
           children: [

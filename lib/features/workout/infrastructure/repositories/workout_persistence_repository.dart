@@ -143,6 +143,7 @@ class WorkoutPersistenceRepository
   }
 
   /// Permanently deletes all workout sessions identified by [sessionIds] in a single transaction.
+  @override
   Future<void> deleteWorkoutSessions(List<int> sessionIds) async {
     if (sessionIds.isEmpty) return;
     await _isar.writeTxn(() async {
@@ -153,6 +154,7 @@ class WorkoutPersistenceRepository
   }
 
   /// Persists multiple workout sessions in a single transaction.
+  @override
   Future<void> saveWorkoutSessionsBatch(List<WorkoutSession> sessions) async {
     if (sessions.isEmpty) return;
     await _isar.writeTxn(() async {
