@@ -47,9 +47,6 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
 
   @override
   Widget build(BuildContext context) {
-    // Watches [hrMonitorProvider] for reactive updates from the BLE heart rate stream.
-    // Delegates to a dedicated builder per [MonitorState] variant to keep the
-    // state machine UI clean and exhaustive.
     final state = ref.watch(hrMonitorProvider);
     final notifier = ref.read(hrMonitorProvider.notifier);
     final l10n = AppLocalizations.of(context);
@@ -65,7 +62,6 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
               ?.copyWith(fontWeight: FontWeight.bold),
         ),
         actions: [
-          // Show explicit disconnect button only when actively streaming or connecting
           if (state is ConnectedMonitorState ||
               state is ConnectingMonitorState ||
               state is DiscoveringServicesMonitorState)
@@ -122,7 +118,6 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     );
   }
 
-  /// Renders the UI for a hard-disconnected state with a button to return to the scanner.
   Widget _buildDisconnectedState(BuildContext context, AppLocalizations l10n) {
     return Center(
       child: Column(
@@ -167,7 +162,6 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     );
   }
 
-  /// Renders a centered loading indicator with a progress message during connection setup.
   Widget _buildLoadingState(String message) {
     return Center(
       child: Padding(
@@ -199,7 +193,6 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     );
   }
 
-  /// Renders the live telemetry dashboard showing BPM, R-R intervals, sensor location, and battery.
   Widget _buildConnectedState(AppLocalizations l10n, HrMeasurement metric) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
@@ -383,7 +376,6 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
     );
   }
 
-  /// Renders an error card with the failure message and options to retry or go back.
   Widget _buildFailureState(
     BuildContext context,
     AppLocalizations l10n,

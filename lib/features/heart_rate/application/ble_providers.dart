@@ -10,12 +10,10 @@ export 'package:pulse_track/features/heart_rate/infrastructure/services/fbp_hear
 
 part 'ble_providers.g.dart';
 
-/// Singleton Riverpod provider delivering the [BluetoothScannerService] using [ref].
 @Riverpod(keepAlive: true)
 BluetoothScannerService bluetoothScannerService(Ref ref) =>
     FbpBluetoothScannerService();
 
-/// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
 @Riverpod(keepAlive: true)
 HeartRateMonitorService heartRateMonitorService(Ref ref) =>
     FbpHeartRateMonitorService();

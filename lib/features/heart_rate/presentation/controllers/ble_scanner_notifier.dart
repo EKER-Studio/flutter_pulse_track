@@ -38,9 +38,6 @@ class BleScannerNotifier extends _$BleScannerNotifier
   /// Whether quality filtering (RSSI threshold and non-empty display name) is active.
   bool get filtersEnabled => _filtersEnabled;
 
-  /// Initializes scanner state and adapter listeners.
-  ///
-  /// Returns the initial [BleScannerState.idle] state.
   @override
   BleScannerState build() {
     _scannerService = ref.read(bluetoothScannerServiceProvider);

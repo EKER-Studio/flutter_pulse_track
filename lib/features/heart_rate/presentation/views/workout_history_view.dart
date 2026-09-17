@@ -132,7 +132,6 @@ class WorkoutHistoryView extends ConsumerWidget {
     );
   }
 
-  /// Renders a centered empty-state message when no workout sessions exist.
   Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Padding(
@@ -279,7 +278,6 @@ class WorkoutHistoryView extends ConsumerWidget {
     );
   }
 
-  /// Builds a vertical metric pair showing a bold numeric [value] above a [label].
   Widget _buildMetricColumn(String label, String value) {
     return Column(
       children: [

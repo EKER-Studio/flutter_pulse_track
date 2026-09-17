@@ -54,7 +54,6 @@ class HrScannerView extends ConsumerWidget {
             ),
         ],
       ),
-      // Exhaustive switch expression enforcing UI coverage for all sealed states
       body: switch (state) {
         IdleScannerState() => _buildIdleState(context, notifier),
         AdapterOffScannerState() => _buildAdapterOffState(context),
@@ -73,12 +72,10 @@ class HrScannerView extends ConsumerWidget {
     );
   }
 
-  /// Returns true if any device type filter is currently active.
   bool _isFilterActive(BleScannerNotifier notifier) {
     return notifier.filtersEnabled;
   }
 
-  /// Builds the idle state UI displayed when no scan is active and no devices have been found.
   Widget _buildIdleState(BuildContext context, BleScannerNotifier notifier) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
@@ -146,7 +143,6 @@ class HrScannerView extends ConsumerWidget {
     );
   }
 
-  /// Builds the UI displayed when the Bluetooth adapter is off.
   Widget _buildAdapterOffState(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
@@ -190,7 +186,6 @@ class HrScannerView extends ConsumerWidget {
     );
   }
 
-  /// Builds the empty state UI displayed when scanning has completed but no devices were found.
   Widget _buildEmptyState(BuildContext context, BleScannerNotifier notifier) {
     return SingleChildScrollView(
       child: Center(
@@ -263,7 +258,6 @@ class HrScannerView extends ConsumerWidget {
     );
   }
 
-  /// Builds the failure state UI displayed when the scan could not be started.
   Widget _buildFailureState(
     BuildContext context,
     String message,
@@ -446,14 +440,12 @@ class HrScannerView extends ConsumerWidget {
           );
   }
 
-  /// Returns a color representing signal strength for the given RSSI value.
   Color _getRssiColor(int rssi) {
     if (rssi >= -65) return AppColors.accentGreen;
     if (rssi >= -85) return AppColors.accentOrange;
     return AppColors.accentRed;
   }
 
-  /// Returns an icon representing signal strength for the given RSSI value.
   IconData _getRssiIcon(int rssi) {
     if (rssi >= -65) return Icons.signal_cellular_alt;
     if (rssi >= -85) return Icons.signal_cellular_alt_2_bar;

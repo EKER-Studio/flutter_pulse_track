@@ -25,7 +25,6 @@ import 'hr_measurement.dart';
 ///                                                   connected(measurement)
 /// ```
 sealed class MonitorState {
-  /// Abstract base constructor for [MonitorState].
   const MonitorState();
 
   /// No active connection exists and no operation is pending.
@@ -55,19 +54,16 @@ sealed class MonitorState {
 
 /// The monitor is idle; no connection is active.
 final class DisconnectedMonitorState extends MonitorState {
-  /// Creates a [DisconnectedMonitorState] instance.
   const DisconnectedMonitorState();
 }
 
 /// Physical BLE link-layer handshake is in flight.
 final class ConnectingMonitorState extends MonitorState {
-  /// Creates a [ConnectingMonitorState] instance.
   const ConnectingMonitorState();
 }
 
 /// BLE link is established; GATT discovery is running against the sensor.
 final class DiscoveringServicesMonitorState extends MonitorState {
-  /// Creates a [DiscoveringServicesMonitorState] instance.
   const DiscoveringServicesMonitorState();
 }
 
@@ -76,7 +72,6 @@ final class ConnectedMonitorState extends MonitorState {
   /// The most recently decoded heart rate measurement from the BLE sensor.
   final HrMeasurement measurement;
 
-  /// Creates a [ConnectedMonitorState] instance with the given [measurement].
   const ConnectedMonitorState({required this.measurement});
 }
 
@@ -85,6 +80,5 @@ final class FailureMonitorState extends MonitorState {
   /// Human-readable error detail for the "Retry" recovery screen.
   final String message;
 
-  /// Creates a [FailureMonitorState] instance with the given error [message].
   const FailureMonitorState({required this.message});
 }

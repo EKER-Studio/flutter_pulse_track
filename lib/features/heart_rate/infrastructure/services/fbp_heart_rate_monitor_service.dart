@@ -50,7 +50,6 @@ abstract class HeartRateMonitorService {
 
 /// Concrete [HeartRateMonitorService] backed by [FlutterBluePlus].
 class FbpHeartRateMonitorService implements HeartRateMonitorService {
-  /// Creates a new [FbpHeartRateMonitorService] instance.
   const FbpHeartRateMonitorService();
 
   @override

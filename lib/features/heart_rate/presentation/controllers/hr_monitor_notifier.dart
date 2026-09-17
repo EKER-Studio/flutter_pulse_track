@@ -80,9 +80,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   /// instance cached here during [connect] (see _saveSessionToDisk).
   SaveWorkoutSessionUseCase? _saveWorkoutSessionUseCase;
 
-  /// Initializes dependencies and lifecycle observer.
-  ///
-  /// Returns the initial [MonitorState.disconnected] state.
   @override
   MonitorState build() {
     _monitorService = ref.read(heartRateMonitorServiceProvider);

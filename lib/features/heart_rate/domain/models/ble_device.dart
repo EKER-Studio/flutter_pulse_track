@@ -13,7 +13,6 @@ class BleDevice {
   /// Received Signal Strength Indicator in dBm.
   final int rssi;
 
-  /// Creates a [BleDevice] instance with [id], [name], and [rssi].
   const BleDevice({required this.id, required this.name, required this.rssi});
 
   @override

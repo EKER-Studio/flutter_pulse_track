@@ -32,7 +32,6 @@ abstract class BluetoothScannerService {
 
 /// Concrete [BluetoothScannerService] backed by [FlutterBluePlus].
 class FbpBluetoothScannerService implements BluetoothScannerService {
-  /// Creates a new [FbpBluetoothScannerService] instance.
   FbpBluetoothScannerService();
 
   @override

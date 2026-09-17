@@ -19,7 +19,6 @@ import 'ble_device.dart';
 ///   failure ◀──(unrecoverable scan error)───────────────────────────────────┘
 /// ```
 sealed class BleScannerState {
-  /// Abstract base constructor for [BleScannerState].
   const BleScannerState();
 
   /// The scanner is powered and ready but no hardware scan is currently running.
