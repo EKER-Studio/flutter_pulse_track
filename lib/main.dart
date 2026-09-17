@@ -68,7 +68,7 @@ Future<void> main() async {
       await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
       AppCrashReporter.setFirebaseAvailable(false);
     }
-  } catch (e, st) {
+  } on Object catch (e, st) {
     log.w(
       'Firebase initialization skipped or failed: $e',
       error: e,
@@ -79,23 +79,21 @@ Future<void> main() async {
   // Initialize widget and notification services.
   try {
     await WidgetSyncService.instance.initialize();
-  } catch (e, stack) {
+  } on Object catch (e, stack) {
     await AppCrashReporter.recordError(
       e,
       stack,
       reason: 'WidgetSyncService initialization failed',
-      fatal: false,
     );
   }
 
   try {
     await NotificationService.instance.initialize();
-  } catch (e, stack) {
+  } on Object catch (e, stack) {
     await AppCrashReporter.recordError(
       e,
       stack,
       reason: 'NotificationService initialization failed',
-      fatal: false,
     );
   }
 
@@ -108,12 +106,11 @@ Future<void> main() async {
       if (sanitized > 0) {
         log.i('Sanitized $sanitized crashed workout sessions on startup.');
       }
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,
         stack,
         reason: 'Crashed workout session recovery failed',
-        fatal: false,
       );
     }
 
@@ -128,7 +125,7 @@ Future<void> main() async {
         child: const App(),
       ),
     );
-  } catch (e, st) {
+  } on Object catch (e, st) {
     log.e(
       'Failed to initialize Isar database on startup',
       error: e,
