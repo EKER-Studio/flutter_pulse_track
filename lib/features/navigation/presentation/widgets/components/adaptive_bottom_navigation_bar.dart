@@ -10,7 +10,6 @@ class AdaptiveBottomNavigationBar extends StatelessWidget {
   /// Callback when a destination is selected.
   final ValueChanged<int> onDestinationSelected;
 
-  /// Creates an [AdaptiveBottomNavigationBar].
   const AdaptiveBottomNavigationBar({
     super.key,
     required this.selectedIndex,

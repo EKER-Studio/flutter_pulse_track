@@ -13,7 +13,6 @@ class MainNavigationScreen extends StatefulWidget {
   /// dead code — every production route goes through the shell).
   final StatefulNavigationShell navigationShell;
 
-  /// Creates a [MainNavigationScreen].
   const MainNavigationScreen({super.key, required this.navigationShell});
 
   @override

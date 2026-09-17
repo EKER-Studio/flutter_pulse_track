@@ -10,7 +10,6 @@ class AdaptiveNavigationRail extends StatelessWidget {
   /// Callback when a destination is selected.
   final ValueChanged<int> onDestinationSelected;
 
-  /// Creates an [AdaptiveNavigationRail].
   const AdaptiveNavigationRail({
     super.key,
     required this.selectedIndex,
