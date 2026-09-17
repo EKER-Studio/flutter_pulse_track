@@ -1115,4 +1115,332 @@ void main() {
       ).called(1);
     });
   });
+
+  group('failure tolerance during connect', () {
+    test('foreground service failure does not abort connection', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      when(() => m.foregroundServiceManager.startService())
+          .thenThrow(Exception('fg dead'));
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+
+      expect(
+        container.read(hrMonitorProvider),
+        isA<DiscoveringServicesMonitorState>(),
+      );
+    });
+
+    test('saveDeviceProfile failure does not abort connection', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      when(
+        () => m.saveDeviceProfileUseCase.call(
+          macAddress: any(named: 'macAddress'),
+          name: any(named: 'name'),
+          sensorLocationIndex: any(named: 'sensorLocationIndex'),
+        ),
+      ).thenThrow(Exception('disk full'));
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+      m.hrValueController.add([0x00, 100]);
+      await Future.delayed(Duration.zero);
+
+      expect(container.read(hrMonitorProvider), isA<ConnectedMonitorState>());
+    });
+
+    test('service discovery timeout reports a timeout failure', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      when(() => m.monitorService.discoverServices(any()))
+          .thenThrow(TimeoutException('too slow', const Duration(seconds: 8)));
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+
+      final state = container.read(hrMonitorProvider);
+      expect(state, isA<FailureMonitorState>());
+      expect((state as FailureMonitorState).message, contains('timed out'));
+    });
+  });
+
+  group('sensor location variants', () {
+    test('value 2 maps to wrist', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      final locationChar = _MockBluetoothCharacteristic();
+      when(() => locationChar.characteristicUuid)
+          .thenReturn(_kSensorLocationGuid);
+      when(() => locationChar.uuid).thenReturn(_kSensorLocationGuid);
+      when(() => m.monitorService.read(locationChar))
+          .thenAnswer((_) async => [2]);
+      when(() => m.hrService.characteristics)
+          .thenReturn([m.hrCharacteristic, locationChar]);
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+
+      verify(
+        () => m.saveDeviceProfileUseCase.call(
+          macAddress: any(named: 'macAddress'),
+          name: any(named: 'name'),
+          sensorLocationIndex: BodySensorLocation.wrist.index,
+        ),
+      ).called(1);
+    });
+
+    test('failed location read falls back to unknown', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      final locationChar = _MockBluetoothCharacteristic();
+      when(() => locationChar.characteristicUuid)
+          .thenReturn(_kSensorLocationGuid);
+      when(() => locationChar.uuid).thenReturn(_kSensorLocationGuid);
+      when(
+        () => m.monitorService.read(locationChar),
+      ).thenThrow(TimeoutException('slow sensor', const Duration(seconds: 2)));
+      when(() => m.hrService.characteristics)
+          .thenReturn([m.hrCharacteristic, locationChar]);
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+      m.hrValueController.add([0x00, 90]);
+      await Future.delayed(Duration.zero);
+
+      final state = container.read(hrMonitorProvider) as ConnectedMonitorState;
+      expect(state.measurement.sensorLocation, BodySensorLocation.unknown);
+    });
+
+    test('empty location bytes fall back to unknown', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      final locationChar = _MockBluetoothCharacteristic();
+      when(() => locationChar.characteristicUuid)
+          .thenReturn(_kSensorLocationGuid);
+      when(() => locationChar.uuid).thenReturn(_kSensorLocationGuid);
+      when(() => m.monitorService.read(locationChar))
+          .thenAnswer((_) async => <int>[]);
+      when(() => m.hrService.characteristics)
+          .thenReturn([m.hrCharacteristic, locationChar]);
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+      m.hrValueController.add([0x00, 90]);
+      await Future.delayed(Duration.zero);
+
+      final state = container.read(hrMonitorProvider) as ConnectedMonitorState;
+      expect(state.measurement.sensorLocation, BodySensorLocation.unknown);
+    });
+  });
+
+  group('battery variants', () {
+    test('missing battery service reports null battery level', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+      m.hrValueController.add([0x00, 100]);
+      await Future.delayed(Duration.zero);
+
+      final state = container.read(hrMonitorProvider) as ConnectedMonitorState;
+      expect(state.measurement.batteryLevel, isNull);
+    });
+
+    test('battery read timeout does not abort connection', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      final batteryChar = _MockBluetoothCharacteristic();
+      when(() => batteryChar.characteristicUuid).thenReturn(_kBatteryCharGuid);
+      when(() => batteryChar.uuid).thenReturn(_kBatteryCharGuid);
+      when(() => batteryChar.properties)
+          .thenReturn(const CharacteristicProperties());
+
+      final batteryService = _MockBluetoothService();
+      when(() => batteryService.serviceUuid).thenReturn(_kBatteryServiceGuid);
+      when(() => batteryService.uuid).thenReturn(_kBatteryServiceGuid);
+      when(() => batteryService.characteristics).thenReturn([batteryChar]);
+
+      when(() => m.monitorService.discoverServices(any()))
+          .thenAnswer((_) async => [m.hrService, batteryService]);
+      when(
+        () => m.monitorService.read(batteryChar),
+      ).thenThrow(TimeoutException('slow battery', const Duration(seconds: 2)));
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+      m.hrValueController.add([0x00, 100]);
+      await Future.delayed(Duration.zero);
+
+      expect(container.read(hrMonitorProvider), isA<ConnectedMonitorState>());
+    });
+
+    test('battery level above 100 is clamped', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      final batteryChar = _MockBluetoothCharacteristic();
+      when(() => batteryChar.characteristicUuid).thenReturn(_kBatteryCharGuid);
+      when(() => batteryChar.uuid).thenReturn(_kBatteryCharGuid);
+      when(() => batteryChar.properties)
+          .thenReturn(const CharacteristicProperties());
+
+      final batteryService = _MockBluetoothService();
+      when(() => batteryService.serviceUuid).thenReturn(_kBatteryServiceGuid);
+      when(() => batteryService.uuid).thenReturn(_kBatteryServiceGuid);
+      when(() => batteryService.characteristics).thenReturn([batteryChar]);
+
+      when(() => m.monitorService.discoverServices(any()))
+          .thenAnswer((_) async => [m.hrService, batteryService]);
+      when(() => m.monitorService.read(batteryChar))
+          .thenAnswer((_) async => [250]);
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+      m.hrValueController.add([0x00, 100]);
+      await Future.delayed(Duration.zero);
+
+      final state = container.read(hrMonitorProvider) as ConnectedMonitorState;
+      expect(state.measurement.batteryLevel, 100);
+    });
+  });
+
+  group('incoming packet handling', () {
+    test('malformed packets are ignored without leaving discovering', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+
+      // Flags claim 8-bit BPM but the value byte is missing.
+      m.hrValueController.add([0x00]);
+      await Future.delayed(Duration.zero);
+
+      expect(
+        container.read(hrMonitorProvider),
+        isA<DiscoveringServicesMonitorState>(),
+      );
+    });
+
+    test('R-R intervals from the packet reach the measurement', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+
+      m.hrValueController.add([0x10, 60, 0x00, 0x04]);
+      await Future.delayed(Duration.zero);
+
+      final state = container.read(hrMonitorProvider) as ConnectedMonitorState;
+      expect(state.measurement.bpm, 60);
+      expect(state.measurement.rrIntervals, hasLength(1));
+      expect(state.measurement.rrIntervals.single, closeTo(1.0, 1e-6));
+    });
+  });
+
+  group('app lifecycle hidden and inactive', () {
+    for (final lifecycle in [
+      AppLifecycleState.hidden,
+      AppLifecycleState.inactive,
+    ]) {
+      test('$lifecycle triggers checkpoint', () async {
+        final m = buildMocks();
+        container = m.container;
+        notifier = container.read(hrMonitorProvider.notifier);
+        keepAlive();
+
+        await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+        m.hrValueController.add([0x00, 130]);
+        await Future.delayed(Duration.zero);
+
+        notifier.didChangeAppLifecycleState(lifecycle);
+        await Future.delayed(Duration.zero);
+
+        verify(
+          () => m.savePartialWorkoutSessionUseCase.call(
+            startTime: any(named: 'startTime'),
+            samples: any(named: 'samples'),
+            sensorLocationIndex: any(named: 'sensorLocationIndex'),
+            macAddress: any(named: 'macAddress'),
+            name: any(named: 'name'),
+            avgBpm: any(named: 'avgBpm'),
+            maxBpm: any(named: 'maxBpm'),
+            existingId: any(named: 'existingId'),
+          ),
+        ).called(1);
+      });
+    }
+  });
+
+  group('dispose force-save', () {
+    test('auto-dispose with unsaved samples persists the session', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      // Own subscription (instead of keepAlive) so closing it triggers
+      // auto-dispose: _cleanup must persist via the use case cached during
+      // connect, since ref.read is forbidden inside onDispose.
+      final sub = container.listen<MonitorState>(hrMonitorProvider, (_, _) {});
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+      m.hrValueController.add([0x00, 110]);
+      await Future.delayed(Duration.zero);
+
+      // The shared buildMocks stub omits the existingId named argument,
+      // which mocktail treats as a different invocation shape — re-stub
+      // with the full shape like the disconnect() tests do.
+      when(
+        () => m.saveWorkoutSessionUseCase.call(
+          startTime: any(named: 'startTime'),
+          endTime: any(named: 'endTime'),
+          samples: any(named: 'samples'),
+          sensorLocationIndex: any(named: 'sensorLocationIndex'),
+          macAddress: any(named: 'macAddress'),
+          name: any(named: 'name'),
+          avgBpm: any(named: 'avgBpm'),
+          maxBpm: any(named: 'maxBpm'),
+          existingId: any(named: 'existingId'),
+        ),
+      ).thenAnswer((_) async {});
+
+      sub.close();
+      await Future.delayed(const Duration(milliseconds: 50));
+
+      verify(
+        () => m.saveWorkoutSessionUseCase.call(
+          startTime: any(named: 'startTime'),
+          endTime: any(named: 'endTime'),
+          samples: [110],
+          sensorLocationIndex: any(named: 'sensorLocationIndex'),
+          macAddress: any(named: 'macAddress'),
+          name: any(named: 'name'),
+          avgBpm: any(named: 'avgBpm'),
+          maxBpm: any(named: 'maxBpm'),
+          existingId: any(named: 'existingId'),
+        ),
+      ).called(1);
+    });
+  });
 }

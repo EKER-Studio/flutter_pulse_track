@@ -12,6 +12,7 @@ import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart
 import 'package:pulse_track/features/heart_rate/domain/parsers/hr_packet_parser.dart';
 import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';
 import 'package:pulse_track/features/workout/application/workout_providers.dart';
+import 'package:pulse_track/features/workout/domain/usecases/save_workout_session_usecase.dart';
 
 part 'hr_monitor_notifier.g.dart';
 
@@ -71,6 +72,13 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   /// same row instead of INSERTing a new one. Reset to null whenever session
   /// fields are reset (new connection, or after a completed save).
   int? _checkpointSessionId;
+
+  /// Cached save use case, resolved while [ref] is live.
+  ///
+  /// Riverpod forbids `ref.read` inside `onDispose` callbacks, so [_cleanup]
+  /// cannot resolve its dependencies at teardown time — it must reuse the
+  /// instance cached here during [connect] (see _saveSessionToDisk).
+  SaveWorkoutSessionUseCase? _saveWorkoutSessionUseCase;
 
   /// Initializes dependencies and lifecycle observer.
   ///
@@ -149,6 +157,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       _sessionSensorLocationIndex = null;
       _currentBatteryLevel = null;
       _checkpointSessionId = null;
+      // Resolve eagerly while ref is live: _cleanup runs after dispose,
+      // when ref.read would throw (see _saveWorkoutSessionUseCase).
+      _saveWorkoutSessionUseCase = ref.read(saveWorkoutSessionUseCaseProvider);
     }
 
     // PII redaction: avoid logging full MAC/deviceId to Crashlytics (C-2).
@@ -504,7 +515,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           _sessionStartTime != null &&
           _sessionDeviceId != null &&
           _sessionDeviceName != null) {
-        final useCase = ref.read(saveWorkoutSessionUseCaseProvider);
+        // Prefer the cached instance: during _cleanup (provider disposal)
+        // ref.read throws, so resolving here would always fail.
+        final SaveWorkoutSessionUseCase useCase =
+            _saveWorkoutSessionUseCase ??
+            ref.read(saveWorkoutSessionUseCaseProvider);
 
         final samples = List<int>.from(_collectedBpmSamples);
         final startTime = _sessionStartTime!;
