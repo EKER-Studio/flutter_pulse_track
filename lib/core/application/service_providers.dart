@@ -7,7 +7,6 @@ export 'package:pulse_track/core/infrastructure/services/foreground_service_mana
 
 part 'service_providers.g.dart';
 
-/// Provider for the [ForegroundServiceManager] instance.
 @Riverpod(keepAlive: true)
 ForegroundServiceManager foregroundServiceManager(Ref ref) {
   return ForegroundServiceManager();

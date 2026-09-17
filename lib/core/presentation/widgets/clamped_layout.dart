@@ -14,7 +14,6 @@ class ClampedLayout extends StatelessWidget {
   /// Alignment of the clamped content.
   final AlignmentGeometry alignment;
 
-  /// Creates a [ClampedLayout].
   const ClampedLayout({
     super.key,
     required this.child,

@@ -15,7 +15,6 @@ import '../../../features/settings/infrastructure/models/user_settings_dto.dart'
 
 /// Manages Isar initialization, AES key provisioning, and crash-recovery.
 class DatabaseModule {
-  /// Versioned database name.
   static const String dbName = 'pulse_track_v1';
 
   static const List<String> _legacyDbNames = ['pulse_track_v0'];
@@ -230,7 +229,6 @@ class DatabaseModule {
     }
   }
 
-  /// Creates a pre-import snapshot backup.
   static Future<String?> createPreImportSnapshot([
     String? directoryPath,
   ]) async {

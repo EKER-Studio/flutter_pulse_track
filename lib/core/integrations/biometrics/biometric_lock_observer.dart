@@ -31,7 +31,6 @@ class BiometricLockObserver with WidgetsBindingObserver {
 
   bool _disposed = false;
 
-  /// Creates a [BiometricLockObserver].
   BiometricLockObserver({
     required this.isBiometricLockEnabled,
     required this.onLockStateChanged,

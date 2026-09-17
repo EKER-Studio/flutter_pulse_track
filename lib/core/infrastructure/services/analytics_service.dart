@@ -69,7 +69,6 @@ class AnalyticsService {
   }
 }
 
-/// Provider for the [AnalyticsService] instance.
 @Riverpod(keepAlive: true)
 AnalyticsService analyticsService(Ref ref) {
   try {

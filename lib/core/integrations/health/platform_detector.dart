@@ -11,7 +11,6 @@ abstract class PlatformDetector {
 
 /// Default implementation of [PlatformDetector] delegating to `dart:io`.
 class NativePlatformDetector implements PlatformDetector {
-  /// Creates a [NativePlatformDetector] instance.
   const NativePlatformDetector();
 
   @override

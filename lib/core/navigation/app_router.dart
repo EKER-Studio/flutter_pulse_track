@@ -172,7 +172,6 @@ GoRouter appRouter(Ref ref) {
 /// Fallback widget that loads a [WorkoutSession] from database by ID
 /// when navigating via deep-link or cold boot where [GoRouterState.extra] is null.
 class WorkoutDetailsLoaderView extends ConsumerWidget {
-  /// Creates a [WorkoutDetailsLoaderView] for [sessionId].
   const WorkoutDetailsLoaderView({required this.sessionId, super.key});
 
   /// Database ID of the workout session to load.
@@ -203,6 +202,5 @@ class WorkoutDetailsLoaderView extends ConsumerWidget {
 
 /// Notifies [GoRouter.refreshListenable] whenever settings change.
 class _SettingsRefreshListenable extends ChangeNotifier {
-  /// Forwards a settings change to the router.
   void notify() => notifyListeners();
 }

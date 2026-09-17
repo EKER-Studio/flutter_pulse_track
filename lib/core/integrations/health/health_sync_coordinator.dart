@@ -14,7 +14,6 @@ class HealthSyncResult {
   /// Number of local sessions exported to the remote health store.
   final int pushedLocalCount;
 
-  /// Creates an immutable [HealthSyncResult] summary.
   const HealthSyncResult({
     required this.syncTimestamp,
     required this.remoteCount,
@@ -30,10 +29,6 @@ class HealthSyncCoordinator {
   /// Local workout persistence repository.
   final WorkoutPersistenceRepository repository;
 
-  /// Creates a [HealthSyncCoordinator] instance.
-  ///
-  /// @param healthService Health API abstraction for iOS/Android.
-  /// @param repository Local workout persistence repository.
   const HealthSyncCoordinator({
     required this.healthService,
     required this.repository,

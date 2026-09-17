@@ -55,7 +55,6 @@ abstract final class AppColors {
   static const Color borderSubtle = Color(0x33C4C6D0);
 
   // Chart
-  /// Chart grid line color.
   static const Color chartGridLine = Color(0x29C4C6D0);
 
   /// Gradient start for chart fill.
@@ -65,31 +64,22 @@ abstract final class AppColors {
   static Color get chartFillEnd => accentBlue.withValues(alpha: 0.0);
 
   // Stat icons
-  /// Average BPM stat icon color.
   static const Color statIconAvg = Color(0xFFFFB4AB);
 
-  /// Peak BPM stat icon color.
   static const Color statIconPeak = Color(0xFFFFD56B);
 
-  /// Duration stat icon color.
   static const Color statIconDuration = Color(0xFF7CE38B);
 
-  /// Samples stat icon color.
   static const Color statIconSamples = Color(0xFFADC6FF);
 
   // HR zone palette
-  /// Heart rate zone 1 color.
   static const Color hrZone1 = Color(0xFF4D96FF);
 
-  /// Heart rate zone 2 color.
   static const Color hrZone2 = Color(0xFF6BCB77);
 
-  /// Heart rate zone 3 color.
   static const Color hrZone3 = Color(0xFFFFD93D);
 
-  /// Heart rate zone 4 color.
   static const Color hrZone4 = Color(0xFFFF9F45);
 
-  /// Heart rate zone 5 color.
   static const Color hrZone5 = Color(0xFFFF6B6B);
 }

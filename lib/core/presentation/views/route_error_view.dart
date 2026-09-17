@@ -8,9 +8,6 @@ import 'package:pulse_track/l10n/app_localizations.dart';
 /// Indicates the requested location is invalid and offers a direct action to
 /// return to the main dashboard.
 class RouteErrorView extends StatelessWidget {
-  /// Creates a [RouteErrorView].
-  ///
-  /// Takes an optional [error] exception details instance.
   const RouteErrorView({super.key, this.error});
 
   /// Optional error or exception details triggering this fallback view.

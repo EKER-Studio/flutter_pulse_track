@@ -6,13 +6,11 @@ import 'package:pulse_track/features/workout/application/workout_providers.dart'
 
 part 'health_providers.g.dart';
 
-/// Riverpod provider supplying the singleton [HealthService] contract using [ref].
 @Riverpod(keepAlive: true)
 HealthService healthService(Ref ref) {
   return NativeHealthService.instance;
 }
 
-/// Riverpod provider supplying the [HealthSyncCoordinator] wired to [healthService] and repository using [ref].
 @Riverpod(keepAlive: true)
 HealthSyncCoordinator healthSyncCoordinator(Ref ref) {
   return HealthSyncCoordinator(
