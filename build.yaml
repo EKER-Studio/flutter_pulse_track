@@ -3,8 +3,17 @@ targets:
     sources:
       exclude:
         - "lib/l10n/**"
+        - "test/**"
+        - "integration_test/**"
     builders:
       isar_community_generator:isar_community_generator:
         generate_for:
           - lib/features/**/infrastructure/models/**.dart
-
+      riverpod_generator:riverpod_generator:
+        generate_for:
+          - lib/**/application/**.dart
+          - lib/**/controllers/**.dart
+          - lib/**/navigation/**.dart
+          - lib/**/services/**.dart
+          - lib/**/storage/**.dart
+          - lib/**/health/**.dart
