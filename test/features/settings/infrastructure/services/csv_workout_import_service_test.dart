@@ -32,7 +32,7 @@ base class _TempPlatformFile extends PlatformFile {
   XFile get xFile => XFile(file.path);
 
   @override
-  Future<int> length() => file.length();
+  Future<int?> length() => file.length();
 
   @override
   Future<Uint8List> readAsBytes() =>

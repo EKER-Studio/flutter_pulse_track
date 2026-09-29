@@ -20,7 +20,9 @@ if (hasKeystoreProperties) {
 
 android {
     namespace = "com.ekerstudio.pulsetrack"
-    compileSdk = flutter.compileSdkVersion
+    // permission_handler_android 14.x requires compileSdk 37; keep the higher
+    // of the Flutter default and 37 so future Flutter bumps still apply.
+    compileSdk = maxOf(flutter.compileSdkVersion, 37)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

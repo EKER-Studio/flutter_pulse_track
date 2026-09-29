@@ -8,12 +8,9 @@ part of 'service_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provider for the [ForegroundServiceManager] instance.
 
 @ProviderFor(foregroundServiceManager)
 final foregroundServiceManagerProvider = ForegroundServiceManagerProvider._();
-
-/// Provider for the [ForegroundServiceManager] instance.
 
 final class ForegroundServiceManagerProvider
     extends
@@ -23,7 +20,6 @@ final class ForegroundServiceManagerProvider
           ForegroundServiceManager
         >
     with $Provider<ForegroundServiceManager> {
-  /// Provider for the [ForegroundServiceManager] instance.
   ForegroundServiceManagerProvider._()
     : super(
         from: null,

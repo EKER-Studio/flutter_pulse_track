@@ -8,12 +8,9 @@ part of 'analytics_service.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provider for the [AnalyticsService] instance.
 
 @ProviderFor(analyticsService)
 final analyticsServiceProvider = AnalyticsServiceProvider._();
-
-/// Provider for the [AnalyticsService] instance.
 
 final class AnalyticsServiceProvider
     extends
@@ -23,7 +20,6 @@ final class AnalyticsServiceProvider
           AnalyticsService
         >
     with $Provider<AnalyticsService> {
-  /// Provider for the [AnalyticsService] instance.
   AnalyticsServiceProvider._()
     : super(
         from: null,

@@ -61,7 +61,8 @@ class NotificationService {
     if (_initialized) return;
     try {
       tz_data.initializeTimeZones();
-      final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+      final String timeZoneName =
+          (await FlutterTimezone.getLocalTimezone()).identifier;
       tz.setLocalLocation(tz.getLocation(timeZoneName));
 
       final androidPlugin = _plugin
@@ -82,7 +83,7 @@ class NotificationService {
       const darwinSettings = DarwinInitializationSettings();
 
       await _plugin.initialize(
-        const InitializationSettings(
+        settings: const InitializationSettings(
           android: androidSettings,
           iOS: darwinSettings,
         ),
@@ -108,11 +109,9 @@ class NotificationService {
   }) async {
     try {
       await _plugin.zonedSchedule(
-        _dailyReminderId,
-        _title,
-        _body,
-        _nextInstanceOfTime(hour, minute),
-        const NotificationDetails(
+        id: _dailyReminderId,
+        scheduledDate: _nextInstanceOfTime(hour, minute),
+        notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
             'pulsetrack_reminders',
             'Workout Reminders',
@@ -122,9 +121,9 @@ class NotificationService {
           ),
           iOS: DarwinNotificationDetails(),
         ),
+        title: _title,
+        body: _body,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
         payload: '/history',
       );
@@ -139,7 +138,7 @@ class NotificationService {
 
   Future<void> cancelDailyReminder() async {
     try {
-      await _plugin.cancel(_dailyReminderId);
+      await _plugin.cancel(id: _dailyReminderId);
     } on Object catch (e, stack) {
       await AppCrashReporter.recordError(
         e,

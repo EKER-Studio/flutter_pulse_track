@@ -8,12 +8,9 @@ part of 'csv_workout_import_service.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Riverpod provider supplying a singleton instance of [CsvWorkoutImportService].
 
 @ProviderFor(csvWorkoutImportService)
 final csvWorkoutImportServiceProvider = CsvWorkoutImportServiceProvider._();
-
-/// Riverpod provider supplying a singleton instance of [CsvWorkoutImportService].
 
 final class CsvWorkoutImportServiceProvider
     extends
@@ -23,7 +20,6 @@ final class CsvWorkoutImportServiceProvider
           CsvWorkoutImportService
         >
     with $Provider<CsvWorkoutImportService> {
-  /// Riverpod provider supplying a singleton instance of [CsvWorkoutImportService].
   CsvWorkoutImportServiceProvider._()
     : super(
         from: null,

@@ -8,13 +8,10 @@ part of 'workout_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Riverpod provider delivering the concrete Isar-backed [WorkoutPersistenceRepository].
 
 @ProviderFor(workoutPersistenceRepository)
 final workoutPersistenceRepositoryProvider =
     WorkoutPersistenceRepositoryProvider._();
-
-/// Riverpod provider delivering the concrete Isar-backed [WorkoutPersistenceRepository].
 
 final class WorkoutPersistenceRepositoryProvider
     extends
@@ -24,7 +21,6 @@ final class WorkoutPersistenceRepositoryProvider
           WorkoutPersistenceRepository
         >
     with $Provider<WorkoutPersistenceRepository> {
-  /// Riverpod provider delivering the concrete Isar-backed [WorkoutPersistenceRepository].
   WorkoutPersistenceRepositoryProvider._()
     : super(
         from: null,
@@ -62,14 +58,8 @@ final class WorkoutPersistenceRepositoryProvider
 String _$workoutPersistenceRepositoryHash() =>
     r'3887105e243703c2ea1e2eff8b3e93d921679fc9';
 
-/// Riverpod provider that supplies a [SaveWorkoutSessionUseCase] wired to the
-/// abstract [WorkoutPersistenceRepository] contract using [ref].
-
 @ProviderFor(saveWorkoutSessionUseCase)
 final saveWorkoutSessionUseCaseProvider = SaveWorkoutSessionUseCaseProvider._();
-
-/// Riverpod provider that supplies a [SaveWorkoutSessionUseCase] wired to the
-/// abstract [WorkoutPersistenceRepository] contract using [ref].
 
 final class SaveWorkoutSessionUseCaseProvider
     extends
@@ -79,8 +69,6 @@ final class SaveWorkoutSessionUseCaseProvider
           SaveWorkoutSessionUseCase
         >
     with $Provider<SaveWorkoutSessionUseCase> {
-  /// Riverpod provider that supplies a [SaveWorkoutSessionUseCase] wired to the
-  /// abstract [WorkoutPersistenceRepository] contract using [ref].
   SaveWorkoutSessionUseCaseProvider._()
     : super(
         from: null,
@@ -118,15 +106,9 @@ final class SaveWorkoutSessionUseCaseProvider
 String _$saveWorkoutSessionUseCaseHash() =>
     r'006b1f32747f457d9f6f0b45092ef136ebbecadb';
 
-/// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
-
 @ProviderFor(savePartialWorkoutSessionUseCase)
 final savePartialWorkoutSessionUseCaseProvider =
     SavePartialWorkoutSessionUseCaseProvider._();
-
-/// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 
 final class SavePartialWorkoutSessionUseCaseProvider
     extends
@@ -136,8 +118,6 @@ final class SavePartialWorkoutSessionUseCaseProvider
           SavePartialWorkoutSessionUseCase
         >
     with $Provider<SavePartialWorkoutSessionUseCase> {
-  /// Riverpod provider that supplies a [SavePartialWorkoutSessionUseCase] wired to
-  /// the abstract [WorkoutPersistenceRepository] contract using [ref].
   SavePartialWorkoutSessionUseCaseProvider._()
     : super(
         from: null,
@@ -177,14 +157,8 @@ final class SavePartialWorkoutSessionUseCaseProvider
 String _$savePartialWorkoutSessionUseCaseHash() =>
     r'4f1b83048ef80eeb782a9ef7d9b0c7b65cfcc019';
 
-/// Riverpod provider that supplies a [SaveDeviceProfileUseCase] wired to the
-/// abstract [WorkoutPersistenceRepository] contract using [ref].
-
 @ProviderFor(saveDeviceProfileUseCase)
 final saveDeviceProfileUseCaseProvider = SaveDeviceProfileUseCaseProvider._();
-
-/// Riverpod provider that supplies a [SaveDeviceProfileUseCase] wired to the
-/// abstract [WorkoutPersistenceRepository] contract using [ref].
 
 final class SaveDeviceProfileUseCaseProvider
     extends
@@ -194,8 +168,6 @@ final class SaveDeviceProfileUseCaseProvider
           SaveDeviceProfileUseCase
         >
     with $Provider<SaveDeviceProfileUseCase> {
-  /// Riverpod provider that supplies a [SaveDeviceProfileUseCase] wired to the
-  /// abstract [WorkoutPersistenceRepository] contract using [ref].
   SaveDeviceProfileUseCaseProvider._()
     : super(
         from: null,
@@ -233,15 +205,9 @@ final class SaveDeviceProfileUseCaseProvider
 String _$saveDeviceProfileUseCaseHash() =>
     r'a0abde423911ad91af1584ddf75157a73d911550';
 
-/// Riverpod provider that supplies a [DeleteWorkoutSessionUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
-
 @ProviderFor(deleteWorkoutSessionUseCase)
 final deleteWorkoutSessionUseCaseProvider =
     DeleteWorkoutSessionUseCaseProvider._();
-
-/// Riverpod provider that supplies a [DeleteWorkoutSessionUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 
 final class DeleteWorkoutSessionUseCaseProvider
     extends
@@ -251,8 +217,6 @@ final class DeleteWorkoutSessionUseCaseProvider
           DeleteWorkoutSessionUseCase
         >
     with $Provider<DeleteWorkoutSessionUseCase> {
-  /// Riverpod provider that supplies a [DeleteWorkoutSessionUseCase] wired to
-  /// the abstract [WorkoutPersistenceRepository] contract using [ref].
   DeleteWorkoutSessionUseCaseProvider._()
     : super(
         from: null,
@@ -290,15 +254,9 @@ final class DeleteWorkoutSessionUseCaseProvider
 String _$deleteWorkoutSessionUseCaseHash() =>
     r'4957744a77072749c328e70969cc5444285713fb';
 
-/// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
-
 @ProviderFor(watchWorkoutHistoryUseCase)
 final watchWorkoutHistoryUseCaseProvider =
     WatchWorkoutHistoryUseCaseProvider._();
-
-/// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 
 final class WatchWorkoutHistoryUseCaseProvider
     extends
@@ -308,8 +266,6 @@ final class WatchWorkoutHistoryUseCaseProvider
           WatchWorkoutHistoryUseCase
         >
     with $Provider<WatchWorkoutHistoryUseCase> {
-  /// Riverpod provider that supplies a [WatchWorkoutHistoryUseCase] wired to
-  /// the abstract [WorkoutPersistenceRepository] contract using [ref].
   WatchWorkoutHistoryUseCaseProvider._()
     : super(
         from: null,
@@ -347,15 +303,9 @@ final class WatchWorkoutHistoryUseCaseProvider
 String _$watchWorkoutHistoryUseCaseHash() =>
     r'fffc58f3571edd7f052b8ce916e05eb48720effa';
 
-/// Riverpod provider that supplies a [WatchSavedDeviceProfilesUseCase] wired
-/// to the abstract [WorkoutPersistenceRepository] contract using [ref].
-
 @ProviderFor(watchSavedDeviceProfilesUseCase)
 final watchSavedDeviceProfilesUseCaseProvider =
     WatchSavedDeviceProfilesUseCaseProvider._();
-
-/// Riverpod provider that supplies a [WatchSavedDeviceProfilesUseCase] wired
-/// to the abstract [WorkoutPersistenceRepository] contract using [ref].
 
 final class WatchSavedDeviceProfilesUseCaseProvider
     extends
@@ -365,8 +315,6 @@ final class WatchSavedDeviceProfilesUseCaseProvider
           WatchSavedDeviceProfilesUseCase
         >
     with $Provider<WatchSavedDeviceProfilesUseCase> {
-  /// Riverpod provider that supplies a [WatchSavedDeviceProfilesUseCase] wired
-  /// to the abstract [WorkoutPersistenceRepository] contract using [ref].
   WatchSavedDeviceProfilesUseCaseProvider._()
     : super(
         from: null,
@@ -406,15 +354,9 @@ final class WatchSavedDeviceProfilesUseCaseProvider
 String _$watchSavedDeviceProfilesUseCaseHash() =>
     r'4307426cd984fe38f594ca4e8fe8b10e9322fc78';
 
-/// Riverpod provider that supplies a [SanitizeCrashedSessionsUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
-
 @ProviderFor(sanitizeCrashedSessionsUseCase)
 final sanitizeCrashedSessionsUseCaseProvider =
     SanitizeCrashedSessionsUseCaseProvider._();
-
-/// Riverpod provider that supplies a [SanitizeCrashedSessionsUseCase] wired to
-/// the abstract [WorkoutPersistenceRepository] contract using [ref].
 
 final class SanitizeCrashedSessionsUseCaseProvider
     extends
@@ -424,8 +366,6 @@ final class SanitizeCrashedSessionsUseCaseProvider
           SanitizeCrashedSessionsUseCase
         >
     with $Provider<SanitizeCrashedSessionsUseCase> {
-  /// Riverpod provider that supplies a [SanitizeCrashedSessionsUseCase] wired to
-  /// the abstract [WorkoutPersistenceRepository] contract using [ref].
   SanitizeCrashedSessionsUseCaseProvider._()
     : super(
         from: null,
@@ -465,14 +405,8 @@ final class SanitizeCrashedSessionsUseCaseProvider
 String _$sanitizeCrashedSessionsUseCaseHash() =>
     r'46814a6cd96e24bde90ca467c35014a6a2092959';
 
-/// Reactive stream of workout history for direct use in
-/// `ref.watch(watchWorkoutHistoryStreamProvider)` from views using [ref].
-
 @ProviderFor(watchWorkoutHistoryStream)
 final watchWorkoutHistoryStreamProvider = WatchWorkoutHistoryStreamProvider._();
-
-/// Reactive stream of workout history for direct use in
-/// `ref.watch(watchWorkoutHistoryStreamProvider)` from views using [ref].
 
 final class WatchWorkoutHistoryStreamProvider
     extends
@@ -484,8 +418,6 @@ final class WatchWorkoutHistoryStreamProvider
     with
         $FutureModifier<List<WorkoutSession>>,
         $StreamProvider<List<WorkoutSession>> {
-  /// Reactive stream of workout history for direct use in
-  /// `ref.watch(watchWorkoutHistoryStreamProvider)` from views using [ref].
   WatchWorkoutHistoryStreamProvider._()
     : super(
         from: null,
@@ -515,15 +447,9 @@ final class WatchWorkoutHistoryStreamProvider
 String _$watchWorkoutHistoryStreamHash() =>
     r'8acba6aee2573d844d671aab651796a80ea92491';
 
-/// Reactive stream of saved device profiles for direct use in
-/// `ref.watch(watchSavedDeviceProfilesStreamProvider)` from views using [ref].
-
 @ProviderFor(watchSavedDeviceProfilesStream)
 final watchSavedDeviceProfilesStreamProvider =
     WatchSavedDeviceProfilesStreamProvider._();
-
-/// Reactive stream of saved device profiles for direct use in
-/// `ref.watch(watchSavedDeviceProfilesStreamProvider)` from views using [ref].
 
 final class WatchSavedDeviceProfilesStreamProvider
     extends
@@ -535,8 +461,6 @@ final class WatchSavedDeviceProfilesStreamProvider
     with
         $FutureModifier<List<DeviceProfile>>,
         $StreamProvider<List<DeviceProfile>> {
-  /// Reactive stream of saved device profiles for direct use in
-  /// `ref.watch(watchSavedDeviceProfilesStreamProvider)` from views using [ref].
   WatchSavedDeviceProfilesStreamProvider._()
     : super(
         from: null,
@@ -566,12 +490,8 @@ final class WatchSavedDeviceProfilesStreamProvider
 String _$watchSavedDeviceProfilesStreamHash() =>
     r'2443548c5d0ebe22545fc41e8a9096900ea45cdc';
 
-/// Riverpod provider supplying a singleton [WorkoutExportShareService].
-
 @ProviderFor(workoutExportShareService)
 final workoutExportShareServiceProvider = WorkoutExportShareServiceProvider._();
-
-/// Riverpod provider supplying a singleton [WorkoutExportShareService].
 
 final class WorkoutExportShareServiceProvider
     extends
@@ -581,7 +501,6 @@ final class WorkoutExportShareServiceProvider
           WorkoutExportShareService
         >
     with $Provider<WorkoutExportShareService> {
-  /// Riverpod provider supplying a singleton [WorkoutExportShareService].
   WorkoutExportShareServiceProvider._()
     : super(
         from: null,

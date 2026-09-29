@@ -8,12 +8,9 @@ part of 'ble_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Singleton Riverpod provider delivering the [BluetoothScannerService] using [ref].
 
 @ProviderFor(bluetoothScannerService)
 final bluetoothScannerServiceProvider = BluetoothScannerServiceProvider._();
-
-/// Singleton Riverpod provider delivering the [BluetoothScannerService] using [ref].
 
 final class BluetoothScannerServiceProvider
     extends
@@ -23,7 +20,6 @@ final class BluetoothScannerServiceProvider
           BluetoothScannerService
         >
     with $Provider<BluetoothScannerService> {
-  /// Singleton Riverpod provider delivering the [BluetoothScannerService] using [ref].
   BluetoothScannerServiceProvider._()
     : super(
         from: null,
@@ -61,12 +57,8 @@ final class BluetoothScannerServiceProvider
 String _$bluetoothScannerServiceHash() =>
     r'32cf1f6ae5187f8994adc81de37da12efb864fbe';
 
-/// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
-
 @ProviderFor(heartRateMonitorService)
 final heartRateMonitorServiceProvider = HeartRateMonitorServiceProvider._();
-
-/// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
 
 final class HeartRateMonitorServiceProvider
     extends
@@ -76,7 +68,6 @@ final class HeartRateMonitorServiceProvider
           HeartRateMonitorService
         >
     with $Provider<HeartRateMonitorService> {
-  /// Singleton Riverpod provider delivering the [HeartRateMonitorService] using [ref].
   HeartRateMonitorServiceProvider._()
     : super(
         from: null,

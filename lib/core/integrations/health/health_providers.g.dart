@@ -8,17 +8,13 @@ part of 'health_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Riverpod provider supplying the singleton [HealthService] contract using [ref].
 
 @ProviderFor(healthService)
 final healthServiceProvider = HealthServiceProvider._();
 
-/// Riverpod provider supplying the singleton [HealthService] contract using [ref].
-
 final class HealthServiceProvider
     extends $FunctionalProvider<HealthService, HealthService, HealthService>
     with $Provider<HealthService> {
-  /// Riverpod provider supplying the singleton [HealthService] contract using [ref].
   HealthServiceProvider._()
     : super(
         from: null,
@@ -54,12 +50,8 @@ final class HealthServiceProvider
 
 String _$healthServiceHash() => r'dfdad5ff88ed423f6d74fc485ae3fd63e023a30a';
 
-/// Riverpod provider supplying the [HealthSyncCoordinator] wired to [healthService] and repository using [ref].
-
 @ProviderFor(healthSyncCoordinator)
 final healthSyncCoordinatorProvider = HealthSyncCoordinatorProvider._();
-
-/// Riverpod provider supplying the [HealthSyncCoordinator] wired to [healthService] and repository using [ref].
 
 final class HealthSyncCoordinatorProvider
     extends
@@ -69,7 +61,6 @@ final class HealthSyncCoordinatorProvider
           HealthSyncCoordinator
         >
     with $Provider<HealthSyncCoordinator> {
-  /// Riverpod provider supplying the [HealthSyncCoordinator] wired to [healthService] and repository using [ref].
   HealthSyncCoordinatorProvider._()
     : super(
         from: null,
