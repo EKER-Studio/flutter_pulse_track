@@ -760,6 +760,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   }
 
   void _updateStateWithBatteryLevel(int newLevel) {
+    if (!ref.mounted) return;
     if (_currentBatteryLevel == newLevel) return;
     _currentBatteryLevel = newLevel;
     log.d('[HrMonitorNotifier] Battery level updated: $newLevel%');
