@@ -17,12 +17,20 @@ class UserSettings {
   /// Whether onboarding wizard has been completed.
   final bool isOnboardingCompleted;
 
+  /// Whether anonymous crash reporting via Firebase Crashlytics is enabled.
+  final bool isCrashReportingEnabled;
+
+  /// Whether anonymous interaction analytics via Firebase Analytics are enabled.
+  final bool isAnalyticsEnabled;
+
   const UserSettings({
     this.themeMode = AppThemeMode.system,
     this.defaultMaxHr = 190,
     this.isBiometricLockEnabled = false,
     this.isLocked = false,
     this.isOnboardingCompleted = false,
+    this.isCrashReportingEnabled = true,
+    this.isAnalyticsEnabled = true,
   });
 
   /// Creates a copy of [UserSettings] with the given fields replaced.
@@ -32,6 +40,8 @@ class UserSettings {
     bool? isBiometricLockEnabled,
     bool? isLocked,
     bool? isOnboardingCompleted,
+    bool? isCrashReportingEnabled,
+    bool? isAnalyticsEnabled,
   }) {
     return UserSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -41,6 +51,9 @@ class UserSettings {
       isLocked: isLocked ?? this.isLocked,
       isOnboardingCompleted:
           isOnboardingCompleted ?? this.isOnboardingCompleted,
+      isCrashReportingEnabled:
+          isCrashReportingEnabled ?? this.isCrashReportingEnabled,
+      isAnalyticsEnabled: isAnalyticsEnabled ?? this.isAnalyticsEnabled,
     );
   }
 
@@ -53,7 +66,9 @@ class UserSettings {
           defaultMaxHr == other.defaultMaxHr &&
           isBiometricLockEnabled == other.isBiometricLockEnabled &&
           isLocked == other.isLocked &&
-          isOnboardingCompleted == other.isOnboardingCompleted;
+          isOnboardingCompleted == other.isOnboardingCompleted &&
+          isCrashReportingEnabled == other.isCrashReportingEnabled &&
+          isAnalyticsEnabled == other.isAnalyticsEnabled;
 
   @override
   int get hashCode => Object.hash(
@@ -62,5 +77,7 @@ class UserSettings {
     isBiometricLockEnabled,
     isLocked,
     isOnboardingCompleted,
+    isCrashReportingEnabled,
+    isAnalyticsEnabled,
   );
 }

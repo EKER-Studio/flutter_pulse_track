@@ -13,10 +13,16 @@ class AppCrashReporter {
   AppCrashReporter._();
 
   static bool _isFirebaseAvailable = false;
+  static bool _isCollectionEnabled = true;
 
   /// Sets whether Firebase Crashlytics is active and available.
   static void setFirebaseAvailable(bool available) {
     _isFirebaseAvailable = available;
+  }
+
+  /// Sets whether crash reporting collection is enabled by user preference.
+  static void setCollectionEnabled(bool enabled) {
+    _isCollectionEnabled = enabled;
   }
 
   /// Records an [error] with optional [stack] trace and [reason] to Crashlytics
@@ -29,7 +35,7 @@ class AppCrashReporter {
   }) async {
     final effectiveStack = stack ?? StackTrace.current;
 
-    if (_isFirebaseAvailable) {
+    if (_isFirebaseAvailable && _isCollectionEnabled) {
       try {
         await FirebaseCrashlytics.instance.recordError(
           error,

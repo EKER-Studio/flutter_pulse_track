@@ -13,6 +13,8 @@ void main() {
       expect(dto.defaultMaxHr, 190);
       expect(dto.isBiometricLockEnabled, isFalse);
       expect(dto.isOnboardingCompleted, isFalse);
+      expect(dto.isCrashReportingEnabled, isTrue);
+      expect(dto.isAnalyticsEnabled, isTrue);
     });
   });
 
@@ -24,6 +26,8 @@ void main() {
         isBiometricLockEnabled: true,
         isLocked: true,
         isOnboardingCompleted: true,
+        isCrashReportingEnabled: false,
+        isAnalyticsEnabled: false,
       );
 
       final dto = UserSettingsDto.fromDomain(settings);
@@ -33,6 +37,8 @@ void main() {
       expect(dto.defaultMaxHr, 175);
       expect(dto.isBiometricLockEnabled, isTrue);
       expect(dto.isOnboardingCompleted, isTrue);
+      expect(dto.isCrashReportingEnabled, isFalse);
+      expect(dto.isAnalyticsEnabled, isFalse);
     });
 
     test('round-trips each theme mode', () {
@@ -51,7 +57,9 @@ void main() {
         ..themeMode = AppThemeMode.light
         ..defaultMaxHr = 200
         ..isBiometricLockEnabled = true
-        ..isOnboardingCompleted = true;
+        ..isOnboardingCompleted = true
+        ..isCrashReportingEnabled = false
+        ..isAnalyticsEnabled = false;
 
       final domain = dto.toDomain();
 
@@ -59,6 +67,8 @@ void main() {
       expect(domain.defaultMaxHr, 200);
       expect(domain.isBiometricLockEnabled, isTrue);
       expect(domain.isOnboardingCompleted, isTrue);
+      expect(domain.isCrashReportingEnabled, isFalse);
+      expect(domain.isAnalyticsEnabled, isFalse);
       // Ephemeral lock state is never persisted.
       expect(domain.isLocked, isFalse);
     });

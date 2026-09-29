@@ -26,6 +26,12 @@ class UserSettingsDto {
   /// Whether onboarding has been completed.
   bool isOnboardingCompleted = false;
 
+  /// Whether anonymous crash reporting via Firebase Crashlytics is enabled.
+  bool isCrashReportingEnabled = true;
+
+  /// Whether anonymous interaction analytics via Firebase Analytics are enabled.
+  bool isAnalyticsEnabled = true;
+
   /// Converts this database entity to a pure domain [UserSettings] model.
   UserSettings toDomain() {
     return UserSettings(
@@ -33,6 +39,8 @@ class UserSettingsDto {
       defaultMaxHr: defaultMaxHr,
       isBiometricLockEnabled: isBiometricLockEnabled,
       isOnboardingCompleted: isOnboardingCompleted,
+      isCrashReportingEnabled: isCrashReportingEnabled,
+      isAnalyticsEnabled: isAnalyticsEnabled,
     );
   }
 
@@ -44,6 +52,8 @@ class UserSettingsDto {
     dto.defaultMaxHr = settings.defaultMaxHr;
     dto.isBiometricLockEnabled = settings.isBiometricLockEnabled;
     dto.isOnboardingCompleted = settings.isOnboardingCompleted;
+    dto.isCrashReportingEnabled = settings.isCrashReportingEnabled;
+    dto.isAnalyticsEnabled = settings.isAnalyticsEnabled;
     return dto;
   }
 }

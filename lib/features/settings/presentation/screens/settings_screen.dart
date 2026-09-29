@@ -282,6 +282,42 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const SizedBox(height: 16),
 
+          // Privacy & Diagnostics section
+          SettingsSectionHeader(title: l10n.settingsSectionPrivacy),
+          SettingsTile(
+            icon: Icons.bug_report_outlined,
+            title: l10n.settingsCrashReporting,
+            subtitle: l10n.settingsCrashReportingSubtitle,
+            trailing: Switch(
+              value: settings.isCrashReportingEnabled,
+              onChanged: (enabled) {
+                ref
+                    .read(appSettingsProvider.notifier)
+                    .updateCrashReporting(enabled);
+              },
+            ),
+          ),
+          SettingsTile(
+            icon: Icons.analytics_outlined,
+            title: l10n.settingsAnalytics,
+            subtitle: l10n.settingsAnalyticsSubtitle,
+            trailing: Switch(
+              value: settings.isAnalyticsEnabled,
+              onChanged: (enabled) {
+                ref.read(appSettingsProvider.notifier).updateAnalytics(enabled);
+              },
+            ),
+          ),
+          SettingsTile(
+            icon: Icons.shield_outlined,
+            title: l10n.settingsPrivacyPolicy,
+            subtitle: l10n.settingsPrivacyPolicySubtitle,
+            onTap: () => _launchUrl(
+              'https://github.com/piotrekert90/flutter_pulse_track/blob/develop/doc/privacy_policy.md',
+            ),
+          ),
+          const SizedBox(height: 16),
+
           // About & support section
           SettingsSectionHeader(title: l10n.settingsSectionAbout),
           SettingsTile(
@@ -290,6 +326,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             subtitle: packageInfo != null
                 ? 'v${packageInfo.version} (${packageInfo.buildNumber})'
                 : '...',
+          ),
+          SettingsTile(
+            icon: Icons.star_outline_rounded,
+            title: l10n.settingsRateApp,
+            subtitle: l10n.settingsRateAppSubtitle,
+            onTap: () => _launchUrl(
+              'https://play.google.com/store/apps/details?id=com.ekerstudio.pulsetrack',
+            ),
           ),
           SettingsTile(
             icon: Icons.description_outlined,

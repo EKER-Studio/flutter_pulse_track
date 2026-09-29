@@ -657,6 +657,34 @@
    "@settingsPrivacyPolicySubtitle": {
       "description": "Subtitle for privacy policy tile."
    },
+   "settingsSectionPrivacy": "Privacy & Diagnostics",
+   "@settingsSectionPrivacy": {
+      "description": "Header for privacy and diagnostics settings section."
+   },
+   "settingsCrashReporting": "Crash Reports",
+   "@settingsCrashReporting": {
+      "description": "Title for crash reporting toggle tile."
+   },
+   "settingsCrashReportingSubtitle": "Send anonymous crash diagnostics to improve stability",
+   "@settingsCrashReportingSubtitle": {
+      "description": "Subtitle for crash reporting toggle tile."
+   },
+   "settingsAnalytics": "Usage Analytics",
+   "@settingsAnalytics": {
+      "description": "Title for usage analytics toggle tile."
+   },
+   "settingsAnalyticsSubtitle": "Send anonymous interaction metrics to improve features",
+   "@settingsAnalyticsSubtitle": {
+      "description": "Subtitle for usage analytics toggle tile."
+   },
+   "settingsRateApp": "Rate PulseTrack",
+   "@settingsRateApp": {
+      "description": "Title for rating the app in store."
+   },
+   "settingsRateAppSubtitle": "Support development with a review on Google Play",
+   "@settingsRateAppSubtitle": {
+      "description": "Subtitle for rating the app."
+   },
    "settingsSupport": "Support & Feedback",
    "@settingsSupport": {
       "description": "Label for support tile."

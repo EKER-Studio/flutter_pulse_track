@@ -1,5 +1,9 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:pulse_track/core/application/service_providers.dart';
+import 'package:pulse_track/core/utils/crash_reporter.dart';
 import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 import 'package:pulse_track/features/settings/application/settings_providers.dart';
@@ -17,6 +21,7 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
         // Preserve ephemeral lock state across DB emissions.
         final currentLocked = state.isLocked;
         state = settings.copyWith(isLocked: currentLocked);
+        AppCrashReporter.setCollectionEnabled(settings.isCrashReportingEnabled);
       });
       ref.onDispose(subscription.cancel);
     } on Object catch (_) {
@@ -58,6 +63,37 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
   /// @param enabled Whether biometric protection is enabled.
   Future<void> updateBiometricLock(bool enabled) =>
       _persist(state.copyWith(isBiometricLockEnabled: enabled));
+
+  /// Updates whether anonymous crash reporting is enabled and synchronizes collection.
+  ///
+  /// @param enabled Whether Crashlytics collection is enabled.
+  Future<void> updateCrashReporting(bool enabled) async {
+    await _persist(state.copyWith(isCrashReportingEnabled: enabled));
+    AppCrashReporter.setCollectionEnabled(enabled);
+    try {
+      if (kReleaseMode) {
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(
+          enabled,
+        );
+      }
+    } on Object catch (_) {
+      // Best-effort in test/uninitialized environments.
+    }
+  }
+
+  /// Updates whether anonymous usage analytics are enabled and synchronizes collection.
+  ///
+  /// @param enabled Whether Analytics collection is enabled.
+  Future<void> updateAnalytics(bool enabled) async {
+    await _persist(state.copyWith(isAnalyticsEnabled: enabled));
+    try {
+      if (kReleaseMode) {
+        await ref.read(analyticsServiceProvider).setCollectionEnabled(enabled);
+      }
+    } on Object catch (_) {
+      // Best-effort in test/uninitialized environments.
+    }
+  }
 
   /// Sets the ephemeral locked state (not persisted).
   ///

@@ -77,6 +77,7 @@ void main() {
       expect(find.text('APPEARANCE'), findsOneWidget);
       expect(find.text('WORKOUT & METRICS'), findsOneWidget);
       expect(find.text('DATA MANAGEMENT'), findsOneWidget);
+      expect(find.text('PRIVACY & DIAGNOSTICS'), findsOneWidget);
       expect(find.text('ABOUT & SUPPORT'), findsOneWidget);
 
       expect(find.text('Theme'), findsOneWidget);
@@ -88,6 +89,10 @@ void main() {
       expect(find.text('Export All Workouts'), findsOneWidget);
       expect(find.text('Import Workouts'), findsOneWidget);
       expect(find.text('Wipe All Workouts'), findsOneWidget);
+      expect(find.text('Crash Reports'), findsOneWidget);
+      expect(find.text('Usage Analytics'), findsOneWidget);
+      expect(find.text('Privacy Policy'), findsOneWidget);
+      expect(find.text('Rate PulseTrack'), findsOneWidget);
       expect(find.text('Licenses'), findsOneWidget);
     });
 

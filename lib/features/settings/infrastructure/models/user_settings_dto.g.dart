@@ -22,18 +22,28 @@ const UserSettingsDtoSchema = CollectionSchema(
       name: r'defaultMaxHr',
       type: IsarType.long,
     ),
-    r'isBiometricLockEnabled': PropertySchema(
+    r'isAnalyticsEnabled': PropertySchema(
       id: 1,
+      name: r'isAnalyticsEnabled',
+      type: IsarType.bool,
+    ),
+    r'isBiometricLockEnabled': PropertySchema(
+      id: 2,
       name: r'isBiometricLockEnabled',
       type: IsarType.bool,
     ),
+    r'isCrashReportingEnabled': PropertySchema(
+      id: 3,
+      name: r'isCrashReportingEnabled',
+      type: IsarType.bool,
+    ),
     r'isOnboardingCompleted': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'isOnboardingCompleted',
       type: IsarType.bool,
     ),
     r'themeMode': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'themeMode',
       type: IsarType.byte,
       enumMap: _UserSettingsDtothemeModeEnumValueMap,
@@ -71,9 +81,11 @@ void _userSettingsDtoSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.defaultMaxHr);
-  writer.writeBool(offsets[1], object.isBiometricLockEnabled);
-  writer.writeBool(offsets[2], object.isOnboardingCompleted);
-  writer.writeByte(offsets[3], object.themeMode.index);
+  writer.writeBool(offsets[1], object.isAnalyticsEnabled);
+  writer.writeBool(offsets[2], object.isBiometricLockEnabled);
+  writer.writeBool(offsets[3], object.isCrashReportingEnabled);
+  writer.writeBool(offsets[4], object.isOnboardingCompleted);
+  writer.writeByte(offsets[5], object.themeMode.index);
 }
 
 UserSettingsDto _userSettingsDtoDeserialize(
@@ -85,11 +97,13 @@ UserSettingsDto _userSettingsDtoDeserialize(
   final object = UserSettingsDto();
   object.defaultMaxHr = reader.readLong(offsets[0]);
   object.id = id;
-  object.isBiometricLockEnabled = reader.readBool(offsets[1]);
-  object.isOnboardingCompleted = reader.readBool(offsets[2]);
+  object.isAnalyticsEnabled = reader.readBool(offsets[1]);
+  object.isBiometricLockEnabled = reader.readBool(offsets[2]);
+  object.isCrashReportingEnabled = reader.readBool(offsets[3]);
+  object.isOnboardingCompleted = reader.readBool(offsets[4]);
   object.themeMode =
       _UserSettingsDtothemeModeValueEnumMap[reader.readByteOrNull(
-        offsets[3],
+        offsets[5],
       )] ??
       AppThemeMode.system;
   return object;
@@ -109,6 +123,10 @@ P _userSettingsDtoDeserializeProp<P>(
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
+      return (reader.readBool(offset)) as P;
+    case 4:
+      return (reader.readBool(offset)) as P;
+    case 5:
       return (_UserSettingsDtothemeModeValueEnumMap[reader.readByteOrNull(
                 offset,
               )] ??
@@ -340,11 +358,32 @@ extension UserSettingsDtoQueryFilter
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
+  isAnalyticsEnabledEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'isAnalyticsEnabled', value: value),
+      );
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
   isBiometricLockEnabledEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.equalTo(
           property: r'isBiometricLockEnabled',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
+  isCrashReportingEnabledEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'isCrashReportingEnabled',
           value: value,
         ),
       );
@@ -442,6 +481,20 @@ extension UserSettingsDtoQuerySortBy
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByIsAnalyticsEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isAnalyticsEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByIsAnalyticsEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isAnalyticsEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
   sortByIsBiometricLockEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isBiometricLockEnabled', Sort.asc);
@@ -452,6 +505,20 @@ extension UserSettingsDtoQuerySortBy
   sortByIsBiometricLockEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isBiometricLockEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByIsCrashReportingEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCrashReportingEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByIsCrashReportingEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCrashReportingEnabled', Sort.desc);
     });
   }
 
@@ -513,6 +580,20 @@ extension UserSettingsDtoQuerySortThenBy
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByIsAnalyticsEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isAnalyticsEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByIsAnalyticsEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isAnalyticsEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
   thenByIsBiometricLockEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isBiometricLockEnabled', Sort.asc);
@@ -523,6 +604,20 @@ extension UserSettingsDtoQuerySortThenBy
   thenByIsBiometricLockEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isBiometricLockEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByIsCrashReportingEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCrashReportingEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByIsCrashReportingEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCrashReportingEnabled', Sort.desc);
     });
   }
 
@@ -565,9 +660,23 @@ extension UserSettingsDtoQueryWhereDistinct
   }
 
   QueryBuilder<UserSettingsDto, UserSettingsDto, QDistinct>
+  distinctByIsAnalyticsEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isAnalyticsEnabled');
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QDistinct>
   distinctByIsBiometricLockEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isBiometricLockEnabled');
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QDistinct>
+  distinctByIsCrashReportingEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isCrashReportingEnabled');
     });
   }
 
@@ -601,9 +710,23 @@ extension UserSettingsDtoQueryProperty
   }
 
   QueryBuilder<UserSettingsDto, bool, QQueryOperations>
+  isAnalyticsEnabledProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isAnalyticsEnabled');
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, bool, QQueryOperations>
   isBiometricLockEnabledProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isBiometricLockEnabled');
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, bool, QQueryOperations>
+  isCrashReportingEnabledProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isCrashReportingEnabled');
     });
   }
 

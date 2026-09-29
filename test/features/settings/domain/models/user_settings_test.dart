@@ -29,6 +29,8 @@ void main() {
       expect(settings.isBiometricLockEnabled, isFalse);
       expect(settings.isLocked, isFalse);
       expect(settings.isOnboardingCompleted, isFalse);
+      expect(settings.isCrashReportingEnabled, isTrue);
+      expect(settings.isAnalyticsEnabled, isTrue);
     });
   });
 
@@ -40,6 +42,8 @@ void main() {
         isBiometricLockEnabled: true,
         isLocked: true,
         isOnboardingCompleted: true,
+        isCrashReportingEnabled: false,
+        isAnalyticsEnabled: false,
       );
 
       expect(settings.copyWith(), settings);
@@ -61,6 +65,14 @@ void main() {
       expect(
         base.copyWith(isOnboardingCompleted: true).isOnboardingCompleted,
         isTrue,
+      );
+      expect(
+        base.copyWith(isCrashReportingEnabled: false).isCrashReportingEnabled,
+        isFalse,
+      );
+      expect(
+        base.copyWith(isAnalyticsEnabled: false).isAnalyticsEnabled,
+        isFalse,
       );
     });
   });
@@ -88,6 +100,8 @@ void main() {
       expect(base == base.copyWith(isBiometricLockEnabled: true), isFalse);
       expect(base == base.copyWith(isLocked: true), isFalse);
       expect(base == base.copyWith(isOnboardingCompleted: true), isFalse);
+      expect(base == base.copyWith(isCrashReportingEnabled: false), isFalse);
+      expect(base == base.copyWith(isAnalyticsEnabled: false), isFalse);
     });
 
     test('returns false for other types', () {
