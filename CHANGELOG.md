@@ -7,7 +7,8 @@ All notable changes to **PulseTrack** are documented here. Format follows [Keep 
 ### Added
 - **privacy**: add user opt-out toggles for anonymous Crashlytics crash reporting and Firebase Analytics in Settings (`75aafae`)
 - **settings**: add Privacy Policy and Rate App tiles with external browser redirection (`75aafae`)
-- **l10n**: add localization strings for privacy toggles, diagnostics, and app rating in English and Polish (`75aafae`)
+- **l10n**: add localization strings for privacy toggles, diagnostics, and app rating across all 10 supported locales (`75aafae`, `bf7007a`)
+- **fastlane**: add default release notes changelog templates for Google Play automated distribution (`1f4e3e2`)
 - **r8**: add keep rules for `flutter_local_notifications` broadcast receivers to prevent stripping in release builds (`614f128`)
 
 ### Fixed
