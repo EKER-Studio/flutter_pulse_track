@@ -19,11 +19,12 @@ class HrHomeView extends ConsumerWidget {
       watchSavedDeviceProfilesStreamProvider,
     );
     final l10n = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         title: Text(
           l10n.homeTitle,
@@ -34,7 +35,7 @@ class HrHomeView extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: l10n.settingsTitle,
-            onPressed: () => context.push('/settings'),
+            onPressed: () => context.go('/settings'),
           ),
         ],
       ),
@@ -50,9 +51,9 @@ class HrHomeView extends ConsumerWidget {
                   return SliverToBoxAdapter(
                     child: Container(
                       width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: AppColors.surfaceBackground,
-                        border: Border(
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainerLow,
+                        border: const Border(
                           bottom: BorderSide(color: AppColors.borderSubtle),
                         ),
                       ),
@@ -266,11 +267,12 @@ class HrHomeView extends ConsumerWidget {
     required String description,
     VoidCallback? onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       decoration: BoxDecoration(
-        color: AppColors.surfaceBackground,
+        color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.borderSubtle),
       ),

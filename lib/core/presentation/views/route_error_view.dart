@@ -16,11 +16,14 @@ class RouteErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         title: Text(l10n.routeErrorTitle),
-        backgroundColor: AppColors.surfaceBackground,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
       ),
       body: Center(
@@ -37,9 +40,7 @@ class RouteErrorView extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 l10n.routeErrorNotFound,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 20,
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
@@ -47,9 +48,8 @@ class RouteErrorView extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 error?.toString() ?? l10n.routeErrorInvalidLink,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 14,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
                 textAlign: TextAlign.center,
               ),

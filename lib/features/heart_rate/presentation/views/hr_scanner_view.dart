@@ -21,7 +21,7 @@ class HrScannerView extends ConsumerWidget {
     final notifier = ref.read(bleScannerProvider.notifier);
 
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
@@ -270,7 +270,7 @@ class HrScannerView extends ConsumerWidget {
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: AppColors.surfaceBackground,
+              color: Theme.of(context).colorScheme.surfaceContainerLow,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: AppColors.accentRed.withValues(alpha: 0.3),

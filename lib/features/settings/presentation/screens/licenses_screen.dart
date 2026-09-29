@@ -67,7 +67,7 @@ class _LicensesScreenState extends State<LicensesScreen> {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(title: Text(l10n.settingsLicenses)),
       body: FutureBuilder<List<dynamic>>(
         future: Future.wait([_packageInfoFuture, _licensesFuture]),
@@ -92,7 +92,6 @@ class _LicensesScreenState extends State<LicensesScreen> {
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Card(
                     margin: EdgeInsets.zero,
-                    color: AppColors.surfaceBackground,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                       side: const BorderSide(color: AppColors.borderSubtle),
@@ -178,7 +177,6 @@ class _LicensesScreenState extends State<LicensesScreen> {
               final item = licenses[index - 1];
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 4),
-                color: AppColors.surfaceBackground,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                   side: const BorderSide(color: AppColors.borderSubtle),

@@ -21,7 +21,7 @@ class WorkoutHistoryView extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
@@ -205,7 +205,7 @@ class WorkoutHistoryView extends ConsumerWidget {
             margin: const EdgeInsets.symmetric(horizontal: 16.0),
             constraints: const BoxConstraints(minHeight: 48),
             decoration: BoxDecoration(
-              color: AppColors.surfaceBackground,
+              color: Theme.of(context).colorScheme.surfaceContainerLow,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: AppColors.borderSubtle),
             ),

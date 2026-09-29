@@ -183,7 +183,6 @@ class WorkoutDetailsLoaderView extends ConsumerWidget {
 
     return historyAsync.when(
       loading: () => const Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
         body: Center(
           child: CircularProgressIndicator(color: AppColors.accentBlue),
         ),
