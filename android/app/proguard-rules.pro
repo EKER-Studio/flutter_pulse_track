@@ -46,4 +46,12 @@
 -keep class androidx.health.** { *; }
 -dontwarn androidx.health.**
 
+# --- Flutter Local Notifications ---
+-keep class com.dexterous.flutterlocalnotifications.** { *; }
+-keep class com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver { *; }
+-keep class com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver { *; }
+-keep class com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver { *; }
+-dontwarn com.dexterous.flutterlocalnotifications.**
+
+
 
