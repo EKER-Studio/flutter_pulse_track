@@ -1,0 +1,4 @@
+• Privacy controls: added opt-out toggles for anonymous crash reports and analytics in Settings.
+• Stability: strengthened background workout notifications and updated Android 15 compatibility.
+• Localizations: full support for 10 languages.
+• Performance: optimized startup and background memory usage.

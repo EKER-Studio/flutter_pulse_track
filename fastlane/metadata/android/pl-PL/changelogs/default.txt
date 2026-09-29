@@ -1,0 +1,4 @@
+• Prywatność: dodano przełączniki anonimowych raportów awarii i analityki w Ustawieniach.
+• Stabilność: usprawniono powiadomienia treningowe w tle oraz zgodność z systemem Android 15.
+• Lokalizacja: pełne wsparcie dla 10 wersji językowych.
+• Wydajność: zoptymalizowano czas startu oraz zużycie pamięci.
