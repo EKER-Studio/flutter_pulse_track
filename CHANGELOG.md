@@ -2,6 +2,23 @@
 
 All notable changes to **PulseTrack** are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Conventional Commits](https://www.conventionalcommits.org/).
 
+## [1.0.3] - 2026-09-29
+
+### Added
+- **privacy**: add user opt-out toggles for anonymous Crashlytics crash reporting and Firebase Analytics in Settings (`75aafae`)
+- **settings**: add Privacy Policy and Rate App tiles with external browser redirection (`75aafae`)
+- **l10n**: add localization strings for privacy toggles, diagnostics, and app rating in English and Polish (`75aafae`)
+- **r8**: add keep rules for `flutter_local_notifications` broadcast receivers to prevent stripping in release builds (`614f128`)
+
+### Fixed
+- **android**: remove deprecated `windowLayoutInDisplayCutoutMode` in Android 12+ styles XML (`7d05bc6`)
+
+### Changed
+- **tooling**: scope `riverpod_generator` in `build.yaml` to application/controller files, accelerating `build_runner` execution (`dc02dc2`)
+- **lint**: streamline `analysis_options.yaml` by adopting strict safety rules and removing redundant options inherited from `flutter_lints` (`5b3e6e9`)
+- **ci**: make test and integration formatting checks dynamic in `scripts/before_push.sh` (`bfae0f9`)
+- **deps**: bump dependencies, align Flutter SDK constraint to `>=3.47.0` and compile Android against SDK 36 (`d7021fd`)
+
 ## [1.0.2] - 2026-09-10
 
 ### Security
