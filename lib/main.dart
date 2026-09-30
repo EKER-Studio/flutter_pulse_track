@@ -13,6 +13,7 @@ import 'core/infrastructure/storage/isar_provider.dart';
 import 'core/integrations/notifications/notification_service.dart';
 import 'core/integrations/widgets/widget_sync_service.dart';
 import 'core/presentation/theme/app_colors.dart';
+import 'core/providers/app_provider_observer.dart';
 import 'core/utils/app_logger.dart';
 import 'core/utils/crash_reporter.dart';
 import 'firebase_options.dart';
@@ -115,6 +116,7 @@ Future<void> main() async {
 
     runApp(
       ProviderScope(
+        observers: const [AppProviderObserver()],
         overrides: [
           isarProvider.overrideWithValue(isar),
           app_providers.workoutPersistenceRepositoryProvider.overrideWithValue(
