@@ -18,8 +18,8 @@ Formerly `ble_heart_rate_monitor` — package renamed.*
 | `./scripts/before_push.sh` | Full pipeline: pub get → gen-l10n → build_runner → format → analyze → custom_lint → test |
 
 ### Architecture & Layer Boundaries
-Feature-first Clean Architecture under `lib/features/<feature>/`. Two features currently exist: `heart_rate`
-and `workout`. Shared code lives in `lib/core/` (theme, logger, storage, foreground services).
+Feature-first Clean Architecture under `lib/features/<feature>/`. Five features currently exist: `heart_rate`,
+`workout`, `settings`, `navigation`, and `onboarding`. Shared code lives in `lib/core/` (theme, logger, storage, foreground services).
 
 - **Domain** (`domain/`): Pure Dart — entities, repository interfaces, use cases. NO Flutter, Riverpod, or
   Isar imports allowed here — not even in doc comments.
@@ -88,11 +88,14 @@ correctness, handle with care:
 
 ### Mandatory Verification Pipeline (concrete commands)
 Matches `./scripts/before_push.sh`:
-1. `dart run build_runner build`
-2. `dart format lib test integration_test test_driver`
-3. `flutter analyze`
-4. `dart run custom_lint`
-5. `flutter test --exclude-tags golden`
+1. `flutter pub get`
+2. `flutter gen-l10n`
+3. `dart run build_runner build`
+4. `dart format lib test integration_test test_driver`
+5. `flutter analyze`
+6. `dart run custom_lint`
+7. `./scripts/check_boundaries.sh`
+8. `flutter test --exclude-tags "golden,screenshot"`
 
-Once all 5 steps are green and the Resource Lifecycle checklist above is verified, commit per `AGENTS.md` →
+Once all steps are green and the Resource Lifecycle checklist above is verified, commit per `AGENTS.md` →
 Git & Version Control (autonomous commit is enabled for this repo, since this file exists).
