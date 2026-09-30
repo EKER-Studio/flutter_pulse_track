@@ -56,6 +56,7 @@ FEATURE_SCRIPTS=(
     "generate_core.sh"
     "generate_settings.sh"
     "generate_biometric.sh"
+    "generate_states.sh"
 )
 
 ARG1="${1:-phone}"
@@ -71,17 +72,19 @@ if [[ "$ARG1" == "-h" || "$ARG1" == "--help" ]]; then
     echo "  - core       (Home, Scanner, Live Monitor, History, Details)"
     echo "  - settings   (Settings Screen, Licenses Screen)"
     echo "  - biometric  (Biometric Shield Screen)"
+    echo "  - states     (Empty states, error states, and modal dialogs)"
     echo ""
     echo "Arguments:"
-    echo "  target  all|core|onboarding|settings|biometric (optional, default: all features)"
-    echo "  device  phone|tablet_7|tablet_10|all          (default: phone)"
-    echo "  locale  en|pl|de|es|fr|it|ja|ko|nl|pt         (default: all supported)"
+    echo "  target  all|core|onboarding|settings|biometric|states (optional, default: all features)"
+    echo "  device  phone|tablet_7|tablet_10|all                 (default: phone)"
+    echo "  locale  en|pl|de|es|fr|it|ja|ko|nl|pt                (default: all supported)"
     echo ""
     echo "Examples:"
     echo "  $0 phone"
     echo "  $0 phone pl"
     echo "  $0 all en"
     echo "  $0 core phone pl"
+    echo "  $0 states phone"
     echo "  $0 onboarding phone"
     exit 0
 fi
@@ -89,7 +92,7 @@ fi
 # Detect whether $ARG1 is a feature target or device
 SPECIFIC_TARGET=""
 case "$ARG1" in
-    core|onboarding|settings|biometric)
+    core|onboarding|settings|biometric|states)
         SPECIFIC_TARGET="$ARG1"
         DEVICE_INPUT="${ARG2:-phone}"
         LOCALE_FILTER="${ARG3:-}"
