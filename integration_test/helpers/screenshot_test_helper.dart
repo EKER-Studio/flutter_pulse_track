@@ -1,10 +1,11 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
-import 'package:pulse_track/core/presentation/theme/app_colors.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pulse_track/core/presentation/theme/app_theme.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/ble_device.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/ble_scanner_state.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/body_sensor_location.dart';
@@ -12,6 +13,9 @@ import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dar
 import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
 import 'package:pulse_track/features/heart_rate/presentation/controllers/ble_scanner_notifier.dart';
 import 'package:pulse_track/features/heart_rate/presentation/controllers/hr_monitor_notifier.dart';
+import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
+import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
+import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
 import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
@@ -214,6 +218,71 @@ class MockHrMonitorNotifier extends HrMonitorNotifier {
   Future<void> disconnect() async {}
 }
 
+/// Riverpod test notifier that supplies configurable [UserSettings].
+class MockAppSettingsNotifier extends AppSettingsNotifier {
+  final UserSettings _initialSettings;
+
+  /// Creates a mock settings notifier initialized with [_initialSettings].
+  MockAppSettingsNotifier([this._initialSettings = const UserSettings()]);
+
+  @override
+  UserSettings build() => _initialSettings;
+
+  @override
+  Future<void> updateTheme(AppThemeMode mode) async {
+    state = state.copyWith(themeMode: mode);
+  }
+
+  @override
+  Future<void> updateMaxHr(int maxHr) async {
+    state = state.copyWith(defaultMaxHr: maxHr);
+  }
+
+  @override
+  Future<void> updateBiometricLock(bool enabled) async {
+    state = state.copyWith(isBiometricLockEnabled: enabled);
+  }
+
+  @override
+  Future<void> updateCrashReporting(bool enabled) async {
+    state = state.copyWith(isCrashReportingEnabled: enabled);
+  }
+
+  @override
+  Future<void> updateAnalytics(bool enabled) async {
+    state = state.copyWith(isAnalyticsEnabled: enabled);
+  }
+
+  @override
+  void setLocked(bool locked) {
+    state = state.copyWith(isLocked: locked);
+  }
+
+  @override
+  Future<void> completeOnboarding() async {
+    state = state.copyWith(isOnboardingCompleted: true);
+  }
+}
+
+/// Seeds [PackageInfo] with deterministic test values for screenshot tests.
+void initPackageInfoMock() {
+  PackageInfo.setMockInitialValues(
+    appName: 'PulseTrack',
+    packageName: 'com.ekerstudio.pulsetrack',
+    version: '1.0.0',
+    buildNumber: '1',
+    buildSignature: '',
+  );
+}
+
+/// Initializes the screenshot test environment by converting surfaces and setting up mocks.
+Future<void> initScreenshotEnvironment(
+  IntegrationTestWidgetsFlutterBinding binding,
+) async {
+  await binding.convertFlutterSurfaceToImage();
+  initPackageInfoMock();
+}
+
 /// Device frame that emulates a realistic mobile status bar and bottom gesture navigation pill.
 class ScreenshotDeviceFrame extends StatelessWidget {
   /// The underlying page content widget.
@@ -379,6 +448,29 @@ class ScreenshotDeviceFrame extends StatelessWidget {
   }
 }
 
+/// Emulates a Material 3 bottom sheet container for modal screenshot captures.
+class ScreenshotBottomSheetContainer extends StatelessWidget {
+  /// The child content widget.
+  final Widget child;
+
+  /// Creates a [ScreenshotBottomSheetContainer].
+  const ScreenshotBottomSheetContainer({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Material(
+      color: theme.colorScheme.surfaceContainerLow,
+      elevation: 2.0,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28.0)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: child,
+    );
+  }
+}
+
 /// Builds a self-contained [MaterialApp] wrapped in [ProviderScope] and [ScreenshotDeviceFrame].
 Widget buildScreenshotAppWrapper({
   required Widget child,
@@ -386,15 +478,13 @@ Widget buildScreenshotAppWrapper({
   List<Override> overrides = const [],
   bool isDark = true,
   bool showNotificationIcon = true,
+  ThemeData? theme,
+  ThemeMode? themeMode,
 }) {
-  final themeData = ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: AppColors.accentRed,
-      brightness: isDark ? Brightness.dark : Brightness.light,
-    ),
-    scaffoldBackgroundColor: AppColors.scaffoldBackground,
-    useMaterial3: true,
-  );
+  final effectiveTheme =
+      theme ?? (isDark ? AppTheme.darkTheme : AppTheme.lightTheme);
+  final effectiveThemeMode =
+      themeMode ?? (isDark ? ThemeMode.dark : ThemeMode.light);
 
   return ProviderScope(
     overrides: overrides,
@@ -402,14 +492,9 @@ Widget buildScreenshotAppWrapper({
       debugShowCheckedModeBanner: false,
       locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      theme: themeData,
-      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      theme: effectiveTheme,
+      themeMode: effectiveThemeMode,
       home: ScreenshotDeviceFrame(
         isDark: isDark,
         showNotificationIcon: showNotificationIcon,
