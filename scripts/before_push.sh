@@ -71,11 +71,7 @@ FORMAT_DIRS=("lib" "test")
 [ -d "integration_test" ] && FORMAT_DIRS+=("integration_test")
 [ -d "test_driver" ] && FORMAT_DIRS+=("test_driver")
 
-dart format "${FORMAT_DIRS[@]}"
-if ! git diff --quiet "${FORMAT_DIRS[@]}"; then
-    log_error "Unstaged formatting changes detected after 'dart format'. Stage and commit them before pushing."
-    exit 1
-fi
+dart format --set-exit-if-changed "${FORMAT_DIRS[@]}"
 log_success "Codebase formatting aligns with style specifications."
 
 # ------------------------------------------------------------------------------
@@ -84,6 +80,7 @@ log_step "5" "Executing static analysis (Linter)..."
 # Evaluates project architecture against analysis_options.yaml rules
 flutter analyze
 dart run custom_lint
+./scripts/check_boundaries.sh
 log_success "Static analysis passed with zero warnings or errors."
 
 # ------------------------------------------------------------------------------
