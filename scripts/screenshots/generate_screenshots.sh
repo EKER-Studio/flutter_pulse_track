@@ -3,7 +3,7 @@
 # ==============================================================================
 # Script Name: generate_screenshots.sh
 # Description: Orchestrator – generates full store screenshot suite for PulseTrack
-#              using integration_test/pulse_track_screenshots_test.dart.
+#              by delegating to modular per-feature generators.
 #              Ensures consistent ScreenshotDeviceFrame emulation (status bar 09:41
 #              + notification icon + signal/wifi/battery + bottom gesture pill).
 # Supports:
@@ -11,13 +11,18 @@
 #   android/tablet_7  (800 x 1280)   -> Small_Tablet  (7")
 #   android/tablet_10 (2560 x 1600)  -> Medium_Tablet (10")
 # Usage:
-#   ./scripts/screenshots/generate_screenshots.sh [phone|tablet_7|tablet_10|all] [locale]
-#   Default: phone (all locales)
+#   ./scripts/screenshots/generate_screenshots.sh [target|device] [device|locale] [locale]
 #   Examples:
 #     ./scripts/screenshots/generate_screenshots.sh phone
 #     ./scripts/screenshots/generate_screenshots.sh phone pl
 #     ./scripts/screenshots/generate_screenshots.sh all en
-#     ./scripts/screenshots/generate_screenshots.sh all
+#     ./scripts/screenshots/generate_screenshots.sh onboarding phone pl
+#     ./scripts/screenshots/generate_screenshots.sh core phone
+# Per-feature scripts:
+#   - generate_core.sh        (Home, Scanner, Live Monitor, History, Details)
+#   - generate_onboarding.sh  (Welcome, Permissions, Biometric, Completion)
+#   - generate_settings.sh    (Settings Screen, Licenses Screen)
+#   - generate_biometric.sh   (Biometric Shield Screen)
 # ==============================================================================
 
 set -euo pipefail
@@ -46,45 +51,69 @@ log_error() {
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-DEVICE_INPUT="${1:-phone}"
-LOCALE_FILTER="${2:-}"
+FEATURE_SCRIPTS=(
+    "generate_onboarding.sh"
+    "generate_core.sh"
+    "generate_settings.sh"
+    "generate_biometric.sh"
+)
 
-if [[ "$DEVICE_INPUT" == "-h" || "$DEVICE_INPUT" == "--help" ]]; then
-    echo "Usage: $0 [phone|tablet_7|tablet_10|all] [locale]"
+ARG1="${1:-phone}"
+ARG2="${2:-}"
+ARG3="${3:-}"
+
+if [[ "$ARG1" == "-h" || "$ARG1" == "--help" ]]; then
+    echo "Usage: $0 [target|device] [device|locale] [locale]"
     echo ""
     echo "Generates Google Play Store screenshot suite for PulseTrack."
-    echo "Screens captured:"
-    echo "  - 01_home (Saved sensors, scan CTA, feature hub)"
-    echo "  - 02_scanner (Discovered BLE sensors with dBm badges)"
-    echo "  - 03_live_monitor (Active workout telemetry: 142 BPM, RR, battery)"
-    echo "  - 04_workout_history (Completed workout session list)"
-    echo "  - 05_workout_details (Summary grid & HR zone waveform chart)"
+    echo "Suites:"
+    echo "  - onboarding (Welcome, Permissions, Biometric, Completion)"
+    echo "  - core       (Home, Scanner, Live Monitor, History, Details)"
+    echo "  - settings   (Settings Screen, Licenses Screen)"
+    echo "  - biometric  (Biometric Shield Screen)"
     echo ""
     echo "Arguments:"
-    echo "  device  phone|tablet_7|tablet_10|all  (default: phone)"
-    echo "  locale  en|pl                         (default: all)"
+    echo "  target  all|core|onboarding|settings|biometric (optional, default: all features)"
+    echo "  device  phone|tablet_7|tablet_10|all          (default: phone)"
+    echo "  locale  en|pl|de|es|fr|it|ja|ko|nl|pt         (default: all supported)"
     echo ""
     echo "Examples:"
     echo "  $0 phone"
     echo "  $0 phone pl"
     echo "  $0 all en"
+    echo "  $0 core phone pl"
+    echo "  $0 onboarding phone"
     exit 0
 fi
+
+# Detect whether $ARG1 is a feature target or device
+SPECIFIC_TARGET=""
+case "$ARG1" in
+    core|onboarding|settings|biometric)
+        SPECIFIC_TARGET="$ARG1"
+        DEVICE_INPUT="${ARG2:-phone}"
+        LOCALE_FILTER="${ARG3:-}"
+        ;;
+    *)
+        DEVICE_INPUT="$ARG1"
+        LOCALE_FILTER="$ARG2"
+        ;;
+esac
 
 case "$DEVICE_INPUT" in
     phone|tablet_7|tablet_10|all) ;;
     *)
         log_error "Unknown device: $DEVICE_INPUT (expected: phone|tablet_7|tablet_10|all)"
-        echo "Usage: $0 [phone|tablet_7|tablet_10|all] [locale]"
+        echo "Usage: $0 [target|device] [device|locale] [locale]"
         exit 1
         ;;
 esac
 
 if [[ -n "$LOCALE_FILTER" ]]; then
     case "$LOCALE_FILTER" in
-        en|pl) ;;
+        en|pl|de|es|fr|it|ja|ko|nl|pt) ;;
         *)
-            log_error "Unknown locale: $LOCALE_FILTER (expected: en|pl)"
+            log_error "Unknown locale: $LOCALE_FILTER (expected: en|pl|de|es|fr|it|ja|ko|nl|pt)"
             exit 1
             ;;
     esac
@@ -95,9 +124,24 @@ START_TIME=$(date +%s)
 log_info "Starting PulseTrack Screenshot Suite..."
 log_info "Devices: $DEVICE_INPUT | Locale: ${LOCALE_FILTER:-all}"
 
-# Execute runner with unified test suite
-log_step "Executing integration test suite..."
-"$DIR/run_screenshot_target.sh" "integration_test/pulse_track_screenshots_test.dart" "$DEVICE_INPUT" "${LOCALE_FILTER:-}"
+if [[ -n "$SPECIFIC_TARGET" ]]; then
+    TARGET_SCRIPT="generate_${SPECIFIC_TARGET}.sh"
+    log_step "Feature target: $TARGET_SCRIPT ($DEVICE_INPUT / ${LOCALE_FILTER:-all})"
+    if [[ ! -x "$DIR/$TARGET_SCRIPT" ]]; then
+        log_error "Missing or non-executable: $DIR/$TARGET_SCRIPT"
+        exit 1
+    fi
+    "$DIR/$TARGET_SCRIPT" "$DEVICE_INPUT" "${LOCALE_FILTER:-}"
+else
+    for SCRIPT in "${FEATURE_SCRIPTS[@]}"; do
+        log_step "Feature: $SCRIPT ($DEVICE_INPUT / ${LOCALE_FILTER:-all})"
+        if [[ ! -x "$DIR/$SCRIPT" ]]; then
+            log_error "Missing or non-executable: $DIR/$SCRIPT"
+            exit 1
+        fi
+        "$DIR/$SCRIPT" "$DEVICE_INPUT" "${LOCALE_FILTER:-}"
+    done
+fi
 
 # Global verification
 log_step "Global Verification (all devices)..."
@@ -107,8 +151,8 @@ log_success "Total Android screenshots across all devices: $TOTAL_ALL"
 if [[ -d "screenshots/android" ]]; then
     echo ""
     log_info "Captured screenshots preview:"
-    find screenshots/android -type f -name "*.png" | sort | head -n 20
-    if [[ "$TOTAL_ALL" -gt 20 ]]; then
+    find screenshots/android -type f -name "*.png" | sort | head -n 25
+    if [[ "$TOTAL_ALL" -gt 25 ]]; then
         echo "... ($TOTAL_ALL total, truncated)"
     fi
     echo ""
