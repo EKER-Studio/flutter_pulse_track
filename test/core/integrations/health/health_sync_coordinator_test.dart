@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health/health.dart';
 import 'package:mocktail/mocktail.dart';
@@ -300,6 +302,30 @@ void main() {
 
       expect(await coordinator.sync(), isNull);
     });
+
+    test(
+      'returns null instead of hanging when the stream never emits',
+      () async {
+        when(
+          () => mockHealthService.fetchWorkoutHistory(
+            start: any(named: 'start'),
+            end: any(named: 'end'),
+          ),
+        ).thenAnswer((_) async => []);
+        // Never emits and never closes: without a timeout, `first` would hang.
+        final hanging = StreamController<List<WorkoutSession>>();
+        addTearDown(hanging.close);
+        when(() => mockRepository.watchWorkoutHistory())
+            .thenAnswer((_) => hanging.stream);
+        final shortTimeoutCoordinator = HealthSyncCoordinator(
+          healthService: mockHealthService,
+          repository: mockRepository,
+          localFetchTimeout: const Duration(milliseconds: 50),
+        );
+
+        expect(await shortTimeoutCoordinator.sync(), isNull);
+      },
+    );
 
     test('deduplicates a remote record exactly 60s away', () async {
       final now = DateTime.now().toUtc();

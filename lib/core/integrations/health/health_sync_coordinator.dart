@@ -29,9 +29,15 @@ class HealthSyncCoordinator {
   /// Local workout persistence repository.
   final WorkoutPersistenceRepository repository;
 
+  /// Maximum wait for the first local snapshot before giving up the cycle.
+  ///
+  /// Guards against a hung `sync()` when the Isar watch stream never emits.
+  final Duration localFetchTimeout;
+
   const HealthSyncCoordinator({
     required this.healthService,
     required this.repository,
+    this.localFetchTimeout = const Duration(seconds: 10),
   });
 
   /// Synchronizes workout sessions between local persistence and the platform health store.
@@ -57,7 +63,10 @@ class HealthSyncCoordinator {
         end: end,
       );
 
-      final localSessions = await repository.watchWorkoutHistory().first;
+      final localSessions = await repository
+          .watchWorkoutHistory()
+          .first
+          .timeout(localFetchTimeout);
       final targetSessions = localSessions
           .where(
             (s) =>
