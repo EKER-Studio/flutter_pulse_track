@@ -26,6 +26,15 @@ class CsvWorkoutImportAnalysis {
 
 /// Domain service that parses CSV representations of workouts into domain entities.
 class CsvWorkoutImporter {
+  /// Lowest plausible heart-rate sample in BPM; non-positive values are corrupt.
+  static const int minValidBpm = 1;
+
+  /// Highest plausible heart-rate sample in BPM; beyond any sensor range.
+  static const int maxValidBpm = 300;
+
+  /// Highest valid `BodySensorLocation` index (8 values, `other`..`unknown`).
+  static const int maxSensorLocationIndex = 7;
+
   const CsvWorkoutImporter();
 
   /// Parses [rawCsv] content into a [CsvWorkoutImportAnalysis].
@@ -100,6 +109,11 @@ class CsvWorkoutImporter {
           skippedRows++;
           continue;
         }
+        // Reject non-physiological readings instead of persisting them verbatim.
+        if (bpm < minValidBpm || bpm > maxValidBpm) {
+          skippedRows++;
+          continue;
+        }
 
         if (firstTime == null || timestamp.isBefore(firstTime)) {
           firstTime = timestamp;
@@ -110,7 +124,11 @@ class CsvWorkoutImporter {
 
         if (sensorIdx != -1 && sensorIdx < row.length) {
           final loc = int.tryParse(row[sensorIdx].toString().trim());
-          if (loc != null) sensorLocationIndex = loc;
+          // Ignore out-of-range indices so a future
+          // `BodySensorLocation.values[i]` mapping cannot throw RangeError.
+          if (loc != null && loc >= 0 && loc <= maxSensorLocationIndex) {
+            sensorLocationIndex = loc;
+          }
         }
 
         bpmSamples.add(bpm);
@@ -213,7 +231,11 @@ class CsvWorkoutImporter {
             final delimiter = rawSamples.contains(';') ? ';' : ',';
             for (final part in rawSamples.split(delimiter)) {
               final parsed = int.tryParse(part.trim());
-              if (parsed != null) samples.add(parsed);
+              if (parsed != null &&
+                  parsed >= minValidBpm &&
+                  parsed <= maxValidBpm) {
+                samples.add(parsed);
+              }
             }
           }
         }
@@ -237,6 +259,10 @@ class CsvWorkoutImporter {
         final sensorLocation = sensorIdx != -1 && sensorIdx < row.length
             ? int.tryParse(row[sensorIdx].toString().trim()) ?? 0
             : 0;
+        final clampedSensorLocation =
+            sensorLocation >= 0 && sensorLocation <= maxSensorLocationIndex
+            ? sensorLocation
+            : 0;
         final mac = macIdx != -1 && macIdx < row.length
             ? row[macIdx].toString().trim()
             : 'IMPORTED';
@@ -251,7 +277,7 @@ class CsvWorkoutImporter {
           avgBpm: avg,
           maxBpm: max,
           bpmSamples: samples,
-          sensorLocationIndex: sensorLocation,
+          sensorLocationIndex: clampedSensorLocation,
           deviceMacAddress: mac.isEmpty ? 'IMPORTED' : mac,
           deviceName: name.isEmpty ? 'Imported Session' : name,
         );

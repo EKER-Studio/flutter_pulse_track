@@ -190,5 +190,59 @@ StartTime,DeviceMacAddress,DeviceName
       expect(analysis.validSessions.first.deviceMacAddress, 'IMPORTED');
       expect(analysis.validSessions.first.deviceName, 'Imported Session');
     });
+
+    test('skips non-physiological bpm rows in time-series format', () {
+      const csv = '''
+Timestamp,HeartRate(bpm),SensorLocation
+2026-07-28T10:00:00.000Z,100,1
+2026-07-28T10:01:00.000Z,0,1
+2026-07-28T10:02:00.000Z,-5,1
+2026-07-28T10:03:00.000Z,999,1
+2026-07-28T10:04:00.000Z,120,1
+''';
+
+      final analysis = importer.parse(csv);
+
+      expect(analysis.validSessions.length, 1);
+      expect(analysis.skippedRowCount, 3);
+      final session = analysis.validSessions.first;
+      expect(session.bpmSamples, [100, 120]);
+      expect(session.avgBpm, 110);
+      expect(session.maxBpm, 120);
+    });
+
+    test('ignores out-of-range sensor location in time-series format', () {
+      const csv = '''
+Timestamp,HeartRate(bpm),SensorLocation
+2026-07-28T10:00:00.000Z,100,1
+2026-07-28T10:01:00.000Z,110,99
+2026-07-28T10:02:00.000Z,120,-2
+''';
+
+      final analysis = importer.parse(csv);
+
+      expect(analysis.validSessions.length, 1);
+      expect(analysis.skippedRowCount, 0);
+      expect(analysis.validSessions.first.sensorLocationIndex, 1);
+    });
+
+    test(
+      'drops invalid samples and clamps sensor location in summary format',
+      () {
+        const csv = '''
+StartTime,EndTime,AvgBpm,MaxBpm,BpmSamples,SensorLocation
+2026-07-28T10:00:00.000Z,2026-07-28T10:30:00.000Z,0,0,"100;0;-10;400;120",42
+''';
+
+        final analysis = importer.parse(csv);
+
+        expect(analysis.validSessions.length, 1);
+        final session = analysis.validSessions.first;
+        expect(session.bpmSamples, [100, 120]);
+        expect(session.avgBpm, 110);
+        expect(session.maxBpm, 120);
+        expect(session.sensorLocationIndex, 0);
+      },
+    );
   });
 }
