@@ -10,13 +10,15 @@ WorkoutSession _crashedSession({
   int id = 1,
   List<int> samples = const [120, 125, 130],
   DateTime? startTime,
+  int avgBpm = 125,
+  int maxBpm = 130,
 }) {
   return WorkoutSession(
     id: id,
     startTime: startTime ?? DateTime.utc(2025, 6, 1, 10),
     endTime: null,
-    avgBpm: 125,
-    maxBpm: 130,
+    avgBpm: avgBpm,
+    maxBpm: maxBpm,
     bpmSamples: samples,
     sensorLocationIndex: 1,
     deviceMacAddress: 'AA:BB:CC:DD:EE:01',
@@ -134,6 +136,36 @@ void main() {
           .thenThrow(Exception('DB gone'));
 
       await expectLater(useCase(), throwsException);
+    });
+
+    test('recomputes aggregates from samples, ignoring stale values', () async {
+      final start = DateTime.utc(2025, 6, 1, 10);
+      when(() => repository.findUnclosedSessions()).thenAnswer(
+        (_) async => [
+          _crashedSession(
+            id: 5,
+            samples: [100, 110],
+            startTime: start,
+            avgBpm: 0,
+            maxBpm: 0,
+          ),
+        ],
+      );
+
+      expect(await useCase(), 1);
+      verify(
+        () => repository.saveWorkoutSession(
+          startTime: start,
+          endTime: start.add(const Duration(seconds: 2)),
+          samples: [100, 110],
+          sensorLocationIndex: 1,
+          macAddress: 'AA:BB:CC:DD:EE:01',
+          name: 'Sensor',
+          avgBpm: 105,
+          maxBpm: 110,
+          existingId: 5,
+        ),
+      ).called(1);
     });
   });
 }

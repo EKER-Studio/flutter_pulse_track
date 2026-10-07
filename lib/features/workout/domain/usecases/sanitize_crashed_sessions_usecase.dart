@@ -50,6 +50,15 @@ class SanitizeCrashedSessionsUseCase {
     final endTime = session.startTime
         .add(Duration(seconds: session.bpmSamples.length))
         .toUtc();
+    // Recompute aggregates from the surviving samples: checkpoint values may
+    // cover only a partial window and must not leak into the finalized record.
+    var sum = 0;
+    var maxBpm = 0;
+    for (final sample in session.bpmSamples) {
+      sum += sample;
+      if (sample > maxBpm) maxBpm = sample;
+    }
+    final avgBpm = (sum / session.bpmSamples.length).round();
     await _repository.saveWorkoutSession(
       startTime: session.startTime,
       endTime: endTime,
@@ -57,8 +66,8 @@ class SanitizeCrashedSessionsUseCase {
       sensorLocationIndex: session.sensorLocationIndex,
       macAddress: session.deviceMacAddress,
       name: session.deviceName,
-      avgBpm: session.avgBpm,
-      maxBpm: session.maxBpm,
+      avgBpm: avgBpm,
+      maxBpm: maxBpm,
       existingId: session.id,
     );
     log.i(
