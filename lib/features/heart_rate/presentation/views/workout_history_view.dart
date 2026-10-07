@@ -184,7 +184,7 @@ class WorkoutHistoryView extends ConsumerWidget {
         : session.deviceName;
 
     return Material(
-      color: Colors.transparent,
+      color: AppColors.transparent,
       child: Semantics(
         button: true,
         label: l10n.workoutCardLabel(formattedDate),

@@ -82,4 +82,8 @@ abstract final class AppColors {
   static const Color hrZone4 = Color(0xFFFF9F45);
 
   static const Color hrZone5 = Color(0xFFFF6B6B);
+
+  // Utility
+  /// Fully transparent passthrough (e.g. Material ink splash host).
+  static const Color transparent = Color(0x00000000);
 }
