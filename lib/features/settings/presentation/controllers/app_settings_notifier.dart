@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pulse_track/core/application/service_providers.dart';
+import 'package:pulse_track/core/utils/app_logger.dart';
 import 'package:pulse_track/core/utils/crash_reporter.dart';
 import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
@@ -17,15 +18,31 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
   UserSettings build() {
     try {
       final repository = ref.watch(userSettingsRepositoryProvider);
-      final subscription = repository.watchSettings().listen((settings) {
-        // Preserve ephemeral lock state across DB emissions.
-        final currentLocked = state.isLocked;
-        state = settings.copyWith(isLocked: currentLocked);
-        AppCrashReporter.setCollectionEnabled(settings.isCrashReportingEnabled);
-      });
+      final subscription = repository.watchSettings().listen(
+        (settings) {
+          // Preserve ephemeral lock state across DB emissions.
+          final currentLocked = state.isLocked;
+          state = settings.copyWith(isLocked: currentLocked);
+          AppCrashReporter.setCollectionEnabled(
+            settings.isCrashReportingEnabled,
+          );
+        },
+        onError: (Object error, StackTrace stack) {
+          log.e(
+            '[AppSettingsNotifier] watchSettings stream error',
+            error: error,
+            stackTrace: stack,
+          );
+        },
+      );
       ref.onDispose(subscription.cancel);
-    } on Object catch (_) {
+    } on Object catch (e, st) {
       // In tests where Isar is not overridden, fall back to in-memory defaults.
+      log.w(
+        '[AppSettingsNotifier] watchSettings unavailable — using defaults',
+        error: e,
+        stackTrace: st,
+      );
     }
 
     return const UserSettings();
@@ -40,7 +57,12 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
     state = updated;
     try {
       await ref.read(userSettingsRepositoryProvider).saveSettings(updated);
-    } on Object catch (_) {
+    } on Object catch (e, st) {
+      log.w(
+        '[AppSettingsNotifier] persistence failed — rolling back',
+        error: e,
+        stackTrace: st,
+      );
       state = previous;
       rethrow;
     }
@@ -76,8 +98,13 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
           enabled,
         );
       }
-    } on Object catch (_) {
+    } on Object catch (e, st) {
       // Best-effort in test/uninitialized environments.
+      log.d(
+        '[AppSettingsNotifier] Crashlytics toggle skipped',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -90,8 +117,13 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
       if (kReleaseMode) {
         await ref.read(analyticsServiceProvider).setCollectionEnabled(enabled);
       }
-    } on Object catch (_) {
+    } on Object catch (e, st) {
       // Best-effort in test/uninitialized environments.
+      log.d(
+        '[AppSettingsNotifier] Analytics toggle skipped',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 

@@ -230,7 +230,16 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
     _connectionStateSubscription = _monitorService
         .connectionState(device)
-        .listen(_onDeviceConnectionStateChanged);
+        .listen(
+          _onDeviceConnectionStateChanged,
+          onError: (Object error, StackTrace stack) {
+            log.e(
+              '[HrMonitorNotifier] connection-state stream error',
+              error: error,
+              stackTrace: stack,
+            );
+          },
+        );
 
     state = const MonitorState.discoveringServices();
 

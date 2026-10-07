@@ -138,15 +138,33 @@ class BleScannerNotifier extends _$BleScannerNotifier
 
   /// Halts the active hardware scan and returns the notifier to [BleScannerState.idle].
   ///
+  /// Never throws: hardware stop failures are logged so fire-and-forget
+  /// lifecycle callers cannot produce unhandled async errors.
   /// Returns a [Future] completing when the scan is stopped.
   Future<void> stopScan() async {
     log.i('[BleScannerNotifier] Stopping scan...');
     _cancelEmptyStateTimer();
 
-    await _scanResultsSubscription?.cancel();
+    try {
+      await _scanResultsSubscription?.cancel();
+    } on Object catch (e, st) {
+      log.w(
+        '[BleScannerNotifier] stopScan() subscription cancel failed',
+        error: e,
+        stackTrace: st,
+      );
+    }
     _scanResultsSubscription = null;
 
-    await _scannerService.stopScan();
+    try {
+      await _scannerService.stopScan();
+    } on Object catch (e, st) {
+      log.w(
+        '[BleScannerNotifier] stopScan() hardware stop failed',
+        error: e,
+        stackTrace: st,
+      );
+    }
 
     if (!ref.mounted) return;
     if (state is ScanningScannerState || state is EmptyScannerState) {
@@ -183,8 +201,18 @@ class BleScannerNotifier extends _$BleScannerNotifier
     switch (adapterState) {
       case BluetoothAdapterState.off:
         _cancelEmptyStateTimer();
-        _scanResultsSubscription?.cancel();
+        final pendingCancel = _scanResultsSubscription;
         _scanResultsSubscription = null;
+        pendingCancel?.cancel().then(
+          (_) {},
+          onError: (Object e, StackTrace st) {
+            log.w(
+              '[BleScannerNotifier] adapter-off cancel failed',
+              error: e,
+              stackTrace: st,
+            );
+          },
+        );
         _lastRawResults = [];
         state = const BleScannerState.adapterOff();
 

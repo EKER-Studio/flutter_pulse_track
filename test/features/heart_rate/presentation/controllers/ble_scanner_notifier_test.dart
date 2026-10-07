@@ -627,16 +627,21 @@ void main() {
     });
   });
 
-  group('stopScan error propagation', () {
-    test('hardware stopScan failure propagates to the caller', () async {
-      final m = buildMockService();
-      container = createContainer(scannerService: m.service);
-      final notifier = initNotifier(container!);
+  group('stopScan error tolerance', () {
+    test(
+      'hardware stopScan failure is swallowed and returns to idle',
+      () async {
+        final m = buildMockService();
+        container = createContainer(scannerService: m.service);
+        final notifier = initNotifier(container!);
 
-      await notifier.startScan();
-      when(() => m.service.stopScan()).thenThrow(Exception('stop failed'));
+        await notifier.startScan();
+        when(() => m.service.stopScan()).thenThrow(Exception('stop failed'));
 
-      await expectLater(notifier.stopScan(), throwsException);
-    });
+        await notifier.stopScan();
+
+        expect(container!.read(bleScannerProvider), isA<IdleScannerState>());
+      },
+    );
   });
 }

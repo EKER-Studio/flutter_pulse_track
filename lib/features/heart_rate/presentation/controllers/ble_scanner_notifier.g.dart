@@ -57,7 +57,7 @@ final class BleScannerNotifierProvider
 }
 
 String _$bleScannerNotifierHash() =>
-    r'9ff8f700cd0f5c0ae74f730189bda119f10d2fee';
+    r'b68dac6f41961b61cc836535582c0951e809341e';
 
 /// Manages BLE scanning lifecycle and filters discovered devices.
 ///
