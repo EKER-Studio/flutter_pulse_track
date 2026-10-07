@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [develop]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   verification:
     runs-on: ubuntu-latest
@@ -120,6 +124,9 @@ jobs:
 
       - name: Riverpod-specific lints (custom_lint)
         run: dart run custom_lint
+
+      - name: Architecture boundaries
+        run: ./scripts/check_boundaries.sh
 
       - name: Run unit and widget tests
         run: flutter test --coverage --exclude-tags "golden,screenshot"
