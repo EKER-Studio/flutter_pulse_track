@@ -10,8 +10,28 @@ state management and Isar for high-speed local data persistence.
 * **Smart Direct Connect**: Local-First device caching via Isar database allows instant, one-tap connections to previously paired sensors, bypassing expensive and battery-draining hardware air discovery.
 * **Universal Capability Discovery**: Dynamic runtime resolution of Body Sensor Location (`0x2A38`) and continuous live streaming of Battery Level (`0x180F`).
 * **Resilient Background Protection**: Engineered with a strict Android Foreground Service boundary to prevent OS-level process termination when the device is locked or dark-screened during a workout.
-* **Reactive State Machine**: Powered by Riverpod 3.0, mapping native BLE events into an exhaustive, type-safe sealed state architecture with atomic error boundaries.
+* **Reactive State Machine**: Powered by Riverpod 3.x, mapping native BLE events into an exhaustive, type-safe sealed state architecture with atomic error boundaries.
 * **Environmental Safety**: Hardware state detection catching disabled Bluetooth adapters and connection timeouts instantly at the UI layer.
+* **Workout Persistence & Export**: Isar-backed workout history with crash recovery, CSV export/share, and heart-rate zone analytics.
+* **Settings & Data Management**: Theme/metrics preferences, CSV workout import with preview, biometric app lock, and full data wipe — all persisted locally.
+* **Onboarding & Navigation**: Guided first-run onboarding plus adaptive navigation (bottom bar / navigation rail).
+* **Health & Platform Integrations**: Optional sync to Health Connect/HealthKit, daily reminders, and home-screen widget sync.
+* **Localization**: Full i18n in 10 locales (de, en, es, fr, it, ja, ko, nl, pl, pt) via `flutter gen-l10n`.
+
+## Verification
+
+```bash
+flutter pub get
+flutter gen-l10n
+dart run build_runner build --delete-conflicting-outputs
+dart format lib test integration_test test_driver
+flutter analyze
+dart run custom_lint
+./scripts/check_boundaries.sh
+flutter test --exclude-tags "golden,screenshot"
+```
+
+Or run the full pipeline at once: `./scripts/before_push.sh` (additionally builds a debug APK).
 
 ## Architecture
 
