@@ -2,11 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pulse_track/features/settings/domain/services/csv_workout_importer.dart';
-
-part 'csv_workout_import_service.g.dart';
 
 /// Exception thrown when the selected CSV file exceeds the memory safety limit.
 class FileTooLargeException implements Exception {
@@ -58,9 +55,4 @@ class CsvWorkoutImportService {
 
     return _importer.parse(content);
   }
-}
-
-@riverpod
-CsvWorkoutImportService csvWorkoutImportService(Ref ref) {
-  return const CsvWorkoutImportService();
 }

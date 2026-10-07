@@ -5,8 +5,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
+import 'package:pulse_track/features/settings/application/settings_providers.dart';
 import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
-import 'package:pulse_track/features/settings/infrastructure/services/csv_workout_import_service.dart';
 import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/csv_import_preview_dialog.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/max_hr_selection_dialog.dart';

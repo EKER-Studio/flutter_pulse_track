@@ -8,6 +8,7 @@ const _forbiddenPackagePatterns = [
   'package:isar_community',
   'package:pulse_track/features/workout/infrastructure/',
   'package:pulse_track/features/heart_rate/infrastructure/',
+  'package:pulse_track/features/settings/infrastructure/',
   'package:pulse_track/core/infrastructure/',
 ];
 
