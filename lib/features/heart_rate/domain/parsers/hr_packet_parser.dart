@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:pulse_track/core/utils/app_logger.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
 
 /// Low-level binary parser responsible for decoding raw Bluetooth GATT Heart Rate Measurement packets (0x2A38 / 0x2A37).
@@ -70,12 +69,9 @@ class HrPacketParser {
         sensorContactSupported: sensorContactSupported,
         sensorContactActive: sensorContactActive,
       );
-    } on Object catch (e, st) {
-      log.w(
-        '[HrPacketParser] Malformed BLE HR packet encountered, returning null.',
-        error: e,
-        stackTrace: st,
-      );
+    } on Object catch (_) {
+      // Domain layer stays pure Dart: no logging side effects here.
+      // A malformed packet is not exceptional — callers treat null as "ignore".
       return null;
     }
   }
