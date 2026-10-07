@@ -111,15 +111,15 @@ class NotificationService {
       await _plugin.zonedSchedule(
         id: _dailyReminderId,
         scheduledDate: _nextInstanceOfTime(hour, minute),
-        notificationDetails: const NotificationDetails(
+        notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
-            'pulsetrack_reminders',
-            'Workout Reminders',
-            channelDescription: 'Reminds you to track your heart rate',
+            _channelId,
+            _channelName,
+            channelDescription: _channelDescription,
             importance: Importance.max,
             priority: Priority.high,
           ),
-          iOS: DarwinNotificationDetails(),
+          iOS: const DarwinNotificationDetails(),
         ),
         title: _title,
         body: _body,
