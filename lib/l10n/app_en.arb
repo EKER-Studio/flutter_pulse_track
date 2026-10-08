@@ -930,5 +930,105 @@
             "type": "String"
          }
       }
+   },
+   "tabCalendar": "Calendar",
+   "@tabCalendar": {
+      "description": "Label for calendar tab in bottom navigation"
+   },
+   "tabCalendarSemanticsLabel": "Calendar tab",
+   "@tabCalendarSemanticsLabel": {
+      "description": "Semantics label for calendar tab"
+   },
+   "tabStatistics": "Statistics",
+   "@tabStatistics": {
+      "description": "Label for statistics tab in bottom navigation"
+   },
+   "tabStatisticsSemanticsLabel": "Statistics tab",
+   "@tabStatisticsSemanticsLabel": {
+      "description": "Semantics label for statistics tab"
+   },
+   "calendarTitle": "Calendar",
+   "@calendarTitle": {
+      "description": "Title shown in the calendar view app bar"
+   },
+   "calendarNoWorkouts": "No workouts on this day",
+   "@calendarNoWorkouts": {
+      "description": "Message displayed when the selected calendar day has no workouts"
+   },
+   "calendarWorkoutsOnDay": "Workouts",
+   "@calendarWorkoutsOnDay": {
+      "description": "Header for workouts on the selected calendar day"
+   },
+   "calendarJumpToToday": "Today",
+   "@calendarJumpToToday": {
+      "description": "Button label to jump to today in the calendar"
+   },
+   "calendarPreviousMonth": "Previous month",
+   "@calendarPreviousMonth": {
+      "description": "Tooltip for previous month navigation"
+   },
+   "calendarNextMonth": "Next month",
+   "@calendarNextMonth": {
+      "description": "Tooltip for next month navigation"
+   },
+   "statisticsTitle": "Statistics",
+   "@statisticsTitle": {
+      "description": "Title shown in the statistics view app bar"
+   },
+   "periodComparisonTitle": "Period Comparison",
+   "@periodComparisonTitle": {
+      "description": "Header for period comparison card"
+   },
+   "last7Days": "Last 7 Days",
+   "@last7Days": {
+      "description": "Label for the recent 7 days comparison window"
+   },
+   "previous7Days": "Previous 7 Days",
+   "@previous7Days": {
+      "description": "Label for the previous 7 days comparison window"
+   },
+   "totalWorkouts": "Total Workouts",
+   "@totalWorkouts": {
+      "description": "Label for total workouts metric"
+   },
+   "totalDuration": "Total Duration",
+   "@totalDuration": {
+      "description": "Label for total workout duration metric"
+   },
+   "avgHeartRate": "Average Heart Rate",
+   "@avgHeartRate": {
+      "description": "Label for average heart rate metric"
+   },
+   "peakHeartRate": "Peak Heart Rate",
+   "@peakHeartRate": {
+      "description": "Label for peak heart rate metric"
+   },
+   "habitsTitle": "Consistency & Habits",
+   "@habitsTitle": {
+      "description": "Header for habits activity card"
+   },
+   "currentStreak": "Current Streak",
+   "@currentStreak": {
+      "description": "Label for current daily workout streak"
+   },
+   "bestStreak": "Best Streak",
+   "@bestStreak": {
+      "description": "Label for best daily workout streak"
+   },
+   "activeDaysLast30": "Active Days (30d)",
+   "@activeDaysLast30": {
+      "description": "Label for active workout days in the last 30 days"
+   },
+   "milestonesTitle": "Milestones & Achievements",
+   "@milestonesTitle": {
+      "description": "Header for milestone badges card"
+   },
+   "viewAllMilestones": "View All",
+   "@viewAllMilestones": {
+      "description": "Button to open the full milestones gallery"
+   },
+   "milestonesGallery": "Milestones Gallery",
+   "@milestonesGallery": {
+      "description": "Title of the milestones gallery bottom sheet"
    }
 }
