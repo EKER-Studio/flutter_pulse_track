@@ -56,3 +56,54 @@ final class ForegroundServiceManagerProvider
 
 String _$foregroundServiceManagerHash() =>
     r'e1b6eeb81c5e352d529b071feec1b13e2d6c7a30';
+
+/// Provides the singleton [BiometricService] instance.
+
+@ProviderFor(biometricService)
+final biometricServiceProvider = BiometricServiceProvider._();
+
+/// Provides the singleton [BiometricService] instance.
+
+final class BiometricServiceProvider
+    extends
+        $FunctionalProvider<
+          BiometricService,
+          BiometricService,
+          BiometricService
+        >
+    with $Provider<BiometricService> {
+  /// Provides the singleton [BiometricService] instance.
+  BiometricServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'biometricServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$biometricServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<BiometricService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  BiometricService create(Ref ref) {
+    return biometricService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BiometricService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BiometricService>(value),
+    );
+  }
+}
+
+String _$biometricServiceHash() => r'18c7808ad70f63025485fd0181f6424201be9df3';

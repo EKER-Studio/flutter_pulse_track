@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../l10n/app_localizations.dart';
-import '../../integrations/biometrics/biometric_service.dart';
+import '../../application/service_providers.dart';
 import '../../utils/crash_reporter.dart';
 import '../../../features/settings/presentation/controllers/app_settings_notifier.dart';
 
@@ -40,7 +40,8 @@ class _BiometricShieldScreenState extends ConsumerState<BiometricShieldScreen> {
       if (!settings.isLocked) {
         ref.read(appSettingsProvider.notifier).setLocked(true);
       }
-      final result = await BiometricService.instance.authenticate(
+      final biometricService = ref.read(biometricServiceProvider);
+      final result = await biometricService.authenticate(
         localizedReason: l10n.biometricAuthReason,
         authMessages: BiometricService.createAuthMessages(l10n),
       );
