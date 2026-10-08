@@ -17,8 +17,10 @@ import 'package:pulse_track/features/workout/presentation/views/workout_details_
 import 'package:pulse_track/core/presentation/screens/biometric_shield_screen.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
+import 'package:pulse_track/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:pulse_track/features/navigation/presentation/screens/main_navigation_screen.dart';
 import 'package:pulse_track/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:pulse_track/features/statistics/presentation/screens/statistics_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -103,6 +105,30 @@ GoRouter appRouter(Ref ref) {
           return HrMonitorView(deviceId: deviceId, deviceName: deviceName);
         },
       ),
+      GoRoute(
+        path: '/history',
+        name: 'history',
+        builder: (BuildContext context, GoRouterState state) =>
+            const WorkoutHistoryView(),
+        routes: <RouteBase>[
+          GoRoute(
+            path: 'details/:sessionId',
+            name: 'workoutDetails',
+            builder: (BuildContext context, GoRouterState state) {
+              final extra = state.extra;
+              if (extra is WorkoutSession) {
+                return WorkoutDetailsView(session: extra);
+              }
+              final sessionIdStr = state.pathParameters['sessionId'];
+              final sessionId = int.tryParse(sessionIdStr ?? '');
+              if (sessionId != null) {
+                return WorkoutDetailsLoaderView(sessionId: sessionId);
+              }
+              return const RouteErrorView();
+            },
+          ),
+        ],
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             MainNavigationScreen(navigationShell: navigationShell),
@@ -120,28 +146,20 @@ GoRouter appRouter(Ref ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/history',
-                name: 'history',
+                path: '/calendar',
+                name: 'calendar',
                 builder: (BuildContext context, GoRouterState state) =>
-                    const WorkoutHistoryView(),
-                routes: <RouteBase>[
-                  GoRoute(
-                    path: 'details/:sessionId',
-                    name: 'workoutDetails',
-                    builder: (BuildContext context, GoRouterState state) {
-                      final extra = state.extra;
-                      if (extra is WorkoutSession) {
-                        return WorkoutDetailsView(session: extra);
-                      }
-                      final sessionIdStr = state.pathParameters['sessionId'];
-                      final sessionId = int.tryParse(sessionIdStr ?? '');
-                      if (sessionId != null) {
-                        return WorkoutDetailsLoaderView(sessionId: sessionId);
-                      }
-                      return const RouteErrorView();
-                    },
-                  ),
-                ],
+                    const CalendarScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/statistics',
+                name: 'statistics',
+                builder: (BuildContext context, GoRouterState state) =>
+                    const StatisticsScreen(),
               ),
             ],
           ),

@@ -81,15 +81,24 @@ class AdaptiveBottomNavigationBar extends StatelessWidget {
             ),
             Semantics(
               selected: selectedIndex == 1,
-              label: l10n.tabHistorySemanticsLabel,
+              label: l10n.tabCalendarSemanticsLabel,
               child: NavigationDestination(
-                icon: const Icon(Icons.history_outlined),
-                selectedIcon: const Icon(Icons.history),
-                label: l10n.tabHistory,
+                icon: const Icon(Icons.calendar_month_outlined),
+                selectedIcon: const Icon(Icons.calendar_month),
+                label: l10n.tabCalendar,
               ),
             ),
             Semantics(
               selected: selectedIndex == 2,
+              label: l10n.tabStatisticsSemanticsLabel,
+              child: NavigationDestination(
+                icon: const Icon(Icons.bar_chart_outlined),
+                selectedIcon: const Icon(Icons.bar_chart),
+                label: l10n.tabStatistics,
+              ),
+            ),
+            Semantics(
+              selected: selectedIndex == 3,
               label: l10n.tabSettingsSemanticsLabel,
               child: NavigationDestination(
                 icon: const Icon(Icons.settings_outlined),

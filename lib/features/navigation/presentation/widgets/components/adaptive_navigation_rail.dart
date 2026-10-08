@@ -68,24 +68,37 @@ class AdaptiveNavigationRail extends StatelessWidget {
                     NavigationRailDestination(
                       icon: Semantics(
                         selected: selectedIndex == 1,
-                        label: l10n.tabHistorySemanticsLabel,
-                        child: const Icon(Icons.history_outlined),
+                        label: l10n.tabCalendarSemanticsLabel,
+                        child: const Icon(Icons.calendar_month_outlined),
                       ),
                       selectedIcon: Semantics(
                         selected: selectedIndex == 1,
-                        label: l10n.tabHistorySemanticsLabel,
-                        child: const Icon(Icons.history),
+                        label: l10n.tabCalendarSemanticsLabel,
+                        child: const Icon(Icons.calendar_month),
                       ),
-                      label: Text(l10n.tabHistory),
+                      label: Text(l10n.tabCalendar),
                     ),
                     NavigationRailDestination(
                       icon: Semantics(
                         selected: selectedIndex == 2,
+                        label: l10n.tabStatisticsSemanticsLabel,
+                        child: const Icon(Icons.bar_chart_outlined),
+                      ),
+                      selectedIcon: Semantics(
+                        selected: selectedIndex == 2,
+                        label: l10n.tabStatisticsSemanticsLabel,
+                        child: const Icon(Icons.bar_chart),
+                      ),
+                      label: Text(l10n.tabStatistics),
+                    ),
+                    NavigationRailDestination(
+                      icon: Semantics(
+                        selected: selectedIndex == 3,
                         label: l10n.tabSettingsSemanticsLabel,
                         child: const Icon(Icons.settings_outlined),
                       ),
                       selectedIcon: Semantics(
-                        selected: selectedIndex == 2,
+                        selected: selectedIndex == 3,
                         label: l10n.tabSettingsSemanticsLabel,
                         child: const Icon(Icons.settings),
                       ),

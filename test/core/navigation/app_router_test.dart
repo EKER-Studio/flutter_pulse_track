@@ -13,6 +13,8 @@ import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_home_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_scanner_view.dart';
+import 'package:pulse_track/features/calendar/presentation/screens/calendar_screen.dart';
+import 'package:pulse_track/features/statistics/presentation/screens/statistics_screen.dart';
 import 'package:pulse_track/features/workout/presentation/views/workout_history_view.dart';
 import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
@@ -173,6 +175,28 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(WorkoutHistoryView), findsOneWidget);
+    });
+
+    testWidgets('route "/calendar" renders CalendarScreen', (tester) async {
+      final container = createContainer();
+      addTearDown(container.dispose);
+
+      container.read(appRouterProvider).go('/calendar');
+      await tester.pumpWidget(buildTestApp(container));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(CalendarScreen), findsOneWidget);
+    });
+
+    testWidgets('route "/statistics" renders StatisticsScreen', (tester) async {
+      final container = createContainer();
+      addTearDown(container.dispose);
+
+      container.read(appRouterProvider).go('/statistics');
+      await tester.pumpWidget(buildTestApp(container));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(StatisticsScreen), findsOneWidget);
     });
 
     testWidgets(
