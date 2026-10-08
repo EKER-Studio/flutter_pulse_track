@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
+import 'package:pulse_track/core/presentation/widgets/failure_card.dart';
+import 'package:pulse_track/core/presentation/widgets/status_state_view.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/ble_device.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/ble_scanner_state.dart';
 import 'package:pulse_track/features/heart_rate/presentation/controllers/ble_scanner_notifier.dart';
+import 'package:pulse_track/features/heart_rate/presentation/widgets/ble_device_list_tile.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Main entry point for discovering BLE heart rate sensors.
@@ -19,240 +22,154 @@ class HrScannerView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(bleScannerProvider);
     final notifier = ref.read(bleScannerProvider.notifier);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        elevation: 0,
         title: Text(
-          AppLocalizations.of(context).scanner_title,
+          l10n.scanner_title,
           style: Theme.of(context).textTheme.titleLarge
               ?.copyWith(fontWeight: FontWeight.bold),
         ),
-
         actions: [
-          // Filter toggle button only relevant when scanning or empty
           if (state is ScanningScannerState || state is EmptyScannerState)
             Semantics(
-              label: AppLocalizations.of(context).toggle_filter_tooltip,
+              label: l10n.toggle_filter_tooltip,
               button: true,
-              toggled: _isFilterActive(notifier),
+              toggled: notifier.filtersEnabled,
               child: IconButton(
                 constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
                 icon: Icon(
-                  _isFilterActive(notifier)
+                  notifier.filtersEnabled
                       ? Icons.filter_list
                       : Icons.filter_list_off,
-                  color: _isFilterActive(notifier)
+                  color: notifier.filtersEnabled
                       ? AppColors.accentBlue
                       : AppColors.textSecondary,
                 ),
-                tooltip: AppLocalizations.of(context).toggle_filter_tooltip,
+                tooltip: l10n.toggle_filter_tooltip,
                 onPressed: () => notifier.toggleFilters(),
               ),
             ),
         ],
       ),
       body: switch (state) {
-        IdleScannerState() => _buildIdleState(context, notifier),
-        AdapterOffScannerState() => _buildAdapterOffState(context),
-        EmptyScannerState() => _buildEmptyState(context, notifier),
+        IdleScannerState() => _buildIdleState(context, notifier, l10n),
+        AdapterOffScannerState() => _buildAdapterOffState(context, l10n),
+        EmptyScannerState() => _buildEmptyState(context, notifier, l10n),
         ScanningScannerState(:final devices) => _buildScanningState(
           context,
           notifier,
           devices,
+          l10n,
         ),
         FailureScannerState(:final message) => _buildFailureState(
           context,
           message,
           notifier,
+          l10n,
         ),
       },
     );
   }
 
-  bool _isFilterActive(BleScannerNotifier notifier) {
-    return notifier.filtersEnabled;
-  }
-
-  Widget _buildIdleState(BuildContext context, BleScannerNotifier notifier) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(32),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.bluetooth_searching,
-              size: 80,
-              color: AppColors.textSecondary,
-              semanticLabel: AppLocalizations.of(context)
-                  .bluetooth_searching_label,
+  Widget _buildIdleState(
+    BuildContext context,
+    BleScannerNotifier notifier,
+    AppLocalizations l10n,
+  ) {
+    return StatusStateView(
+      icon: Icons.bluetooth_searching,
+      iconSemanticLabel: l10n.bluetooth_searching_label,
+      title: l10n.ready_to_scan,
+      subtitle: l10n.start_scan_description,
+      action: Semantics(
+        label: l10n.scan_button_semantic_label,
+        button: true,
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.accentBlue,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            minimumSize: const Size(180, 48),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-            const SizedBox(height: 24),
-            Text(
-              AppLocalizations.of(context).ready_to_scan,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          icon: const ExcludeSemantics(
+            child: Icon(Icons.search, color: AppColors.textPrimary),
+          ),
+          label: Text(
+            l10n.scan_button_label,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 8),
-            Text(
-              AppLocalizations.of(context).start_scan_description,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 32),
-            Semantics(
-              label: AppLocalizations.of(context).scan_button_semantic_label,
-              button: true,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accentBlue,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  minimumSize: const Size(180, 48),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                icon: const ExcludeSemantics(
-                  child: Icon(Icons.search, color: AppColors.textPrimary),
-                ),
-                label: Text(
-                  AppLocalizations.of(context).scan_button_label,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onPressed: () => notifier.startScan(),
-              ),
-            ),
-          ],
+          ),
+          onPressed: () => notifier.startScan(),
         ),
       ),
     );
   }
 
-  Widget _buildAdapterOffState(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        width: double.infinity,
-        color: AppColors.accentRed.withValues(alpha: 0.05),
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.bluetooth_disabled,
-                size: 80,
-                color: AppColors.accentRed,
-                semanticLabel: AppLocalizations.of(context)
-                    .bluetooth_disabled_label,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                AppLocalizations.of(context).bluetooth_required,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                AppLocalizations.of(context).bluetooth_off_description,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 16,
-                  height: 1.4,
-                ),
-              ),
-            ],
-          ),
-        ),
+  Widget _buildAdapterOffState(BuildContext context, AppLocalizations l10n) {
+    return Container(
+      width: double.infinity,
+      color: AppColors.accentRed.withValues(alpha: 0.05),
+      child: StatusStateView(
+        icon: Icons.bluetooth_disabled,
+        iconColor: AppColors.accentRed,
+        iconSemanticLabel: l10n.bluetooth_disabled_label,
+        title: l10n.bluetooth_required,
+        subtitle: l10n.bluetooth_off_description,
       ),
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, BleScannerNotifier notifier) {
-    return SingleChildScrollView(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.device_unknown,
-                size: 80,
-                color: AppColors.accentOrange,
-                semanticLabel: AppLocalizations.of(context)
-                    .device_unknown_label,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                AppLocalizations.of(context).empty_state_title,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                AppLocalizations.of(context).empty_state_bullets,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 16,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.left,
-              ),
-              const SizedBox(height: 32),
-
-              Semantics(
-                label: AppLocalizations.of(context).retry_scan_semantic_label,
-                button: true,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accentOrange,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
-                    ),
-                    minimumSize: const Size(180, 48),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  icon: const ExcludeSemantics(
-                    child: Icon(Icons.refresh, color: AppColors.textPrimary),
-                  ),
-                  label: Text(
-                    AppLocalizations.of(context).retry_scan_label,
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: () => notifier.retry(),
-                ),
-              ),
-            ],
+  Widget _buildEmptyState(
+    BuildContext context,
+    BleScannerNotifier notifier,
+    AppLocalizations l10n,
+  ) {
+    return StatusStateView(
+      icon: Icons.device_unknown,
+      iconColor: AppColors.accentOrange,
+      iconSemanticLabel: l10n.device_unknown_label,
+      title: l10n.empty_state_title,
+      customContent: Text(
+        l10n.empty_state_bullets,
+        style: const TextStyle(
+          color: AppColors.textSecondary,
+          fontSize: 16,
+          height: 1.5,
+        ),
+        textAlign: TextAlign.left,
+      ),
+      action: Semantics(
+        label: l10n.retry_scan_semantic_label,
+        button: true,
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.accentOrange,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            minimumSize: const Size(180, 48),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
+          icon: const ExcludeSemantics(
+            child: Icon(Icons.refresh, color: AppColors.textPrimary),
+          ),
+          label: Text(
+            l10n.retry_scan_label,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          onPressed: () => notifier.retry(),
         ),
       ),
     );
@@ -262,193 +179,69 @@ class HrScannerView extends ConsumerWidget {
     BuildContext context,
     String message,
     BleScannerNotifier notifier,
+    AppLocalizations l10n,
   ) {
-    return SingleChildScrollView(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerLow,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: AppColors.accentRed.withValues(alpha: 0.3),
+    return FailureCard(
+      title: l10n.scan_failed_title,
+      message: message,
+      actions: [
+        Semantics(
+          button: true,
+          label: l10n.scan_button_semantic_label,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.accentRed,
+              minimumSize: const Size(120, 48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.error_outline,
-                  size: 48,
-                  color: AppColors.accentRed,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  AppLocalizations.of(context).scan_failed_title,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  message,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Semantics(
-                  button: true,
-                  label: AppLocalizations.of(context)
-                      .scan_button_semantic_label,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.accentRed,
-                      minimumSize: const Size(120, 48),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    onPressed: () => notifier.retry(),
-                    child: Text(
-                      AppLocalizations.of(context).scan_button_label,
-                      style: const TextStyle(color: AppColors.textPrimary),
-                    ),
-                  ),
-                ),
-              ],
+            onPressed: () => notifier.retry(),
+            child: Text(
+              l10n.scan_button_label,
+              style: const TextStyle(color: AppColors.textPrimary),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
-  /// Builds the scanning state UI with an animated indicator and the list of discovered devices.
-  ///
-  /// Returned directly as `Scaffold.body` — must NOT be wrapped in `Expanded`,
-  /// which requires a `Flex` (Row/Column) ancestor. `Center`/`ListView` already fill
-  /// the available space on their own here.
   Widget _buildScanningState(
     BuildContext context,
     BleScannerNotifier notifier,
     List<BleDevice> devices,
+    AppLocalizations l10n,
   ) {
-    return devices.isEmpty
-        ? Center(
-            child: Text(
-              AppLocalizations.of(context).searching_sensors,
-              style: const TextStyle(color: AppColors.textSecondary),
-            ),
-          )
-        : ListView.separated(
-            itemCount: devices.length,
-            separatorBuilder: (_, _) =>
-                const Divider(color: AppColors.borderSubtle, height: 1),
-            itemBuilder: (context, index) {
-              final device = devices[index];
-              final deviceName = device.name.isEmpty
-                  ? AppLocalizations.of(context).unknown_device
-                  : device.name;
-              return Semantics(
-                label: deviceName,
-                hint: AppLocalizations.of(context)
-                    .deviceListTileHint(device.id, device.rssi),
-                button: true,
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  leading: ExcludeSemantics(
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.badgeBackground,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.bluetooth,
-                        color: AppColors.textPrimary,
-                        size: 24,
-                      ),
-                    ),
-                  ),
-                  title: Text(
-                    deviceName,
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(
-                    device.id,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                      fontFamily: 'monospace',
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: ExcludeSemantics(
-                    child: SizedBox(
-                      width: 56,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            _getRssiIcon(device.rssi),
-                            color: _getRssiColor(device.rssi),
-                            size: 22,
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            '${device.rssi} dBm',
-                            style: TextStyle(
-                              color: _getRssiColor(device.rssi),
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'monospace',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  onTap: () async {
-                    await notifier.stopScan();
-                    if (!context.mounted) return;
-                    final targetName = device.name.isEmpty
-                        ? AppLocalizations.of(context).unknown_device
-                        : device.name;
-                    await context.push(
-                      '/monitor?deviceId=${Uri.encodeComponent(device.id)}&deviceName=${Uri.encodeComponent(targetName)}',
-                    );
-                  },
-                ),
-              );
-            },
-          );
-  }
+    if (devices.isEmpty) {
+      return Center(
+        child: Text(
+          l10n.searching_sensors,
+          style: const TextStyle(color: AppColors.textSecondary),
+        ),
+      );
+    }
 
-  Color _getRssiColor(int rssi) {
-    if (rssi >= -65) return AppColors.accentGreen;
-    if (rssi >= -85) return AppColors.accentOrange;
-    return AppColors.accentRed;
-  }
-
-  IconData _getRssiIcon(int rssi) {
-    if (rssi >= -65) return Icons.signal_cellular_alt;
-    if (rssi >= -85) return Icons.signal_cellular_alt_2_bar;
-    return Icons.signal_cellular_alt_1_bar;
+    return ListView.separated(
+      itemCount: devices.length,
+      separatorBuilder: (_, _) =>
+          const Divider(color: AppColors.borderSubtle, height: 1),
+      itemBuilder: (context, index) {
+        final device = devices[index];
+        return BleDeviceListTile(
+          device: device,
+          onTap: () async {
+            await notifier.stopScan();
+            if (!context.mounted) return;
+            final targetName = device.name.isEmpty
+                ? l10n.unknown_device
+                : device.name;
+            await context.push(
+              '/monitor?deviceId=${Uri.encodeComponent(device.id)}&deviceName=${Uri.encodeComponent(targetName)}',
+            );
+          },
+        );
+      },
+    );
   }
 }
