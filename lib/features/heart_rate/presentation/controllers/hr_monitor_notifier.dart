@@ -6,31 +6,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:pulse_track/core/application/service_providers.dart';
 import 'package:pulse_track/core/utils/app_logger.dart';
+import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/body_sensor_location.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
 import 'package:pulse_track/features/heart_rate/domain/parsers/hr_packet_parser.dart';
-import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';
 import 'package:pulse_track/features/workout/application/workout_providers.dart';
-import 'package:pulse_track/features/workout/domain/usecases/save_workout_session_usecase.dart';
+
+import 'gatt_profile_resolver.dart';
+import 'workout_session_recorder.dart';
 
 part 'hr_monitor_notifier.g.dart';
 
 const Duration _kConnectionTimeout = Duration(seconds: 4);
-
 const Duration _kDiscoverServicesTimeout = Duration(seconds: 8);
 
 final Guid _kHrServiceUuid = Guid('180d');
-
 final Guid _kHrMeasurementCharUuid = Guid('2a37');
-
-final Guid _kBodySensorLocationCharUuid = Guid('2a38');
-
-final Guid _kBatteryServiceUuid = Guid('180f');
-
-final Guid _kBatteryLevelCharacteristicUuid = Guid('2a19');
-
-const Duration _kCheckpointInterval = Duration(seconds: 30);
 
 /// Manages heart rate monitor connection, GATT discovery, and live telemetry.
 @riverpod
@@ -38,6 +30,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     with WidgetsBindingObserver {
   late final HeartRateMonitorService _monitorService;
   late final ForegroundServiceManager _foregroundServiceManager;
+  late final WorkoutSessionRecorder _recorder;
+  late final GattProfileResolver _gattResolver;
 
   BluetoothDevice? _device;
 
@@ -45,45 +39,32 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   StreamSubscription<BluetoothConnectionState>? _connectionStateSubscription;
   StreamSubscription<List<int>>? _batteryNotificationSubscription;
 
-  final List<int> _collectedBpmSamples = [];
-  DateTime? _sessionStartTime;
   String? _sessionDeviceId;
   String? _sessionDeviceName;
-  int? _sessionSensorLocationIndex;
+  BodySensorLocation _sensorLocation = BodySensorLocation.unknown;
   int? _currentBatteryLevel;
-  int _currentBpmSum = 0;
-  int _currentMaxBpm = 0;
   bool _isDisconnecting = false;
-  bool _checkpointInProgress = false;
-  bool _saveInProgress = false;
   int _reconnectAttempts = 0;
   static const int _maxReconnectAttempts = 3;
   Timer? _connectTimer;
-  Timer? _checkpointTimer;
   Timer? _reconnectTimer;
 
   /// Number of auto-reconnect attempts performed during current disconnection event.
   @visibleForTesting
   int get reconnectAttempts => _reconnectAttempts;
 
-  /// Isar row id returned by the session's most recent checkpoint write, if
-  /// any. Passed back into subsequent checkpoint calls — and into the final
-  /// [_saveSessionToDisk] write — so every write after the first UPDATES the
-  /// same row instead of INSERTing a new one. Reset to null whenever session
-  /// fields are reset (new connection, or after a completed save).
-  int? _checkpointSessionId;
-
-  /// Cached save use case, resolved while [ref] is live.
-  ///
-  /// Riverpod forbids `ref.read` inside `onDispose` callbacks, so [_cleanup]
-  /// cannot resolve its dependencies at teardown time — it must reuse the
-  /// instance cached here during [connect] (see _saveSessionToDisk).
-  SaveWorkoutSessionUseCase? _saveWorkoutSessionUseCase;
-
   @override
   MonitorState build() {
     _monitorService = ref.read(heartRateMonitorServiceProvider);
     _foregroundServiceManager = ref.read(foregroundServiceManagerProvider);
+    _recorder = WorkoutSessionRecorder(
+      saveWorkoutSessionUseCase: ref.read(saveWorkoutSessionUseCaseProvider),
+      savePartialWorkoutSessionUseCase: ref.read(
+        savePartialWorkoutSessionUseCaseProvider,
+      ),
+    );
+    _gattResolver = GattProfileResolver(_monitorService);
+
     WidgetsBinding.instance.addObserver(this);
     // Fire-and-forget is intentional: onDispose cannot await, so _cleanup
     // cancels timers and subscriptions synchronously first; the async
@@ -121,16 +102,12 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       await _cancelSubscriptions();
       await _safeDisconnectDevice();
       await _foregroundServiceManager.stopService();
-      _stopCheckpointTimer();
-      _collectedBpmSamples.clear();
-      _currentBpmSum = 0;
-      _currentMaxBpm = 0;
-      _sessionStartTime = null;
+      _recorder.stopCheckpointTimer();
+      _recorder.reset();
       _sessionDeviceId = null;
       _sessionDeviceName = null;
-      _sessionSensorLocationIndex = null;
+      _sensorLocation = BodySensorLocation.unknown;
       _currentBatteryLevel = null;
-      _checkpointSessionId = null;
       state = const MonitorState.disconnected();
     }
 
@@ -145,18 +122,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     unawaited(_cancelSubscriptions());
 
     if (!isReconnect) {
-      _collectedBpmSamples.clear();
-      _currentBpmSum = 0;
-      _currentMaxBpm = 0;
-      _sessionStartTime = DateTime.now();
+      _recorder.startNewSession(deviceId: deviceId, deviceName: deviceName);
       _sessionDeviceId = deviceId;
       _sessionDeviceName = deviceName;
-      _sessionSensorLocationIndex = null;
+      _sensorLocation = BodySensorLocation.unknown;
       _currentBatteryLevel = null;
-      _checkpointSessionId = null;
-      // Resolve eagerly while ref is live: _cleanup runs after dispose,
-      // when ref.read would throw (see _saveWorkoutSessionUseCase).
-      _saveWorkoutSessionUseCase = ref.read(saveWorkoutSessionUseCaseProvider);
     }
 
     // PII redaction: avoid logging full MAC/deviceId to Crashlytics (C-2).
@@ -330,11 +300,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       return;
     }
 
-    final BodySensorLocation sensorLocation = await _readBodySensorLocation(
-      hrService,
-    );
-
-    _sessionSensorLocationIndex = sensorLocation.index;
+    _sensorLocation = await _gattResolver.readBodySensorLocation(hrService);
+    _recorder.setSensorLocationIndex(_sensorLocation.index);
 
     try {
       await ref
@@ -342,17 +309,24 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
           .call(
             macAddress: deviceId,
             name: deviceName,
-            sensorLocationIndex: sensorLocation.index,
+            sensorLocationIndex: _sensorLocation.index,
           );
     } on Object catch (e) {
       log.e('[HrMonitorNotifier] saveDeviceProfile() failed', error: e);
     }
 
     log.d(
-      '[HrMonitorNotifier] Body sensor location: ${sensorLocation.displayName}',
+      '[HrMonitorNotifier] Body sensor location: ${_sensorLocation.displayName}',
     );
 
-    await _resolveBatteryService(services);
+    final batteryResult = await _gattResolver.resolveBatteryService(
+      services,
+      onLevelChanged: _updateStateWithBatteryLevel,
+    );
+    if (batteryResult.initialLevel != null) {
+      _currentBatteryLevel = batteryResult.initialLevel;
+    }
+    _batteryNotificationSubscription = batteryResult.subscription;
 
     try {
       await _monitorService.setNotifyValue(hrCharacteristic, true);
@@ -393,14 +367,10 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
             );
             if (measurement == null) return;
 
-            _collectedBpmSamples.add(measurement.bpm);
-            _currentBpmSum += measurement.bpm;
-            if (measurement.bpm > _currentMaxBpm) {
-              _currentMaxBpm = measurement.bpm;
-            }
+            _recorder.recordSample(measurement.bpm);
 
             final HrMeasurement enrichedMeasurement = measurement.copyWith(
-              sensorLocation: sensorLocation,
+              sensorLocation: _sensorLocation,
               batteryLevel: _currentBatteryLevel ?? measurement.batteryLevel,
             );
 
@@ -433,7 +403,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         );
 
     _reconnectAttempts = 0;
-    _startCheckpointTimer();
+    _recorder.startCheckpointTimer(
+      isConnected: () => ref.mounted && state is ConnectedMonitorState,
+    );
   }
 
   Future<void> _handleConnectFailure({
@@ -468,7 +440,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
     _reconnectAttempts = 0;
-    await _saveSessionToDisk();
+    await _recorder.saveFinalSession();
     await _foregroundServiceManager.stopService();
     if (!ref.mounted) return;
     state = MonitorState.failure(message: failureMessage);
@@ -485,12 +457,11 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _reconnectAttempts = 0;
     _connectTimer?.cancel();
     _connectTimer = null;
-    _checkpointTimer?.cancel();
-    _checkpointTimer = null;
+    _recorder.stopCheckpointTimer();
 
     try {
       await _safeDisconnectDevice();
-      await _saveSessionToDisk();
+      await _recorder.saveFinalSession();
       await _foregroundServiceManager.stopService();
     } on Object catch (e, st) {
       log.e(
@@ -507,128 +478,18 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
   }
 
-  Future<void> _saveSessionToDisk() async {
-    if (_saveInProgress) {
-      log.d(
-        '[HrMonitorNotifier] _saveSessionToDisk() skipped — '
-        'a save is already in progress.',
-      );
-      return;
-    }
-    _saveInProgress = true;
-    try {
-      if (_collectedBpmSamples.isNotEmpty &&
-          _sessionStartTime != null &&
-          _sessionDeviceId != null &&
-          _sessionDeviceName != null) {
-        // Prefer the cached instance: during _cleanup (provider disposal)
-        // ref.read throws, so resolving here would always fail.
-        final SaveWorkoutSessionUseCase useCase =
-            _saveWorkoutSessionUseCase ??
-            ref.read(saveWorkoutSessionUseCaseProvider);
-
-        final samples = List<int>.from(_collectedBpmSamples);
-        final startTime = _sessionStartTime!;
-        final endTime = DateTime.now();
-        final avgBpm = (_currentBpmSum / samples.length).round();
-
-        await useCase.call(
-          startTime: startTime,
-          endTime: endTime,
-          samples: samples,
-          sensorLocationIndex:
-              _sessionSensorLocationIndex ?? BodySensorLocation.other.index,
-          macAddress: _sessionDeviceId!,
-          name: _sessionDeviceName!,
-          avgBpm: avgBpm,
-          maxBpm: _currentMaxBpm,
-          existingId: _checkpointSessionId,
-        );
-      }
-    } on Object catch (e) {
-      log.e(
-        '[HrMonitorNotifier] Failed to persist workout session (data may be lost)',
-        error: e,
-      );
-    } finally {
-      _collectedBpmSamples.clear();
-      _currentBpmSum = 0;
-      _currentMaxBpm = 0;
-      _sessionStartTime = null;
-      _sessionDeviceId = null;
-      _sessionDeviceName = null;
-      _sessionSensorLocationIndex = null;
-      _checkpointSessionId = null;
-      _saveInProgress = false;
-    }
-  }
-
-  void _startCheckpointTimer() {
-    _stopCheckpointTimer();
-    _checkpointTimer = Timer.periodic(_kCheckpointInterval, (_) {
-      unawaited(_checkpoint());
-    });
-  }
-
-  void _stopCheckpointTimer() {
-    _checkpointTimer?.cancel();
-    _checkpointTimer = null;
-  }
-
-  Future<void> _checkpoint() async {
-    if (_checkpointInProgress) {
-      log.d(
-        '[HrMonitorNotifier] _checkpoint() skipped — '
-        'a checkpoint write is already in progress.',
-      );
-      return;
-    }
-    if (state is! ConnectedMonitorState ||
-        _collectedBpmSamples.isEmpty ||
-        _sessionStartTime == null ||
-        _sessionDeviceId == null ||
-        _sessionDeviceName == null) {
-      return;
-    }
-
-    _checkpointInProgress = true;
-    try {
-      final savePartial = ref.read(savePartialWorkoutSessionUseCaseProvider);
-      final avgBpm = (_currentBpmSum / _collectedBpmSamples.length).round();
-      final newId = await savePartial.call(
-        startTime: _sessionStartTime!,
-        samples: List<int>.of(_collectedBpmSamples),
-        sensorLocationIndex:
-            _sessionSensorLocationIndex ?? BodySensorLocation.other.index,
-        macAddress: _sessionDeviceId!,
-        name: _sessionDeviceName!,
-        avgBpm: avgBpm,
-        maxBpm: _currentMaxBpm,
-        existingId: _checkpointSessionId,
-      );
-      if (newId != null) _checkpointSessionId = newId;
-      log.d(
-        '[HrMonitorNotifier] Checkpoint saved at ${DateTime.now()} '
-        'with ${_collectedBpmSamples.length} samples (row id: '
-        '$_checkpointSessionId).',
-      );
-    } on Object catch (e) {
-      log.e('[HrMonitorNotifier] Checkpoint failed', error: e);
-    } finally {
-      _checkpointInProgress = false;
-    }
-  }
-
   /// Handles app lifecycle state changes for [state], forcing an immediate checkpoint on pause/detach.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // All background transitions, matching the scanner and lock observer:
-    // hidden fires before paused on recent Android.
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
-      unawaited(_checkpoint());
+      unawaited(
+        _recorder.checkpoint(
+          isConnected: ref.mounted && this.state is ConnectedMonitorState,
+        ),
+      );
     }
   }
 
@@ -639,133 +500,6 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     log.i('[HrMonitorNotifier] retry() — tearing down current session.');
     await disconnect();
     await connect(deviceId, deviceName);
-  }
-
-  Future<BodySensorLocation> _readBodySensorLocation(
-    BluetoothService hrService,
-  ) async {
-    try {
-      final BluetoothCharacteristic? locationChar = hrService.characteristics
-          .where(
-            (BluetoothCharacteristic c) =>
-                c.characteristicUuid == _kBodySensorLocationCharUuid,
-          )
-          .firstOrNull;
-
-      if (locationChar == null) return BodySensorLocation.unknown;
-
-      final List<int> bytes = await _monitorService
-          .read(locationChar)
-          .timeout(const Duration(seconds: 2));
-
-      if (bytes.isEmpty) return BodySensorLocation.unknown;
-
-      return switch (bytes.first) {
-        1 => BodySensorLocation.chest,
-        2 => BodySensorLocation.wrist,
-        3 => BodySensorLocation.finger,
-        4 => BodySensorLocation.hand,
-        5 => BodySensorLocation.earLobe,
-        6 => BodySensorLocation.foot,
-        _ => BodySensorLocation.other,
-      };
-    } on Object catch (e) {
-      log.w(
-        '[HrMonitorNotifier] Optional 0x2A38 read failed (ignored)',
-        error: e,
-      );
-      return BodySensorLocation.unknown;
-    }
-  }
-
-  Future<void> _resolveBatteryService(List<BluetoothService> services) async {
-    try {
-      final BluetoothService? batteryService = services
-          .where((BluetoothService s) => s.serviceUuid == _kBatteryServiceUuid)
-          .firstOrNull;
-
-      if (batteryService == null) {
-        log.d(
-          '[HrMonitorNotifier] Battery Service (0x180F) not found on device.',
-        );
-        return;
-      }
-
-      final BluetoothCharacteristic? batteryChar = batteryService
-          .characteristics
-          .where(
-            (BluetoothCharacteristic c) =>
-                c.characteristicUuid == _kBatteryLevelCharacteristicUuid,
-          )
-          .firstOrNull;
-
-      if (batteryChar == null) {
-        log.d(
-          '[HrMonitorNotifier] Battery Level Characteristic (0x2A19) not found.',
-        );
-        return;
-      }
-
-      try {
-        final List<int> initialBytes = await _monitorService
-            .read(batteryChar)
-            .timeout(const Duration(seconds: 2));
-        if (initialBytes.isNotEmpty) {
-          _currentBatteryLevel = initialBytes.first.clamp(0, 100);
-          log.d(
-            '[HrMonitorNotifier] Initial battery level read: $_currentBatteryLevel%',
-          );
-        }
-      } on TimeoutException {
-        log.w(
-          '[HrMonitorNotifier] Battery level initial read timed out (2 s) — '
-          'will rely on notifications if available.',
-        );
-      } on Object catch (e) {
-        log.e(
-          '[HrMonitorNotifier] Battery level initial read failed',
-          error: e,
-        );
-      }
-
-      final bool supportsNotify = batteryChar.properties.notify;
-      final bool supportsIndicate = batteryChar.properties.indicate;
-
-      if (supportsNotify || supportsIndicate) {
-        await _monitorService.setNotifyValue(batteryChar, true);
-
-        if (!ref.mounted) return;
-
-        _batteryNotificationSubscription = _monitorService
-            .onValueReceived(batteryChar)
-            .listen(
-              (List<int> bytes) {
-                if (!ref.mounted) return;
-                if (bytes.isNotEmpty) {
-                  _updateStateWithBatteryLevel(bytes.first.clamp(0, 100));
-                }
-              },
-              onError: (Object error, StackTrace stack) {
-                if (!ref.mounted) return;
-                log.e(
-                  '[HrMonitorNotifier] Battery notification stream error',
-                  error: error,
-                );
-              },
-              cancelOnError: false,
-            );
-      } else {
-        log.d(
-          '[HrMonitorNotifier] Battery characteristic found but does not '
-          'support notifications/indications. Using initial read value.',
-        );
-      }
-    } on Object catch (e) {
-      log.w(
-        '[HrMonitorNotifier] Battery service resolution failed (ignored)',
-        error: e,
-      );
-    }
   }
 
   void _updateStateWithBatteryLevel(int newLevel) {
@@ -849,9 +583,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     );
 
     // 1. Force-save any unsaved BPM samples before releasing resources.
-    if (_collectedBpmSamples.isNotEmpty && !_saveInProgress) {
+    if (_recorder.hasSamples && !_recorder.isSaveInProgress) {
       try {
-        await _saveSessionToDisk();
+        await _recorder.saveFinalSession();
       } on Object catch (e, st) {
         log.e(
           '[HrMonitorNotifier] _cleanup: Failed to force-save session to disk',
@@ -867,10 +601,9 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
     _reconnectAttempts = 0;
-    _stopCheckpointTimer();
+    _recorder.stopCheckpointTimer();
 
-    // 3. Safely disconnect BLE device — await the future to ensure OS releases
-    //    hardware resources before we null out the reference.
+    // 3. Safely disconnect BLE device.
     final deviceToDisconnect = _device;
     if (deviceToDisconnect != null) {
       try {
@@ -888,8 +621,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
     }
     _device = null;
 
-    // 4. Cancel subscriptions sequentially — each cancel must complete before
-    //    the next subscription is nulled to avoid race conditions.
+    // 4. Cancel subscriptions sequentially.
     await _hrNotificationSubscription?.cancel();
     _hrNotificationSubscription = null;
     await _batteryNotificationSubscription?.cancel();
