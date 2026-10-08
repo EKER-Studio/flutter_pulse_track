@@ -14,7 +14,7 @@ import 'package:pulse_track/features/heart_rate/presentation/controllers/hr_moni
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_home_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_scanner_view.dart';
-import 'package:pulse_track/features/heart_rate/presentation/views/workout_history_view.dart';
+import 'package:pulse_track/features/workout/presentation/views/workout_history_view.dart';
 import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/max_hr_selection_dialog.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/theme_selection_dialog.dart';

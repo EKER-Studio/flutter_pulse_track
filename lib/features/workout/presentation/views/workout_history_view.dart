@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart' as intl;
 
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
+import 'package:pulse_track/core/presentation/widgets/status_state_view.dart';
 import 'package:pulse_track/core/utils/app_logger.dart';
+import 'package:pulse_track/core/utils/date_time_formatters.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/application/workout_providers.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
@@ -133,38 +134,17 @@ class WorkoutHistoryView extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(AppLocalizations l10n) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const ExcludeSemantics(
-              child: Icon(
-                Icons.fitness_center,
-                size: 80,
-                color: AppColors.textTertiary,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              l10n.noWorkoutsTitle,
-              style: TextStyle(
-                color: AppColors.textMuted,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.noWorkoutsDescription,
-              style: TextStyle(color: AppColors.textTertiary, fontSize: 14),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+    return StatusStateView(
+      icon: Icons.fitness_center,
+      iconColor: AppColors.textTertiary,
+      title: l10n.noWorkoutsTitle,
+      titleStyle: const TextStyle(
+        color: AppColors.textMuted,
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
       ),
+      subtitle: l10n.noWorkoutsDescription,
+      scrollable: false,
     );
   }
 
@@ -177,8 +157,8 @@ class WorkoutHistoryView extends ConsumerWidget {
     AppLocalizations l10n,
     WorkoutSession session,
   ) {
-    final duration = _formatDuration(session.startTime, session.endTime);
-    final formattedDate = _formatDate(l10n, session.startTime);
+    final duration = formatWorkoutDuration(session.startTime, session.endTime);
+    final formattedDate = formatRelativeDate(l10n, session.startTime);
     final deviceName = session.deviceName.isEmpty
         ? l10n.unknownSensorName
         : session.deviceName;
@@ -296,35 +276,5 @@ class WorkoutHistoryView extends ConsumerWidget {
         ),
       ],
     );
-  }
-
-  /// Returns a relative date string ("Today, HH:mm", "Yesterday…", or "Mon, MMM DD, HH:mm").
-  String _formatDate(AppLocalizations l10n, DateTime date) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final workoutDay = DateTime(date.year, date.month, date.day);
-    final difference = today.difference(workoutDay).inDays;
-
-    if (difference == 0) {
-      return l10n.todayPrefix(intl.DateFormat.Hm().format(date));
-    } else if (difference == 1) {
-      return l10n.yesterdayPrefix(intl.DateFormat.Hm().format(date));
-    } else {
-      return '${intl.DateFormat.EEEE().format(date)}, ${intl.DateFormat.Md().format(date)} at ${intl.DateFormat.Hm().format(date)}';
-    }
-  }
-
-  /// Formats the elapsed time between [start] and [end] into a compact "Xh Ym" string.
-  String _formatDuration(DateTime start, DateTime? end) {
-    final endTime = end ?? DateTime.now();
-    final duration = endTime.difference(start);
-
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes.remainder(60);
-
-    if (hours > 0) {
-      return '${hours}h ${minutes}m';
-    }
-    return '${minutes}m';
   }
 }

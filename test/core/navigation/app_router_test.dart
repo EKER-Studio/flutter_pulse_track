@@ -13,7 +13,7 @@ import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_home_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_monitor_view.dart';
 import 'package:pulse_track/features/heart_rate/presentation/views/hr_scanner_view.dart';
-import 'package:pulse_track/features/heart_rate/presentation/views/workout_history_view.dart';
+import 'package:pulse_track/features/workout/presentation/views/workout_history_view.dart';
 import 'package:pulse_track/features/workout/domain/models/device_profile.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
 import 'package:pulse_track/features/workout/application/workout_providers.dart';
