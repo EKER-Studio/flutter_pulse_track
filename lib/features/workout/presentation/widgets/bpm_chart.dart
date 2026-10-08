@@ -23,6 +23,7 @@ class BpmChart extends CustomPainter {
     required this.startTime,
     required this.endTime,
     this.emptyLabel = 'No data',
+    this.scrubFraction,
   });
 
   /// Individual BPM readings ordered chronologically.
@@ -36,6 +37,9 @@ class BpmChart extends CustomPainter {
 
   /// Localized text rendered when [samples] is empty.
   final String emptyLabel;
+
+  /// Optional active horizontal scrubbing position as a fraction [0.0, 1.0].
+  final double? scrubFraction;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -144,10 +148,40 @@ class BpmChart extends CustomPainter {
       linePaint.color = getZoneColor(displaySamples[i]);
       canvas.drawLine(points[i], points[i + 1], linePaint);
     }
+
+    // Interactive scrub indicator line & dot
+    final activeFraction = scrubFraction;
+    if (activeFraction != null && displaySamples.isNotEmpty) {
+      final scrubDisplayIndex = (activeFraction * (displaySamples.length - 1))
+          .round()
+          .clamp(0, displaySamples.length - 1);
+      final scrubPoint = points[scrubDisplayIndex];
+
+      final scrubLinePaint = Paint()
+        ..color = AppColors.accentBlue
+        ..strokeWidth = 1.5;
+      canvas.drawLine(
+        Offset(scrubPoint.dx, 0),
+        Offset(scrubPoint.dx, chartHeight),
+        scrubLinePaint,
+      );
+
+      final circlePaint = Paint()
+        ..color = getZoneColor(displaySamples[scrubDisplayIndex])
+        ..style = PaintingStyle.fill;
+      canvas.drawCircle(scrubPoint, 6.0, circlePaint);
+
+      final borderPaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.0;
+      canvas.drawCircle(scrubPoint, 6.0, borderPaint);
+    }
   }
 
   @override
   bool shouldRepaint(covariant BpmChart oldDelegate) {
+    if (oldDelegate.scrubFraction != scrubFraction) return true;
     if (oldDelegate.emptyLabel != emptyLabel) return true;
     if (oldDelegate.samples.length != samples.length) return true;
     for (int i = 0; i < samples.length; i++) {
