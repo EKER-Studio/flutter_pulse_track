@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
+import 'package:pulse_track/features/settings/domain/models/energy_unit.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
 import 'package:pulse_track/features/settings/presentation/screens/settings_screen.dart';
+import 'package:pulse_track/features/settings/presentation/widgets/components/energy_unit_selection_dialog.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/max_hr_selection_dialog.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/theme_selection_dialog.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
@@ -28,6 +30,16 @@ class FakeAppSettingsNotifier extends AppSettingsNotifier {
   @override
   Future<void> updateMaxHr(int maxHr) async {
     state = state.copyWith(defaultMaxHr: maxHr);
+  }
+
+  @override
+  Future<void> updateEnergyUnit(EnergyUnit unit) async {
+    state = state.copyWith(energyUnit: unit);
+  }
+
+  @override
+  Future<void> updateDefaultChartZoomed(bool zoomed) async {
+    state = state.copyWith(defaultChartZoomed: zoomed);
   }
 }
 
@@ -86,6 +98,13 @@ void main() {
         find.text('190 BPM (Heart rate zones calculation)'),
         findsOneWidget,
       );
+      expect(find.text('Energy Unit'), findsOneWidget);
+      expect(find.text('Kilocalories (kcal)'), findsOneWidget);
+      expect(find.text('Default Live Chart Zoom'), findsOneWidget);
+      expect(
+        find.text('Auto-zoom vertical scale to current BPM range'),
+        findsOneWidget,
+      );
       expect(find.text('Export All Workouts'), findsOneWidget);
       expect(find.text('Import Workouts'), findsOneWidget);
       expect(find.text('Wipe All Workouts'), findsOneWidget);
@@ -115,6 +134,26 @@ void main() {
       );
       expect(find.text('Light'), findsOneWidget);
       expect(find.text('Dark'), findsOneWidget);
+    });
+
+    testWidgets('tapping Energy Unit tile opens EnergyUnitSelectionDialog', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(buildSubject());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Energy Unit'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(EnergyUnitSelectionDialog), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(EnergyUnitSelectionDialog),
+          matching: find.text('Kilocalories (kcal)'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Kilojoules (kJ)'), findsOneWidget);
     });
 
     testWidgets('tapping Max Heart Rate tile opens MaxHrSelectionDialog', (

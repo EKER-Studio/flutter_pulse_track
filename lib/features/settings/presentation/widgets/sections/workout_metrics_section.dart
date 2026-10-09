@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:pulse_track/features/settings/domain/models/energy_unit.dart';
 import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
+import 'package:pulse_track/features/settings/presentation/widgets/components/energy_unit_selection_dialog.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/max_hr_selection_dialog.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/settings_section_header.dart';
 import 'package:pulse_track/features/settings/presentation/widgets/components/settings_tile.dart';
@@ -29,6 +31,31 @@ class WorkoutMetricsSection extends ConsumerWidget {
             currentMaxHr: settings.defaultMaxHr,
             onConfirmed: (maxHr) =>
                 ref.read(appSettingsProvider.notifier).updateMaxHr(maxHr),
+          ),
+        ),
+        SettingsTile(
+          icon: Icons.local_fire_department_outlined,
+          title: l10n.settingsEnergyUnitTitle,
+          subtitle: switch (settings.energyUnit) {
+            EnergyUnit.kcal => l10n.settingsEnergyUnitKcal,
+            EnergyUnit.kj => l10n.settingsEnergyUnitKj,
+          },
+          onTap: () => EnergyUnitSelectionDialog.show(
+            context,
+            currentUnit: settings.energyUnit,
+            onSelected: (unit) =>
+                ref.read(appSettingsProvider.notifier).updateEnergyUnit(unit),
+          ),
+        ),
+        SettingsTile(
+          icon: Icons.zoom_in_rounded,
+          title: l10n.settingsDefaultChartZoomTitle,
+          subtitle: l10n.settingsDefaultChartZoomSubtitle,
+          trailing: Switch(
+            value: settings.defaultChartZoomed,
+            onChanged: (zoomed) => ref
+                .read(appSettingsProvider.notifier)
+                .updateDefaultChartZoomed(zoomed),
           ),
         ),
       ],
