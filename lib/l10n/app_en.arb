@@ -1030,5 +1030,46 @@
    "milestonesGallery": "Milestones Gallery",
    "@milestonesGallery": {
       "description": "Title of the milestones gallery bottom sheet"
+   },
+   "liveBpmChartTitle": "Live Heart Rate",
+   "@liveBpmChartTitle": {
+      "description": "Header title for live heart rate waveform chart."
+   },
+   "chartZoomInTooltip": "Auto-zoom to BPM range",
+   "@chartZoomInTooltip": {
+      "description": "Tooltip for button that zooms the chart vertically to the current BPM range."
+   },
+   "chartZoomOutTooltip": "Reset chart zoom (0–220 BPM)",
+   "@chartZoomOutTooltip": {
+      "description": "Tooltip for button that resets the chart vertical scale to the full 0-220 range."
+   },
+   "skinContactTitle": "Skin Contact",
+   "@skinContactTitle": {
+      "description": "Title for skin contact sensor status card."
+   },
+   "skinContactDetected": "Detected",
+   "@skinContactDetected": {
+      "description": "Status text when heart rate sensor detects good skin contact."
+   },
+   "skinContactLost": "Poor contact / No contact",
+   "@skinContactLost": {
+      "description": "Status text when heart rate sensor loses skin contact."
+   },
+   "skinContactUnsupported": "Not supported",
+   "@skinContactUnsupported": {
+      "description": "Status text when heart rate sensor does not support skin contact detection."
+   },
+   "energyExpendedTitle": "Energy Expended",
+   "@energyExpendedTitle": {
+      "description": "Title for cumulative energy expended metric card."
+   },
+   "energyExpendedUnitKj": "{energy} kJ",
+   "@energyExpendedUnitKj": {
+      "description": "Formatted cumulative energy expended in kilojoules.",
+      "placeholders": {
+         "energy": {
+            "type": "int"
+         }
+      }
    }
 }

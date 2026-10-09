@@ -1,596 +1,605 @@
 {
-  "@@locale": "ko",
-  "@back": {
-    "description": "Onboarding: back"
-  },
-  "@bodySensorLocationLabel": {
-    "description": "Accessibility label for the sensor location card.",
-    "placeholders": {
-      "location": {
-        "type": "String"
+   "@@locale": "ko",
+   "@back": {
+      "description": "Onboarding: back"
+   },
+   "@bodySensorLocationLabel": {
+      "description": "Accessibility label for the sensor location card.",
+      "placeholders": {
+         "location": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "@cancel": {
-    "description": "Generic cancel button label."
-  },
-  "@connectToSensor": {
-    "description": "Semantic label for saved sensor chips on the home screen.",
-    "placeholders": {
-      "sensorName": {
-        "type": "String"
+   },
+   "@cancel": {
+      "description": "Generic cancel button label."
+   },
+   "@connectToSensor": {
+      "description": "Semantic label for saved sensor chips on the home screen.",
+      "placeholders": {
+         "sensorName": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "@csvExportEmpty": {
-    "description": "Snackbar message when user tries to export empty history."
-  },
-  "@csvExportShareSubject": {
-    "description": "Subject line when sharing exported CSV."
-  },
-  "@csvExportSuccess": {
-    "description": "Snackbar message after exporting workouts to CSV."
-  },
-  "@csvImportNoValidData": {
-    "description": "Snackbar message when CSV file has no parseable workouts."
-  },
-  "@csvImportSuccess": {
-    "description": "Snackbar message after successful CSV import.",
-    "placeholders": {
-      "count": {
-        "type": "int"
+   },
+   "@csvExportEmpty": {
+      "description": "Snackbar message when user tries to export empty history."
+   },
+   "@csvExportShareSubject": {
+      "description": "Subject line when sharing exported CSV."
+   },
+   "@csvExportSuccess": {
+      "description": "Snackbar message after exporting workouts to CSV."
+   },
+   "@csvImportNoValidData": {
+      "description": "Snackbar message when CSV file has no parseable workouts."
+   },
+   "@csvImportSuccess": {
+      "description": "Snackbar message after successful CSV import.",
+      "placeholders": {
+         "count": {
+            "type": "int"
+         }
       }
-    }
-  },
-  "@csvPreviewConfirmImport": {
-    "description": "Button to confirm importing valid sessions.",
-    "placeholders": {
-      "count": {
-        "type": "int"
+   },
+   "@csvPreviewConfirmImport": {
+      "description": "Button to confirm importing valid sessions.",
+      "placeholders": {
+         "count": {
+            "type": "int"
+         }
       }
-    }
-  },
-  "@csvPreviewDateRange": {
-    "description": "Date range of sessions to import.",
-    "placeholders": {
-      "start": {
-        "type": "String"
-      },
-      "end": {
-        "type": "String"
+   },
+   "@csvPreviewDateRange": {
+      "description": "Date range of sessions to import.",
+      "placeholders": {
+         "start": {
+            "type": "String"
+         },
+         "end": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "@csvPreviewSessionsCount": {
-    "description": "Number of valid workout sessions found.",
-    "placeholders": {
-      "count": {
-        "type": "int"
+   },
+   "@csvPreviewSessionsCount": {
+      "description": "Number of valid workout sessions found.",
+      "placeholders": {
+         "count": {
+            "type": "int"
+         }
       }
-    }
-  },
-  "@csvPreviewSkippedRows": {
-    "description": "Number of skipped invalid rows.",
-    "placeholders": {
-      "count": {
-        "type": "int"
+   },
+   "@csvPreviewSkippedRows": {
+      "description": "Number of skipped invalid rows.",
+      "placeholders": {
+         "count": {
+            "type": "int"
+         }
       }
-    }
-  },
-  "@csvPreviewTitle": {
-    "description": "Title of CSV import preview dialog."
-  },
-  "@deviceListTileHint": {
-    "description": "Semantics hint for each device row in the scanner list.",
-    "placeholders": {
-      "id": {
-        "type": "String"
-      },
-      "rssi": {
-        "type": "int"
+   },
+   "@csvPreviewTitle": {
+      "description": "Title of CSV import preview dialog."
+   },
+   "@deviceListTileHint": {
+      "description": "Semantics hint for each device row in the scanner list.",
+      "placeholders": {
+         "id": {
+            "type": "String"
+         },
+         "rssi": {
+            "type": "int"
+         }
       }
-    }
-  },
-  "@disconnectHint": {
-    "description": "Semantics hint for the disconnect button.",
-    "placeholders": {
-      "deviceName": {
-        "type": "String"
+   },
+   "@disconnectHint": {
+      "description": "Semantics hint for the disconnect button.",
+      "placeholders": {
+         "deviceName": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "@errorGeneric": {
-    "description": "Generic error message with parameter.",
-    "placeholders": {
-      "error": {
-        "type": "String"
+   },
+   "@errorGeneric": {
+      "description": "Generic error message with parameter.",
+      "placeholders": {
+         "error": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "@failedToLoadSavedSensors": {
-    "description": "Error shown when saved sensors fail to load.",
-    "placeholders": {
-      "error": {
-        "type": "String"
+   },
+   "@failedToLoadSavedSensors": {
+      "description": "Error shown when saved sensors fail to load.",
+      "placeholders": {
+         "error": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "@getStarted": {
-    "description": "Onboarding: getStarted"
-  },
-  "@healthConnectRequiredSubtitle": {
-    "description": "Explanation prompting user to install Health Connect from Google Play."
-  },
-  "@healthConnectRequiredTitle": {
-    "description": "Title of dialog informing user that Google Health Connect must be installed."
-  },
-  "@healthPermissionDenied": {
-    "description": "Message shown when health read or write permissions are rejected."
-  },
-  "@healthServiceNameAndroid": {
-    "description": "Platform brand name for Android Health Connect."
-  },
-  "@healthServiceNameIOS": {
-    "description": "Platform brand name for iOS Apple Health."
-  },
-  "@healthServiceNameOther": {
-    "description": "Generic brand name for health services on unsupported or desktop platforms."
-  },
-  "@healthSyncDescAndroid": {
-    "description": "Description of health synchronization on Android devices."
-  },
-  "@healthSyncDescIOS": {
-    "description": "Description of health synchronization on iOS devices."
-  },
-  "@healthSyncDescOther": {
-    "description": "Description of health synchronization on other platforms."
-  },
-  "@healthSyncUnavailable": {
-    "description": "Warning shown when health ecosystem APIs are unavailable on current device."
-  },
-  "@heartRateLiveLabel": {
-    "description": "Accessibility live region label for the current heart rate.",
-    "placeholders": {
-      "bpm": {
-        "type": "int"
+   },
+   "@getStarted": {
+      "description": "Onboarding: getStarted"
+   },
+   "@healthConnectRequiredSubtitle": {
+      "description": "Explanation prompting user to install Health Connect from Google Play."
+   },
+   "@healthConnectRequiredTitle": {
+      "description": "Title of dialog informing user that Google Health Connect must be installed."
+   },
+   "@healthPermissionDenied": {
+      "description": "Message shown when health read or write permissions are rejected."
+   },
+   "@healthServiceNameAndroid": {
+      "description": "Platform brand name for Android Health Connect."
+   },
+   "@healthServiceNameIOS": {
+      "description": "Platform brand name for iOS Apple Health."
+   },
+   "@healthServiceNameOther": {
+      "description": "Generic brand name for health services on unsupported or desktop platforms."
+   },
+   "@healthSyncDescAndroid": {
+      "description": "Description of health synchronization on Android devices."
+   },
+   "@healthSyncDescIOS": {
+      "description": "Description of health synchronization on iOS devices."
+   },
+   "@healthSyncDescOther": {
+      "description": "Description of health synchronization on other platforms."
+   },
+   "@healthSyncUnavailable": {
+      "description": "Warning shown when health ecosystem APIs are unavailable on current device."
+   },
+   "@heartRateLiveLabel": {
+      "description": "Accessibility live region label for the current heart rate.",
+      "placeholders": {
+         "bpm": {
+            "type": "int"
+         }
       }
-    }
-  },
-  "@installFromPlayStore": {
-    "description": "Button label directing user to Google Play Store to install Health Connect."
-  },
-  "@next": {
-    "description": "Onboarding: next"
-  },
-  "@onboardingCompleteSubtitle": {
-    "description": "Onboarding: onboardingCompleteSubtitle"
-  },
-  "@onboardingCompleteTitle": {
-    "description": "Onboarding: onboardingCompleteTitle"
-  },
-  "@onboardingPermissionsSubtitle": {
-    "description": "Onboarding: onboardingPermissionsSubtitle"
-  },
-  "@onboardingPermissionsTitle": {
-    "description": "Onboarding: onboardingPermissionsTitle"
-  },
-  "@onboardingWelcomeHealthSync": {
-    "description": "Onboarding: onboardingWelcomeHealthSync"
-  },
-  "@onboardingWelcomeHistory": {
-    "description": "Onboarding: onboardingWelcomeHistory"
-  },
-  "@onboardingWelcomePrivacy": {
-    "description": "Onboarding: onboardingWelcomePrivacy"
-  },
-  "@onboardingWelcomeStart": {
-    "description": "Onboarding: onboardingWelcomeStart"
-  },
-  "@onboardingWelcomeSubtitle": {
-    "description": "Onboarding: onboardingWelcomeSubtitle"
-  },
-  "@onboardingWelcomeTitle": {
-    "description": "Onboarding: onboardingWelcomeTitle"
-  },
-  "@permissionBluetoothSubtitle": {
-    "description": "Onboarding: permissionBluetoothSubtitle"
-  },
-  "@permissionBluetoothTitle": {
-    "description": "Onboarding: permissionBluetoothTitle"
-  },
-  "@permissionHealthSubtitle": {
-    "description": "Onboarding: permissionHealthSubtitle"
-  },
-  "@permissionHealthTitle": {
-    "description": "Onboarding: permissionHealthTitle"
-  },
-  "@permissionNotificationsSubtitle": {
-    "description": "Onboarding: permissionNotificationsSubtitle"
-  },
-  "@permissionNotificationsTitle": {
-    "description": "Onboarding: permissionNotificationsTitle"
-  },
-  "@save": {
-    "description": "Generic save button label."
-  },
-  "@sensorBatteryLabel": {
-    "description": "Accessibility label for the battery card.",
-    "placeholders": {
-      "level": {
-        "type": "String"
+   },
+   "@installFromPlayStore": {
+      "description": "Button label directing user to Google Play Store to install Health Connect."
+   },
+   "@next": {
+      "description": "Onboarding: next"
+   },
+   "@onboardingCompleteSubtitle": {
+      "description": "Onboarding: onboardingCompleteSubtitle"
+   },
+   "@onboardingCompleteTitle": {
+      "description": "Onboarding: onboardingCompleteTitle"
+   },
+   "@onboardingPermissionsSubtitle": {
+      "description": "Onboarding: onboardingPermissionsSubtitle"
+   },
+   "@onboardingPermissionsTitle": {
+      "description": "Onboarding: onboardingPermissionsTitle"
+   },
+   "@onboardingWelcomeHealthSync": {
+      "description": "Onboarding: onboardingWelcomeHealthSync"
+   },
+   "@onboardingWelcomeHistory": {
+      "description": "Onboarding: onboardingWelcomeHistory"
+   },
+   "@onboardingWelcomePrivacy": {
+      "description": "Onboarding: onboardingWelcomePrivacy"
+   },
+   "@onboardingWelcomeStart": {
+      "description": "Onboarding: onboardingWelcomeStart"
+   },
+   "@onboardingWelcomeSubtitle": {
+      "description": "Onboarding: onboardingWelcomeSubtitle"
+   },
+   "@onboardingWelcomeTitle": {
+      "description": "Onboarding: onboardingWelcomeTitle"
+   },
+   "@permissionBluetoothSubtitle": {
+      "description": "Onboarding: permissionBluetoothSubtitle"
+   },
+   "@permissionBluetoothTitle": {
+      "description": "Onboarding: permissionBluetoothTitle"
+   },
+   "@permissionHealthSubtitle": {
+      "description": "Onboarding: permissionHealthSubtitle"
+   },
+   "@permissionHealthTitle": {
+      "description": "Onboarding: permissionHealthTitle"
+   },
+   "@permissionNotificationsSubtitle": {
+      "description": "Onboarding: permissionNotificationsSubtitle"
+   },
+   "@permissionNotificationsTitle": {
+      "description": "Onboarding: permissionNotificationsTitle"
+   },
+   "@save": {
+      "description": "Generic save button label."
+   },
+   "@sensorBatteryLabel": {
+      "description": "Accessibility label for the battery card.",
+      "placeholders": {
+         "level": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "@settingsDefaultMaxHr": {
-    "description": "Title of max HR setting."
-  },
-  "@settingsDefaultMaxHrSubtitle": {
-    "description": "Subtitle showing current max HR.",
-    "placeholders": {
-      "bpm": {
-        "type": "int"
+   },
+   "@settingsDefaultMaxHr": {
+      "description": "Title of max HR setting."
+   },
+   "@settingsDefaultMaxHrSubtitle": {
+      "description": "Subtitle showing current max HR.",
+      "placeholders": {
+         "bpm": {
+            "type": "int"
+         }
       }
-    }
-  },
-  "@settingsExportAllWorkouts": {
-    "description": "Title for exporting all workouts."
-  },
-  "@settingsExportAllWorkoutsSubtitle": {
-    "description": "Subtitle for exporting all workouts."
-  },
-  "@settingsImportWorkouts": {
-    "description": "Title for importing workouts from CSV."
-  },
-  "@settingsImportWorkoutsSubtitle": {
-    "description": "Subtitle for importing workouts from CSV."
-  },
-  "@settingsLicenses": {
-    "description": "Label for open-source licenses tile."
-  },
-  "@settingsLicensesSubtitle": {
-    "description": "Subtitle for licenses tile."
-  },
-  "@settingsMaxHrDialogHint": {
-    "description": "Hint in max HR configuration dialog."
-  },
-  "@settingsMaxHrDialogTitle": {
-    "description": "Title of max HR configuration dialog."
-  },
-  "@settingsPrivacyPolicy": {
-    "description": "Label for privacy policy tile."
-  },
-  "@settingsPrivacyPolicySubtitle": {
-    "description": "Subtitle for privacy policy tile."
-  },
-  "@settingsSectionAbout": {
-    "description": "Header for about and support section."
-  },
-  "@settingsSectionAppearance": {
-    "description": "Header for the appearance settings section."
-  },
-  "@settingsSectionData": {
-    "description": "Header for data management section."
-  },
-  "@settingsSectionWorkout": {
-    "description": "Header for workout parameters section."
-  },
-  "@settingsSourceCode": {
-    "description": "Label for source code tile."
-  },
-  "@settingsSourceCodeSubtitle": {
-    "description": "Subtitle for source code tile."
-  },
-  "@settingsSupport": {
-    "description": "Label for support tile."
-  },
-  "@settingsSupportSubtitle": {
-    "description": "Subtitle for support tile."
-  },
-  "@settingsTheme": {
-    "description": "Label for theme mode selection tile."
-  },
-  "@settingsThemeDark": {
-    "description": "Label for dark theme."
-  },
-  "@settingsThemeLight": {
-    "description": "Label for light theme."
-  },
-  "@settingsThemeSystem": {
-    "description": "Label for system default theme."
-  },
-  "@settingsTitle": {
-    "description": "Title of the settings screen."
-  },
-  "@settingsVersion": {
-    "description": "Label for app version tile."
-  },
-  "@settingsWipeData": {
-    "description": "Title for wiping all workout history."
-  },
-  "@settingsWipeDataSubtitle": {
-    "description": "Subtitle for wiping all workout history."
-  },
-  "@tabHistory": {
-    "description": "Label for workout history tab"
-  },
-  "@tabHistorySemanticsLabel": {
-    "description": "Semantics label for history tab"
-  },
-  "@tabHome": {
-    "description": "Label for home tab in bottom navigation"
-  },
-  "@tabHomeSemanticsLabel": {
-    "description": "Semantics label for home tab"
-  },
-  "@tabSettings": {
-    "description": "Label for settings tab"
-  },
-  "@tabSettingsSemanticsLabel": {
-    "description": "Semantics label for settings tab"
-  },
-  "@todayPrefix": {
-    "description": "Date prefix for workouts that occurred today.",
-    "placeholders": {
-      "time": {
-        "type": "String"
+   },
+   "@settingsExportAllWorkouts": {
+      "description": "Title for exporting all workouts."
+   },
+   "@settingsExportAllWorkoutsSubtitle": {
+      "description": "Subtitle for exporting all workouts."
+   },
+   "@settingsImportWorkouts": {
+      "description": "Title for importing workouts from CSV."
+   },
+   "@settingsImportWorkoutsSubtitle": {
+      "description": "Subtitle for importing workouts from CSV."
+   },
+   "@settingsLicenses": {
+      "description": "Label for open-source licenses tile."
+   },
+   "@settingsLicensesSubtitle": {
+      "description": "Subtitle for licenses tile."
+   },
+   "@settingsMaxHrDialogHint": {
+      "description": "Hint in max HR configuration dialog."
+   },
+   "@settingsMaxHrDialogTitle": {
+      "description": "Title of max HR configuration dialog."
+   },
+   "@settingsPrivacyPolicy": {
+      "description": "Label for privacy policy tile."
+   },
+   "@settingsPrivacyPolicySubtitle": {
+      "description": "Subtitle for privacy policy tile."
+   },
+   "@settingsSectionAbout": {
+      "description": "Header for about and support section."
+   },
+   "@settingsSectionAppearance": {
+      "description": "Header for the appearance settings section."
+   },
+   "@settingsSectionData": {
+      "description": "Header for data management section."
+   },
+   "@settingsSectionWorkout": {
+      "description": "Header for workout parameters section."
+   },
+   "@settingsSourceCode": {
+      "description": "Label for source code tile."
+   },
+   "@settingsSourceCodeSubtitle": {
+      "description": "Subtitle for source code tile."
+   },
+   "@settingsSupport": {
+      "description": "Label for support tile."
+   },
+   "@settingsSupportSubtitle": {
+      "description": "Subtitle for support tile."
+   },
+   "@settingsTheme": {
+      "description": "Label for theme mode selection tile."
+   },
+   "@settingsThemeDark": {
+      "description": "Label for dark theme."
+   },
+   "@settingsThemeLight": {
+      "description": "Label for light theme."
+   },
+   "@settingsThemeSystem": {
+      "description": "Label for system default theme."
+   },
+   "@settingsTitle": {
+      "description": "Title of the settings screen."
+   },
+   "@settingsVersion": {
+      "description": "Label for app version tile."
+   },
+   "@settingsWipeData": {
+      "description": "Title for wiping all workout history."
+   },
+   "@settingsWipeDataSubtitle": {
+      "description": "Subtitle for wiping all workout history."
+   },
+   "@tabHistory": {
+      "description": "Label for workout history tab"
+   },
+   "@tabHistorySemanticsLabel": {
+      "description": "Semantics label for history tab"
+   },
+   "@tabHome": {
+      "description": "Label for home tab in bottom navigation"
+   },
+   "@tabHomeSemanticsLabel": {
+      "description": "Semantics label for home tab"
+   },
+   "@tabSettings": {
+      "description": "Label for settings tab"
+   },
+   "@tabSettingsSemanticsLabel": {
+      "description": "Semantics label for settings tab"
+   },
+   "@todayPrefix": {
+      "description": "Date prefix for workouts that occurred today.",
+      "placeholders": {
+         "time": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "@wipeDataConfirm": {
-    "description": "Button to confirm wiping data."
-  },
-  "@wipeDataDialogContent": {
-    "description": "Content of wipe data confirmation dialog."
-  },
-  "@wipeDataDialogTitle": {
-    "description": "Title of wipe data confirmation dialog."
-  },
-  "@wipeDataSuccess": {
-    "description": "Snackbar message after wiping data."
-  },
-  "@workoutCardHint": {
-    "description": "Semantics hint for a workout history card.",
-    "placeholders": {
-      "duration": {
-        "type": "String"
-      },
-      "device": {
-        "type": "String"
-      },
-      "avg": {
-        "type": "int"
-      },
-      "max": {
-        "type": "int"
+   },
+   "@wipeDataConfirm": {
+      "description": "Button to confirm wiping data."
+   },
+   "@wipeDataDialogContent": {
+      "description": "Content of wipe data confirmation dialog."
+   },
+   "@wipeDataDialogTitle": {
+      "description": "Title of wipe data confirmation dialog."
+   },
+   "@wipeDataSuccess": {
+      "description": "Snackbar message after wiping data."
+   },
+   "@workoutCardHint": {
+      "description": "Semantics hint for a workout history card.",
+      "placeholders": {
+         "duration": {
+            "type": "String"
+         },
+         "device": {
+            "type": "String"
+         },
+         "avg": {
+            "type": "int"
+         },
+         "max": {
+            "type": "int"
+         }
       }
-    }
-  },
-  "@workoutCardLabel": {
-    "description": "Semantic label for a workout history card.",
-    "placeholders": {
-      "date": {
-        "type": "String"
+   },
+   "@workoutCardLabel": {
+      "description": "Semantic label for a workout history card.",
+      "placeholders": {
+         "date": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "@workoutDetailsExportFailed": {
-    "description": "Snackbar when export fails.",
-    "placeholders": {
-      "error": {
-        "type": "String"
+   },
+   "@workoutDetailsExportFailed": {
+      "description": "Snackbar when export fails.",
+      "placeholders": {
+         "error": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "@yesterdayPrefix": {
-    "description": "Date prefix for workouts that occurred yesterday.",
-    "placeholders": {
-      "time": {
-        "type": "String"
+   },
+   "@yesterdayPrefix": {
+      "description": "Date prefix for workouts that occurred yesterday.",
+      "placeholders": {
+         "time": {
+            "type": "String"
+         }
       }
-    }
-  },
-  "appLocked": "App Locked",
-  "appLockedStatusIconSemantics": "Application locked status icon",
-  "avgBpmMetric": "평균 BPM",
-  "back": "Back",
-  "batteryNotAvailable": "해당 없음",
-  "biometricAuthFailed": "Biometric authentication failed or was canceled.",
-  "biometricAuthReason": "Authenticate to access Balance",
-  "biometricDesc": "Additional app security",
-  "biometricLock": "Biometric Protection",
-  "biometricLockoutBody": "Biometrics are no longer available or enrolled on this device. Turn off the biometric lock to regain access to your data, or keep it locked.",
-  "biometricLockoutTitle": "Biometric lock unavailable",
-  "biometricStepOptionalTitle": "Biometric Protection",
-  "biometricStepSubtitle": "Secure your measurements from prying eyes and unlock the app instantly using your face or fingerprint.",
-  "biometricStepTitle": "Biometric Protection",
-  "biometricsNotAvailable": "Biometrics not available on this device",
-  "bluetooth_disabled_label": "블루투스 비활성화됨",
-  "bluetooth_off_description": "블루투스가 꺼져 있거나 권한이 없습니다. 블루투스를 켜고 로컬 권한을 허용해주세요.",
-  "bluetooth_required": "블루투스 필요",
-  "bluetooth_searching_label": "블루투스 검색 중",
-  "bodySensorLocationChest": "가슴",
-  "bodySensorLocationEarLobe": "귓불",
-  "bodySensorLocationFinger": "손가락",
-  "bodySensorLocationFoot": "발",
-  "bodySensorLocationHand": "손",
-  "bodySensorLocationLabel": "센서 착용 위치: {location}",
-  "bodySensorLocationOther": "기타",
-  "bodySensorLocationTitle": "센서 착용 위치",
-  "bodySensorLocationUnknown": "알 수 없음",
-  "bodySensorLocationWrist": "손목",
-  "bpmUnit": "BPM",
-  "cancel": "Cancel",
-  "chartNoData": "데이터 없음",
-  "connectToSensor": "{sensorName}에 연결",
-  "connectingMessage": "기기에 연결 중...\n연결 설정이 진행 중입니다",
-  "connectionFailedTitle": "연결 실패",
-  "csvExportEmpty": "No workout sessions to export.",
-  "csvExportShareSubject": "PulseTrack Workout History Export",
-  "csvExportSuccess": "Workout sessions exported successfully.",
-  "csvImportNoValidData": "No valid workout sessions found in the selected CSV file.",
-  "csvImportSuccess": "Successfully imported {count} workout sessions.",
-  "csvPreviewConfirmImport": "Import ({count})",
-  "csvPreviewDateRange": "{start} – {end}",
-  "csvPreviewSessionsCount": "{count, plural, =1{1 session found} other{{count} sessions found}}",
-  "csvPreviewSkippedRows": "{count, plural, =1{1 invalid row will be skipped} other{{count} invalid rows will be skipped}}",
-  "csvPreviewTitle": "Import Workouts Preview",
-  "deleteSessionHint": "이 운동 세션을 삭제합니다",
-  "deleteSessionLabel": "삭제",
-  "deviceListTileHint": "MAC 주소 {id}, 신호 강도 {rssi} dBm. 두 번 탭하여 연결하세요.",
-  "device_unknown_label": "알 수 없는 기기",
-  "disableLock": "Turn off lock",
-  "disconnectButton": "연결 해제",
-  "disconnectHint": "{deviceName} 기기와의 연결을 해제합니다",
-  "disconnectedStatus": "연결 끊김",
-  "discoveringServicesMessage": "서비스 검색 중... 잠시 기다려주세요...",
-  "empty_state_bullets": "• 센서의 전원이 켜져 있는지 확인하세요.\n• 센서 배터리를 확인하세요.\n• 기기에 더 가까이 이동하세요.\n• 스캔 필터를 비활성화해 보세요.",
-  "empty_state_title": "기기가 보이지 않나요?",
-  "errorGeneric": "An error occurred: {error}",
-  "failedToLoadSavedSensors": "저장된 센서를 불러오지 못했습니다: {error}",
-  "getStarted": "Get Started",
-  "goBackButton": "뒤로",
-  "goBackHint": "이전 화면으로 돌아갑니다",
-  "healthConnectRequiredSubtitle": "Download the official Google Health Connect app from the Play Store to enable sync.",
-  "healthConnectRequiredTitle": "Health Connect App Required",
-  "healthPermissionDenied": "Health data permissions are required to sync heart rate and workouts.",
-  "healthServiceNameAndroid": "Health Connect",
-  "healthServiceNameIOS": "Apple Health",
-  "healthServiceNameOther": "Health Services",
-  "healthSyncDescAndroid": "Sync heart rate and workout data with Health Connect",
-  "healthSyncDescIOS": "Sync heart rate and workout data with Apple Health",
-  "healthSyncDescOther": "Sync heart rate and workout data with health services",
-  "healthSyncUnavailable": "Health sync unavailable on this device",
-  "heartRateLabel": "심박수",
-  "heartRateLiveLabel": "심박수: 분당 {bpm}회",
-  "homeTitle": "PulseTrack",
-  "hrMonitorRrIntervalsSemantics": "R-R 간격: {intervals}",
-  "inProgress": "진행 중",
-  "installFromPlayStore": "Install from Play Store",
-  "keepLocked": "Keep locked",
-  "maxBpmMetric": "최대 BPM",
-  "millisecondsUnit": "밀리초",
-  "next": "Next",
-  "noWorkoutsDescription": "심박수 측정 세션을 완료하면 기록이 여기에 표시됩니다.",
-  "noWorkoutsTitle": "기록된 운동이 없습니다",
-  "onboardingCompleteSubtitle": "Start tracking your heart rate and workouts",
-  "onboardingCompleteTitle": "You're All Set!",
-  "onboardingPermissionsSubtitle": "We need a few permissions to provide full functionality",
-  "onboardingPermissionsTitle": "Permissions",
-  "onboardingWelcomeHealthSync": "Health Sync",
-  "onboardingWelcomeHistory": "Workout History",
-  "onboardingWelcomePrivacy": "Privacy First",
-  "onboardingWelcomeStart": "Get Started",
-  "onboardingWelcomeSubtitle": "Your professional heart rate monitor and workout analytics companion",
-  "onboardingWelcomeTitle": "Welcome to PulseTrack",
-  "percentRange": "{min} ~ {max} 퍼센트",
-  "permissionBluetoothSubtitle": "To scan and connect to heart rate sensors",
-  "permissionBluetoothTitle": "Bluetooth",
-  "permissionHealthSubtitle": "To sync workouts with Apple Health / Health Connect",
-  "permissionHealthTitle": "Health Data",
-  "permissionNotificationsSubtitle": "To remind you about workouts",
-  "permissionNotificationsTitle": "Notifications",
-  "ready_to_scan": "검색 준비 완료",
-  "retryConnectionButton": "연결 재시도",
-  "retryConnectionHint": "심박수 센서에 다시 연결을 시도합니다",
-  "retry_button_label": "재시도",
-  "retry_scan_label": "스캔 재시도",
-  "retry_scan_semantic_label": "센서 검색 재시도",
-  "returnToScannerButton": "스캐너로 돌아가기",
-  "returnToScannerHint": "기기 스캐너 화면으로 돌아갑니다",
-  "routeErrorBackHome": "홈으로 돌아가기",
-  "routeErrorInvalidLink": "잘못된 주소이거나 손상된 링크입니다.",
-  "routeErrorNotFound": "페이지를 찾을 수 없습니다",
-  "routeErrorTitle": "탐색 오류",
-  "save": "Save",
-  "savedSensorFallbackName": "저장된 센서",
-  "savedSensorsSectionTitle": "저장된 센서 (직접 연결)",
-  "scanForNewSensorButton": "새 센서 검색",
-  "scan_button_label": "스캔",
-  "scan_button_semantic_label": "심박수 센서 검색 시작",
-  "scan_failed_title": "스캔 실패",
-  "scanner_title": "스캐너",
-  "searching_sensors": "활성 센서 검색 중...",
-  "sensorBatteryLabel": "센서 배터리 잔량: {level}",
-  "sensorBatteryTitle": "센서 배터리",
-  "settingsDefaultMaxHr": "Max Heart Rate",
-  "settingsDefaultMaxHrSubtitle": "{bpm} BPM (Heart rate zones calculation)",
-  "settingsExportAllWorkouts": "Export All Workouts",
-  "settingsExportAllWorkoutsSubtitle": "Generate and share CSV of all sessions",
-  "settingsImportWorkouts": "Import Workouts",
-  "settingsImportWorkoutsSubtitle": "Import workout sessions from a CSV file",
-  "settingsLicenses": "Licenses",
-  "settingsLicensesSubtitle": "Open-source software licenses",
-  "settingsMaxHrDialogHint": "Target max heart rate in BPM (50 - 240)",
-  "settingsMaxHrDialogTitle": "Set Max Heart Rate",
-  "settingsPrivacyPolicy": "개인정보 처리방침",
-  "settingsPrivacyPolicySubtitle": "생체 인식 데이터가 기기 내에서 보호되는 방식 확인",
-  "settingsSectionPrivacy": "개인정보 및 진단",
-  "settingsCrashReporting": "오류 보고서",
-  "settingsCrashReportingSubtitle": "안정성 향상을 위해 익명의 진단 데이터를 전송합니다",
-  "settingsAnalytics": "사용 통계",
-  "settingsAnalyticsSubtitle": "기능 개선을 위해 익명의 상호작용 지표를 전송합니다",
-  "settingsRateApp": "PulseTrack 평가",
-  "settingsRateAppSubtitle": "Google Play 리뷰로 앱 개발을 지원해 주세요",
-  "settingsSectionAbout": "About & Support",
-  "settingsSectionAppearance": "Appearance",
-  "settingsSectionData": "Data Management",
-  "settingsSectionWorkout": "Workout & Metrics",
-  "settingsSourceCode": "Source Code",
-  "settingsSourceCodeSubtitle": "View PulseTrack repository on GitHub",
-  "settingsSupport": "Support & Feedback",
-  "settingsSupportSubtitle": "Contact the development team",
-  "settingsTheme": "Theme",
-  "settingsThemeDark": "Dark",
-  "settingsThemeLight": "Light",
-  "settingsThemeSystem": "System default",
-  "settingsTitle": "Settings",
-  "settingsVersion": "Version",
-  "settingsWipeData": "Wipe All Workouts",
-  "settingsWipeDataSubtitle": "Permanently delete all workout history",
-  "start_scan_description": "센서 검색을 시작하려면 스캔을 누르세요.",
-  "tabHistory": "History",
-  "tabHistorySemanticsLabel": "History tab",
-  "tabHome": "Home",
-  "tabHomeSemanticsLabel": "Home tab",
-  "tabSettings": "Settings",
-  "tabSettingsSemanticsLabel": "Settings tab",
-  "todayPrefix": "오늘, {time}",
-  "toggle_filter_tooltip": "이름 및 주변 기기 필터 전환",
-  "unableToDeleteSession": "세션을 삭제할 수 없습니다. 다시 시도해주세요.",
-  "unableToLoadHistory": "운동 기록을 불러올 수 없습니다. 나중에 다시 시도해주세요.",
-  "unknownSensor": "알 수 없는 센서",
-  "unknownSensorLabel": "알 수 없는 센서",
-  "unknownSensorName": "알 수 없는 센서",
-  "unknown_device": "알 수 없는 기기",
-  "unlock": "Unlock",
-  "wipeDataConfirm": "Delete Everything",
-  "wipeDataDialogContent": "This action cannot be undone. All recorded sessions and heart rate telemetry will be permanently wiped from your device.",
-  "wipeDataDialogTitle": "Delete All Workout Data?",
-  "wipeDataSuccess": "All workout data has been wiped successfully.",
-  "workoutCardHint": "시간 {duration}, 센서 {device}. 평균 심박수 {avg} BPM, 최고 심박수 {max} BPM. 삭제하려면 왼쪽으로 미세요.",
-  "workoutCardLabel": "{date} 운동",
-  "workoutDetailsAvgBpm": "평균 심박수",
-  "workoutDetailsBackHint": "운동 기록으로 돌아가기",
-  "workoutDetailsChartNoDataSemantics": "심박수 차트: 기록된 운동 데이터가 없습니다",
-  "workoutDetailsChartWaveformSemantics": "시간에 따른 {count}개의 샘플을 보여주는 심박수 파형 차트입니다. 평균 심박수 {avgBpm} BPM, 최대 심박수 {maxBpm} BPM.",
-  "workoutDetailsDuration": "운동 시간",
-  "workoutDetailsExportFailed": "세션 내보내기 실패: {error}",
-  "workoutDetailsExportHint": "운동 데이터를 CSV로 내보내기",
-  "workoutDetailsHeaderSemantics": "운동 날짜: {date}, 시간: {duration}, 센서: {sensor}",
-  "workoutDetailsHeartRateOverTime": "시간별 심박수 추이",
-  "workoutDetailsNoData": "기록된 운동 데이터가 없습니다",
-  "workoutDetailsNoValidData": "유효한 심박수 데이터가 기록되지 않았습니다",
-  "workoutDetailsNotCompleted": "운동이 완료되지 않았습니다",
-  "workoutDetailsPeakBpm": "최고 심박수",
-  "workoutDetailsSamples": "샘플 수",
-  "workoutDetailsSensorDisconnected": "데이터가 기록되기 전에 센서 연결이 끊어졌을 수 있습니다",
-  "workoutDetailsSummary": "요약",
-  "workoutDetailsTitle": "운동 상세",
-  "workoutDetailsZonesLegendSemantics": "심박수 운동 영역 범례: {legend}",
-  "workoutHistoryAppBarTitle": "운동 기록",
-  "workoutHistoryDescription": "이전 심박수 세션 및 분석을 확인하세요.",
-  "workoutHistoryTitle": "운동 기록",
-  "yesterdayPrefix": "어제, {time}",
-  "workoutShareSingleText": "PulseTrack workout export #{id}",
-  "workoutShareBulkText": "PulseTrack workouts export ({count} sessions)"
+   },
+   "appLocked": "App Locked",
+   "appLockedStatusIconSemantics": "Application locked status icon",
+   "avgBpmMetric": "평균 BPM",
+   "back": "Back",
+   "batteryNotAvailable": "해당 없음",
+   "biometricAuthFailed": "Biometric authentication failed or was canceled.",
+   "biometricAuthReason": "Authenticate to access Balance",
+   "biometricDesc": "Additional app security",
+   "biometricLock": "Biometric Protection",
+   "biometricLockoutBody": "Biometrics are no longer available or enrolled on this device. Turn off the biometric lock to regain access to your data, or keep it locked.",
+   "biometricLockoutTitle": "Biometric lock unavailable",
+   "biometricStepOptionalTitle": "Biometric Protection",
+   "biometricStepSubtitle": "Secure your measurements from prying eyes and unlock the app instantly using your face or fingerprint.",
+   "biometricStepTitle": "Biometric Protection",
+   "biometricsNotAvailable": "Biometrics not available on this device",
+   "bluetooth_disabled_label": "블루투스 비활성화됨",
+   "bluetooth_off_description": "블루투스가 꺼져 있거나 권한이 없습니다. 블루투스를 켜고 로컬 권한을 허용해주세요.",
+   "bluetooth_required": "블루투스 필요",
+   "bluetooth_searching_label": "블루투스 검색 중",
+   "bodySensorLocationChest": "가슴",
+   "bodySensorLocationEarLobe": "귓불",
+   "bodySensorLocationFinger": "손가락",
+   "bodySensorLocationFoot": "발",
+   "bodySensorLocationHand": "손",
+   "bodySensorLocationLabel": "센서 착용 위치: {location}",
+   "bodySensorLocationOther": "기타",
+   "bodySensorLocationTitle": "센서 착용 위치",
+   "bodySensorLocationUnknown": "알 수 없음",
+   "bodySensorLocationWrist": "손목",
+   "bpmUnit": "BPM",
+   "cancel": "Cancel",
+   "chartNoData": "데이터 없음",
+   "connectToSensor": "{sensorName}에 연결",
+   "connectingMessage": "기기에 연결 중...\n연결 설정이 진행 중입니다",
+   "connectionFailedTitle": "연결 실패",
+   "csvExportEmpty": "No workout sessions to export.",
+   "csvExportShareSubject": "PulseTrack Workout History Export",
+   "csvExportSuccess": "Workout sessions exported successfully.",
+   "csvImportNoValidData": "No valid workout sessions found in the selected CSV file.",
+   "csvImportSuccess": "Successfully imported {count} workout sessions.",
+   "csvPreviewConfirmImport": "Import ({count})",
+   "csvPreviewDateRange": "{start} – {end}",
+   "csvPreviewSessionsCount": "{count, plural, =1{1 session found} other{{count} sessions found}}",
+   "csvPreviewSkippedRows": "{count, plural, =1{1 invalid row will be skipped} other{{count} invalid rows will be skipped}}",
+   "csvPreviewTitle": "Import Workouts Preview",
+   "deleteSessionHint": "이 운동 세션을 삭제합니다",
+   "deleteSessionLabel": "삭제",
+   "deviceListTileHint": "MAC 주소 {id}, 신호 강도 {rssi} dBm. 두 번 탭하여 연결하세요.",
+   "device_unknown_label": "알 수 없는 기기",
+   "disableLock": "Turn off lock",
+   "disconnectButton": "연결 해제",
+   "disconnectHint": "{deviceName} 기기와의 연결을 해제합니다",
+   "disconnectedStatus": "연결 끊김",
+   "discoveringServicesMessage": "서비스 검색 중... 잠시 기다려주세요...",
+   "empty_state_bullets": "• 센서의 전원이 켜져 있는지 확인하세요.\n• 센서 배터리를 확인하세요.\n• 기기에 더 가까이 이동하세요.\n• 스캔 필터를 비활성화해 보세요.",
+   "empty_state_title": "기기가 보이지 않나요?",
+   "errorGeneric": "An error occurred: {error}",
+   "failedToLoadSavedSensors": "저장된 센서를 불러오지 못했습니다: {error}",
+   "getStarted": "Get Started",
+   "goBackButton": "뒤로",
+   "goBackHint": "이전 화면으로 돌아갑니다",
+   "healthConnectRequiredSubtitle": "Download the official Google Health Connect app from the Play Store to enable sync.",
+   "healthConnectRequiredTitle": "Health Connect App Required",
+   "healthPermissionDenied": "Health data permissions are required to sync heart rate and workouts.",
+   "healthServiceNameAndroid": "Health Connect",
+   "healthServiceNameIOS": "Apple Health",
+   "healthServiceNameOther": "Health Services",
+   "healthSyncDescAndroid": "Sync heart rate and workout data with Health Connect",
+   "healthSyncDescIOS": "Sync heart rate and workout data with Apple Health",
+   "healthSyncDescOther": "Sync heart rate and workout data with health services",
+   "healthSyncUnavailable": "Health sync unavailable on this device",
+   "heartRateLabel": "심박수",
+   "heartRateLiveLabel": "심박수: 분당 {bpm}회",
+   "homeTitle": "PulseTrack",
+   "hrMonitorRrIntervalsSemantics": "R-R 간격: {intervals}",
+   "inProgress": "진행 중",
+   "installFromPlayStore": "Install from Play Store",
+   "keepLocked": "Keep locked",
+   "maxBpmMetric": "최대 BPM",
+   "millisecondsUnit": "밀리초",
+   "next": "Next",
+   "noWorkoutsDescription": "심박수 측정 세션을 완료하면 기록이 여기에 표시됩니다.",
+   "noWorkoutsTitle": "기록된 운동이 없습니다",
+   "onboardingCompleteSubtitle": "Start tracking your heart rate and workouts",
+   "onboardingCompleteTitle": "You're All Set!",
+   "onboardingPermissionsSubtitle": "We need a few permissions to provide full functionality",
+   "onboardingPermissionsTitle": "Permissions",
+   "onboardingWelcomeHealthSync": "Health Sync",
+   "onboardingWelcomeHistory": "Workout History",
+   "onboardingWelcomePrivacy": "Privacy First",
+   "onboardingWelcomeStart": "Get Started",
+   "onboardingWelcomeSubtitle": "Your professional heart rate monitor and workout analytics companion",
+   "onboardingWelcomeTitle": "Welcome to PulseTrack",
+   "percentRange": "{min} ~ {max} 퍼센트",
+   "permissionBluetoothSubtitle": "To scan and connect to heart rate sensors",
+   "permissionBluetoothTitle": "Bluetooth",
+   "permissionHealthSubtitle": "To sync workouts with Apple Health / Health Connect",
+   "permissionHealthTitle": "Health Data",
+   "permissionNotificationsSubtitle": "To remind you about workouts",
+   "permissionNotificationsTitle": "Notifications",
+   "ready_to_scan": "검색 준비 완료",
+   "retryConnectionButton": "연결 재시도",
+   "retryConnectionHint": "심박수 센서에 다시 연결을 시도합니다",
+   "retry_button_label": "재시도",
+   "retry_scan_label": "스캔 재시도",
+   "retry_scan_semantic_label": "센서 검색 재시도",
+   "returnToScannerButton": "스캐너로 돌아가기",
+   "returnToScannerHint": "기기 스캐너 화면으로 돌아갑니다",
+   "routeErrorBackHome": "홈으로 돌아가기",
+   "routeErrorInvalidLink": "잘못된 주소이거나 손상된 링크입니다.",
+   "routeErrorNotFound": "페이지를 찾을 수 없습니다",
+   "routeErrorTitle": "탐색 오류",
+   "save": "Save",
+   "savedSensorFallbackName": "저장된 센서",
+   "savedSensorsSectionTitle": "저장된 센서 (직접 연결)",
+   "scanForNewSensorButton": "새 센서 검색",
+   "scan_button_label": "스캔",
+   "scan_button_semantic_label": "심박수 센서 검색 시작",
+   "scan_failed_title": "스캔 실패",
+   "scanner_title": "스캐너",
+   "searching_sensors": "활성 센서 검색 중...",
+   "sensorBatteryLabel": "센서 배터리 잔량: {level}",
+   "sensorBatteryTitle": "센서 배터리",
+   "settingsDefaultMaxHr": "Max Heart Rate",
+   "settingsDefaultMaxHrSubtitle": "{bpm} BPM (Heart rate zones calculation)",
+   "settingsExportAllWorkouts": "Export All Workouts",
+   "settingsExportAllWorkoutsSubtitle": "Generate and share CSV of all sessions",
+   "settingsImportWorkouts": "Import Workouts",
+   "settingsImportWorkoutsSubtitle": "Import workout sessions from a CSV file",
+   "settingsLicenses": "Licenses",
+   "settingsLicensesSubtitle": "Open-source software licenses",
+   "settingsMaxHrDialogHint": "Target max heart rate in BPM (50 - 240)",
+   "settingsMaxHrDialogTitle": "Set Max Heart Rate",
+   "settingsPrivacyPolicy": "개인정보 처리방침",
+   "settingsPrivacyPolicySubtitle": "생체 인식 데이터가 기기 내에서 보호되는 방식 확인",
+   "settingsSectionPrivacy": "개인정보 및 진단",
+   "settingsCrashReporting": "오류 보고서",
+   "settingsCrashReportingSubtitle": "안정성 향상을 위해 익명의 진단 데이터를 전송합니다",
+   "settingsAnalytics": "사용 통계",
+   "settingsAnalyticsSubtitle": "기능 개선을 위해 익명의 상호작용 지표를 전송합니다",
+   "settingsRateApp": "PulseTrack 평가",
+   "settingsRateAppSubtitle": "Google Play 리뷰로 앱 개발을 지원해 주세요",
+   "settingsSectionAbout": "About & Support",
+   "settingsSectionAppearance": "Appearance",
+   "settingsSectionData": "Data Management",
+   "settingsSectionWorkout": "Workout & Metrics",
+   "settingsSourceCode": "Source Code",
+   "settingsSourceCodeSubtitle": "View PulseTrack repository on GitHub",
+   "settingsSupport": "Support & Feedback",
+   "settingsSupportSubtitle": "Contact the development team",
+   "settingsTheme": "Theme",
+   "settingsThemeDark": "Dark",
+   "settingsThemeLight": "Light",
+   "settingsThemeSystem": "System default",
+   "settingsTitle": "Settings",
+   "settingsVersion": "Version",
+   "settingsWipeData": "Wipe All Workouts",
+   "settingsWipeDataSubtitle": "Permanently delete all workout history",
+   "start_scan_description": "센서 검색을 시작하려면 스캔을 누르세요.",
+   "tabHistory": "History",
+   "tabHistorySemanticsLabel": "History tab",
+   "tabHome": "Home",
+   "tabHomeSemanticsLabel": "Home tab",
+   "tabSettings": "Settings",
+   "tabSettingsSemanticsLabel": "Settings tab",
+   "todayPrefix": "오늘, {time}",
+   "toggle_filter_tooltip": "이름 및 주변 기기 필터 전환",
+   "unableToDeleteSession": "세션을 삭제할 수 없습니다. 다시 시도해주세요.",
+   "unableToLoadHistory": "운동 기록을 불러올 수 없습니다. 나중에 다시 시도해주세요.",
+   "unknownSensor": "알 수 없는 센서",
+   "unknownSensorLabel": "알 수 없는 센서",
+   "unknownSensorName": "알 수 없는 센서",
+   "unknown_device": "알 수 없는 기기",
+   "unlock": "Unlock",
+   "wipeDataConfirm": "Delete Everything",
+   "wipeDataDialogContent": "This action cannot be undone. All recorded sessions and heart rate telemetry will be permanently wiped from your device.",
+   "wipeDataDialogTitle": "Delete All Workout Data?",
+   "wipeDataSuccess": "All workout data has been wiped successfully.",
+   "workoutCardHint": "시간 {duration}, 센서 {device}. 평균 심박수 {avg} BPM, 최고 심박수 {max} BPM. 삭제하려면 왼쪽으로 미세요.",
+   "workoutCardLabel": "{date} 운동",
+   "workoutDetailsAvgBpm": "평균 심박수",
+   "workoutDetailsBackHint": "운동 기록으로 돌아가기",
+   "workoutDetailsChartNoDataSemantics": "심박수 차트: 기록된 운동 데이터가 없습니다",
+   "workoutDetailsChartWaveformSemantics": "시간에 따른 {count}개의 샘플을 보여주는 심박수 파형 차트입니다. 평균 심박수 {avgBpm} BPM, 최대 심박수 {maxBpm} BPM.",
+   "workoutDetailsDuration": "운동 시간",
+   "workoutDetailsExportFailed": "세션 내보내기 실패: {error}",
+   "workoutDetailsExportHint": "운동 데이터를 CSV로 내보내기",
+   "workoutDetailsHeaderSemantics": "운동 날짜: {date}, 시간: {duration}, 센서: {sensor}",
+   "workoutDetailsHeartRateOverTime": "시간별 심박수 추이",
+   "workoutDetailsNoData": "기록된 운동 데이터가 없습니다",
+   "workoutDetailsNoValidData": "유효한 심박수 데이터가 기록되지 않았습니다",
+   "workoutDetailsNotCompleted": "운동이 완료되지 않았습니다",
+   "workoutDetailsPeakBpm": "최고 심박수",
+   "workoutDetailsSamples": "샘플 수",
+   "workoutDetailsSensorDisconnected": "데이터가 기록되기 전에 센서 연결이 끊어졌을 수 있습니다",
+   "workoutDetailsSummary": "요약",
+   "workoutDetailsTitle": "운동 상세",
+   "workoutDetailsZonesLegendSemantics": "심박수 운동 영역 범례: {legend}",
+   "workoutHistoryAppBarTitle": "운동 기록",
+   "workoutHistoryDescription": "이전 심박수 세션 및 분석을 확인하세요.",
+   "workoutHistoryTitle": "운동 기록",
+   "yesterdayPrefix": "어제, {time}",
+   "workoutShareSingleText": "PulseTrack workout export #{id}",
+   "workoutShareBulkText": "PulseTrack workouts export ({count} sessions)",
+   "liveBpmChartTitle": "실시간 심박수",
+   "chartZoomInTooltip": "BPM 범위로 자동 줌",
+   "chartZoomOutTooltip": "차트 줌 초기화 (0–220 BPM)",
+   "skinContactTitle": "피부 접촉",
+   "skinContactDetected": "감지됨",
+   "skinContactLost": "접촉 불량 / 미접촉",
+   "skinContactUnsupported": "지원되지 않음",
+   "energyExpendedTitle": "소모된 에너지",
+   "energyExpendedUnitKj": "{energy} kJ"
 }
