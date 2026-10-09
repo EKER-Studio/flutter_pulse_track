@@ -25,9 +25,6 @@
    "@csvExportEmpty": {
       "description": "Snackbar message when user tries to export empty history."
    },
-   "@csvExportShareSubject": {
-      "description": "Subject line when sharing exported CSV."
-   },
    "@csvExportSuccess": {
       "description": "Snackbar message after exporting workouts to CSV."
    },
@@ -99,14 +96,6 @@
          }
       }
    },
-   "@errorGeneric": {
-      "description": "Generic error message with parameter.",
-      "placeholders": {
-         "error": {
-            "type": "String"
-         }
-      }
-   },
    "@failedToLoadSavedSensors": {
       "description": "Error shown when saved sensors fail to load.",
       "placeholders": {
@@ -118,36 +107,6 @@
    "@getStarted": {
       "description": "Onboarding: getStarted"
    },
-   "@healthConnectRequiredSubtitle": {
-      "description": "Explanation prompting user to install Health Connect from Google Play."
-   },
-   "@healthConnectRequiredTitle": {
-      "description": "Title of dialog informing user that Google Health Connect must be installed."
-   },
-   "@healthPermissionDenied": {
-      "description": "Message shown when health read or write permissions are rejected."
-   },
-   "@healthServiceNameAndroid": {
-      "description": "Platform brand name for Android Health Connect."
-   },
-   "@healthServiceNameIOS": {
-      "description": "Platform brand name for iOS Apple Health."
-   },
-   "@healthServiceNameOther": {
-      "description": "Generic brand name for health services on unsupported or desktop platforms."
-   },
-   "@healthSyncDescAndroid": {
-      "description": "Description of health synchronization on Android devices."
-   },
-   "@healthSyncDescIOS": {
-      "description": "Description of health synchronization on iOS devices."
-   },
-   "@healthSyncDescOther": {
-      "description": "Description of health synchronization on other platforms."
-   },
-   "@healthSyncUnavailable": {
-      "description": "Warning shown when health ecosystem APIs are unavailable on current device."
-   },
    "@heartRateLiveLabel": {
       "description": "Accessibility live region label for the current heart rate.",
       "placeholders": {
@@ -155,9 +114,6 @@
             "type": "int"
          }
       }
-   },
-   "@installFromPlayStore": {
-      "description": "Button label directing user to Google Play Store to install Health Connect."
    },
    "@next": {
       "description": "Onboarding: next"
@@ -310,12 +266,6 @@
    "@settingsWipeDataSubtitle": {
       "description": "Subtitle for wiping all workout history."
    },
-   "@tabHistory": {
-      "description": "Label for workout history tab"
-   },
-   "@tabHistorySemanticsLabel": {
-      "description": "Semantics label for history tab"
-   },
    "@tabHome": {
       "description": "Label for home tab in bottom navigation"
    },
@@ -400,7 +350,6 @@
    "biometricLock": "Biometric Protection",
    "biometricLockoutBody": "Biometrics are no longer available or enrolled on this device. Turn off the biometric lock to regain access to your data, or keep it locked.",
    "biometricLockoutTitle": "Biometric lock unavailable",
-   "biometricStepOptionalTitle": "Biometric Protection",
    "biometricStepSubtitle": "Secure your measurements from prying eyes and unlock the app instantly using your face or fingerprint.",
    "biometricStepTitle": "Biometric Protection",
    "biometricsNotAvailable": "Biometrics not available on this device",
@@ -425,7 +374,6 @@
    "connectingMessage": "デバイスに接続中...\n接続ハンドシェイクを実行しています",
    "connectionFailedTitle": "接続に失敗しました",
    "csvExportEmpty": "No workout sessions to export.",
-   "csvExportShareSubject": "PulseTrack Workout History Export",
    "csvExportSuccess": "Workout sessions exported successfully.",
    "csvImportNoValidData": "No valid workout sessions found in the selected CSV file.",
    "csvImportSuccess": "Successfully imported {count} workout sessions.",
@@ -445,27 +393,15 @@
    "discoveringServicesMessage": "サービスを検出中... お待ちください...",
    "empty_state_bullets": "• センサーの電源が入っていることを確認してください。\n• センサーのバッテリーを確認してください。\n• デバイスに近づいてください。\n• スキャンフィルターを無効にしてみてください。",
    "empty_state_title": "デバイスが表示されませんか？",
-   "errorGeneric": "An error occurred: {error}",
    "failedToLoadSavedSensors": "保存されたセンサーの読み込みに失敗しました: {error}",
    "getStarted": "Get Started",
    "goBackButton": "戻る",
    "goBackHint": "前の画面に戻ります",
-   "healthConnectRequiredSubtitle": "Download the official Google Health Connect app from the Play Store to enable sync.",
-   "healthConnectRequiredTitle": "Health Connect App Required",
-   "healthPermissionDenied": "Health data permissions are required to sync heart rate and workouts.",
-   "healthServiceNameAndroid": "Health Connect",
-   "healthServiceNameIOS": "Apple Health",
-   "healthServiceNameOther": "Health Services",
-   "healthSyncDescAndroid": "Sync heart rate and workout data with Health Connect",
-   "healthSyncDescIOS": "Sync heart rate and workout data with Apple Health",
-   "healthSyncDescOther": "Sync heart rate and workout data with health services",
-   "healthSyncUnavailable": "Health sync unavailable on this device",
    "heartRateLabel": "心拍数",
    "heartRateLiveLabel": "心拍数：毎分 {bpm} 拍",
    "homeTitle": "PulseTrack",
    "hrMonitorRrIntervalsSemantics": "R-R間隔：{intervals}",
    "inProgress": "進行中",
-   "installFromPlayStore": "Install from Play Store",
    "keepLocked": "Keep locked",
    "maxBpmMetric": "最大 BPM",
    "millisecondsUnit": "ミリ秒",
@@ -548,8 +484,6 @@
    "settingsWipeData": "Wipe All Workouts",
    "settingsWipeDataSubtitle": "Permanently delete all workout history",
    "start_scan_description": "「スキャン」をタップしてセンサーの検索を開始します。",
-   "tabHistory": "History",
-   "tabHistorySemanticsLabel": "History tab",
    "tabHome": "Home",
    "tabHomeSemanticsLabel": "Home tab",
    "tabSettings": "Settings",
@@ -601,5 +535,47 @@
    "skinContactLost": "接触不良 / 未接触",
    "skinContactUnsupported": "非対応",
    "energyExpendedTitle": "消費エネルギー",
-   "energyExpendedUnitKj": "{energy} kJ"
+   "energyExpendedUnitKj": "{energy} kJ",
+   "tabCalendar": "カレンダー",
+   "tabCalendarSemanticsLabel": "カレンダータブ",
+   "tabStatistics": "統計",
+   "tabStatisticsSemanticsLabel": "統計タブ",
+   "calendarTitle": "ワークアウトカレンダー",
+   "calendarNoWorkouts": "この日のワークアウトはありません",
+   "calendarJumpToToday": "今日",
+   "calendarPreviousMonth": "前月",
+   "calendarNextMonth": "翌月",
+   "statisticsTitle": "統計",
+   "periodComparisonTitle": "期間比較",
+   "totalWorkouts": "総ワークアウト数",
+   "totalDuration": "総時間",
+   "avgHeartRate": "平均心拍数",
+   "peakHeartRate": "最大心拍数",
+   "habitsTitle": "習慣と継続性",
+   "currentStreak": "現在の連続記録",
+   "bestStreak": "最長連続記録",
+   "activeDaysLast30": "アクティブ日数 (過去30日)",
+   "milestonesTitle": "実績とバッジ",
+   "viewAllMilestones": "すべて表示",
+   "milestonesGallery": "実績ギャラリー",
+   "workoutDateAtTime": "{weekday}、{date} {time}",
+   "calendarDayCellSemantics": "{day}日、{count}件のワークアウト",
+   "workoutMetricsSummary": "平均 {avgBpm} BPM  •  最大 {maxBpm} BPM",
+   "licensesPackageCount": "{count}個のパッケージ",
+   "settingsMaxHrDialogError": "50から240の間の値を入力してください",
+   "milestoneStatusCompleted": "達成済み",
+   "milestoneProgress": "進捗状況: {percent}%",
+   "close": "閉じる",
+   "milestoneBadgeSemantics": "{title}: {status}",
+   "milestoneStatusUnlocked": "解除済み",
+   "milestoneStatusLocked": "未解除",
+   "habitsActiveDays": "{count} / 30日",
+   "periodComparisonPreviousPrefix": "前: {value}",
+   "energyExpendedUnitKcal": "{calories} kcal",
+   "settingsEnergyUnitTitle": "エネルギー単位",
+   "settingsEnergyUnitKcal": "キロカロリー (kcal)",
+   "settingsEnergyUnitKj": "キロジュール (kJ)",
+   "settingsDefaultChartZoomTitle": "デフォルトのチャートズーム",
+   "settingsDefaultChartZoomSubtitle": "垂直スケールを現在のBPM範囲に自動調整",
+   "onboardingWelcomeLiveTelemetry": "リアルタイムテレメトリと波形"
 }

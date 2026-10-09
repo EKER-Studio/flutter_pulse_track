@@ -22,7 +22,11 @@ String formatRelativeDate(AppLocalizations l10n, DateTime date) {
   } else if (difference == 1) {
     return l10n.yesterdayPrefix(intl.DateFormat.Hm().format(date));
   } else {
-    return '${intl.DateFormat.EEEE().format(date)}, ${intl.DateFormat.Md().format(date)} at ${intl.DateFormat.Hm().format(date)}';
+    return l10n.workoutDateAtTime(
+      intl.DateFormat.EEEE().format(date),
+      intl.DateFormat.Md().format(date),
+      intl.DateFormat.Hm().format(date),
+    );
   }
 }
 

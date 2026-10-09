@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pulse_track/features/calendar/presentation/widgets/components/calendar_day_cell.dart';
 import 'package:pulse_track/features/calendar/presentation/widgets/components/calendar_grid.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
+import 'package:pulse_track/l10n/app_localizations.dart';
 
 void main() {
   final session = WorkoutSession(
@@ -24,6 +25,9 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
           home: Scaffold(
             body: CalendarGrid(
               focusedMonth: DateTime(2026, 10),

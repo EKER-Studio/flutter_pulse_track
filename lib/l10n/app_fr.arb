@@ -25,9 +25,6 @@
    "@csvExportEmpty": {
       "description": "Snackbar message when user tries to export empty history."
    },
-   "@csvExportShareSubject": {
-      "description": "Subject line when sharing exported CSV."
-   },
    "@csvExportSuccess": {
       "description": "Snackbar message after exporting workouts to CSV."
    },
@@ -99,14 +96,6 @@
          }
       }
    },
-   "@errorGeneric": {
-      "description": "Generic error message with parameter.",
-      "placeholders": {
-         "error": {
-            "type": "String"
-         }
-      }
-   },
    "@failedToLoadSavedSensors": {
       "description": "Error shown when saved sensors fail to load.",
       "placeholders": {
@@ -118,36 +107,6 @@
    "@getStarted": {
       "description": "Onboarding: getStarted"
    },
-   "@healthConnectRequiredSubtitle": {
-      "description": "Explanation prompting user to install Health Connect from Google Play."
-   },
-   "@healthConnectRequiredTitle": {
-      "description": "Title of dialog informing user that Google Health Connect must be installed."
-   },
-   "@healthPermissionDenied": {
-      "description": "Message shown when health read or write permissions are rejected."
-   },
-   "@healthServiceNameAndroid": {
-      "description": "Platform brand name for Android Health Connect."
-   },
-   "@healthServiceNameIOS": {
-      "description": "Platform brand name for iOS Apple Health."
-   },
-   "@healthServiceNameOther": {
-      "description": "Generic brand name for health services on unsupported or desktop platforms."
-   },
-   "@healthSyncDescAndroid": {
-      "description": "Description of health synchronization on Android devices."
-   },
-   "@healthSyncDescIOS": {
-      "description": "Description of health synchronization on iOS devices."
-   },
-   "@healthSyncDescOther": {
-      "description": "Description of health synchronization on other platforms."
-   },
-   "@healthSyncUnavailable": {
-      "description": "Warning shown when health ecosystem APIs are unavailable on current device."
-   },
    "@heartRateLiveLabel": {
       "description": "Accessibility live region label for the current heart rate.",
       "placeholders": {
@@ -155,9 +114,6 @@
             "type": "int"
          }
       }
-   },
-   "@installFromPlayStore": {
-      "description": "Button label directing user to Google Play Store to install Health Connect."
    },
    "@next": {
       "description": "Onboarding: next"
@@ -310,12 +266,6 @@
    "@settingsWipeDataSubtitle": {
       "description": "Subtitle for wiping all workout history."
    },
-   "@tabHistory": {
-      "description": "Label for workout history tab"
-   },
-   "@tabHistorySemanticsLabel": {
-      "description": "Semantics label for history tab"
-   },
    "@tabHome": {
       "description": "Label for home tab in bottom navigation"
    },
@@ -400,7 +350,6 @@
    "biometricLock": "Biometric Protection",
    "biometricLockoutBody": "Biometrics are no longer available or enrolled on this device. Turn off the biometric lock to regain access to your data, or keep it locked.",
    "biometricLockoutTitle": "Biometric lock unavailable",
-   "biometricStepOptionalTitle": "Biometric Protection",
    "biometricStepSubtitle": "Secure your measurements from prying eyes and unlock the app instantly using your face or fingerprint.",
    "biometricStepTitle": "Biometric Protection",
    "biometricsNotAvailable": "Biometrics not available on this device",
@@ -425,7 +374,6 @@
    "connectingMessage": "Connexion à l'appareil...\nÉtablissement de la liaison en cours",
    "connectionFailedTitle": "Échec de connexion",
    "csvExportEmpty": "No workout sessions to export.",
-   "csvExportShareSubject": "PulseTrack Workout History Export",
    "csvExportSuccess": "Workout sessions exported successfully.",
    "csvImportNoValidData": "No valid workout sessions found in the selected CSV file.",
    "csvImportSuccess": "Successfully imported {count} workout sessions.",
@@ -445,27 +393,15 @@
    "discoveringServicesMessage": "Recherche des services... Veuillez patienter...",
    "empty_state_bullets": "• Assurez-vous que le capteur est allumé.\n• Vérifiez la batterie du capteur.\n• Rapprochez-vous de l'appareil.\n• Essayez de désactiver les filtres de scan.",
    "empty_state_title": "VOUS NE TROUVEZ PAS VOTRE APPAREIL ?",
-   "errorGeneric": "An error occurred: {error}",
    "failedToLoadSavedSensors": "Impossible de charger les capteurs enregistrés : {error}",
    "getStarted": "Get Started",
    "goBackButton": "Retour",
    "goBackHint": "Revient à l'écran précédent",
-   "healthConnectRequiredSubtitle": "Download the official Google Health Connect app from the Play Store to enable sync.",
-   "healthConnectRequiredTitle": "Health Connect App Required",
-   "healthPermissionDenied": "Health data permissions are required to sync heart rate and workouts.",
-   "healthServiceNameAndroid": "Health Connect",
-   "healthServiceNameIOS": "Apple Health",
-   "healthServiceNameOther": "Health Services",
-   "healthSyncDescAndroid": "Sync heart rate and workout data with Health Connect",
-   "healthSyncDescIOS": "Sync heart rate and workout data with Apple Health",
-   "healthSyncDescOther": "Sync heart rate and workout data with health services",
-   "healthSyncUnavailable": "Health sync unavailable on this device",
    "heartRateLabel": "Fréquence cardiaque",
    "heartRateLiveLabel": "Fréquence cardiaque : {bpm} battements par minute",
    "homeTitle": "PulseTrack",
    "hrMonitorRrIntervalsSemantics": "Intervalles R-R : {intervals}",
    "inProgress": "En cours",
-   "installFromPlayStore": "Install from Play Store",
    "keepLocked": "Keep locked",
    "maxBpmMetric": "Max BPM",
    "millisecondsUnit": "millisecondes",
@@ -548,8 +484,6 @@
    "settingsWipeData": "Wipe All Workouts",
    "settingsWipeDataSubtitle": "Permanently delete all workout history",
    "start_scan_description": "Appuyez sur Scanner pour rechercher des capteurs.",
-   "tabHistory": "History",
-   "tabHistorySemanticsLabel": "History tab",
    "tabHome": "Home",
    "tabHomeSemanticsLabel": "Home tab",
    "tabSettings": "Settings",
@@ -601,5 +535,47 @@
    "skinContactLost": "Mauvais contact / Aucun contact",
    "skinContactUnsupported": "Non pris en charge",
    "energyExpendedTitle": "Énergie dépensée",
-   "energyExpendedUnitKj": "{energy} kJ"
+   "energyExpendedUnitKj": "{energy} kJ",
+   "tabCalendar": "Calendrier",
+   "tabCalendarSemanticsLabel": "Onglet Calendrier",
+   "tabStatistics": "Statistiques",
+   "tabStatisticsSemanticsLabel": "Onglet Statistiques",
+   "calendarTitle": "Calendrier d'entraînement",
+   "calendarNoWorkouts": "Aucun entraînement ce jour-là",
+   "calendarJumpToToday": "Aujourd'hui",
+   "calendarPreviousMonth": "Mois précédent",
+   "calendarNextMonth": "Mois suivant",
+   "statisticsTitle": "Statistiques",
+   "periodComparisonTitle": "Comparaison des périodes",
+   "totalWorkouts": "Total des entraînements",
+   "totalDuration": "Durée totale",
+   "avgHeartRate": "Fréquence cardiaque moyenne",
+   "peakHeartRate": "Fréquence cardiaque maximale",
+   "habitsTitle": "Habitudes et régularité",
+   "currentStreak": "Série actuelle",
+   "bestStreak": "Meilleure série",
+   "activeDaysLast30": "Jours actifs (30 derniers)",
+   "milestonesTitle": "Objectifs et réalisations",
+   "viewAllMilestones": "Tout voir",
+   "milestonesGallery": "Galerie des objectifs",
+   "workoutDateAtTime": "{weekday}, {date} à {time}",
+   "calendarDayCellSemantics": "{day}, {count} entraînements",
+   "workoutMetricsSummary": "Moy {avgBpm} BPM  •  Max {maxBpm} BPM",
+   "licensesPackageCount": "{count} paquets",
+   "settingsMaxHrDialogError": "Veuillez entrer une valeur entre 50 et 240",
+   "milestoneStatusCompleted": "Terminé",
+   "milestoneProgress": "Progression : {percent}%",
+   "close": "Fermer",
+   "milestoneBadgeSemantics": "{title} : {status}",
+   "milestoneStatusUnlocked": "Débloqué",
+   "milestoneStatusLocked": "Verrouillé",
+   "habitsActiveDays": "{count} / 30 jours",
+   "periodComparisonPreviousPrefix": "Préc. : {value}",
+   "energyExpendedUnitKcal": "{calories} kcal",
+   "settingsEnergyUnitTitle": "Unité d'énergie",
+   "settingsEnergyUnitKcal": "Kilocalories (kcal)",
+   "settingsEnergyUnitKj": "Kilojoules (kJ)",
+   "settingsDefaultChartZoomTitle": "Zoom par défaut du graphique",
+   "settingsDefaultChartZoomSubtitle": "Ajuster automatiquement l'échelle verticale à la plage de BPM",
+   "onboardingWelcomeLiveTelemetry": "Télémétrie et formes d'onde en direct"
 }

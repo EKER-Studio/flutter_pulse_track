@@ -512,50 +512,6 @@
    "@cancel": {
       "description": "Generic cancel button label."
    },
-   "installFromPlayStore": "Install from Play Store",
-   "@installFromPlayStore": {
-      "description": "Button label directing user to Google Play Store to install Health Connect."
-   },
-   "healthConnectRequiredTitle": "Health Connect App Required",
-   "@healthConnectRequiredTitle": {
-      "description": "Title of dialog informing user that Google Health Connect must be installed."
-   },
-   "healthConnectRequiredSubtitle": "Download the official Google Health Connect app from the Play Store to enable sync.",
-   "@healthConnectRequiredSubtitle": {
-      "description": "Explanation prompting user to install Health Connect from Google Play."
-   },
-   "healthPermissionDenied": "Health data permissions are required to sync heart rate and workouts.",
-   "@healthPermissionDenied": {
-      "description": "Message shown when health read or write permissions are rejected."
-   },
-   "healthServiceNameAndroid": "Health Connect",
-   "@healthServiceNameAndroid": {
-      "description": "Platform brand name for Android Health Connect."
-   },
-   "healthServiceNameIOS": "Apple Health",
-   "@healthServiceNameIOS": {
-      "description": "Platform brand name for iOS Apple Health."
-   },
-   "healthServiceNameOther": "Health Services",
-   "@healthServiceNameOther": {
-      "description": "Generic brand name for health services on unsupported or desktop platforms."
-   },
-   "healthSyncDescAndroid": "Sync heart rate and workout data with Health Connect",
-   "@healthSyncDescAndroid": {
-      "description": "Description of health synchronization on Android devices."
-   },
-   "healthSyncDescIOS": "Sync heart rate and workout data with Apple Health",
-   "@healthSyncDescIOS": {
-      "description": "Description of health synchronization on iOS devices."
-   },
-   "healthSyncDescOther": "Sync heart rate and workout data with health services",
-   "@healthSyncDescOther": {
-      "description": "Description of health synchronization on other platforms."
-   },
-   "healthSyncUnavailable": "Health sync unavailable on this device",
-   "@healthSyncUnavailable": {
-      "description": "Warning shown when health ecosystem APIs are unavailable on current device."
-   },
    "settingsTitle": "Settings",
    "@settingsTitle": {
       "description": "Title of the settings screen."
@@ -781,22 +737,9 @@
    "@csvExportSuccess": {
       "description": "Snackbar message after exporting workouts to CSV."
    },
-   "csvExportShareSubject": "PulseTrack Workout History Export",
-   "@csvExportShareSubject": {
-      "description": "Subject line when sharing exported CSV."
-   },
    "save": "Save",
    "@save": {
       "description": "Generic save button label."
-   },
-   "errorGeneric": "An error occurred: {error}",
-   "@errorGeneric": {
-      "description": "Generic error message with parameter.",
-      "placeholders": {
-         "error": {
-            "type": "String"
-         }
-      }
    },
    "biometricAuthFailed": "Biometric authentication failed or was canceled.",
    "biometricAuthReason": "Authenticate to access Balance",
@@ -804,7 +747,6 @@
    "biometricLock": "Biometric Protection",
    "biometricLockoutBody": "Biometrics are no longer available or enrolled on this device. Turn off the biometric lock to regain access to your data, or keep it locked.",
    "biometricLockoutTitle": "Biometric lock unavailable",
-   "biometricStepOptionalTitle": "Biometric Protection",
    "biometricStepSubtitle": "Secure your measurements from prying eyes and unlock the app instantly using your face or fingerprint.",
    "biometricStepTitle": "Biometric Protection",
    "biometricsNotAvailable": "Biometrics not available on this device",
@@ -817,10 +759,6 @@
    "@tabHome": {
       "description": "Label for home tab in bottom navigation"
    },
-   "tabHistory": "History",
-   "@tabHistory": {
-      "description": "Label for workout history tab"
-   },
    "tabSettings": "Settings",
    "@tabSettings": {
       "description": "Label for settings tab"
@@ -828,10 +766,6 @@
    "tabHomeSemanticsLabel": "Home tab",
    "@tabHomeSemanticsLabel": {
       "description": "Semantics label for home tab"
-   },
-   "tabHistorySemanticsLabel": "History tab",
-   "@tabHistorySemanticsLabel": {
-      "description": "Semantics label for history tab"
    },
    "tabSettingsSemanticsLabel": "Settings tab",
    "@tabSettingsSemanticsLabel": {
@@ -955,10 +889,6 @@
    "@calendarNoWorkouts": {
       "description": "Message displayed when the selected calendar day has no workouts"
    },
-   "calendarWorkoutsOnDay": "Workouts",
-   "@calendarWorkoutsOnDay": {
-      "description": "Header for workouts on the selected calendar day"
-   },
    "calendarJumpToToday": "Today",
    "@calendarJumpToToday": {
       "description": "Button label to jump to today in the calendar"
@@ -978,14 +908,6 @@
    "periodComparisonTitle": "Period Comparison",
    "@periodComparisonTitle": {
       "description": "Header for period comparison card"
-   },
-   "last7Days": "Last 7 Days",
-   "@last7Days": {
-      "description": "Label for the recent 7 days comparison window"
-   },
-   "previous7Days": "Previous 7 Days",
-   "@previous7Days": {
-      "description": "Label for the previous 7 days comparison window"
    },
    "totalWorkouts": "Total Workouts",
    "@totalWorkouts": {
@@ -1071,5 +993,145 @@
             "type": "int"
          }
       }
+   },
+   "workoutDateAtTime": "{weekday}, {date} at {time}",
+   "calendarDayCellSemantics": "{day}, {count} workouts",
+   "workoutMetricsSummary": "Avg {avgBpm} BPM  •  Max {maxBpm} BPM",
+   "licensesPackageCount": "{count} packages",
+   "settingsMaxHrDialogError": "Please enter a value between 50 and 240",
+   "milestoneStatusCompleted": "Completed",
+   "milestoneProgress": "Progress: {percent}%",
+   "close": "Close",
+   "milestoneBadgeSemantics": "{title}: {status}",
+   "milestoneStatusUnlocked": "Unlocked",
+   "milestoneStatusLocked": "Locked",
+   "habitsActiveDays": "{count} / 30 days",
+   "periodComparisonPreviousPrefix": "Prev: {value}",
+   "@workoutDateAtTime": {
+      "description": "Formatted date and time for workouts older than yesterday.",
+      "placeholders": {
+         "weekday": {
+            "type": "String"
+         },
+         "date": {
+            "type": "String"
+         },
+         "time": {
+            "type": "String"
+         }
+      }
+   },
+   "@calendarDayCellSemantics": {
+      "description": "Semantics label for a day cell in the calendar grid.",
+      "placeholders": {
+         "day": {
+            "type": "int"
+         },
+         "count": {
+            "type": "int"
+         }
+      }
+   },
+   "@workoutMetricsSummary": {
+      "description": "Summary of average and maximum BPM for a workout session.",
+      "placeholders": {
+         "avgBpm": {
+            "type": "int"
+         },
+         "maxBpm": {
+            "type": "int"
+         }
+      }
+   },
+   "@licensesPackageCount": {
+      "description": "Total number of open-source packages shown on the licenses screen.",
+      "placeholders": {
+         "count": {
+            "type": "int"
+         }
+      }
+   },
+   "@settingsMaxHrDialogError": {
+      "description": "Validation error message in the max HR configuration dialog."
+   },
+   "@milestoneStatusCompleted": {
+      "description": "Status text indicating a milestone has been unlocked."
+   },
+   "@milestoneProgress": {
+      "description": "Progress percentage for an incomplete milestone.",
+      "placeholders": {
+         "percent": {
+            "type": "int"
+         }
+      }
+   },
+   "@close": {
+      "description": "Generic close button label."
+   },
+   "@milestoneBadgeSemantics": {
+      "description": "Accessibility label for a milestone badge.",
+      "placeholders": {
+         "title": {
+            "type": "String"
+         },
+         "status": {
+            "type": "String"
+         }
+      }
+   },
+   "@milestoneStatusUnlocked": {
+      "description": "Milestone status unlocked."
+   },
+   "@milestoneStatusLocked": {
+      "description": "Milestone status locked."
+   },
+   "@habitsActiveDays": {
+      "description": "Number of active workout days in the last 30 days.",
+      "placeholders": {
+         "count": {
+            "type": "int"
+         }
+      }
+   },
+   "@periodComparisonPreviousPrefix": {
+      "description": "Label displaying the metric value from the previous comparison period.",
+      "placeholders": {
+         "value": {
+            "type": "String"
+         }
+      }
+   },
+   "energyExpendedUnitKcal": "{calories} kcal",
+   "@energyExpendedUnitKcal": {
+      "description": "Formatted cumulative energy expended in kilocalories.",
+      "placeholders": {
+         "calories": {
+            "type": "int"
+         }
+      }
+   },
+   "settingsEnergyUnitTitle": "Energy Unit",
+   "@settingsEnergyUnitTitle": {
+      "description": "Title for energy unit selection setting."
+   },
+   "settingsEnergyUnitKcal": "Kilocalories (kcal)",
+   "@settingsEnergyUnitKcal": {
+      "description": "Label for kilocalories energy unit option."
+   },
+   "settingsEnergyUnitKj": "Kilojoules (kJ)",
+   "@settingsEnergyUnitKj": {
+      "description": "Label for kilojoules energy unit option."
+   },
+   "settingsDefaultChartZoomTitle": "Default Live Chart Zoom",
+   "@settingsDefaultChartZoomTitle": {
+      "description": "Title for default live chart zoom preference setting."
+   },
+   "settingsDefaultChartZoomSubtitle": "Auto-zoom vertical scale to current BPM range",
+   "@settingsDefaultChartZoomSubtitle": {
+      "description": "Subtitle describing the default live chart zoom setting behavior."
+   },
+   "onboardingWelcomeLiveTelemetry": "Live Telemetry & Waveforms",
+   "@onboardingWelcomeLiveTelemetry": {
+      "description": "Feature card title in onboarding wizard for live telemetry and waveforms."
    }
 }

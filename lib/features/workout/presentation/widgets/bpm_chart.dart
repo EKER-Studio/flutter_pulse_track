@@ -22,7 +22,7 @@ class BpmChart extends CustomPainter {
     required this.samples,
     required this.startTime,
     required this.endTime,
-    this.emptyLabel = 'No data',
+    required this.emptyLabel,
     this.scrubFraction,
   });
 

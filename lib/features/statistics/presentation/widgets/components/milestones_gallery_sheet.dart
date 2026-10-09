@@ -112,6 +112,7 @@ class MilestonesGallerySheet extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (context) {
+        final l10n = AppLocalizations.of(context);
         return AlertDialog(
           backgroundColor: AppColors.surfaceBackground,
           title: Text(
@@ -136,9 +137,9 @@ class MilestonesGallerySheet extends StatelessWidget {
                       size: 20,
                     ),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Completed',
-                      style: TextStyle(
+                    Text(
+                      l10n.milestoneStatusCompleted,
+                      style: const TextStyle(
                         color: AppColors.accentGreen,
                         fontWeight: FontWeight.bold,
                       ),
@@ -158,7 +159,9 @@ class MilestonesGallerySheet extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Progress: ${(milestone.progress * 100).toInt()}%',
+                      l10n.milestoneProgress(
+                        (milestone.progress * 100).toInt(),
+                      ),
                       style: const TextStyle(
                         color: AppColors.textTertiary,
                         fontSize: 12,
@@ -171,9 +174,9 @@ class MilestonesGallerySheet extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
-                'Close',
-                style: TextStyle(color: AppColors.accentBlue),
+              child: Text(
+                l10n.close,
+                style: const TextStyle(color: AppColors.accentBlue),
               ),
             ),
           ],

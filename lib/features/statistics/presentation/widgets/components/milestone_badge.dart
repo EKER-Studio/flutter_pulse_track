@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/features/statistics/domain/entities/milestone.dart';
+import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Interactive circular badge visual representing a single [Milestone].
 class MilestoneBadge extends StatelessWidget {
@@ -15,11 +16,15 @@ class MilestoneBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isUnlocked = milestone.isUnlocked;
+    final status = isUnlocked
+        ? l10n.milestoneStatusUnlocked
+        : l10n.milestoneStatusLocked;
 
     return Semantics(
       button: true,
-      label: '${milestone.title}: ${isUnlocked ? "Unlocked" : "Locked"}',
+      label: l10n.milestoneBadgeSemantics(milestone.title, status),
       hint: milestone.description,
       child: InkWell(
         onTap: onTap,

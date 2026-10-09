@@ -166,7 +166,10 @@ class _WorkoutDayCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Avg ${session.avgBpm} BPM  •  Max ${session.maxBpm} BPM',
+                      l10n.workoutMetricsSummary(
+                        session.avgBpm,
+                        session.maxBpm,
+                      ),
                       style: const TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 13,

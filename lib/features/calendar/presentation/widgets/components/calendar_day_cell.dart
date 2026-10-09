@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/features/workout/domain/models/workout_session.dart';
+import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Single interactive day cell rendered within [CalendarGrid].
 class CalendarDayCell extends StatelessWidget {
@@ -31,12 +32,13 @@ class CalendarDayCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final hasWorkouts = sessions.isNotEmpty;
 
     return Semantics(
       button: true,
       selected: isSelected,
-      label: '${date.day}, ${sessions.length} workouts',
+      label: l10n.calendarDayCellSemantics(date.day, sessions.length),
       child: Material(
         color: AppColors.transparent,
         child: InkWell(

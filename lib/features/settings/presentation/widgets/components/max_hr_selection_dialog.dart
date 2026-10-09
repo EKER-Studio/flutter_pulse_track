@@ -52,11 +52,11 @@ class _MaxHrSelectionDialogState extends State<MaxHrSelectionDialog> {
     super.dispose();
   }
 
-  void _submit() {
+  void _submit(AppLocalizations l10n) {
     final parsed = int.tryParse(_controller.text.trim());
     if (parsed == null || parsed < 50 || parsed > 240) {
       setState(() {
-        _errorMessage = 'Please enter a value between 50 and 240';
+        _errorMessage = l10n.settingsMaxHrDialogError;
       });
       return;
     }
@@ -85,12 +85,12 @@ class _MaxHrSelectionDialogState extends State<MaxHrSelectionDialog> {
             ],
             autofocus: true,
             decoration: InputDecoration(
-              suffixText: 'BPM',
+              suffixText: l10n.bpmUnit,
               hintText: '190',
               errorText: _errorMessage,
               helperText: l10n.settingsMaxHrDialogHint,
             ),
-            onSubmitted: (_) => _submit(),
+            onSubmitted: (_) => _submit(l10n),
           ),
         ],
       ),
@@ -99,7 +99,7 @@ class _MaxHrSelectionDialogState extends State<MaxHrSelectionDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: Text(l10n.cancel),
         ),
-        FilledButton(onPressed: _submit, child: Text(l10n.save)),
+        FilledButton(onPressed: () => _submit(l10n), child: Text(l10n.save)),
       ],
     );
   }

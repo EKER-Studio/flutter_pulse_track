@@ -238,7 +238,8 @@ class _PeriodComparisonCardState extends State<PeriodComparisonCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Prev: $previousValue',
+                AppLocalizations.of(context)
+                    .periodComparisonPreviousPrefix(previousValue),
                 style: const TextStyle(
                   color: AppColors.textTertiary,
                   fontSize: 11,

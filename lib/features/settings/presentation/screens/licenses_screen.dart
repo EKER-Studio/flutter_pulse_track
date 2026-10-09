@@ -158,7 +158,7 @@ class _LicensesScreenState extends State<LicensesScreen> {
                                     ?.copyWith(color: AppColors.textSecondary),
                               ),
                               Text(
-                                '${licenses.length} packages',
+                                l10n.licensesPackageCount(licenses.length),
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(
                                       color: AppColors.accentBlue,

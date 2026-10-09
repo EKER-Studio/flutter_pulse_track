@@ -92,7 +92,7 @@ class HabitsActivityCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${summary.activeDaysInLast30} / 30 days',
+                      l10n.habitsActiveDays(summary.activeDaysInLast30),
                       style: const TextStyle(
                         color: AppColors.accentGreen,
                         fontWeight: FontWeight.bold,
