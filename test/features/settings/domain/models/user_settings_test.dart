@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
+import 'package:pulse_track/features/settings/domain/models/energy_unit.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 
 void main() {
@@ -20,6 +21,22 @@ void main() {
     });
   });
 
+  group('EnergyUnit', () {
+    test('has exactly 2 values', () {
+      expect(EnergyUnit.values, hasLength(2));
+    });
+
+    test('exhaustive switch over all variants', () {
+      for (final unit in EnergyUnit.values) {
+        final label = switch (unit) {
+          EnergyUnit.kcal => 'kcal',
+          EnergyUnit.kj => 'kj',
+        };
+        expect(label, isNotEmpty);
+      }
+    });
+  });
+
   group('UserSettings defaults', () {
     test('applies documented defaults', () {
       const settings = UserSettings();
@@ -31,6 +48,8 @@ void main() {
       expect(settings.isOnboardingCompleted, isFalse);
       expect(settings.isCrashReportingEnabled, isTrue);
       expect(settings.isAnalyticsEnabled, isTrue);
+      expect(settings.energyUnit, EnergyUnit.kcal);
+      expect(settings.defaultChartZoomed, isFalse);
     });
   });
 
@@ -44,6 +63,8 @@ void main() {
         isOnboardingCompleted: true,
         isCrashReportingEnabled: false,
         isAnalyticsEnabled: false,
+        energyUnit: EnergyUnit.kj,
+        defaultChartZoomed: true,
       );
 
       expect(settings.copyWith(), settings);
@@ -74,6 +95,14 @@ void main() {
         base.copyWith(isAnalyticsEnabled: false).isAnalyticsEnabled,
         isFalse,
       );
+      expect(
+        base.copyWith(energyUnit: EnergyUnit.kj).energyUnit,
+        EnergyUnit.kj,
+      );
+      expect(
+        base.copyWith(defaultChartZoomed: true).defaultChartZoomed,
+        isTrue,
+      );
     });
   });
 
@@ -85,8 +114,18 @@ void main() {
     });
 
     test('same field values are equal with same hashCode', () {
-      const a = UserSettings(themeMode: AppThemeMode.dark, defaultMaxHr: 180);
-      const b = UserSettings(themeMode: AppThemeMode.dark, defaultMaxHr: 180);
+      const a = UserSettings(
+        themeMode: AppThemeMode.dark,
+        defaultMaxHr: 180,
+        energyUnit: EnergyUnit.kj,
+        defaultChartZoomed: true,
+      );
+      const b = UserSettings(
+        themeMode: AppThemeMode.dark,
+        defaultMaxHr: 180,
+        energyUnit: EnergyUnit.kj,
+        defaultChartZoomed: true,
+      );
 
       expect(a, b);
       expect(a.hashCode, b.hashCode);
@@ -102,6 +141,8 @@ void main() {
       expect(base == base.copyWith(isOnboardingCompleted: true), isFalse);
       expect(base == base.copyWith(isCrashReportingEnabled: false), isFalse);
       expect(base == base.copyWith(isAnalyticsEnabled: false), isFalse);
+      expect(base == base.copyWith(energyUnit: EnergyUnit.kj), isFalse);
+      expect(base == base.copyWith(defaultChartZoomed: true), isFalse);
     });
 
     test('returns false for other types', () {

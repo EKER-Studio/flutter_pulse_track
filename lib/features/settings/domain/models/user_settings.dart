@@ -1,4 +1,5 @@
 import 'app_theme_mode.dart';
+import 'energy_unit.dart';
 
 /// Immutable user preferences and global workout configuration.
 class UserSettings {
@@ -23,6 +24,12 @@ class UserSettings {
   /// Whether anonymous interaction analytics via Firebase Analytics are enabled.
   final bool isAnalyticsEnabled;
 
+  /// Measurement unit preference for displaying expended energy.
+  final EnergyUnit energyUnit;
+
+  /// Whether vertical scale in the live heart rate chart defaults to auto-zoomed.
+  final bool defaultChartZoomed;
+
   const UserSettings({
     this.themeMode = AppThemeMode.system,
     this.defaultMaxHr = 190,
@@ -31,6 +38,8 @@ class UserSettings {
     this.isOnboardingCompleted = false,
     this.isCrashReportingEnabled = true,
     this.isAnalyticsEnabled = true,
+    this.energyUnit = EnergyUnit.kcal,
+    this.defaultChartZoomed = false,
   });
 
   /// Creates a copy of [UserSettings] with the given fields replaced.
@@ -42,6 +51,8 @@ class UserSettings {
     bool? isOnboardingCompleted,
     bool? isCrashReportingEnabled,
     bool? isAnalyticsEnabled,
+    EnergyUnit? energyUnit,
+    bool? defaultChartZoomed,
   }) {
     return UserSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -54,6 +65,8 @@ class UserSettings {
       isCrashReportingEnabled:
           isCrashReportingEnabled ?? this.isCrashReportingEnabled,
       isAnalyticsEnabled: isAnalyticsEnabled ?? this.isAnalyticsEnabled,
+      energyUnit: energyUnit ?? this.energyUnit,
+      defaultChartZoomed: defaultChartZoomed ?? this.defaultChartZoomed,
     );
   }
 
@@ -68,7 +81,9 @@ class UserSettings {
           isLocked == other.isLocked &&
           isOnboardingCompleted == other.isOnboardingCompleted &&
           isCrashReportingEnabled == other.isCrashReportingEnabled &&
-          isAnalyticsEnabled == other.isAnalyticsEnabled;
+          isAnalyticsEnabled == other.isAnalyticsEnabled &&
+          energyUnit == other.energyUnit &&
+          defaultChartZoomed == other.defaultChartZoomed;
 
   @override
   int get hashCode => Object.hash(
@@ -79,5 +94,7 @@ class UserSettings {
     isOnboardingCompleted,
     isCrashReportingEnabled,
     isAnalyticsEnabled,
+    energyUnit,
+    defaultChartZoomed,
   );
 }

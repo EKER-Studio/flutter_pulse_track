@@ -6,6 +6,7 @@ import 'package:pulse_track/core/application/service_providers.dart';
 import 'package:pulse_track/core/utils/app_logger.dart';
 import 'package:pulse_track/core/utils/crash_reporter.dart';
 import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
+import 'package:pulse_track/features/settings/domain/models/energy_unit.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 import 'package:pulse_track/features/settings/application/settings_providers.dart';
 
@@ -79,6 +80,18 @@ class AppSettingsNotifier extends _$AppSettingsNotifier {
   /// @param maxHr Target max heart rate in beats per minute.
   Future<void> updateMaxHr(int maxHr) =>
       _persist(state.copyWith(defaultMaxHr: maxHr));
+
+  /// Updates the energy measurement unit and persists it to database.
+  ///
+  /// @param unit The selected energy unit.
+  Future<void> updateEnergyUnit(EnergyUnit unit) =>
+      _persist(state.copyWith(energyUnit: unit));
+
+  /// Updates whether live chart vertical scale defaults to auto-zoomed and persists it.
+  ///
+  /// @param zoomed Whether default chart zoom is enabled.
+  Future<void> updateDefaultChartZoomed(bool zoomed) =>
+      _persist(state.copyWith(defaultChartZoomed: zoomed));
 
   /// Updates whether biometric lock is enabled and persists it.
   ///

@@ -17,33 +17,44 @@ const UserSettingsDtoSchema = CollectionSchema(
   name: r'UserSettingsDto',
   id: -1895679404152038888,
   properties: {
-    r'defaultMaxHr': PropertySchema(
+    r'defaultChartZoomed': PropertySchema(
       id: 0,
+      name: r'defaultChartZoomed',
+      type: IsarType.bool,
+    ),
+    r'defaultMaxHr': PropertySchema(
+      id: 1,
       name: r'defaultMaxHr',
       type: IsarType.long,
     ),
+    r'energyUnit': PropertySchema(
+      id: 2,
+      name: r'energyUnit',
+      type: IsarType.byte,
+      enumMap: _UserSettingsDtoenergyUnitEnumValueMap,
+    ),
     r'isAnalyticsEnabled': PropertySchema(
-      id: 1,
+      id: 3,
       name: r'isAnalyticsEnabled',
       type: IsarType.bool,
     ),
     r'isBiometricLockEnabled': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'isBiometricLockEnabled',
       type: IsarType.bool,
     ),
     r'isCrashReportingEnabled': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'isCrashReportingEnabled',
       type: IsarType.bool,
     ),
     r'isOnboardingCompleted': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'isOnboardingCompleted',
       type: IsarType.bool,
     ),
     r'themeMode': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'themeMode',
       type: IsarType.byte,
       enumMap: _UserSettingsDtothemeModeEnumValueMap,
@@ -80,12 +91,14 @@ void _userSettingsDtoSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.defaultMaxHr);
-  writer.writeBool(offsets[1], object.isAnalyticsEnabled);
-  writer.writeBool(offsets[2], object.isBiometricLockEnabled);
-  writer.writeBool(offsets[3], object.isCrashReportingEnabled);
-  writer.writeBool(offsets[4], object.isOnboardingCompleted);
-  writer.writeByte(offsets[5], object.themeMode.index);
+  writer.writeBool(offsets[0], object.defaultChartZoomed);
+  writer.writeLong(offsets[1], object.defaultMaxHr);
+  writer.writeByte(offsets[2], object.energyUnit.index);
+  writer.writeBool(offsets[3], object.isAnalyticsEnabled);
+  writer.writeBool(offsets[4], object.isBiometricLockEnabled);
+  writer.writeBool(offsets[5], object.isCrashReportingEnabled);
+  writer.writeBool(offsets[6], object.isOnboardingCompleted);
+  writer.writeByte(offsets[7], object.themeMode.index);
 }
 
 UserSettingsDto _userSettingsDtoDeserialize(
@@ -95,15 +108,21 @@ UserSettingsDto _userSettingsDtoDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = UserSettingsDto();
-  object.defaultMaxHr = reader.readLong(offsets[0]);
+  object.defaultChartZoomed = reader.readBool(offsets[0]);
+  object.defaultMaxHr = reader.readLong(offsets[1]);
+  object.energyUnit =
+      _UserSettingsDtoenergyUnitValueEnumMap[reader.readByteOrNull(
+        offsets[2],
+      )] ??
+      EnergyUnit.kcal;
   object.id = id;
-  object.isAnalyticsEnabled = reader.readBool(offsets[1]);
-  object.isBiometricLockEnabled = reader.readBool(offsets[2]);
-  object.isCrashReportingEnabled = reader.readBool(offsets[3]);
-  object.isOnboardingCompleted = reader.readBool(offsets[4]);
+  object.isAnalyticsEnabled = reader.readBool(offsets[3]);
+  object.isBiometricLockEnabled = reader.readBool(offsets[4]);
+  object.isCrashReportingEnabled = reader.readBool(offsets[5]);
+  object.isOnboardingCompleted = reader.readBool(offsets[6]);
   object.themeMode =
       _UserSettingsDtothemeModeValueEnumMap[reader.readByteOrNull(
-        offsets[5],
+        offsets[7],
       )] ??
       AppThemeMode.system;
   return object;
@@ -117,16 +136,24 @@ P _userSettingsDtoDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 1:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readBool(offset)) as P;
+      return (_UserSettingsDtoenergyUnitValueEnumMap[reader.readByteOrNull(
+                offset,
+              )] ??
+              EnergyUnit.kcal)
+          as P;
     case 3:
       return (reader.readBool(offset)) as P;
     case 4:
       return (reader.readBool(offset)) as P;
     case 5:
+      return (reader.readBool(offset)) as P;
+    case 6:
+      return (reader.readBool(offset)) as P;
+    case 7:
       return (_UserSettingsDtothemeModeValueEnumMap[reader.readByteOrNull(
                 offset,
               )] ??
@@ -137,6 +164,11 @@ P _userSettingsDtoDeserializeProp<P>(
   }
 }
 
+const _UserSettingsDtoenergyUnitEnumValueMap = {'kcal': 0, 'kj': 1};
+const _UserSettingsDtoenergyUnitValueEnumMap = {
+  0: EnergyUnit.kcal,
+  1: EnergyUnit.kj,
+};
 const _UserSettingsDtothemeModeEnumValueMap = {
   'system': 0,
   'light': 1,
@@ -248,6 +280,15 @@ extension UserSettingsDtoQueryWhere
 extension UserSettingsDtoQueryFilter
     on QueryBuilder<UserSettingsDto, UserSettingsDto, QFilterCondition> {
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
+  defaultChartZoomedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'defaultChartZoomed', value: value),
+      );
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
   defaultMaxHrEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -293,6 +334,61 @@ extension UserSettingsDtoQueryFilter
       return query.addFilterCondition(
         FilterCondition.between(
           property: r'defaultMaxHr',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
+  energyUnitEqualTo(EnergyUnit value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'energyUnit', value: value),
+      );
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
+  energyUnitGreaterThan(EnergyUnit value, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'energyUnit',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
+  energyUnitLessThan(EnergyUnit value, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'energyUnit',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterFilterCondition>
+  energyUnitBetween(
+    EnergyUnit lower,
+    EnergyUnit upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'energyUnit',
           lower: lower,
           includeLower: includeLower,
           upper: upper,
@@ -467,6 +563,20 @@ extension UserSettingsDtoQueryLinks
 extension UserSettingsDtoQuerySortBy
     on QueryBuilder<UserSettingsDto, UserSettingsDto, QSortBy> {
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByDefaultChartZoomed() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'defaultChartZoomed', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByDefaultChartZoomedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'defaultChartZoomed', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
   sortByDefaultMaxHr() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'defaultMaxHr', Sort.asc);
@@ -477,6 +587,20 @@ extension UserSettingsDtoQuerySortBy
   sortByDefaultMaxHrDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'defaultMaxHr', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByEnergyUnit() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'energyUnit', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  sortByEnergyUnitDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'energyUnit', Sort.desc);
     });
   }
 
@@ -554,6 +678,20 @@ extension UserSettingsDtoQuerySortBy
 extension UserSettingsDtoQuerySortThenBy
     on QueryBuilder<UserSettingsDto, UserSettingsDto, QSortThenBy> {
   QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByDefaultChartZoomed() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'defaultChartZoomed', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByDefaultChartZoomedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'defaultChartZoomed', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
   thenByDefaultMaxHr() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'defaultMaxHr', Sort.asc);
@@ -564,6 +702,20 @@ extension UserSettingsDtoQuerySortThenBy
   thenByDefaultMaxHrDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'defaultMaxHr', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByEnergyUnit() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'energyUnit', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QAfterSortBy>
+  thenByEnergyUnitDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'energyUnit', Sort.desc);
     });
   }
 
@@ -653,9 +805,23 @@ extension UserSettingsDtoQuerySortThenBy
 extension UserSettingsDtoQueryWhereDistinct
     on QueryBuilder<UserSettingsDto, UserSettingsDto, QDistinct> {
   QueryBuilder<UserSettingsDto, UserSettingsDto, QDistinct>
+  distinctByDefaultChartZoomed() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'defaultChartZoomed');
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QDistinct>
   distinctByDefaultMaxHr() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'defaultMaxHr');
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, UserSettingsDto, QDistinct>
+  distinctByEnergyUnit() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'energyUnit');
     });
   }
 
@@ -703,9 +869,23 @@ extension UserSettingsDtoQueryProperty
     });
   }
 
+  QueryBuilder<UserSettingsDto, bool, QQueryOperations>
+  defaultChartZoomedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'defaultChartZoomed');
+    });
+  }
+
   QueryBuilder<UserSettingsDto, int, QQueryOperations> defaultMaxHrProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'defaultMaxHr');
+    });
+  }
+
+  QueryBuilder<UserSettingsDto, EnergyUnit, QQueryOperations>
+  energyUnitProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'energyUnit');
     });
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
+import 'package:pulse_track/features/settings/domain/models/energy_unit.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 import 'package:pulse_track/features/settings/infrastructure/models/user_settings_dto.dart';
 
@@ -15,6 +16,8 @@ void main() {
       expect(dto.isOnboardingCompleted, isFalse);
       expect(dto.isCrashReportingEnabled, isTrue);
       expect(dto.isAnalyticsEnabled, isTrue);
+      expect(dto.energyUnit, EnergyUnit.kcal);
+      expect(dto.defaultChartZoomed, isFalse);
     });
   });
 
@@ -28,6 +31,8 @@ void main() {
         isOnboardingCompleted: true,
         isCrashReportingEnabled: false,
         isAnalyticsEnabled: false,
+        energyUnit: EnergyUnit.kj,
+        defaultChartZoomed: true,
       );
 
       final dto = UserSettingsDto.fromDomain(settings);
@@ -39,6 +44,8 @@ void main() {
       expect(dto.isOnboardingCompleted, isTrue);
       expect(dto.isCrashReportingEnabled, isFalse);
       expect(dto.isAnalyticsEnabled, isFalse);
+      expect(dto.energyUnit, EnergyUnit.kj);
+      expect(dto.defaultChartZoomed, isTrue);
     });
 
     test('round-trips each theme mode', () {
@@ -47,6 +54,15 @@ void main() {
 
         expect(dto.themeMode, mode);
         expect(dto.toDomain().themeMode, mode);
+      }
+    });
+
+    test('round-trips each energy unit', () {
+      for (final unit in EnergyUnit.values) {
+        final dto = UserSettingsDto.fromDomain(UserSettings(energyUnit: unit));
+
+        expect(dto.energyUnit, unit);
+        expect(dto.toDomain().energyUnit, unit);
       }
     });
   });
@@ -59,7 +75,9 @@ void main() {
         ..isBiometricLockEnabled = true
         ..isOnboardingCompleted = true
         ..isCrashReportingEnabled = false
-        ..isAnalyticsEnabled = false;
+        ..isAnalyticsEnabled = false
+        ..energyUnit = EnergyUnit.kj
+        ..defaultChartZoomed = true;
 
       final domain = dto.toDomain();
 
@@ -69,6 +87,8 @@ void main() {
       expect(domain.isOnboardingCompleted, isTrue);
       expect(domain.isCrashReportingEnabled, isFalse);
       expect(domain.isAnalyticsEnabled, isFalse);
+      expect(domain.energyUnit, EnergyUnit.kj);
+      expect(domain.defaultChartZoomed, isTrue);
       // Ephemeral lock state is never persisted.
       expect(domain.isLocked, isFalse);
     });
@@ -79,6 +99,8 @@ void main() {
         defaultMaxHr: 165,
         isBiometricLockEnabled: true,
         isOnboardingCompleted: true,
+        energyUnit: EnergyUnit.kj,
+        defaultChartZoomed: true,
       );
 
       expect(UserSettingsDto.fromDomain(settings).toDomain(), settings);

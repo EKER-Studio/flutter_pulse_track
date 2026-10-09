@@ -1,6 +1,7 @@
 import 'package:isar_community/isar.dart';
 
 import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
+import 'package:pulse_track/features/settings/domain/models/energy_unit.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 
 part 'user_settings_dto.g.dart';
@@ -32,6 +33,13 @@ class UserSettingsDto {
   /// Whether anonymous interaction analytics via Firebase Analytics are enabled.
   bool isAnalyticsEnabled = true;
 
+  /// Measurement unit preference for expended energy stored as an enumerated integer.
+  @enumerated
+  EnergyUnit energyUnit = EnergyUnit.kcal;
+
+  /// Whether vertical scale in the live heart rate chart defaults to auto-zoomed.
+  bool defaultChartZoomed = false;
+
   /// Converts this database entity to a pure domain [UserSettings] model.
   UserSettings toDomain() {
     return UserSettings(
@@ -41,6 +49,8 @@ class UserSettingsDto {
       isOnboardingCompleted: isOnboardingCompleted,
       isCrashReportingEnabled: isCrashReportingEnabled,
       isAnalyticsEnabled: isAnalyticsEnabled,
+      energyUnit: energyUnit,
+      defaultChartZoomed: defaultChartZoomed,
     );
   }
 
@@ -54,6 +64,8 @@ class UserSettingsDto {
     dto.isOnboardingCompleted = settings.isOnboardingCompleted;
     dto.isCrashReportingEnabled = settings.isCrashReportingEnabled;
     dto.isAnalyticsEnabled = settings.isAnalyticsEnabled;
+    dto.energyUnit = settings.energyUnit;
+    dto.defaultChartZoomed = settings.defaultChartZoomed;
     return dto;
   }
 }

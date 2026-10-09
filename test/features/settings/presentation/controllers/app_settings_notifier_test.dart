@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pulse_track/features/settings/domain/models/app_theme_mode.dart';
+import 'package:pulse_track/features/settings/domain/models/energy_unit.dart';
 import 'package:pulse_track/features/settings/domain/models/user_settings.dart';
 import 'package:pulse_track/features/settings/domain/repositories/user_settings_repository.dart';
 import 'package:pulse_track/features/settings/application/settings_providers.dart';
@@ -89,6 +90,33 @@ void main() {
         expect(persisted.defaultMaxHr, 175);
       },
     );
+
+    test(
+      'updateEnergyUnit mutates state and invokes repository.saveSettings',
+      () async {
+        await container
+            .read(appSettingsProvider.notifier)
+            .updateEnergyUnit(EnergyUnit.kj);
+
+        final state = container.read(appSettingsProvider);
+        expect(state.energyUnit, EnergyUnit.kj);
+
+        final persisted = await repository.getSettings();
+        expect(persisted.energyUnit, EnergyUnit.kj);
+      },
+    );
+
+    test('updateDefaultChartZoomed mutates state and invokes repository.saveSettings', () async {
+      await container
+          .read(appSettingsProvider.notifier)
+          .updateDefaultChartZoomed(true);
+
+      final state = container.read(appSettingsProvider);
+      expect(state.defaultChartZoomed, isTrue);
+
+      final persisted = await repository.getSettings();
+      expect(persisted.defaultChartZoomed, isTrue);
+    });
 
     test('watchSettings stream updates state reactively', () async {
       final sub = container.listen(appSettingsProvider, (_, _) {});
