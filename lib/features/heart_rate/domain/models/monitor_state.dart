@@ -39,8 +39,11 @@ sealed class MonitorState {
 
   /// Service discovery succeeded and GATT notifications are active.
   /// [measurement] holds the most recently parsed heart rate packet.
-  factory MonitorState.connected({required HrMeasurement measurement}) =
-      ConnectedMonitorState;
+  factory MonitorState.connected({
+    required HrMeasurement measurement,
+    List<int> recentBpmHistory,
+    bool isChartZoomed,
+  }) = ConnectedMonitorState;
 
   /// A non-recoverable error occurred during connection or streaming.
   /// [message] is a human-readable string suitable for the recovery screen CTA.
@@ -72,7 +75,17 @@ final class ConnectedMonitorState extends MonitorState {
   /// The most recently decoded heart rate measurement from the BLE sensor.
   final HrMeasurement measurement;
 
-  const ConnectedMonitorState({required this.measurement});
+  /// Recent rolling window of heart rate samples (chronological order) for live waveform rendering.
+  final List<int> recentBpmHistory;
+
+  /// Whether the live chart display is zoomed into the dynamic min/max BPM range.
+  final bool isChartZoomed;
+
+  const ConnectedMonitorState({
+    required this.measurement,
+    this.recentBpmHistory = const [],
+    this.isChartZoomed = false,
+  });
 }
 
 /// An error terminated the connection or stream; [message] drives the recovery UI.

@@ -141,6 +141,8 @@ buildMocks({Future<void> Function(Invocation)? onConnect}) {
   final hrCharacteristic = _MockBluetoothCharacteristic();
   when(() => hrCharacteristic.characteristicUuid).thenReturn(_kHrCharGuid);
   when(() => hrCharacteristic.uuid).thenReturn(_kHrCharGuid);
+  when(() => hrCharacteristic.properties)
+      .thenReturn(const CharacteristicProperties(notify: true));
 
   final hrService = _MockBluetoothService();
   when(() => hrService.serviceUuid).thenReturn(_kHrServiceGuid);
@@ -454,6 +456,25 @@ void main() {
       },
     );
 
+    test('HR characteristic 0x2A37 without notify or indicate transitions to FailureMonitorState', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      when(() => m.hrCharacteristic.properties)
+          .thenReturn(const CharacteristicProperties());
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+
+      final state = container.read(hrMonitorProvider);
+      expect(state, isA<FailureMonitorState>());
+      expect(
+        (state as FailureMonitorState).message,
+        contains('NOTIFY or INDICATE'),
+      );
+    });
+
     test('setNotifyValue error transitions to FailureMonitorState', () async {
       final m = buildMocks();
       container = m.container;
@@ -628,6 +649,51 @@ void main() {
       expect(state.measurement.batteryLevel, 85);
 
       await batteryValueController.close();
+    });
+  });
+
+  group('recentBpmHistory and chart zoom', () {
+    test('accumulates BPM samples up to 40 items in rolling buffer', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+
+      // Add 45 samples (1..45)
+      for (var i = 1; i <= 45; i++) {
+        m.hrValueController.add([0x00, i]);
+        await Future.delayed(Duration.zero);
+      }
+
+      final state = container.read(hrMonitorProvider) as ConnectedMonitorState;
+      expect(state.recentBpmHistory.length, 40);
+      // The first 5 should have rolled off, remaining should be 6..45
+      expect(state.recentBpmHistory.first, 6);
+      expect(state.recentBpmHistory.last, 45);
+    });
+
+    test('toggleChartZoom toggles isChartZoomed state', () async {
+      final m = buildMocks();
+      container = m.container;
+      notifier = container.read(hrMonitorProvider.notifier);
+      keepAlive();
+
+      await notifier.connect(_kTestDeviceId, _kTestDeviceName);
+      m.hrValueController.add([0x00, 75]);
+      await Future.delayed(Duration.zero);
+
+      var state = container.read(hrMonitorProvider) as ConnectedMonitorState;
+      expect(state.isChartZoomed, isFalse);
+
+      notifier.toggleChartZoom();
+      state = container.read(hrMonitorProvider) as ConnectedMonitorState;
+      expect(state.isChartZoomed, isTrue);
+
+      notifier.toggleChartZoom();
+      state = container.read(hrMonitorProvider) as ConnectedMonitorState;
+      expect(state.isChartZoomed, isFalse);
     });
   });
 

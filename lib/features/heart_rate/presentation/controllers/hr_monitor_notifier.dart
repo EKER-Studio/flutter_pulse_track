@@ -7,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pulse_track/core/application/service_providers.dart';
 import 'package:pulse_track/core/utils/app_logger.dart';
 import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';
+import 'package:pulse_track/features/heart_rate/domain/constants/gatt_spec.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/body_sensor_location.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
@@ -21,8 +22,10 @@ part 'hr_monitor_notifier.g.dart';
 const Duration _kConnectionTimeout = Duration(seconds: 4);
 const Duration _kDiscoverServicesTimeout = Duration(seconds: 8);
 
-final Guid _kHrServiceUuid = Guid('180d');
-final Guid _kHrMeasurementCharUuid = Guid('2a37');
+final Guid _kHrServiceUuid = Guid(GattSpec.heartRateServiceUuid);
+final Guid _kHrMeasurementCharUuid = Guid(
+  GattSpec.heartRateMeasurementCharUuid,
+);
 
 /// Manages heart rate monitor connection, GATT discovery, and live telemetry.
 @riverpod
@@ -48,6 +51,29 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
   static const int _maxReconnectAttempts = 3;
   Timer? _connectTimer;
   Timer? _reconnectTimer;
+
+  static const int _kMaxRecentBpmSamples = 40;
+  final List<int> _recentBpmHistory = [];
+  bool _isChartZoomed = false;
+
+  /// Whether the live chart display is currently zoomed into the dynamic min/max range.
+  bool get isChartZoomed => _isChartZoomed;
+
+  /// Returns an unmodifiable snapshot of recent heart rate readings for live chart display.
+  List<int> get recentBpmHistory => List.unmodifiable(_recentBpmHistory);
+
+  /// Toggles between dynamic min/max zoom and standard 0-220 BPM range for the live chart.
+  void toggleChartZoom() {
+    _isChartZoomed = !_isChartZoomed;
+    if (state is ConnectedMonitorState) {
+      final current = state as ConnectedMonitorState;
+      state = MonitorState.connected(
+        measurement: current.measurement,
+        recentBpmHistory: List.unmodifiable(_recentBpmHistory),
+        isChartZoomed: _isChartZoomed,
+      );
+    }
+  }
 
   /// Number of auto-reconnect attempts performed during current disconnection event.
   @visibleForTesting
@@ -127,6 +153,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       _sessionDeviceName = deviceName;
       _sensorLocation = BodySensorLocation.unknown;
       _currentBatteryLevel = null;
+      _recentBpmHistory.clear();
+      _isChartZoomed = false;
     }
 
     // PII redaction: avoid logging full MAC/deviceId to Crashlytics (C-2).
@@ -300,8 +328,24 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       return;
     }
 
+    final bool isSubscribable =
+        hrCharacteristic.properties.notify ||
+        hrCharacteristic.properties.indicate;
+    if (!isSubscribable) {
+      log.w(
+        '[HrMonitorNotifier] HR Measurement Characteristic (0x2A37) does not support NOTIFY or INDICATE.',
+      );
+      await _safeDisconnectDevice();
+      await _handleConnectFailure(
+        isReconnect: isReconnect,
+        failureMessage: 'HR Measurement Characteristic (0x2A37) must support NOTIFY or INDICATE.',
+      );
+      return;
+    }
+
     _sensorLocation = await _gattResolver.readBodySensorLocation(hrService);
     _recorder.setSensorLocationIndex(_sensorLocation.index);
+    await _gattResolver.resetEnergyExpended(hrService);
 
     try {
       await ref
@@ -369,12 +413,21 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
 
             _recorder.recordSample(measurement.bpm);
 
+            _recentBpmHistory.add(measurement.bpm);
+            if (_recentBpmHistory.length > _kMaxRecentBpmSamples) {
+              _recentBpmHistory.removeAt(0);
+            }
+
             final HrMeasurement enrichedMeasurement = measurement.copyWith(
               sensorLocation: _sensorLocation,
               batteryLevel: _currentBatteryLevel ?? measurement.batteryLevel,
             );
 
-            state = MonitorState.connected(measurement: enrichedMeasurement);
+            state = MonitorState.connected(
+              measurement: enrichedMeasurement,
+              recentBpmHistory: List.unmodifiable(_recentBpmHistory),
+              isChartZoomed: _isChartZoomed,
+            );
           },
           onError: (Object error, StackTrace stack) {
             if (!ref.mounted) return;
@@ -470,6 +523,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         stackTrace: st,
       );
     } finally {
+      _recentBpmHistory.clear();
+      _isChartZoomed = false;
       if (ref.mounted) {
         state = const MonitorState.disconnected();
       }
@@ -512,6 +567,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       final current = state as ConnectedMonitorState;
       state = MonitorState.connected(
         measurement: current.measurement.copyWith(batteryLevel: newLevel),
+        recentBpmHistory: current.recentBpmHistory,
+        isChartZoomed: current.isChartZoomed,
       );
     }
   }
@@ -641,5 +698,8 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
         stackTrace: st,
       );
     }
+
+    _recentBpmHistory.clear();
+    _isChartZoomed = false;
   }
 }
