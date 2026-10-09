@@ -3,11 +3,19 @@ import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:pulse_track/core/utils/app_logger.dart';
 import 'package:pulse_track/features/heart_rate/application/ble_providers.dart';
+import 'package:pulse_track/features/heart_rate/domain/constants/gatt_spec.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/body_sensor_location.dart';
 
-final Guid _kBodySensorLocationCharUuid = Guid('2a38');
-final Guid _kBatteryServiceUuid = Guid('180f');
-final Guid _kBatteryLevelCharacteristicUuid = Guid('2a19');
+final Guid _kBodySensorLocationCharUuid = Guid(
+  GattSpec.bodySensorLocationCharUuid,
+);
+final Guid _kBatteryServiceUuid = Guid(GattSpec.batteryServiceUuid);
+final Guid _kBatteryLevelCharacteristicUuid = Guid(
+  GattSpec.batteryLevelCharUuid,
+);
+final Guid _kHeartRateControlPointCharUuid = Guid(
+  GattSpec.heartRateControlPointCharUuid,
+);
 
 /// Discovers and reads optional standard GATT characteristics (Sensor Location, Battery).
 class GattProfileResolver {
@@ -148,6 +156,37 @@ class GattProfileResolver {
         error: e,
       );
       return (initialLevel: null, subscription: null);
+    }
+  }
+
+  /// Attempts to write 0x01 to Heart Rate Control Point (0x2A39) to reset the
+  /// accumulated energy expended counter, if supported by [hrService].
+  ///
+  /// Returns `true` if the write succeeded, or `false` if unsupported or failed.
+  Future<bool> resetEnergyExpended(BluetoothService hrService) async {
+    try {
+      final BluetoothCharacteristic? controlPointChar = hrService
+          .characteristics
+          .where(
+            (BluetoothCharacteristic c) =>
+                c.characteristicUuid == _kHeartRateControlPointCharUuid,
+          )
+          .firstOrNull;
+
+      if (controlPointChar == null) return false;
+
+      // Bluetooth SIG Heart Rate Service: Write 0x01 resets energy expended.
+      await _monitorService.write(controlPointChar, const [0x01]);
+      log.i(
+        '[GattProfileResolver] Reset energy expended succeeded via 0x2A39.',
+      );
+      return true;
+    } on Object catch (e) {
+      log.w(
+        '[GattProfileResolver] Reset energy expended (0x2A39) failed or unsupported',
+        error: e,
+      );
+      return false;
     }
   }
 }

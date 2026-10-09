@@ -46,6 +46,15 @@ abstract class HeartRateMonitorService {
   ///
   /// Returns a [Future] completing with raw byte values.
   Future<List<int>> read(BluetoothCharacteristic characteristic);
+
+  /// Writes [value] bytes to [characteristic].
+  ///
+  /// Returns a [Future] completing when the write operation finishes.
+  Future<void> write(
+    BluetoothCharacteristic characteristic,
+    List<int> value, {
+    bool withoutResponse = false,
+  });
 }
 
 /// Concrete [HeartRateMonitorService] backed by [FlutterBluePlus].
@@ -120,6 +129,20 @@ class FbpHeartRateMonitorService implements HeartRateMonitorService {
       return await characteristic.read();
     } on Object catch (e) {
       log.e('[FbpHeartRateMonitorService] read failed', error: e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> write(
+    BluetoothCharacteristic characteristic,
+    List<int> value, {
+    bool withoutResponse = false,
+  }) async {
+    try {
+      await characteristic.write(value, withoutResponse: withoutResponse);
+    } on Object catch (e) {
+      log.e('[FbpHeartRateMonitorService] write failed', error: e);
       rethrow;
     }
   }
