@@ -131,8 +131,11 @@ jobs:
       - name: Run unit and widget tests
         run: flutter test --coverage --exclude-tags "golden,screenshot"
 
-      - name: Build Android Debug APK
-        run: flutter build apk --debug
+      # Temporarily disabled: Gradle downloads NDK r28c and CMake on the fly, exhausting GitHub runner
+      # disk space ('No space left on device') and adding 11+ minutes. Build integrity is verified in
+      # release.yml and locally via ./scripts/before_push.sh.
+      # - name: Build Android Debug APK
+      #   run: flutter build apk --debug
 
       - name: Generate Coverage Job Summary
         if: always()
