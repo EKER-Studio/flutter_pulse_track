@@ -8,6 +8,7 @@ import 'package:pulse_track/core/presentation/widgets/status_state_view.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
 import 'package:pulse_track/features/heart_rate/presentation/controllers/hr_monitor_notifier.dart';
 import 'package:pulse_track/features/heart_rate/presentation/widgets/hr_monitor_connected_view.dart';
+import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Telemetry dashboard and BLE connection lifecycle view.
@@ -110,6 +111,7 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
             metric: measurement,
             recentBpmHistory: recentBpmHistory,
             isChartZoomed: isChartZoomed,
+            energyUnit: ref.watch(appSettingsProvider).energyUnit,
             onToggleChartZoom: notifier.toggleChartZoom,
           ),
         FailureMonitorState(:final message) => _buildFailureState(

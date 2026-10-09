@@ -6,6 +6,7 @@ import 'package:pulse_track/features/heart_rate/presentation/utils/body_sensor_l
 import 'package:pulse_track/features/heart_rate/presentation/widgets/animated_heart_icon.dart';
 import 'package:pulse_track/features/heart_rate/presentation/widgets/live_bpm_chart.dart';
 import 'package:pulse_track/features/heart_rate/presentation/widgets/sensor_metric_card.dart';
+import 'package:pulse_track/features/settings/domain/models/energy_unit.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
 /// Telemetry dashboard displayed when a sensor is actively streaming heart rate data.
@@ -19,6 +20,9 @@ class HrMonitorConnectedView extends StatelessWidget {
   /// Whether vertical chart scale is auto-zoomed to the min/max of [recentBpmHistory].
   final bool isChartZoomed;
 
+  /// Preferred energy measurement unit for displaying calories or kilojoules.
+  final EnergyUnit energyUnit;
+
   /// Callback when user toggles chart zoom state.
   final VoidCallback? onToggleChartZoom;
 
@@ -27,6 +31,7 @@ class HrMonitorConnectedView extends StatelessWidget {
     required this.metric,
     this.recentBpmHistory = const [],
     this.isChartZoomed = false,
+    this.energyUnit = EnergyUnit.kcal,
     this.onToggleChartZoom,
   });
 
@@ -169,13 +174,21 @@ class HrMonitorConnectedView extends StatelessWidget {
           ),
           if (metric.energyExpended != null) ...[
             const SizedBox(height: 16),
-            SensorMetricCard(
-              semanticsLabel:
-                  '${l10n.energyExpendedTitle}: ${l10n.energyExpendedUnitKj(metric.energyExpended!)}',
-              icon: Icons.local_fire_department,
-              iconColor: AppColors.accentOrange,
-              title: l10n.energyExpendedTitle,
-              value: l10n.energyExpendedUnitKj(metric.energyExpended!),
+            Builder(
+              builder: (context) {
+                final energyText = energyUnit == EnergyUnit.kcal
+                    ? l10n.energyExpendedUnitKcal(
+                        (metric.energyExpended! / 4.184).round(),
+                      )
+                    : l10n.energyExpendedUnitKj(metric.energyExpended!);
+                return SensorMetricCard(
+                  semanticsLabel: '${l10n.energyExpendedTitle}: $energyText',
+                  icon: Icons.local_fire_department,
+                  iconColor: AppColors.accentOrange,
+                  title: l10n.energyExpendedTitle,
+                  value: energyText,
+                );
+              },
             ),
           ],
         ],

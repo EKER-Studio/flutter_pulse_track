@@ -12,6 +12,7 @@ import 'package:pulse_track/features/heart_rate/domain/models/body_sensor_locati
 import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/monitor_state.dart';
 import 'package:pulse_track/features/heart_rate/domain/parsers/hr_packet_parser.dart';
+import 'package:pulse_track/features/settings/presentation/controllers/app_settings_notifier.dart';
 import 'package:pulse_track/features/workout/application/workout_providers.dart';
 
 import 'gatt_profile_resolver.dart';
@@ -154,7 +155,7 @@ class HrMonitorNotifier extends _$HrMonitorNotifier
       _sensorLocation = BodySensorLocation.unknown;
       _currentBatteryLevel = null;
       _recentBpmHistory.clear();
-      _isChartZoomed = false;
+      _isChartZoomed = ref.read(appSettingsProvider).defaultChartZoomed;
     }
 
     // PII redaction: avoid logging full MAC/deviceId to Crashlytics (C-2).

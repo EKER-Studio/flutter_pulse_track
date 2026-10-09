@@ -5,6 +5,7 @@ import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dar
 import 'package:pulse_track/features/heart_rate/presentation/widgets/animated_heart_icon.dart';
 import 'package:pulse_track/features/heart_rate/presentation/widgets/live_bpm_chart.dart';
 import 'package:pulse_track/features/heart_rate/presentation/widgets/hr_monitor_connected_view.dart';
+import 'package:pulse_track/features/settings/domain/models/energy_unit.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
 Widget _buildTestWidget(Widget child) {
@@ -65,8 +66,26 @@ void main() {
     expect(find.text('BPM'), findsOneWidget);
     expect(find.byType(LiveBpmChart), findsOneWidget);
     expect(find.text('Detected'), findsOneWidget);
-    expect(find.text('120 kJ'), findsOneWidget);
+    expect(find.text('29 kcal'), findsOneWidget);
   });
+
+  testWidgets(
+    'renders energy expended in kJ when energyUnit is EnergyUnit.kj',
+    (WidgetTester tester) async {
+      final measurement = _createMeasurement(bpm: 85, energyExpended: 120);
+
+      await tester.pumpWidget(
+        _buildTestWidget(
+          HrMonitorConnectedView(
+            metric: measurement,
+            energyUnit: EnergyUnit.kj,
+          ),
+        ),
+      );
+
+      expect(find.text('120 kJ'), findsOneWidget);
+    },
+  );
 
   testWidgets(
     'renders skin contact as lost when sensorContactActive is false',
