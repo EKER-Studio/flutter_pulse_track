@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:pulse_track/core/presentation/theme/app_colors.dart';
 import 'package:pulse_track/features/heart_rate/domain/models/hr_measurement.dart';
 import 'package:pulse_track/features/heart_rate/presentation/utils/body_sensor_location_l10n.dart';
+import 'package:pulse_track/features/heart_rate/presentation/widgets/animated_heart_icon.dart';
+import 'package:pulse_track/features/heart_rate/presentation/widgets/live_bpm_chart.dart';
 import 'package:pulse_track/features/heart_rate/presentation/widgets/sensor_metric_card.dart';
 import 'package:pulse_track/l10n/app_localizations.dart';
 
@@ -11,13 +13,47 @@ class HrMonitorConnectedView extends StatelessWidget {
   /// The latest heart rate measurement telemetry.
   final HrMeasurement metric;
 
-  const HrMonitorConnectedView({super.key, required this.metric});
+  /// Recent heart rate readings (up to 40 samples) for the waveform chart.
+  final List<int> recentBpmHistory;
+
+  /// Whether vertical chart scale is auto-zoomed to the min/max of [recentBpmHistory].
+  final bool isChartZoomed;
+
+  /// Callback when user toggles chart zoom state.
+  final VoidCallback? onToggleChartZoom;
+
+  const HrMonitorConnectedView({
+    super.key,
+    required this.metric,
+    this.recentBpmHistory = const [],
+    this.isChartZoomed = false,
+    this.onToggleChartZoom,
+  });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final isBatteryOk =
         metric.batteryLevel != null && metric.batteryLevel! > 20;
+
+    final contactActive = metric.sensorContactActive;
+    final String contactValue;
+    final IconData contactIcon;
+    final Color contactColor;
+
+    if (contactActive == null) {
+      contactValue = l10n.skinContactUnsupported;
+      contactIcon = Icons.sensors;
+      contactColor = AppColors.textSecondary;
+    } else if (contactActive) {
+      contactValue = l10n.skinContactDetected;
+      contactIcon = Icons.check_circle_outline;
+      contactColor = AppColors.accentGreen;
+    } else {
+      contactValue = l10n.skinContactLost;
+      contactIcon = Icons.warning_amber_rounded;
+      contactColor = AppColors.accentOrange;
+    }
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
@@ -43,13 +79,7 @@ class HrMonitorConnectedView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                const ExcludeSemantics(
-                  child: Icon(
-                    Icons.favorite,
-                    color: AppColors.accentRed,
-                    size: 44,
-                  ),
-                ),
+                ExcludeSemantics(child: AnimatedHeartIcon(bpm: metric.bpm)),
                 const SizedBox(width: 12),
                 Flexible(
                   child: FittedBox(
@@ -98,7 +128,13 @@ class HrMonitorConnectedView extends StatelessWidget {
               ),
             ),
           ],
-          const SizedBox(height: 48),
+          const SizedBox(height: 24),
+          LiveBpmChart(
+            samples: recentBpmHistory,
+            isZoomed: isChartZoomed,
+            onToggleZoom: onToggleChartZoom ?? () {},
+          ),
+          const SizedBox(height: 24),
           SensorMetricCard(
             semanticsLabel: l10n.bodySensorLocationLabel(
               metric.sensorLocation.localizedName(l10n),
@@ -123,6 +159,25 @@ class HrMonitorConnectedView extends StatelessWidget {
                 ? '${metric.batteryLevel}%'
                 : l10n.batteryNotAvailable,
           ),
+          const SizedBox(height: 16),
+          SensorMetricCard(
+            semanticsLabel: '${l10n.skinContactTitle}: $contactValue',
+            icon: contactIcon,
+            iconColor: contactColor,
+            title: l10n.skinContactTitle,
+            value: contactValue,
+          ),
+          if (metric.energyExpended != null) ...[
+            const SizedBox(height: 16),
+            SensorMetricCard(
+              semanticsLabel:
+                  '${l10n.energyExpendedTitle}: ${l10n.energyExpendedUnitKj(metric.energyExpended!)}',
+              icon: Icons.local_fire_department,
+              iconColor: AppColors.accentOrange,
+              title: l10n.energyExpendedTitle,
+              value: l10n.energyExpendedUnitKj(metric.energyExpended!),
+            ),
+          ],
         ],
       ),
     );

@@ -101,9 +101,17 @@ class _HrMonitorViewState extends ConsumerState<HrMonitorView> {
         DiscoveringServicesMonitorState() => _buildLoadingState(
           l10n.discoveringServicesMessage,
         ),
-        ConnectedMonitorState(:final measurement) => HrMonitorConnectedView(
-          metric: measurement,
-        ),
+        ConnectedMonitorState(
+          :final measurement,
+          :final recentBpmHistory,
+          :final isChartZoomed,
+        ) =>
+          HrMonitorConnectedView(
+            metric: measurement,
+            recentBpmHistory: recentBpmHistory,
+            isChartZoomed: isChartZoomed,
+            onToggleChartZoom: notifier.toggleChartZoom,
+          ),
         FailureMonitorState(:final message) => _buildFailureState(
           context,
           l10n,
