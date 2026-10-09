@@ -22,5 +22,6 @@ void main() {
 
     expect(find.byType(OnboardingScreen), findsOneWidget);
     expect(find.byType(WelcomeStep), findsOneWidget);
+    expect(find.text('Live Telemetry & Waveforms'), findsOneWidget);
   });
 }

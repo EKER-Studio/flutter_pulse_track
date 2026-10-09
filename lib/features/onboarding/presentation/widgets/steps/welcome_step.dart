@@ -34,6 +34,11 @@ class WelcomeStep extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _FeatureCard(
+            icon: Icons.show_chart_rounded,
+            title: l10n.onboardingWelcomeLiveTelemetry,
+          ),
+          const SizedBox(height: 12),
+          _FeatureCard(
             icon: Icons.history_outlined,
             title: l10n.onboardingWelcomeHistory,
           ),
