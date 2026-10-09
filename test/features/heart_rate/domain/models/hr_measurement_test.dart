@@ -12,6 +12,7 @@ HrMeasurement _measurement({
   int? batteryLevel,
   bool sensorContactSupported = false,
   bool? sensorContactActive,
+  int? energyExpended,
 }) {
   return HrMeasurement(
     bpm: bpm,
@@ -21,6 +22,7 @@ HrMeasurement _measurement({
     batteryLevel: batteryLevel,
     sensorContactSupported: sensorContactSupported,
     sensorContactActive: sensorContactActive,
+    energyExpended: energyExpended,
   );
 }
 
@@ -62,6 +64,11 @@ void main() {
       final m = _measurement();
       expect(m.sensorContactActive, isNull);
     });
+
+    test('accepts optional energyExpended', () {
+      final m = _measurement(energyExpended: 120);
+      expect(m.energyExpended, 120);
+    });
   });
 
   group('copyWith', () {
@@ -75,6 +82,12 @@ void main() {
       expect(copy.batteryLevel, m.batteryLevel);
       expect(copy.sensorContactSupported, m.sensorContactSupported);
       expect(copy.sensorContactActive, m.sensorContactActive);
+      expect(copy.energyExpended, m.energyExpended);
+    });
+
+    test('overrides energyExpended', () {
+      final m = _measurement(energyExpended: 100);
+      expect(m.copyWith(energyExpended: 250).energyExpended, 250);
     });
 
     test('overrides single field', () {
@@ -195,6 +208,18 @@ void main() {
     test('null vs non-null sensorContactActive is not equal', () {
       final a = _measurement();
       final b = _measurement(sensorContactActive: true);
+      expect(a == b, isFalse);
+    });
+
+    test('different energyExpended is not equal', () {
+      final a = _measurement(energyExpended: 100);
+      final b = _measurement(energyExpended: 200);
+      expect(a == b, isFalse);
+    });
+
+    test('null vs non-null energyExpended is not equal', () {
+      final a = _measurement();
+      final b = _measurement(energyExpended: 100);
       expect(a == b, isFalse);
     });
 

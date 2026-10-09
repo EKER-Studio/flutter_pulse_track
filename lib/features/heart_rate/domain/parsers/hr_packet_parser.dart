@@ -47,8 +47,10 @@ class HrPacketParser {
       // Expended field (kJ, uint16) is present immediately before any R-R
       // intervals. Skipping this check would silently misalign every
       // subsequent R-R interval read for sensors that report energy expended.
+      int? energyExpended;
       if (hasEnergyExpended) {
         if (byteData.lengthInBytes < currentOffset + 2) return null;
+        energyExpended = byteData.getUint16(currentOffset, Endian.little);
         currentOffset += 2;
       }
 
@@ -68,6 +70,7 @@ class HrPacketParser {
         timestamp: DateTime.now(),
         sensorContactSupported: sensorContactSupported,
         sensorContactActive: sensorContactActive,
+        energyExpended: energyExpended,
       );
     } on Object catch (_) {
       // Domain layer stays pure Dart: no logging side effects here.

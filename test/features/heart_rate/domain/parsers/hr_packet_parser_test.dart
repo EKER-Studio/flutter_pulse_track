@@ -107,7 +107,7 @@ void main() {
     });
 
     group('Energy Expended flag (flags = 0x08)', () {
-      test('skips energy expended field correctly', () {
+      test('parses energy expended field correctly', () {
         // flags = 0x08 (has energy expended, 8-bit BPM)
         // bpm = 90
         // energy expended = 500 => 0x01F4 => [0xF4, 0x01] in little-endian
@@ -116,6 +116,7 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 90);
+        expect(result.energyExpended, 500);
         expect(result.rrIntervals, isEmpty);
         expect(result.sensorContactSupported, false);
         expect(result.sensorContactActive, isNull);
@@ -128,6 +129,7 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 60);
+        expect(result.energyExpended, 0);
         expect(result.sensorContactSupported, false);
         expect(result.sensorContactActive, isNull);
       });
@@ -139,6 +141,7 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 100);
+        expect(result.energyExpended, 65535);
         expect(result.sensorContactSupported, false);
         expect(result.sensorContactActive, isNull);
       });
@@ -239,6 +242,7 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 150);
+        expect(result.energyExpended, 250);
         expect(result.rrIntervals, hasLength(1));
         expect(result.rrIntervals[0], closeTo(1.0, 1e-6));
         expect(result.sensorContactSupported, false);
@@ -261,6 +265,7 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 85);
+        expect(result.energyExpended, 1000);
         expect(result.rrIntervals, hasLength(2));
         expect(result.rrIntervals[0], closeTo(0.5, 1e-6));
         expect(result.rrIntervals[1], closeTo(2.0, 1e-6));
@@ -355,6 +360,7 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 100);
+        expect(result.energyExpended, 0);
         expect(result.rrIntervals, hasLength(1));
         expect(result.rrIntervals[0], closeTo(1.0, 1e-6));
         expect(result.sensorContactSupported, true);
@@ -426,6 +432,7 @@ void main() {
 
           expect(result, isNotNull);
           expect(result!.bpm, 160);
+          expect(result.energyExpended, 300);
           expect(result.sensorContactSupported, true);
           expect(result.sensorContactActive, true);
           expect(result.rrIntervals, hasLength(2));
@@ -448,6 +455,7 @@ void main() {
 
           expect(result, isNotNull);
           expect(result!.bpm, 160);
+          expect(result.energyExpended, 300);
           expect(result.sensorContactSupported, true);
           expect(result.sensorContactActive, false);
           expect(result.rrIntervals, hasLength(1));
@@ -466,6 +474,7 @@ void main() {
 
         expect(result, isNotNull);
         expect(result!.bpm, 70);
+        expect(result.energyExpended, isNull);
         expect(result.sensorContactSupported, true);
         expect(result.sensorContactActive, false);
         expect(result.rrIntervals, hasLength(1));

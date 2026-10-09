@@ -26,6 +26,9 @@ class HrMeasurement {
   /// Whether skin contact is detected, null if [sensorContactSupported] is false.
   final bool? sensorContactActive;
 
+  /// Cumulative energy expended in kiloJoules (kJ), null if unsupported by hardware.
+  final int? energyExpended;
+
   const HrMeasurement({
     required this.bpm,
     required this.rrIntervals,
@@ -34,6 +37,7 @@ class HrMeasurement {
     this.batteryLevel,
     this.sensorContactSupported = false,
     this.sensorContactActive,
+    this.energyExpended,
   });
 
   /// Creates a copy of this measurement with the given fields replaced with new values.
@@ -45,6 +49,7 @@ class HrMeasurement {
     int? batteryLevel,
     bool? sensorContactSupported,
     bool? sensorContactActive,
+    int? energyExpended,
   }) {
     return HrMeasurement(
       bpm: bpm ?? this.bpm,
@@ -55,6 +60,7 @@ class HrMeasurement {
       sensorContactSupported:
           sensorContactSupported ?? this.sensorContactSupported,
       sensorContactActive: sensorContactActive ?? this.sensorContactActive,
+      energyExpended: energyExpended ?? this.energyExpended,
     );
   }
 
@@ -69,6 +75,7 @@ class HrMeasurement {
           batteryLevel == other.batteryLevel &&
           sensorContactSupported == other.sensorContactSupported &&
           sensorContactActive == other.sensorContactActive &&
+          energyExpended == other.energyExpended &&
           _listEquals(rrIntervals, other.rrIntervals);
 
   @override
@@ -79,6 +86,7 @@ class HrMeasurement {
       batteryLevel.hashCode ^
       sensorContactSupported.hashCode ^
       sensorContactActive.hashCode ^
+      energyExpended.hashCode ^
       rrIntervals.fold(0, (a, b) => a ^ b.hashCode);
 
   bool _listEquals(List<double> a, List<double> b) {
