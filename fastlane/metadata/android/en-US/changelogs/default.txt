@@ -1,4 +1,4 @@
-• Privacy controls: added opt-out toggles for anonymous crash reports and analytics in Settings.
-• Stability: strengthened background workout notifications and updated Android 15 compatibility.
-• Localizations: full support for 10 languages.
-• Performance: optimized startup and background memory usage.
+• Live Telemetry: real-time BPM waveform chart with auto-zoom and animated heart pulse.
+• Sensor Metrics: added skin contact detection, energy expended, and customizable energy units (kcal/kJ).
+• Activity Insights: new interactive workout calendar, habit tracking streaks, and milestone achievements.
+• Localizations: complete support across all 10 languages.

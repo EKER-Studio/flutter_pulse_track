@@ -2,6 +2,8 @@ PulseTrack to profesjonalny monitor tętna i analityka treningów dla czujników
 
 Funkcje:
 • Pomiar tętna w czasie rzeczywistym przez BLE
+• Wykresy fali tętna na żywo i wykrywanie kontaktu ze skórą
+• Śledzenie zużycia energii (kcal / kJ)
 • Historia treningów ze strefami Z1-Z5
 • Synchronizacja z Health Connect i Apple Health
 • Import/eksport CSV i zarządzanie danymi

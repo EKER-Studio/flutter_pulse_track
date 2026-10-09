@@ -6,15 +6,16 @@ state management and Isar for high-speed local data persistence.
 
 ## Features
 
-* **Real-time Telemetry**: Low-latency parsing of standard GATT Heart Rate Service (`0x180D`) streaming heart rate values and R-R intervals (raw timing data; no HRV computation).
+* **Real-time Telemetry & Live Waveforms**: Low-latency parsing of standard GATT Heart Rate Service (`0x180D`) streaming heart rate values and R-R intervals (raw timing data; no HRV computation), dynamic live BPM waveform chart with range zoom toggle, and cadence-synced pulsing heart animation.
+* **Hardware Health & Skin Contact**: Continuous monitoring of Body Sensor Location (`0x2A38`), live battery level (`0x180F`), and GATT sensor contact detection (distinguishing active skin contact from loose fit or unsupported hardware).
+* **Energy Expenditure Tracking**: Real-time accumulation of energy expended parsed from GATT payloads, formatted dynamically in user-preferred energy units (`kcal` or `kJ`).
 * **Smart Direct Connect**: Local-First device caching via Isar database allows instant, one-tap connections to previously paired sensors, bypassing expensive and battery-draining hardware air discovery.
-* **Universal Capability Discovery**: Dynamic runtime resolution of Body Sensor Location (`0x2A38`) and continuous live streaming of Battery Level (`0x180F`).
 * **Resilient Background Protection**: Engineered with a strict Android Foreground Service boundary to prevent OS-level process termination when the device is locked or dark-screened during a workout.
 * **Reactive State Machine**: Powered by Riverpod 3.x, mapping native BLE events into an exhaustive, type-safe sealed state architecture with atomic error boundaries.
 * **Environmental Safety**: Hardware state detection catching disabled Bluetooth adapters and connection timeouts instantly at the UI layer.
-* **Workout Persistence & Export**: Isar-backed workout history with crash recovery, CSV export/share, and heart-rate zone analytics.
-* **Settings & Data Management**: Theme/metrics preferences, CSV workout import with preview, biometric app lock, and full data wipe — all persisted locally.
-* **Onboarding & Navigation**: Guided first-run onboarding plus adaptive navigation (bottom bar / navigation rail).
+* **Workout Persistence & Export**: Isar-backed workout history with crash recovery, CSV export/share, and heart-rate zone analytics (Z1–Z5).
+* **Settings & Workout Metrics**: Customizable energy units (`kcal` vs. `kJ`), default live chart zoom toggle, theme preferences (dark/light/system), CSV workout import with preview, biometric app lock, and complete data wipe.
+* **Onboarding & Navigation**: Guided multi-step onboarding highlighting core features, privacy, and permissions, plus adaptive responsive navigation (bottom bar / navigation rail).
 * **Health & Platform Integrations**: Optional sync to Health Connect/HealthKit, daily reminders, and home-screen widget sync.
 * **Localization**: Full i18n in 10 locales (de, en, es, fr, it, ja, ko, nl, pl, pt) via `flutter gen-l10n`.
 

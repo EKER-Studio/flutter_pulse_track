@@ -2,6 +2,29 @@
 
 All notable changes to **PulseTrack** are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Conventional Commits](https://www.conventionalcommits.org/).
 
+## [1.1.0] - 2026-10-09
+
+### Added
+- **heart_rate**: real-time BPM waveform live chart (`LiveBpmChart`) with dynamic auto-zoom and fixed-scale modes
+- **heart_rate**: pulsing animated heart icon (`AnimatedHeartIcon`) synchronized with active BPM
+- **heart_rate**: skin contact status telemetry (`sensorContactActive`) and cumulative energy expended metrics (`energyExpended`)
+- **heart_rate**: rolling buffer of recent BPM samples (40 items) and GATT control point reset support
+- **settings**: energy unit preference (`EnergyUnit.kcal` vs `EnergyUnit.kj`) with automatic conversion and persistence
+- **settings**: default live chart zoom preference toggle in workout metrics settings
+- **calendar**: interactive monthly workout calendar grid and daily session details view
+- **statistics**: period comparisons, habit streaks (active days in last 30), and milestone achievement badges
+- **workout**: interactive touch scrubbing on workout BPM charts with floating indicator
+- **onboarding**: live telemetry and waveforms feature highlight card in Welcome step
+- **l10n**: complete localization strings for new telemetry, settings, calendar, and statistics across all 10 supported locales
+
+### Changed
+- **architecture**: modular presentation refactoring for workout details, settings sections, and onboarding steps
+- **deps**: updated internal code-generation and dependencies
+
+### Fixed
+- **calendar**: localized semantics and day cell accessibility labels
+- **settings**: theme-aware cards and localized validation feedback
+
 ## [1.0.3] - 2026-09-29
 
 ### Added

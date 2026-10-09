@@ -1,4 +1,4 @@
-• Prywatność: dodano przełączniki anonimowych raportów awarii i analityki w Ustawieniach.
-• Stabilność: usprawniono powiadomienia treningowe w tle oraz zgodność z systemem Android 15.
+• Telemetria na żywo: wykres fali BPM z funkcją auto-zoom oraz animowane pulsowanie serca.
+• Wskaźniki czujnika: wykrywanie kontaktu ze skórą, spalone kalorie i wybór jednostek energii (kcal/kJ).
+• Kalendarz i statystyki: interaktywny kalendarz treningów, śledzenie nawyków i odznaki osiągnięć.
 • Lokalizacja: pełne wsparcie dla 10 wersji językowych.
-• Wydajność: zoptymalizowano czas startu oraz zużycie pamięci.
